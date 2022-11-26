@@ -5,7 +5,7 @@ This app aims to solve the day-to-day problems that students and faculty face in
 Flutter, Firebase
 
 ## Maintainers ☀️
- |[@Ananyaiitbhilai](https://github.com/Ananyaiitbhilai)|[@chaitanyabisht](https://github.com/chaitanyabisht) |[@maanas talwar](https://github.com/maanas-talwar)| [@Satvik Vemuganti](https://github.com/VickyMerzOwn)|
+ |[@Ananya](https://github.com/Ananyaiitbhilai)|[@chaitanyabisht](https://github.com/chaitanyabisht) |[@Maanas Talwar](https://github.com/maanas-talwar)| [@Satvik Vemuganti](https://github.com/VickyMerzOwn)|
 |------|-------|---------|--------|
 
 ## Other details 📑
