@@ -5,7 +5,7 @@ This app aims to solve the day-to-day problems that students, faculty face in II
 Flutter, Firebase
 
 ## Maintainers ☀️
-[@Ananyaiitbhilai](https://github.com/Ananyaiitbhilai)[@chaitanyabisht](https://github.com/chaitanyabisht)[@maanas talwar](https://github.com/maanas-talwar) [@Satvik Vemuganti](https://github.com/VickyMerzOwn)
+[@Ananyaiitbhilai](https://github.com/Ananyaiitbhilai) [@chaitanyabisht](https://github.com/chaitanyabisht) [@maanas talwar](https://github.com/maanas-talwar) [@Satvik Vemuganti](https://github.com/VickyMerzOwn)
 
 ## Other details 📑
 This project is in its first iteration hence have to be started from Scratch. You need not to be proficient in the Techstack mentioned but should have basic understanding of the things. 
