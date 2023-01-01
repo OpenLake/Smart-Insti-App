@@ -46,21 +46,21 @@ class UserData{
           List.from(data?['posts']) 
           : <Post>[], 
       achievements: 
-        data?['achievements'] is Iterable ? 
-          List.from(data?['achievements']) 
+        data?['achievements'] is Iterable ?
+          List.from(data?['achievements']).map((hashMap)=> Achievement.fromJson(hashMap)).toList()
           : <Achievement>[],
-      skills: 
-        data?['skills'] is Iterable ? 
-          List.from(data?['skills']) 
-          : <Skill>[], 
-      pors: 
-        data?['pors'] is Iterable ? 
-          List.from(data?['pors']) 
-          : <Por>[], 
-      following: 
-        data?['following'] is Iterable ? 
-          List.from(data?['following']) 
-          : <String>[], 
+      skills:
+        data?['skills'] is Iterable ?
+          List.from(data?['skills']).map((hashMap)=> Skill.fromJson(hashMap)).toList()
+          : <Skill>[],
+      pors:
+        data?['pors'] is Iterable ?
+          List.from(data?['pors']).map((hashMap)=> Por.fromJson(hashMap)).toList()
+          : <Por>[],
+      following:
+        data?['following'] is Iterable ?
+          List.from(data?['following'])
+          : <String>[],
     );
   }
 
@@ -69,9 +69,9 @@ class UserData{
       'name': username,
       'description': description,
       'posts': posts,
-      'achievements': achievements,
-      'skills': skills,
-      'pors': pors,
+      'achievements': achievements.map((achievement) => achievement.toJson()).toList(),
+      'skills': skills.map((skill) => skill.toJson()).toList(),
+      'pors': pors.map((por)=>por.toJson()).toList(),
       'following': following
     };
   }
