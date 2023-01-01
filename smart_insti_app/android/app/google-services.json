@@ -1,0 +1,83 @@
+{
+  "project_info": {
+    "project_number": "764436491502",
+    "firebase_url": "https://smart-insti-app-default-rtdb.asia-southeast1.firebasedatabase.app",
+    "project_id": "smart-insti-app",
+    "storage_bucket": "smart-insti-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764436491502:android:feeff862f602d77b0c57ff",
+        "android_client_info": {
+          "package_name": "com.example.smart_insti_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764436491502-0n5e4362tr6hlebe699qq755u208845o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-mNMpkwzi7UMbcIGnL5NWLN1uPRgUtbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764436491502-0n5e4362tr6hlebe699qq755u208845o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "764436491502-qv0k2anm5o6shgq6vnjdsr5148a7bgmi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.smartInstiApp"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:764436491502:android:85becc6a6d48ddf10c57ff",
+        "android_client_info": {
+          "package_name": "dev.fossoverflow.lecture_schedule"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "764436491502-0n5e4362tr6hlebe699qq755u208845o.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyA-mNMpkwzi7UMbcIGnL5NWLN1uPRgUtbg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "764436491502-0n5e4362tr6hlebe699qq755u208845o.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "764436491502-qv0k2anm5o6shgq6vnjdsr5148a7bgmi.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.smartInstiApp"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
