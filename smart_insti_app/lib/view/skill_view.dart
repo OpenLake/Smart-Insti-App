@@ -9,8 +9,10 @@ class SkillView extends StatelessWidget{
 
   @override
   Widget build(BuildContext context){
+    final double width = MediaQuery.of(context).size.width;
+
     return Padding(
-      padding: const EdgeInsets.all(5.0),
+      padding: EdgeInsets.all(width*0.005),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
