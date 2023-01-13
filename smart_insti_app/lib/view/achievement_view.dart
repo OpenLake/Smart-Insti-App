@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../model/achievement.dart';
+import '../constants/text_styles.dart';
 
 class AchievementView extends StatelessWidget{
   final Achievement achievement;
@@ -14,7 +15,7 @@ class AchievementView extends StatelessWidget{
         children: [
           Text(
             achievement.title,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            style: TextStyles.title,
           ),
           Text(achievement.description),
           const Divider(),

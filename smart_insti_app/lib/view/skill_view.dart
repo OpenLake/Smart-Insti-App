@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../model/skill.dart';
+import '../constants/text_styles.dart';
 
 class SkillView extends StatelessWidget{
   final Skill skill;
@@ -18,7 +19,7 @@ class SkillView extends StatelessWidget{
               Text(
                 skill.title,
                 style: 
-                  const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+                  TextStyles.title,
               ),
               const Expanded(child: Text("")),
               Profeciency(skill.profeciency)

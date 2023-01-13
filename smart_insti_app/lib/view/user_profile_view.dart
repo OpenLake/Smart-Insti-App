@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../model/user_data.dart';
+import '../constants/text_styles.dart';
 
 class UserProfileView extends StatelessWidget {
   final UserData profile;
@@ -53,19 +54,12 @@ class UserProfileView extends StatelessWidget {
                     children: [
                       Text(
                         profile.username,
-                        style: const TextStyle(
-                          fontSize: 20, 
-                          fontWeight: FontWeight.w500
-                        ),
+                        style: TextStyles.title,
                         textAlign: TextAlign.left,
                       ),
                       Text(
                         profile.userID,
-                        style: const TextStyle(
-                          fontSize: 14, 
-                          fontWeight: FontWeight.w400, 
-                          color: Color.fromARGB(200, 00, 00, 00)
-                        ),
+                        style: TextStyles.subtitle,
                         textAlign: TextAlign.left,
                       ),
                     ],

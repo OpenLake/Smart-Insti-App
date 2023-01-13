@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../model/por.dart';
+import '../constants/text_styles.dart';
 
 class PorView extends StatelessWidget{
   final Por por;
@@ -14,7 +15,7 @@ class PorView extends StatelessWidget{
         children: [
           Text(
             por.position,
-            style: const TextStyle(fontSize: 20, fontWeight: FontWeight.w500),
+            style: TextStyles.title,
           ),
           Text(por.at),
           const Divider(),
