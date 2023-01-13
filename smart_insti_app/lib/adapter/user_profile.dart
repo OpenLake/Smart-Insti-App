@@ -4,13 +4,14 @@ import '../view/user_profile_view.dart';
 import '../view/user_info_view.dart';
 import '../model/user_data.dart';
 import '../model/user_data_model.dart';
+import '../adapter/edit_user_profile.dart';
 
 class UserProfile extends StatefulWidget{
   final String ldapId;
   final String viewerLdapId;
   const UserProfile({
-    super.key, 
-    required this.ldapId, 
+    super.key,
+    required this.ldapId,
     required this.viewerLdapId
   });
   @override
@@ -39,7 +40,7 @@ class UserProfileState extends State<UserProfile>{
       }
       else{
          type = myProfile.following.contains(newProfile.userID) ?
-             "following" 
+             "following"
              : "not following";
       }
       profile = newProfile;
@@ -50,7 +51,7 @@ class UserProfileState extends State<UserProfile>{
     setState((){
       profileRef = UserDataModel.fetch(widget.ldapId);
       myProfileRef = UserDataModel.fetch(widget.viewerLdapId);
-    });    
+    });
     await getProfile();
   }
 
@@ -69,6 +70,14 @@ class UserProfileState extends State<UserProfile>{
       type = "not following";
     });
   }
+  edit(){
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:(context) =>
+         UserProfileEdit(profile: profile),
+      )
+    );
+  }
 
   @override
   Widget build(BuildContext context){
@@ -78,13 +87,14 @@ class UserProfileState extends State<UserProfile>{
       mainAxisSize: MainAxisSize.min,
       children: [
         UserProfileView(
-          profile: profile, 
-          type: type, 
-          follow: follow, 
-          unfollow: unfollow
+          profile: profile,
+          type: type,
+          follow: follow,
+          unfollow: unfollow,
+          edit: edit,
         ),
         UserInfoView(profile: profile),
       ],
-    ); 
+    );
   }
 }

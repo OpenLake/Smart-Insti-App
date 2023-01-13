@@ -37,6 +37,7 @@ class UserDataModel{
   
   static Future<void> updateProfile(String ldapId, UserData profile) async{
     WidgetsFlutterBinding.ensureInitialized();
+    profile.description.removeWhere((string)=>string == "");
     final db = FirebaseFirestore.instance;
     final docRef = db.collection('users')
       .withConverter(
