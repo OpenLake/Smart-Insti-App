@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../model/user_data.dart';
 import 'edit_achievement_view.dart';
 import 'edit_por_view.dart';
+import 'edit_skills_view.dart';
 
 class EditUserProfileView extends StatefulWidget{
   final UserData profile;
@@ -25,6 +26,10 @@ class EditUserProfileViewState extends State<EditUserProfileView>{
 
   updatePors(pors){
     profile.pors = pors;
+  }
+
+  updateSkills(skills){
+    profile.skills = skills;
   }
 
   @override
@@ -120,6 +125,11 @@ class EditUserProfileViewState extends State<EditUserProfileView>{
             OutlinedButton(
               child: const Text("Edit Skill"),
               onPressed: (){
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EditSkillView(profile.skills, updateSkills),
+                  ),
+                );
               }
             ),
 
