@@ -1,47 +1,47 @@
 import 'package:flutter/material.dart';
-import '../model/achievement.dart';
+import '../model/por.dart';
 
-class EditAchievementView extends StatefulWidget {
-  final List<Achievement> achievements;
-  final Function updateAchievements;
-  const EditAchievementView(this.achievements, this.updateAchievements, {super.key});
+class EditPorView extends StatefulWidget {
+  final List<Por> pors;
+  final Function updatePors;
+  const EditPorView(this.pors, this.updatePors, {super.key});
   @override
-  EditAchievementViewState createState() => EditAchievementViewState();
+  EditPorViewState createState() => EditPorViewState();
 }
 
-class EditAchievementViewState extends State<EditAchievementView> {
-  List<EditAchievement> editComponents = [];
-  List<TextEditingController> titleControllers = [];
-  List<TextEditingController> descriptionControllers = [];
-  late Function updateAchievements;
+class EditPorViewState extends State<EditPorView> {
+  List<EditPor> editComponents = [];
+  List<TextEditingController> positionControllers = [];
+  List<TextEditingController> atControllers = [];
+  late Function updatePors;
 
-  removeComponent(achievement){
+  removeComponent(por){
     setState((){
-      editComponents.remove(achievement);
-      titleControllers.remove(achievement.titleController);
-      descriptionControllers.remove(achievement.descriptionController);
+      editComponents.remove(por);
+      positionControllers.remove(por.positionController);
+      atControllers.remove(por.atController);
     });
   }
   @override
   void initState() {
     super.initState();
-    updateAchievements = widget.updateAchievements;
-    for(Achievement achievement in widget.achievements){
-      titleControllers.add(
+    updatePors = widget.updatePors;
+    for(Por por in widget.pors){
+      positionControllers.add(
         TextEditingController(
-          text: achievement.title,
+          text: por.position,
         )
       );
-      descriptionControllers.add(
+      atControllers.add(
         TextEditingController(
-          text: achievement.description,
+          text: por.at,
         )
       );
       editComponents.add(
-        EditAchievement(
+        EditPor(
           removeComponent,
-          titleControllers.last,
-          descriptionControllers.last,
+          positionControllers.last,
+          atControllers.last,
         )
       );
     }
@@ -49,7 +49,7 @@ class EditAchievementViewState extends State<EditAchievementView> {
   @override
  Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Achievements')),
+      appBar: AppBar(title: const Text('Edit Pors')),
       body: Padding(
         padding: const EdgeInsets.all(10.0),
         child: Column(
@@ -69,14 +69,14 @@ class EditAchievementViewState extends State<EditAchievementView> {
                   child: OutlinedButton(
                     child: const Text('Add Por'),
                     onPressed: () {
-                      titleControllers.add(TextEditingController());
-                      descriptionControllers.add(TextEditingController());
+                      positionControllers.add(TextEditingController());
+                      atControllers.add(TextEditingController());
                       setState(() {
                         editComponents.add(
-                          EditAchievement(
+                          EditPor(
                             removeComponent,
-                            titleControllers.last,
-                            descriptionControllers.last
+                            positionControllers.last,
+                            atControllers.last
                           )
                         );
                       });
@@ -91,16 +91,16 @@ class EditAchievementViewState extends State<EditAchievementView> {
                     child: const Text('Save'),
                     onPressed: () {
                       setState(() {
-                        List<Achievement> updatedPors = [];
+                        List<Por> updatedPors = [];
                         for(int i = 0; i < editComponents.length; i++){
                           updatedPors.add(
-                            Achievement(
-                              title: titleControllers[i].text,
-                              description: descriptionControllers[i].text
+                            Por(
+                              position: positionControllers[i].text,
+                              at: atControllers[i].text
                             )
                           );
                         }
-                        updateAchievements(updatedPors);
+                        updatePors(updatedPors);
                       });
                       Navigator.of(context).pop();
                     },
@@ -115,36 +115,36 @@ class EditAchievementViewState extends State<EditAchievementView> {
   }
 }
 
-class EditAchievement extends StatefulWidget {
+class EditPor extends StatefulWidget {
   final Function removeComponent;
-  final TextEditingController titleController;
-  final TextEditingController descriptionController;
-  const EditAchievement(
+  final TextEditingController positionController;
+  final TextEditingController atController;
+  const EditPor(
     this.removeComponent,
-    this.titleController,
-    this.descriptionController,
+    this.positionController,
+    this.atController,
     {
       super.key,
     }
   );
   @override
-  EditAchievementState createState() => EditAchievementState();
+  EditPorState createState() => EditPorState();
 }
 
-class EditAchievementState extends State<EditAchievement> {
-  late TextEditingController titleController;
-  late TextEditingController descriptionController;
+class EditPorState extends State<EditPor> {
+  late TextEditingController positionController;
+  late TextEditingController atController;
   late Function removeComponent;
 
   @override
   void initState() {
     super.initState();
     removeComponent = widget.removeComponent;
-     titleController =
-         widget.titleController;
+     positionController =
+         widget.positionController;
         // TextEditingController(text: widget.title);
-     descriptionController =
-         widget.descriptionController;
+     atController =
+         widget.atController;
         // TextEditingController(text: widget.description);
   }
 
@@ -156,9 +156,9 @@ class EditAchievementState extends State<EditAchievement> {
           child: Column(
             children: [
               TextField(
-                controller: titleController,
+                controller: positionController,
                 decoration: const InputDecoration(
-                  labelText: "Title",
+                  labelText: "Position",
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                     borderSide: BorderSide(color: Colors.grey, width: 1),
@@ -172,10 +172,9 @@ class EditAchievementState extends State<EditAchievement> {
               const SizedBox(height: 5),
 
               TextField(
-                controller: descriptionController,
-                maxLines: 2,
+                controller: atController,
                 decoration: const InputDecoration(
-                  labelText: "Description",
+                  labelText: "At",
                   enabledBorder: OutlineInputBorder(
                     borderRadius: BorderRadius.all(Radius.circular(5.0)),
                     borderSide: BorderSide(color: Colors.grey, width: 1),

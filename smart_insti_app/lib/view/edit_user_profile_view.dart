@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../model/user_data.dart';
 import 'edit_achievement_view.dart';
+import 'edit_por_view.dart';
 
 class EditUserProfileView extends StatefulWidget{
   final UserData profile;
@@ -20,6 +21,10 @@ class EditUserProfileViewState extends State<EditUserProfileView>{
 
   updateAchievements(achievements){
     profile.achievements = achievements;
+  }
+
+  updatePors(pors){
+    profile.pors = pors;
   }
 
   @override
@@ -106,7 +111,7 @@ class EditUserProfileViewState extends State<EditUserProfileView>{
                 Navigator.of(context).push(
                   MaterialPageRoute(
                     builder: (context) => EditAchievementView(profile.achievements, updateAchievements),
-                  ), 
+                  ),
                 );
               }
             ),
@@ -122,6 +127,11 @@ class EditUserProfileViewState extends State<EditUserProfileView>{
             OutlinedButton(
               child: const Text("Edit PORs"),
               onPressed: (){
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (context) => EditPorView(profile.pors, updatePors),
+                  ),
+                );
               }
             ),
 
