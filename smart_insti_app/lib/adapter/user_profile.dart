@@ -5,6 +5,7 @@ import '../view/user_info_view.dart';
 import '../model/user_data.dart';
 import '../model/user_data_model.dart';
 import '../adapter/edit_user_profile.dart';
+import '../adapter/new_post.dart';
 
 class UserProfile extends StatefulWidget{
   final String ldapId;
@@ -78,6 +79,14 @@ class UserProfileState extends State<UserProfile>{
       )
     );
   }
+  addPost(){
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder:(context) =>
+         const NewPost(),
+      )
+    );
+  }
 
   @override
   Widget build(BuildContext context){
@@ -92,6 +101,7 @@ class UserProfileState extends State<UserProfile>{
           follow: follow,
           unfollow: unfollow,
           edit: edit,
+          addPost: addPost,
         ),
         UserInfoView(profile: profile),
       ],

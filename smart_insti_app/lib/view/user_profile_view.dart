@@ -8,6 +8,7 @@ class UserProfileView extends StatelessWidget {
   final VoidCallback follow;
   final VoidCallback unfollow;
   final VoidCallback edit;
+  final VoidCallback addPost;
 
   const UserProfileView({
     super.key, 
@@ -16,6 +17,7 @@ class UserProfileView extends StatelessWidget {
     required this.follow, 
     required this.unfollow,
     required this.edit,
+    required this.addPost,
   });
 
   @override
@@ -101,10 +103,31 @@ class UserProfileView extends StatelessWidget {
               onPressed: follow,
               child: const Text("Follow"),
             )
-            : type == "self" ? OutlinedButton(
-              onPressed: edit,
-              child: const Text("Edit Profile"),
+
+            : type == "self" ? Row(
+              children: <Widget>[
+                SizedBox(width: width*0.02),
+
+                Expanded(
+                  child: OutlinedButton(
+                    onPressed: edit,
+                    child: const Text("Edit Profile"),
+                  )
+                ),
+
+                SizedBox(width: width*0.02),
+
+                Expanded(
+                  child: ElevatedButton(
+                    onPressed: addPost,
+                    child: const Text("Add Post"),
+                  )
+                ),
+
+                SizedBox(width: width*0.02),
+              ]
             )
+
             : OutlinedButton(
               onPressed: (){
               }, 
