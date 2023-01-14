@@ -2,9 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'post_view.dart';
 import '../model/post.dart';
+import '../model/user_data.dart';
 
 class NewPostView extends StatefulWidget{
-  const NewPostView({super.key});
+  final Function addPost;
+  final UserData profile;
+  const NewPostView(this.addPost, this.profile, {super.key});
 
   @override
   State<NewPostView> createState() => NewPostViewState();
@@ -13,7 +16,13 @@ class NewPostView extends StatefulWidget{
 class NewPostViewState extends State<NewPostView>{
   TextEditingController titleController = TextEditingController();
   TextEditingController contentController = TextEditingController();
+  late Function addPost;
 
+  @override
+  void initState() {
+    super.initState();
+    addPost = widget.addPost;
+  }
   @override
   Widget build(BuildContext context){
     final double width = MediaQuery.of(context).size.width;
@@ -66,7 +75,7 @@ class NewPostViewState extends State<NewPostView>{
                          PostView(
                           post: Post(
                             title: titleController.text,
-                            postedBy: "viewer_id",
+                            postedBy: widget.profile.userID,
                             content: contentController.text,
                           ),
                         ),
@@ -82,9 +91,13 @@ class NewPostViewState extends State<NewPostView>{
                 child: ElevatedButton(
                   child: const Text('Post'),
                   onPressed: () {
-                    setState(() {
-                    });
-                    Navigator.of(context).pop();
+                    addPost(
+                      Post(
+                        title: titleController.text,
+                        postedBy: widget.profile.userID,
+                        content: contentController.text,
+                      )
+                    );
                   },
                 )
               ),

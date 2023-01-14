@@ -83,7 +83,7 @@ class UserProfileState extends State<UserProfile>{
     Navigator.of(context).push(
       MaterialPageRoute(
         builder:(context) =>
-         const NewPost(),
+         NewPost(profile),
       )
     );
   }
