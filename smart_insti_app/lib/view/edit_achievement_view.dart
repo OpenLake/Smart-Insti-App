@@ -10,16 +10,14 @@ class EditAchievementView extends StatefulWidget {
 }
 
 class EditAchievementViewState extends State<EditAchievementView> {
-  List<EditAchievement> editComponents = [];
   List<TextEditingController> titleControllers = [];
   List<TextEditingController> descriptionControllers = [];
   late Function updateAchievements;
 
   removeComponent(achievement){
     setState((){
-      editComponents.remove(achievement);
-      titleControllers.remove(achievement.titleController);
-      descriptionControllers.remove(achievement.descriptionController);
+      achievement.titleController.text = "";
+      achievement.descriptionController.text = "";
     });
   }
   @override
@@ -37,28 +35,27 @@ class EditAchievementViewState extends State<EditAchievementView> {
           text: achievement.description,
         )
       );
-      editComponents.add(
-        EditAchievement(
-          removeComponent,
-          titleControllers.last,
-          descriptionControllers.last,
-        )
-      );
     }
   }
   @override
  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Achievements')),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(width*0.025),
         child: Column(
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: editComponents.length,
+                itemCount: titleControllers.length,
                 itemBuilder: (context, index) {
-                  return editComponents[index];
+                  return EditAchievement(
+                    removeComponent,
+                    titleControllers[index],
+                    descriptionControllers[index]
+                  );
                 },
               ),
             ),
@@ -69,22 +66,15 @@ class EditAchievementViewState extends State<EditAchievementView> {
                   child: OutlinedButton(
                     child: const Text('Add Por'),
                     onPressed: () {
-                      titleControllers.add(TextEditingController());
-                      descriptionControllers.add(TextEditingController());
                       setState(() {
-                        editComponents.add(
-                          EditAchievement(
-                            removeComponent,
-                            titleControllers.last,
-                            descriptionControllers.last
-                          )
-                        );
+                        titleControllers.add(TextEditingController());
+                        descriptionControllers.add(TextEditingController());
                       });
                     },
                   )
                 ),
 
-                const SizedBox(width: 10),
+                SizedBox(width: width*0.01),
 
                 Expanded(
                   child: ElevatedButton(
@@ -92,8 +82,8 @@ class EditAchievementViewState extends State<EditAchievementView> {
                     onPressed: () {
                       setState(() {
                         List<Achievement> updatedPors = [];
-                        for(int i = 0; i < editComponents.length; i++){
-                          updatedPors.add(
+                        for(int i = 0; i < titleControllers.length; i++){
+                            updatedPors.add(
                             Achievement(
                               title: titleControllers[i].text,
                               description: descriptionControllers[i].text
@@ -150,6 +140,8 @@ class EditAchievementState extends State<EditAchievement> {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
     return Row(
       children: [
         Expanded(
@@ -157,35 +149,35 @@ class EditAchievementState extends State<EditAchievement> {
             children: [
               TextField(
                 controller: titleController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Title",
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
+                    borderSide: BorderSide(color: Colors.grey, width: width*0.001),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 5),
+              SizedBox(height: width*0.015),
 
               TextField(
                 controller: descriptionController,
                 maxLines: 2,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Description",
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
+                    borderSide: BorderSide(color: Colors.grey, width: width*0.001),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: width*0.03),
             ]
           ),
         ),

@@ -10,16 +10,14 @@ class EditPorView extends StatefulWidget {
 }
 
 class EditPorViewState extends State<EditPorView> {
-  List<EditPor> editComponents = [];
   List<TextEditingController> positionControllers = [];
   List<TextEditingController> atControllers = [];
   late Function updatePors;
 
   removeComponent(por){
     setState((){
-      editComponents.remove(por);
-      positionControllers.remove(por.positionController);
-      atControllers.remove(por.atController);
+      por.positionController.text = "";
+      por.atController.text = "";
     });
   }
   @override
@@ -37,54 +35,45 @@ class EditPorViewState extends State<EditPorView> {
           text: por.at,
         )
       );
-      editComponents.add(
-        EditPor(
-          removeComponent,
-          positionControllers.last,
-          atControllers.last,
-        )
-      );
     }
   }
   @override
  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Pors')),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(width*0.025),
         child: Column(
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: editComponents.length,
+                itemCount: positionControllers.length,
                 itemBuilder: (context, index) {
-                  return editComponents[index];
+                  return EditPor(
+                    removeComponent, 
+                    positionControllers[index], 
+                    atControllers[index]
+                  );
                 },
               ),
             ),
             Row(
               children: <Widget>[
-
                 Expanded(
                   child: OutlinedButton(
                     child: const Text('Add Por'),
                     onPressed: () {
-                      positionControllers.add(TextEditingController());
-                      atControllers.add(TextEditingController());
                       setState(() {
-                        editComponents.add(
-                          EditPor(
-                            removeComponent,
-                            positionControllers.last,
-                            atControllers.last
-                          )
-                        );
+                        positionControllers.add(TextEditingController());
+                        atControllers.add(TextEditingController());
                       });
                     },
                   )
                 ),
 
-                const SizedBox(width: 10),
+                SizedBox(width: width*0.015),
 
                 Expanded(
                   child: ElevatedButton(
@@ -92,7 +81,7 @@ class EditPorViewState extends State<EditPorView> {
                     onPressed: () {
                       setState(() {
                         List<Por> updatedPors = [];
-                        for(int i = 0; i < editComponents.length; i++){
+                        for(int i = 0; i < positionControllers.length; i++){
                           updatedPors.add(
                             Por(
                               position: positionControllers[i].text,
@@ -142,14 +131,13 @@ class EditPorState extends State<EditPor> {
     removeComponent = widget.removeComponent;
      positionController =
          widget.positionController;
-        // TextEditingController(text: widget.title);
      atController =
          widget.atController;
-        // TextEditingController(text: widget.description);
   }
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     return Row(
       children: [
         Expanded(
@@ -157,34 +145,34 @@ class EditPorState extends State<EditPor> {
             children: [
               TextField(
                 controller: positionController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Position",
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
+                    borderSide: BorderSide(color: Colors.grey, width: width*0.001),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 5),
+              SizedBox(height: width*0.015),
 
               TextField(
                 controller: atController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "At",
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
+                    borderSide: BorderSide(color: Colors.grey, width: width*0.001),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
                   ),
                 ),
               ),
-              const SizedBox(height: 10),
+              SizedBox(height: width*0.03),
             ]
           ),
         ),

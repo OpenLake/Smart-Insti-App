@@ -10,16 +10,13 @@ class EditSkillView extends StatefulWidget {
 }
 
 class EditSkillViewState extends State<EditSkillView> {
-  List<EditSkill> editComponents = [];
   List<TextEditingController> titleControllers = [];
   List<TextEditingController> profeciencyControllers = [];
   late Function updateSkills;
 
   removeComponent(skill){
     setState((){
-      editComponents.remove(skill);
-      titleControllers.remove(skill.titleController);
-      profeciencyControllers.remove(skill.profeciencyController);
+      skill.titleController.text = "";
     });
   }
   @override
@@ -37,54 +34,44 @@ class EditSkillViewState extends State<EditSkillView> {
           text: skill.profeciency.toString(),
         )
       );
-      editComponents.add(
-        EditSkill(
-          removeComponent,
-          titleControllers.last,
-          profeciencyControllers.last,
-        )
-      );
     }
   }
   @override
  Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
+
     return Scaffold(
       appBar: AppBar(title: const Text('Edit Skills')),
       body: Padding(
-        padding: const EdgeInsets.all(10.0),
+        padding: EdgeInsets.all(width*0.015),
         child: Column(
           children: [
             Expanded(
               child: ListView.builder(
-                itemCount: editComponents.length,
+                itemCount: titleControllers.length,
                 itemBuilder: (context, index) {
-                  return editComponents[index];
+                  return EditSkill(removeComponent,
+                    titleControllers[index],
+                    profeciencyControllers[index]
+                  );
                 },
               ),
             ),
             Row(
               children: <Widget>[
-
                 Expanded(
                   child: OutlinedButton(
                     child: const Text('Add Skill'),
                     onPressed: () {
-                      titleControllers.add(TextEditingController());
-                      profeciencyControllers.add(TextEditingController());
                       setState(() {
-                        editComponents.add(
-                          EditSkill(
-                            removeComponent,
-                            titleControllers.last,
-                            profeciencyControllers.last
-                          )
-                        );
+                        titleControllers.add(TextEditingController());
+                        profeciencyControllers.add(TextEditingController());
                       });
                     },
                   )
                 ),
 
-                const SizedBox(width: 10),
+                SizedBox(width: width*0.01),
 
                 Expanded(
                   child: ElevatedButton(
@@ -92,7 +79,7 @@ class EditSkillViewState extends State<EditSkillView> {
                     onPressed: () {
                       setState(() {
                         List<Skill> updatedSkills = [];
-                        for(int i = 0; i < editComponents.length; i++){
+                        for(int i = 0; i < titleControllers.length; i++){
                           updatedSkills.add(
                             Skill(
                               title: titleControllers[i].text,
@@ -154,6 +141,7 @@ class EditSkillState extends State<EditSkill> {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
 
     var stars = <Widget>[];
     for(int i = 1; i <= 5; i++){
@@ -176,26 +164,26 @@ class EditSkillState extends State<EditSkill> {
             children: [
               TextFormField(
                 controller: titleController,
-                decoration: const InputDecoration(
+                decoration: InputDecoration(
                   labelText: "Skill",
                   enabledBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
-                    borderSide: BorderSide(color: Colors.grey, width: 1),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
+                    borderSide: BorderSide(color: Colors.grey, width: width*0.001),
                   ),
                   focusedBorder: OutlineInputBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(5.0)),
+                    borderRadius: BorderRadius.all(Radius.circular(width*0.005)),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 5),
+              SizedBox(height: width*0.005),
 
               Padding(
-                padding: const EdgeInsets.symmetric(vertical: 5),
+                padding: EdgeInsets.symmetric(vertical: width*0.005),
                 child: Row(children: stars,),
               ),
 
-              const SizedBox(height: 10),
+              SizedBox(height: width*0.01),
             ]
           ),
         ),
