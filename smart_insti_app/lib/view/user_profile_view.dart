@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../model/user_data.dart';
+import '../constants/text_styles.dart';
 
 class UserProfileView extends StatelessWidget {
   final UserData profile;
@@ -19,6 +20,7 @@ class UserProfileView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final double width = MediaQuery.of(context).size.width;
     var descriptionList = <Widget>[];
     for(int i = 0; i < profile.description.length; i++){
       descriptionList.add(Text(profile.description[i]));
@@ -32,46 +34,45 @@ class UserProfileView extends StatelessWidget {
         children: [
           // Header
           Padding(
-            padding: const EdgeInsets.all(10.0),
+            padding: EdgeInsets.symmetric(
+              vertical: width*0.01,
+              horizontal: width*0.01
+            ),
             child: Row(
               children: [
                 // Avatar
-                ClipOval(
-                  child: 
-                  (profile.profilePhotoURL != '') ? 
-                  Image(
-                    image: NetworkImage(profile.profilePhotoURL),
-                    height: 60,
+                Expanded(
+                  child: ClipOval(
+                    child:
+                    (profile.profilePhotoURL != '') ?
+                    Image(
+                      image: NetworkImage(profile.profilePhotoURL),
+                    )
+                    : const Image(
+                      image: NetworkImage("https://logodix.com/logo/1070509.png"),
+                    ),
                   )
-                  : const Image(
-                    image: NetworkImage("https://logodix.com/logo/1070509.png"),
-                    height: 60,
-                  ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 10),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        profile.username,
-                        style: const TextStyle(
-                          fontSize: 20, 
-                          fontWeight: FontWeight.w500
+                Expanded(
+                  flex: 4,
+                  child: Padding(
+                    padding: EdgeInsets.only(left: width*0.01),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          profile.username,
+                          style: TextStyles.title,
+                          textAlign: TextAlign.left,
                         ),
-                        textAlign: TextAlign.left,
-                      ),
-                      Text(
-                        profile.userID,
-                        style: const TextStyle(
-                          fontSize: 14, 
-                          fontWeight: FontWeight.w400, 
-                          color: Color.fromARGB(200, 00, 00, 00)
+                        Text(
+                          profile.userID,
+                          style: TextStyles.subtitle,
+                          textAlign: TextAlign.left,
                         ),
-                        textAlign: TextAlign.left,
-                      ),
-                    ],
-                  ),
+                      ],
+                    ),
+                  )
                 ),
               ],
             ),
@@ -79,7 +80,7 @@ class UserProfileView extends StatelessWidget {
 
           // about
           Padding(
-            padding: const EdgeInsets.all(16.0),
+            padding: EdgeInsets.all(width*0.016),
             // replace this column with a list
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -88,11 +89,11 @@ class UserProfileView extends StatelessWidget {
             ),
           ),
 
-          // Buttons
+          // Button
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: EdgeInsets.all(width*0.008),
             child: type == "following" ? OutlinedButton(
-              onPressed: unfollow, 
+              onPressed: unfollow,
               child: const Text("Following"),
             ) :
             type == "not following" ?
