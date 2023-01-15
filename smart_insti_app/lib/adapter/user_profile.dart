@@ -99,20 +99,26 @@ class UserProfileState extends State<UserProfile>{
   @override
   Widget build(BuildContext context){
     getProfile();
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        UserProfileView(
-          profile: profile,
-          type: type,
-          follow: follow,
-          unfollow: unfollow,
-          edit: edit,
-          addPost: addPost,
-        ),
-        UserInfoView(profile: profile, posts: posts),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.ldapId),
+        leading: const Icon(Icons.expand_more),
+      ),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          UserProfileView(
+            profile: profile,
+            type: type,
+            follow: follow,
+            unfollow: unfollow,
+            edit: edit,
+            addPost: addPost,
+          ),
+          UserInfoView(profile: profile, posts: posts),
+        ],
+      )
     );
   }
 }

@@ -21,18 +21,9 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Smart Insti App',
-      home: Scaffold(
-        appBar: AppBar(
-          title: const Text('user_id'),
-          leading: const Icon(Icons.expand_more),
-        ),
-        body: const UserProfile(
-          viewerLdapId: "viewer_id",
-          ldapId: "viewer_id"
-        ),
-      ),
+      home: UserProfile(ldapId: 'viewer_id', viewerLdapId: 'viewer_id'),
     );
   }
 }
