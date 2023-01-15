@@ -5,7 +5,7 @@ import 'package:firebase_core/firebase_core.dart';
 
 import 'firebase_options.dart';
 
-import 'adapter/user_profile.dart';
+import 'adapter/feed.dart';
 
 
 Future<void> main() async {
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Smart Insti App',
-      home: UserProfile(ldapId: 'viewer_id', viewerLdapId: 'viewer_id'),
+      home: Feed(),
     );
   }
 }

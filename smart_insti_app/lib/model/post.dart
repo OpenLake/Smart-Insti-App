@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Post{
+  final String id;
   final String title;
   final String postedBy;
   final Timestamp postedOn;
@@ -8,6 +9,7 @@ class Post{
   List<String> likedBy;
 
   Post({
+    this.id = '',
     required this.title,
     required this.postedBy,
     required this.postedOn,
@@ -23,6 +25,7 @@ class Post{
     final data = snapshot.data();
 
     return Post(
+      id: snapshot.id,
       title: data?['title'],
       postedBy: data?['postedBy'],
       postedOn: data?['postedOn'],

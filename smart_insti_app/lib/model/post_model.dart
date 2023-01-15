@@ -34,4 +34,20 @@ class PostModel{
     }
     return posts;
   }
+
+  static Future<void> like(Post post, String myLdap) async{
+    WidgetsFlutterBinding.ensureInitialized();
+    final db = FirebaseFirestore.instance;
+    await db.collection('posts')
+        .doc(post.id)
+        .update({"likedBy": FieldValue.arrayUnion([myLdap])});
+  }
+
+  static Future<void> unlike(Post post, String myLdap) async{
+    WidgetsFlutterBinding.ensureInitialized();
+    final db = FirebaseFirestore.instance;
+    await db.collection('posts')
+        .doc(post.id)
+        .update({"likedBy": FieldValue.arrayRemove([myLdap])});
+  }
 }

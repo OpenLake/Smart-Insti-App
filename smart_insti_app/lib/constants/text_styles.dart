@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class TextStyles{
-  const TextStyles();
 
   static TextStyle title = const 
     TextStyle(
@@ -14,5 +13,11 @@ class TextStyles{
         fontSize: 14,
         fontWeight: FontWeight.w400,
         color: Color.fromARGB(200, 00, 00, 00)
+      );
+  static TextStyle boldCount = const
+      TextStyle(
+        fontSize: 14,
+        fontWeight: FontWeight.w800,
+        color: Colors.black
       );
 }
