@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 
 import 'post_view.dart';
 import '../model/post.dart';
@@ -76,6 +77,7 @@ class NewPostViewState extends State<NewPostView>{
                           post: Post(
                             title: titleController.text,
                             postedBy: widget.profile.userID,
+                            postedOn: Timestamp.fromDate(DateTime.now()),
                             content: contentController.text,
                           ),
                         ),
@@ -95,6 +97,7 @@ class NewPostViewState extends State<NewPostView>{
                       Post(
                         title: titleController.text,
                         postedBy: widget.profile.userID,
+                        postedOn: Timestamp.fromDate(DateTime.now()),
                         content: contentController.text,
                       )
                     );

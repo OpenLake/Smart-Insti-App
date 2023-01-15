@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smart_insti_app/model/user_data_model.dart';
 
+import '../model/post_model.dart';
 import '../model/user_data.dart';
 import '../model/post.dart';
 import '../view/new_post_view.dart';
@@ -16,7 +16,7 @@ class NewPost extends StatefulWidget{
 class NewPostState extends State<NewPost>{
 
   addPost(Post post) async{
-    await UserDataModel.addPost(widget.profile.userID, post);
+    await PostModel.addPost(post);
     inform();
   }
   inform(){

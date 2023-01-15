@@ -1,12 +1,20 @@
 import 'package:flutter/material.dart';
 
+import '../model/post.dart';
+import 'post_brief_view.dart';
+
 class UserInfoPostsView extends StatelessWidget{
-  const UserInfoPostsView({super.key});
+  final List<Post> posts;
+  const UserInfoPostsView(this.posts, {super.key});
 
   @override
   Widget build(BuildContext context){
-    return const Center(
-      child: Text("Posts will be implemented along with feed")
+    return ListView(
+      children: posts.isNotEmpty ?
+        posts.map((post){
+          return PostBriefView(post: post);
+        }).toList()
+      : <Widget>[],
     );
   }
 }

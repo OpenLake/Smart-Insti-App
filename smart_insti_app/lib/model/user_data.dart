@@ -1,6 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-import 'post.dart';
 import 'achievement.dart';
 import 'skill.dart';
 import 'por.dart';
@@ -10,7 +9,6 @@ class UserData{
   String userID;
   List<String> description;
   String profilePhotoURL;
-  List<Post> posts;
   List<Achievement> achievements;
   List<Skill> skills;
   List<Por> pors;
@@ -20,7 +18,6 @@ class UserData{
     required this.username,
     required this.description,
     this.profilePhotoURL = "",
-    required this.posts,
     required this.achievements,
     required this.skills,
     required this.pors,
@@ -41,10 +38,6 @@ class UserData{
       profilePhotoURL: (data?['profilePhoto'] != null) ? 
         (data?['profilePhoto']) 
         : '',
-      posts: 
-        data?['posts'] is Iterable ? 
-          List.from(data?['posts']) 
-          : <Post>[], 
       achievements: 
         data?['achievements'] is Iterable ?
           List.from(data?['achievements']).map((hashMap)=> Achievement.fromJson(hashMap)).toList()
@@ -68,7 +61,6 @@ class UserData{
     return {
       'name': username,
       'description': description,
-      'posts': posts,
       'achievements': achievements.map((achievement) => achievement.toJson()).toList(),
       'skills': skills.map((skill) => skill.toJson()).toList(),
       'pors': pors.map((por)=>por.toJson()).toList(),

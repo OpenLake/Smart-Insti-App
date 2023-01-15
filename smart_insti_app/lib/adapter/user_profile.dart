@@ -4,6 +4,8 @@ import '../view/user_profile_view.dart';
 import '../view/user_info_view.dart';
 import '../model/user_data.dart';
 import '../model/user_data_model.dart';
+import '../model/post.dart';
+import '../model/post_model.dart';
 import '../adapter/edit_user_profile.dart';
 import '../adapter/new_post.dart';
 
@@ -21,8 +23,10 @@ class UserProfile extends StatefulWidget{
 
 class UserProfileState extends State<UserProfile>{
   var profile = UserDataModel.profile;
+  var posts = <Post>[];
   late Future<UserData> profileRef;
   late Future<UserData> myProfileRef;
+  late Future<List<Post>> postsRef;
   var type = "unknown";
 
   @override
@@ -30,11 +34,13 @@ class UserProfileState extends State<UserProfile>{
     super.initState;
     profileRef = UserDataModel.fetch(widget.ldapId);
     myProfileRef = UserDataModel.fetch(widget.viewerLdapId);
+    postsRef = PostModel.getPosts([widget.ldapId]);
   }
 
   Future<void> getProfile() async {
     final newProfile  = await profileRef;
     final myProfile = await myProfileRef;
+    final newPosts = await postsRef;
     setState(() {
       if(myProfile.userID == newProfile.userID){
         type = "self";
@@ -45,6 +51,7 @@ class UserProfileState extends State<UserProfile>{
              : "not following";
       }
       profile = newProfile;
+      posts = newPosts;
     });
   }
 
@@ -52,6 +59,7 @@ class UserProfileState extends State<UserProfile>{
     setState((){
       profileRef = UserDataModel.fetch(widget.ldapId);
       myProfileRef = UserDataModel.fetch(widget.viewerLdapId);
+      postsRef = PostModel.getPosts([widget.ldapId]);
     });
     await getProfile();
   }
@@ -103,7 +111,7 @@ class UserProfileState extends State<UserProfile>{
           edit: edit,
           addPost: addPost,
         ),
-        UserInfoView(profile: profile),
+        UserInfoView(profile: profile, posts: posts),
       ],
     );
   }

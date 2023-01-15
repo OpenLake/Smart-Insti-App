@@ -13,7 +13,6 @@ class UserDataModel{
     userID: "",
     description: [],
     profilePhotoURL: "",
-    posts: <Post>[],
     achievements: <Achievement>[],
     skills: <Skill>[],
     pors: <Por>[],
@@ -71,12 +70,5 @@ class UserDataModel{
     await db.collection('users')
         .doc(myLdap)
         .update({"following": FieldValue.arrayRemove([followLdap])});
-  }
-  static Future<void> addPost(String myLdap, Post post) async{
-    WidgetsFlutterBinding.ensureInitialized();
-    final db = FirebaseFirestore.instance;
-    await db.collection('users')
-        .doc(myLdap)
-        .update({"posts": FieldValue.arrayUnion([post.toJson()])});
   }
 }
