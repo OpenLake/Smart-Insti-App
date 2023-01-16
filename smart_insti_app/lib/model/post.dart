@@ -1,5 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
+import 'comment.dart';
+
 class Post{
   final String id;
   final String title;
@@ -7,6 +9,7 @@ class Post{
   final Timestamp postedOn;
   final String content;
   List<String> likedBy;
+  List<Comment> comments;
 
   Post({
     this.id = '',
@@ -14,9 +17,11 @@ class Post{
     required this.postedBy,
     required this.postedOn,
     required this.content,
-    List<String>? likedBy
+    List<String>? likedBy,
+    List<Comment>? comments
   })
-      : likedBy = (likedBy == null) ? <String>[] : likedBy;
+      : likedBy = (likedBy == null) ? <String>[] : likedBy,
+      comments = (comments == null) ? <Comment>[] : comments;
 
   factory Post.fromFirestore(
     DocumentSnapshot<Map<String, dynamic>> snapshot,
@@ -31,6 +36,10 @@ class Post{
       postedOn: data?['postedOn'],
       content: data?['content'],
       likedBy: data?['likedBy'].cast<String>(),
+      comments:
+        data?['comments'] is Iterable ?
+          List.from(data?['comments']).map((hashMap)=> Comment.fromJson(hashMap)).toList()
+          : <Comment>[]
     );
   }
 

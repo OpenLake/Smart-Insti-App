@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'user_data.dart';
 import 'achievement.dart';
-import 'post.dart';
 import 'por.dart';
 import 'skill.dart';
 
