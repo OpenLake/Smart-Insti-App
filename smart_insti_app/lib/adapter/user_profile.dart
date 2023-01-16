@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../view/user_profile_view.dart';
 import '../view/user_info_view.dart';
+import '../view/user_drawer.dart';
 import '../model/user_data.dart';
 import '../model/user_data_model.dart';
 import '../model/post.dart';
@@ -102,8 +103,8 @@ class UserProfileState extends State<UserProfile>{
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.ldapId),
-        leading: const Icon(Icons.expand_more),
       ),
+      drawer: const UserDrawer(),
       body: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,

@@ -5,6 +5,7 @@ import '../model/user_data.dart';
 import '../model/post.dart';
 import '../model/post_model.dart';
 import '../view/post_feed_view.dart';
+import '../view/user_drawer.dart';
 
 class Feed extends StatefulWidget{
   const Feed({super.key});
@@ -65,8 +66,8 @@ class FeedState extends State<Feed>{
     return Scaffold(
        appBar: AppBar(
          title: const Text("Feed"),
-         leading: const Icon(Icons.expand_more),
        ),
+       drawer: const UserDrawer(),
        body: ListView(
         children: posts.isNotEmpty ?
         posts.map((post){
