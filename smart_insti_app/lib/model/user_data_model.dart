@@ -70,4 +70,13 @@ class UserDataModel{
         .doc(myLdap)
         .update({"following": FieldValue.arrayRemove([followLdap])});
   }
+
+  static Future<bool> checkUser(String ldapId) async{
+    WidgetsFlutterBinding.ensureInitialized();
+    final db = FirebaseFirestore.instance;
+    var doc = await db.collection('users')
+        .doc(ldapId)
+        .get();
+    return doc.exists;
+  }
 }

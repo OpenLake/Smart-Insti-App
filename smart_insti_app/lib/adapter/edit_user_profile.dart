@@ -51,7 +51,6 @@ class UserProfileEditState extends State<UserProfileEdit>{
     return Scaffold(
       appBar: AppBar(
         title: const Text('Edit profile'),
-        leading: const Icon(Icons.expand_more),
       ),
       body: EditUserProfileView(profile, update),
     );

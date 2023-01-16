@@ -7,6 +7,7 @@ import '../constants/text_styles.dart';
 import '../adapter/new_post.dart';
 import '../adapter/feed.dart';
 import '../adapter/edit_user_profile.dart';
+import 'search_user_view.dart';
 
 class UserDrawer extends StatefulWidget{
   const UserDrawer({super.key});
@@ -144,6 +145,25 @@ class UserDrawerState extends State<UserDrawer>{
                 MaterialPageRoute(
                   builder:(context) =>
                    const Feed(),
+                )
+              );
+            },
+          ),
+
+          const Divider(),
+
+          // Search User Button
+          TextButton(
+            child: const ListTile(
+              leading: Icon(Icons.search),
+              title: Text("Search User"),
+            ),
+            onPressed: (){
+              Navigator.of(context).pop();
+              Navigator.of(context).push(
+                MaterialPageRoute(
+                  builder:(context) =>
+                   const SearchUserView(),
                 )
               );
             },
