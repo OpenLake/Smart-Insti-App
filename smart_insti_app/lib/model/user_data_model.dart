@@ -13,7 +13,6 @@ class UserDataModel{
     userID: "",
     description: [],
     profilePhotoURL: "",
-    posts: <Post>[],
     achievements: <Achievement>[],
     skills: <Skill>[],
     pors: <Por>[],

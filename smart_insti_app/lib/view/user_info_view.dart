@@ -5,11 +5,12 @@ import '../view/user_info_achievements_view.dart';
 import '../view/user_info_skills_view.dart';
 import '../view/user_info_pors_view.dart';
 import '../model/user_data.dart';
+import '../model/post.dart';
 
 class UserInfoView extends StatefulWidget {
   final UserData profile; 
-
-  const UserInfoView({ super.key, required this.profile });
+  final List<Post> posts;
+  const UserInfoView({ super.key, required this.profile, required this.posts});
   @override
   State<UserInfoView> createState() => UserInfoViewState();
 }
@@ -64,7 +65,7 @@ class UserInfoViewState extends State<UserInfoView>
           ),
           child: 
               (_selectedTabBar == 0) ? 
-                const UserInfoPostsView()
+                UserInfoPostsView(widget.posts)
               :(_selectedTabBar == 1) ? 
                 UserInfoAchievementsView(widget.profile.achievements)
               :(_selectedTabBar == 2) ? 
