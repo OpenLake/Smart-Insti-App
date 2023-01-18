@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import '../view/user_profile_view.dart';
 import '../view/user_info_view.dart';
+import '../view/user_drawer.dart';
 import '../model/user_data.dart';
 import '../model/user_data_model.dart';
 import '../model/post.dart';
@@ -99,20 +100,26 @@ class UserProfileState extends State<UserProfile>{
   @override
   Widget build(BuildContext context){
     getProfile();
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      mainAxisSize: MainAxisSize.min,
-      children: [
-        UserProfileView(
-          profile: profile,
-          type: type,
-          follow: follow,
-          unfollow: unfollow,
-          edit: edit,
-          addPost: addPost,
-        ),
-        UserInfoView(profile: profile, posts: posts),
-      ],
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(widget.ldapId),
+      ),
+      drawer: const UserDrawer(),
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          UserProfileView(
+            profile: profile,
+            type: type,
+            follow: follow,
+            unfollow: unfollow,
+            edit: edit,
+            addPost: addPost,
+          ),
+          UserInfoView(profile: profile, posts: posts),
+        ],
+      )
     );
   }
 }

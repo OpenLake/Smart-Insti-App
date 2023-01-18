@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 
 import 'user_data.dart';
 import 'achievement.dart';
-import 'post.dart';
 import 'por.dart';
 import 'skill.dart';
 
@@ -70,5 +69,14 @@ class UserDataModel{
     await db.collection('users')
         .doc(myLdap)
         .update({"following": FieldValue.arrayRemove([followLdap])});
+  }
+
+  static Future<bool> checkUser(String ldapId) async{
+    WidgetsFlutterBinding.ensureInitialized();
+    final db = FirebaseFirestore.instance;
+    var doc = await db.collection('users')
+        .doc(ldapId)
+        .get();
+    return doc.exists;
   }
 }
