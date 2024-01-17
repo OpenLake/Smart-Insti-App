@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_insti_app/constants/constants.dart';
+import 'package:smart_insti_app/provider/user_Provider.dart';
 import 'package:smart_insti_app/routes/routes.dart';
 
 void main() {
@@ -12,17 +13,18 @@ class SmartInstiApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // return MultiProvider(
-    //   providers: [
-    //     /// Add Providers here
-    //   ],
-    return  MaterialApp.router(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => UserProvider()),
+      ],
+      child: MaterialApp.router(
         title: AppConstants.name,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.seedColor),
           useMaterial3: true,
         ),
         routerConfig: routes,
-      );
+      ),
+    );
   }
 }
