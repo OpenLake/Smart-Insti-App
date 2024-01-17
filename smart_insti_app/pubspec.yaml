@@ -40,6 +40,7 @@ dependencies:
   responsive_framework: ^1.1.1
   awesome_notifications: ^0.9.1
   http: ^1.2.0
+  flutter_secure_storage: ^9.0.0
 
 dev_dependencies:
   flutter_test:
