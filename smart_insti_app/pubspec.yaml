@@ -39,6 +39,7 @@ dependencies:
   go_router: ^13.0.1
   responsive_framework: ^1.1.1
   awesome_notifications: ^0.9.1
+  http: ^1.2.0
 
 dev_dependencies:
   flutter_test:
