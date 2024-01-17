@@ -18,7 +18,7 @@ class SmartInstiApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserProvider()),
       ],
       child: MaterialApp.router(
-        title: AppConstants.name,
+        title: AppConstants.appName,
         theme: ThemeData(
           colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.seedColor),
           useMaterial3: true,

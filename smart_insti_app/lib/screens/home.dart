@@ -9,11 +9,11 @@ class Home extends StatelessWidget {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text(AppConstants.name),
+          title: const Text(AppConstants.appName),
           backgroundColor: Colors.lightBlueAccent,
         ),
         body: const Center(
-          child: Text(AppConstants.name),
+          child: Text(AppConstants.appName),
         ),
       ),
     );
