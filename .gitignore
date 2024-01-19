@@ -6,6 +6,9 @@ node_modules/
 
 ## Frontend ignored file (Root level)
 
+
+## Frontend ignored file (Root level)
+
 # Miscellaneous
 frontend/*.class
 frontend/*.log
