@@ -41,6 +41,9 @@ dependencies:
   awesome_notifications: ^0.9.1
   http: ^1.2.0
   flutter_secure_storage: ^9.0.0
+  google_fonts: ^6.1.0
+  search_choices: ^2.2.7
+  calendar_date_picker2: ^0.5.3
 
 dev_dependencies:
   flutter_test:
