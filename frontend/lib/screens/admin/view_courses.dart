@@ -31,6 +31,6 @@ class ViewCourses extends StatelessWidget {
           child: Text('View Courses'),
         ),
       ),
-    );;
+    );
   }
 }

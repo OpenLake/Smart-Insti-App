@@ -34,6 +34,5 @@ class ViewFaculty extends StatelessWidget {
         ),
       ),
     );
-    ;
   }
 }
