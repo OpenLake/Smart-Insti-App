@@ -63,7 +63,20 @@ class AdminHome extends StatelessWidget {
                   primaryColor: Colors.orangeAccent.shade100,
                   secondaryColor: Colors.orangeAccent.shade200,
                 ),
-
+                MenuTile(
+                  title: "Mess\nMenu",
+                  onTap: () => context.push('/mess_menu'),
+                  icon: Icons.add,
+                  primaryColor: Colors.pinkAccent.shade100,
+                  secondaryColor: Colors.pinkAccent.shade200,
+                ),
+                MenuTile(
+                  title: "Add\nMess Menu",
+                  onTap: () => context.push('/add_mess_menu'),
+                  icon: Icons.add,
+                  primaryColor: Colors.blueAccent.shade100,
+                  secondaryColor: Colors.blueAccent.shade200,
+                ),
               ],
             ),
           ),
