@@ -36,6 +36,17 @@ class Branches {
 
 class LayoutConstants{
 
+class StudentRoles {
+  static List<DropdownMenuItem<String>> studentRoleList = const [
+    DropdownMenuItem<String>(value: "Student", child: Text("Student")),
+    DropdownMenuItem<String>(value: "Class Representative", child: Text("Class Representative")),
+    DropdownMenuItem<String>(value: "Cultural Secretary", child: Text("Cultural Secretary")),
+    DropdownMenuItem<String>(value: "Teaching Assistant", child: Text("Teaching Assistant")),
+    DropdownMenuItem<String>(value: "Vice President", child: Text("Vice President")),
+    DropdownMenuItem<String>(value: "Monitor", child: Text("Monitor")),
+    DropdownMenuItem<String>(value: "President", child: Text("President")),
+    DropdownMenuItem<String>(value: "Instructor", child: Text("Instructor")),
+  ];
 }
 
 class Validators{
