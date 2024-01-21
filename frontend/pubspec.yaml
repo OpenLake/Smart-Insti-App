@@ -46,6 +46,9 @@ dependencies:
   calendar_date_picker2: ^0.5.3
   logger: ^2.0.2+1
   flutter_typeahead: ^5.0.2
+  file_picker: ^6.1.1
+  grouped_list: ^5.1.2
+  slide_switcher: ^1.1.2
 
 dev_dependencies:
   flutter_test:
