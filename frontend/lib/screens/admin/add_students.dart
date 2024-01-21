@@ -156,119 +156,18 @@ class AddStudents extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.tealAccent.withOpacity(0.4),
-                          ),
-                          child: SearchChoices.single(
-                            style: TextStyle(
-                              color: Colors.teal.shade900,
-                              fontSize: 15,
-                              fontFamily: "RobotoFlex",
-                            ),
-                            items: const [
-                              DropdownMenuItem(
-                                  value: "Computer Science",
-                                  child: Text("Computer Science")),
-                              DropdownMenuItem(
-                                  value: "Electrical Engineering",
-                                  child: Text("Electrical Engineering")),
-                              DropdownMenuItem(
-                                  value: "Mechanical Engineering",
-                                  child: Text("Mechanical Engineering")),
-                            ],
-                            value: "Computer Science",
-                            hint: "Select one",
-                            searchHint: null,
-                            onChanged: (value) {},
-                            dialogBox: false,
-                            isExpanded: true,
-                            menuConstraints: BoxConstraints.tight(
-                                const Size.fromHeight(350)),
-                            menuBackgroundColor: Colors.tealAccent.shade100,
-                          ),
+                        ChoiceSelector(
+                          onChanged: (value) => studentProvider.branch = value!,
+                          value: studentProvider.branch,
+                          items: Branches.branchList,
+                          hint: "Select Branch",
                         ),
                         const SizedBox(height: 30),
-                        Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(15),
-                            color: Colors.tealAccent.withOpacity(0.4),
-                          ),
-                          child: SearchChoices.single(
-                            style: TextStyle(
-                              color: Colors.teal.shade900,
-                              fontSize: 15,
-                              fontFamily: "RobotoFlex",
-                            ),
-                            items: const [
-                              DropdownMenuItem(
-                                value: "Hostel A",
-                                child: Text("Hostel A"),
-                              ),
-                              DropdownMenuItem(
-                                value: "Hostel B",
-                                child: Text("Hostel B"),
-                              ),
-                              DropdownMenuItem(
-                                value: "Hostel C",
-                                child: Text("Hostel C"),
-                              ),
-                            ],
-                            value: "Hostel A",
-                            hint: "Select one",
-                            searchHint: null,
-                            onChanged: (value) {},
-                            dialogBox: false,
-                            isExpanded: true,
-                            menuConstraints: BoxConstraints.tight(
-                                const Size.fromHeight(350)),
-                            menuBackgroundColor: Colors.tealAccent.shade100,
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        ElevatedButton(
-                          onPressed: () => showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                title: const Text("Select Year"),
-                                content: SizedBox(
-                                  width: 300,
-                                  height: 300,
-                                  child: YearPicker(
-                                    firstDate: DateTime(DateTime.now().year),
-                                    lastDate:
-                                        DateTime(DateTime.now().year + 10),
-                                    selectedDate: DateTime.now(),
-                                    onChanged: (value) {
-                                      context.pop();
-                                    },
-                                  ),
-                                ),
-                              );
-                            },
-                          ),
-                          style: ButtonStyle(
-                            shape: MaterialStateProperty.all<
-                                RoundedRectangleBorder>(RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(15),
-                            )),
-                            minimumSize: MaterialStateProperty.all(
-                              const Size.fromHeight(60),
-                            ),
-                          ),
-                          child: Align(
-                            alignment: Alignment.centerLeft,
-                            child: Row(
-                              children: [
-                                const Icon(Icons.calendar_month),
-                                const SizedBox(width: 10),
-                                Text(
-                                    "Graduation Year : ${DateTime.now().year}"),
-                              ],
-                            ),
-                          ),
+                        ChoiceSelector(
+                          onChanged: (value) => studentProvider.role = value!,
+                          value: studentProvider.role,
+                          items: StudentRoles.studentRoleList,
+                          hint: "Select student role",
                         ),
                         const SizedBox(height: 30),
                         Align(
