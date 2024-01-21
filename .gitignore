@@ -2,7 +2,9 @@
 ## Backend ignored file (Root level)
 
 node_modules/
-*.kt
+
+
+## Frontend ignored file (Root level)
 
 
 ## Frontend ignored file (Root level)
