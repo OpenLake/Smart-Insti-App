@@ -9,12 +9,53 @@ class AdminHome extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AdminProvider adminProvider = Provider.of<AdminProvider>(context);
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
         body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) =>
-              [const CollapsingAppBar(title: 'Welcome\nAdmin')],
+          headerSliverBuilder: (context, innerBoxIsScrolled) => [
+            CollapsingAppBar(
+                title: 'Welcome\nAdmin',
+                bottom: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 10),
+                  child: Consumer<AdminProvider>(
+                    builder: (_, adminProvider, ___) {
+                      if (adminProvider.toggleSearch) {
+                        return SearchBar(
+                          controller: adminProvider.searchController,
+                          onChanged: (value) => adminProvider.refreshTiles(),
+                          leading: IconButton(
+                            icon: const Icon(Icons.arrow_back),
+                            onPressed: () {
+                              adminProvider.toggleSearchBar();
+                              adminProvider.searchController.clear();
+                              adminProvider.refreshTiles();
+                            },
+                          ),
+                          shadowColor: MaterialStateProperty.all(Colors.transparent),
+                        );
+                      } else {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            IconButton(
+                                iconSize: 30,
+                                onPressed: () => adminProvider.toggleSearchBar(),
+                                icon: const Icon(Icons.search)),
+                            PopupMenuButton(itemBuilder: (context){
+                              return [
+                                const PopupMenuItem(value: "about", child: Text("About Us")),
+                                const PopupMenuItem(value: "logout", child: Text("Log Out")),
+                              ];
+                            }),
+                          ],
+                        );
+                      }
+                    },
+                  ),
+                ))
+          ],
           body: Container(
             color: Colors.white,
             child: GridView.count(
