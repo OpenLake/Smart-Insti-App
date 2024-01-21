@@ -1,28 +1,22 @@
 import 'package:flutter/material.dart';
 
 class CollapsingAppBar extends StatelessWidget {
-  const CollapsingAppBar({super.key, required this.title});
+  const CollapsingAppBar({super.key, required this.title, required this.bottom});
 
   final String title;
+  final Widget bottom;
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
       backgroundColor: Colors.white,
+      surfaceTintColor: Colors.white,
       expandedHeight: 300,
       floating: true,
       pinned: true,
       bottom: PreferredSize(
         preferredSize: const Size.fromHeight(60),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.end,
-          children: [
-            IconButton(
-                iconSize: 30, onPressed: () {}, icon: const Icon(Icons.search)),
-            IconButton(
-                iconSize: 30, onPressed: () {}, icon: const Icon(Icons.menu)),
-          ],
-        ),
+        child: bottom,
       ),
       flexibleSpace: FlexibleSpaceBar(
         background: Center(
