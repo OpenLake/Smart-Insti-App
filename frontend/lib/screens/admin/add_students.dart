@@ -175,6 +175,19 @@ class AddStudents extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               _formKey.currentState!.validate();
+                              studentProvider.addStudent();
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                SnackBar(
+                                  elevation: 0,
+                                  behavior: SnackBarBehavior.floating,
+                                  backgroundColor: Colors.transparent,
+                                  content: AwesomeSnackbarContent(
+                                    title: 'Success',
+                                    message: 'You have successfully added a student to the database.',
+                                    contentType: ContentType.success,
+                                  ),
+                                ),
+                              );
                             },
                             style: ButtonStyle(
                                 minimumSize: MaterialStateProperty.all(
