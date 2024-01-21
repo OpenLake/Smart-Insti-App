@@ -1,8 +1,11 @@
+import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-import 'package:search_choices/search_choices.dart';
+import 'package:smart_insti_app/components/choice_selector.dart';
 import 'package:smart_insti_app/components/text_divider.dart';
+import 'package:smart_insti_app/constants/constants.dart';
+import 'package:smart_insti_app/provider/student_provider.dart';
 
 class AddStudents extends StatelessWidget {
   AddStudents({super.key});
@@ -11,6 +14,7 @@ class AddStudents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    StudentProvider studentProvider = Provider.of<StudentProvider>(context, listen: false);
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
@@ -43,21 +47,15 @@ class AddStudents extends StatelessWidget {
                       const SizedBox(width: 30),
                       ElevatedButton(
                         onPressed: () {},
-                        style: ButtonStyle(
-                            minimumSize:
-                                MaterialStateProperty.all(const Size(200, 60))),
+                        style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
                     ],
                   ),
                 ),
-
-
                 const SizedBox(height: 30),
                 const TextDivider(text: "OR"),
                 const SizedBox(height: 30),
-
-
                 Container(
                   alignment: Alignment.topLeft,
                   padding: const EdgeInsets.only(left: 30),
@@ -67,8 +65,6 @@ class AddStudents extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
-
-
                 Form(
                   key: _formKey,
                   child: Padding(
@@ -76,18 +72,14 @@ class AddStudents extends StatelessWidget {
                     child: Column(
                       children: [
                         TextFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter student name';
-                            }
-                            return null;
-                          },
+                          controller: studentProvider.studentNameController,
+                          validator: (value) => Validators.nameValidator(value),
                           decoration: InputDecoration(
                             contentPadding: const EdgeInsets.all(20),
-                            hintText: "Enter Name",
+                            hintText: "Enter Student Name",
                             filled: true,
                             hintStyle: TextStyle(
-                              color: Colors.teal.shade900,
+                              color: Colors.teal.shade900.withOpacity(0.5),
                               fontSize: 15,
                               fontFamily: "RobotoFlex",
                             ),
@@ -100,17 +92,14 @@ class AddStudents extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
                         TextFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter student roll number';
-                            }
-                            return null;
-                          },
+                          controller: studentProvider.studentRollNoController,
+                          validator: (value) => Validators.rollNumberValidator(value),
                           decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(20),
                             hintText: "Enter Roll Number",
                             filled: true,
                             hintStyle: TextStyle(
-                              color: Colors.teal.shade900,
+                              color: Colors.teal.shade900.withOpacity(0.5),
                               fontSize: 15,
                               fontFamily: "RobotoFlex",
                             ),
@@ -123,28 +112,14 @@ class AddStudents extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
                         TextFormField(
+                          controller: studentProvider.studentEmailController,
+                          validator: (value) => Validators.emailValidator(value),
                           decoration: InputDecoration(
+                            contentPadding: const EdgeInsets.all(20),
                             hintText: "Enter Student Mail",
                             filled: true,
                             hintStyle: TextStyle(
-                              color: Colors.teal.shade900,
-                              fontSize: 15,
-                              fontFamily: "RobotoFlex",
-                            ),
-                            fillColor: Colors.tealAccent.withOpacity(0.4),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 30),
-                        TextFormField(
-                          decoration: InputDecoration(
-                            hintText: "Enter Phone Number",
-                            filled: true,
-                            hintStyle: TextStyle(
-                              color: Colors.teal.shade900,
+                              color: Colors.teal.shade900.withOpacity(0.5),
                               fontSize: 15,
                               fontFamily: "RobotoFlex",
                             ),
@@ -189,9 +164,7 @@ class AddStudents extends StatelessWidget {
                                 ),
                               );
                             },
-                            style: ButtonStyle(
-                                minimumSize: MaterialStateProperty.all(
-                                    const Size(200, 60))),
+                            style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                             child: const Text("Add Student"),
                           ),
                         ),
