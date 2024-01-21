@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 
+import '../../components/text_divider.dart';
 import '../../provider/menu_provider.dart';
 
 class AddMessMenu extends StatelessWidget {
@@ -16,61 +17,84 @@ class AddMessMenu extends StatelessWidget {
         appBar: AppBar(
           title: const Text('Add Mess Menu'),
         ),
-        body: Column(
-          children: [
-            Consumer<MenuProvider>(
-              builder: (_, menuProvider, ___) {
-                return Row(
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              Container(
+                alignment: Alignment.topLeft,
+                padding: const EdgeInsets.only(left: 30),
+                child: const Text(
+                  "Spreadsheet Entry",
+                  style: TextStyle(fontSize: 32, fontFamily: "RobotoFlex"),
+                ),
+              ),
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.only(left: 30),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    Container(
-                      padding: const EdgeInsets.only(left: 10,top: 100),
-                      child: SlideSwitcher(
-                        onSelect: (index) {},
-                        containerHeight: 550,
-                        containerWight: 70,
-                        direction: Axis.vertical,
-
-                        slidersColors: [Colors.greenAccent],
-                        containerColor: Colors.grey.shade300,
-                        children: const [
-                          Text('Sun'),
-                          Text('Mon'),
-                          Text('Tue'),
-                          Text('Wed'),
-                          Text('Thu'),
-                          Text('Fri'),
-                          Text('Sat'),
-                        ],
-                      ),
+                    const Text(
+                      "Upload file here",
+                      style: TextStyle(fontSize: 16),
                     ),
-                    Container(
-                      child: SizedBox(
-                        height: 600,
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Container(
-                            child: SlideSwitcher(
-                              onSelect: (index) {},
-                              containerHeight: 60,
-                              containerWight: 300,
-                              slidersColors: [Colors.greenAccent],
-                              containerColor: Colors.grey.shade300,
-                              children: [
-                                Container(width: 70,child: Text('Breakfast')),
-                                Text('Lunch'),
-                                Text('Snacks'),
-                                Text('Dinner'),
-                              ],
-                            ),
-                          ),
-                        ),
-                      ),
+                    const SizedBox(width: 30),
+                    ElevatedButton(
+                      onPressed: () => {},
+                      style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                      child: const Text("Upload Spreadsheet"),
                     ),
                   ],
-                );
-              },
-            ), // many more parameters available
-          ],
+                ),
+              ),
+              const SizedBox(height: 30),
+              const TextDivider(text: "OR"),
+              const SizedBox(height: 30),
+              SlideSwitcher(
+                onSelect: (index) {},
+                containerHeight: 70,
+                containerWight: 390,
+                slidersColors: [Colors.greenAccent],
+                containerColor: Colors.grey.shade300,
+                children: [
+                  Container(width: 70, child: Text('Breakfast')),
+                  Text('Lunch'),
+                  Text('Snacks'),
+                  Text('Dinner'),
+                ],
+              ),
+              Consumer<MenuProvider>(
+                builder: (_, menuProvider, ___) {
+                  return Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.only(left: 15, top: 30),
+                        child: SlideSwitcher(
+                          onSelect: (index) {},
+                          containerHeight: 550,
+                          containerWight: 70,
+                          containerBorderRadius: 20,
+                          direction: Axis.vertical,
+                          slidersColors: [Colors.tealAccent.shade700.withOpacity(0.7)],
+                          containerColor: Colors.tealAccent.shade100,
+                          children: [
+                            Text('Sun', style: TextStyle(color: Colors.teal.shade900,fontSize: 16)),
+                            Text('Mon', style: TextStyle(color: Colors.teal.shade900,fontSize: 16)),
+                            Text('Tue', style: TextStyle(color: Colors.teal.shade900,fontSize: 16)),
+                            Text('Wed', style: TextStyle(color: Colors.teal.shade900,fontSize: 16)),
+                            Text('Thu', style: TextStyle(color: Colors.teal.shade900,fontSize: 16)),
+                            Text('Fri', style: TextStyle(color: Colors.teal.shade900,fontSize: 16)),
+                            Text('Sat', style: TextStyle(color: Colors.teal.shade900,fontSize: 16)),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(height: 30)
+                    ],
+                  );
+                },
+              ), // many more parameters available
+            ],
+          ),
         ),
       ),
     );
