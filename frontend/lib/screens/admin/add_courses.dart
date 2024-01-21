@@ -1,31 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
+import 'package:smart_insti_app/provider/courses_provider.dart';
 import '../../components/text_divider.dart';
 
 class AddCourses extends StatelessWidget {
   AddCourses({super.key});
 
   final _formKey = GlobalKey<FormState>();
-  final List<Chip> majors = [
-
-  ];
-
-  final List<Color> chipColors =[
-    Colors.redAccent.shade100,
-    Colors.redAccent.shade200,
-    Colors.greenAccent.shade100,
-    Colors.greenAccent.shade200,
-    Colors.yellowAccent.shade100,
-    Colors.yellowAccent.shade200,
-    Colors.lightBlueAccent.shade100,
-    Colors.lightBlueAccent.shade200,
-    Colors.purpleAccent.shade100,
-    Colors.purpleAccent.shade200,
-  ];
 
   @override
   Widget build(BuildContext context) {
+    CoursesProvider coursesProvider = Provider.of<CoursesProvider>(context, listen: false);
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
@@ -57,10 +45,8 @@ class AddCourses extends StatelessWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () {},
-                        style: ButtonStyle(
-                            minimumSize:
-                                MaterialStateProperty.all(const Size(200, 60))),
+                        onPressed: () => coursesProvider.pickSpreadsheet(),
+                        style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
                     ],
@@ -77,7 +63,7 @@ class AddCourses extends StatelessWidget {
                     style: TextStyle(fontSize: 32, fontFamily: "RobotoFlex"),
                   ),
                 ),
-                SizedBox(height: 30),
+                const SizedBox(height: 30),
                 Form(
                   key: _formKey,
                   child: Padding(
@@ -85,6 +71,7 @@ class AddCourses extends StatelessWidget {
                     child: Column(
                       children: [
                         TextFormField(
+                          controller: coursesProvider.courseNameController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
                               return 'Please enter course name';
@@ -109,9 +96,10 @@ class AddCourses extends StatelessWidget {
                         ),
                         const SizedBox(height: 30),
                         TextFormField(
+                          controller: coursesProvider.courseCodeController,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return 'Please student name';
+                              return 'Please enter course code';
                             }
                             return null;
                           },
@@ -132,47 +120,63 @@ class AddCourses extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        TextFormField(
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter course code';
-                            }
-                            return null;
-                          },
-                          onFieldSubmitted: (value) {
-                            majors.add(
-                              Chip(
-                                backgroundColor: chipColors[majors.length % 10],
-                                onDeleted: () {
-                                  majors.removeWhere((element) =>
-                                      element.label.toString() == value);
-                                },
-                                label: Text(value),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(20),
+                        TypeAheadField<String?>(
+                          builder: (context,controller,focusNode){
+                            return TextFormField(
+                              controller: coursesProvider.courseBranchController,
+                              focusNode: focusNode,
+                              validator: (value) {
+                                if (value == null || value.isEmpty) {
+                                  return 'Please enter branch';
+                                }
+                                return null;
+                              },
+                              decoration: InputDecoration(
+                                contentPadding: const EdgeInsets.all(20),
+                                hintText: "Enter branch",
+                                filled: true,
+                                hintStyle: TextStyle(
+                                  color: Colors.teal.shade900,
+                                  fontSize: 15,
+                                  fontFamily: "RobotoFlex",
+                                ),
+                                fillColor: Colors.tealAccent.withOpacity(0.4),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                  borderSide: BorderSide.none,
                                 ),
                               ),
                             );
                           },
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(20),
-                            hintText: "Enter majors / branches",
-                            filled: true,
-                            hintStyle: TextStyle(
-                              color: Colors.teal.shade900,
-                              fontSize: 15,
-                              fontFamily: "RobotoFlex",
-                            ),
-                            fillColor: Colors.tealAccent.withOpacity(0.4),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
+                          itemBuilder: (BuildContext context, value) {
+                            return ListTile(
+                              title: Text(value??"Null")
+                            );
+                          },
+                          onSelected: (Object? value) {final logger = Logger();
+                            logger.i(value.toString());
+                            coursesProvider.courseBranchController.text=value.toString();
+                            }, suggestionsCallback: (String search) { return []; },
+                        ),
+                        const SizedBox(height: 30),
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: ElevatedButton(
+                            onPressed: () {
+                              if(_formKey.currentState!.validate()){
+                                coursesProvider.addCourse();
+                              }
+                              else{
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Please fill all the fields')),
+                                );
+                              };
+                            },
+                            style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                            child: const Text("Add Course"),
                           ),
                         ),
-                        const SizedBox(height: 10),
-                        for (Chip i in majors)
-                          Align(alignment: Alignment.centerLeft, child: i),
+                        const SizedBox(height: 30),
                       ],
                     ),
                   ),
