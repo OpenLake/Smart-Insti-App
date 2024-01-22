@@ -2,6 +2,7 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import testResource from "./resources/testResource.js";
+import authResource from "./resources/authResource.js";
 import Connection from "./database/db.js";
 
 const app = express();
@@ -14,6 +15,7 @@ app.use(cookieParser());
 // Get Database connection
 Connection();
 
+app.use(authResource);
 app.use("/", testResource);
 
 export default app;
