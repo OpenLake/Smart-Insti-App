@@ -98,6 +98,14 @@ class RoomProvider extends ChangeNotifier {
     _logger.i("Built room tiles : ${roomTiles.length}");
     return roomTiles;
   }
+
+  void searchRooms() {
+    String query = _searchRoomController.text;
+    _logger.i("Searching for room: $query");
+    filteredRoomList = roomList.where((room) => room.name.toLowerCase().contains(query.toLowerCase())).toList();
+    notifyListeners();
+  }
+
   void removeRoom(Room room) {
     roomList.remove(room);
     _logger.i("Removed room: ${room.name}");
