@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_insti_app/constants/constants.dart';
-import 'package:smart_insti_app/provider/user_Provider.dart';
+import 'package:smart_insti_app/provider/user_provider.dart';
 import 'package:smart_insti_app/routes/routes.dart';
 
 void main() {
