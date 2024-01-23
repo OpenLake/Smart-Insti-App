@@ -1,15 +1,11 @@
 import mongoose from 'mongoose'
 import dotenv from 'dotenv'
 
-// Create a .env file in the backend and add your mongoDB credentials
+// Add a .env file to the root to access the mongoDB credentials
 dotenv.config();
-const USERNAME = process.env.DB_USERNAME;
-const PASSWORD = process.env.DB_PASSWORD;
 
 const Connection = () => {
-    const MONGODB_URI = `mongodb+srv://${USERNAME}:${PASSWORD}@openlake.ay9un.mongodb.net/?retryWrites=true&w=majority`
-    
-    mongoose.connect(MONGODB_URI);
+    mongoose.connect(process.env.MONGODB_URI);
 
     mongoose.connection.on('connected', () => {
         console.log('Database connected Successfully');
