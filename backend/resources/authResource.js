@@ -3,6 +3,7 @@ import User from "../models/user.js";
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import auth from '../middlewares/auth.js';
+import * as errorMessages from '../constants/errorMessages.js';
 
 const authRouter = express.Router();
 
@@ -12,7 +13,7 @@ authRouter.post('/signup',async (req,res)=>{
         const { name, email, password } = req.body;
         const existingUser = await User.findOne({ email });
         if (existingUser){
-            return res.status(400).json({msg:"User already exists"});
+            return res.status(400).json({ msg: errorMessages.userAlreadyExists });
         }
         const hashedPassword = await bcryptjs.hash(password,8);
         let user = new User({
@@ -36,19 +37,19 @@ authRouter.post("/signin", async (req, res) => {
     if (!user) {
       return res
         .status(400)
-        .json({ msg: "User with this email does not exist!" });
+        .json({ msg: errorMessages.userNotFound });
     }
 
     const isMatch = await bcryptjs.compare(password, user.password);
     
     if (!isMatch) {
-      return res.status(400).json({ msg: "Incorrect password." });
+      return res.status(400).json({ msg: errorMessages.incorrectPassword });
     }
 
     const token = jwt.sign({ id: user._id }, "passwordKey");
     res.json({ token, ...user._doc });
   } catch (e) {
-    res.status(500).json({ error: e.message });
+    res.status(500).json({ error: errorMessages.internalServerError });
   }
 });
 
