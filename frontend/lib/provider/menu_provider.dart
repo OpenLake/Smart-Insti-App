@@ -121,6 +121,36 @@ class MenuProvider extends ChangeNotifier {
       },
     };
   }
+
+  void addMenu(){
+    String kitchenName = _kitchenNameController.text;
+    if(kitchenName.isEmpty){
+      _logger.e("Kitchen name is empty");
+      return;
+    }
+    currentMenu.kitchenName = kitchenName;
+    _logger.i("Adding $kitchenName to messMenus");
+    messMenus[kitchenName] = currentMenu;
+    clear();
     notifyListeners();
   }
+
+  void addMenuItem(){
+    String item = _itemNameController.text;
+    String weekday = this.weekday;
+    String mealType = this.mealType;
+    _logger.i("Adding $item to $weekday $mealType");
+    currentMenu.messMenu![weekday]![mealType]!.add(item);
+    _itemNameController.clear();
+    notifyListeners();
+  }
+
+  void removeMenuItem(int index){
+    String weekday = this.weekday;
+    String mealType = this.mealType;
+    _logger.i("Removing ${currentMenu.messMenu![weekday]![mealType]![index]} from $weekday $mealType");
+    currentMenu.messMenu![weekday]![mealType]!.removeAt(index);
+    notifyListeners();
+  }
+
 }
