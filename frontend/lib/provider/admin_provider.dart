@@ -71,10 +71,17 @@ class AdminProvider extends ChangeNotifier{
       ),
       MenuTile(
         title: "View\nMess\nMenu",
-        onTap: () => context.push('/mess_menu'),
+        onTap: () => context.push('/view_menu'),
         icon: Icons.add,
         primaryColor: Colors.blueAccent.shade100,
         secondaryColor: Colors.blueAccent.shade200,
+      ),
+      MenuTile(
+        title: "Manage\nRooms",
+        onTap: () => context.push('/manage_rooms'),
+        icon: Icons.add,
+        primaryColor: Colors.tealAccent.shade100,
+        secondaryColor: Colors.tealAccent.shade200,
       ),
     ];
     String query = _searchController.text;
