@@ -29,7 +29,7 @@ class ViewCourses extends StatelessWidget {
                 width: 390,
                 child: SearchBar(
                   controller: coursesProvider.searchCourseController,
-                  hintText: 'Enter course code',
+                  hintText: 'Enter course name',
                   onChanged: (value) {
                     coursesProvider.searchCourses();
                   },
@@ -77,7 +77,13 @@ class ViewCourses extends StatelessWidget {
                             IconButton(
                               iconSize: 20,
                               icon: const Icon(Icons.edit),
-                              onPressed: () {},
+                              onPressed: () => showDialog(
+                                context: context,
+                                builder: (_) => const AlertDialog(
+                                  title: Text('Edit Course'),
+                                  content: Text("Course editing will be added in future"),
+                                ),
+                              ),
                             ),
                             IconButton(
                               iconSize: 20,
