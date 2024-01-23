@@ -3,7 +3,8 @@ name: Flutter Build Apk
 on:
   push:
     branches:
-      - master
+      - main
+      - build-workflow
 
 jobs:
   build:
