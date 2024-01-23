@@ -4,7 +4,9 @@ import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/provider/courses_provider.dart';
+import '../../components/choice_selector.dart';
 import '../../components/text_divider.dart';
+import '../../constants/constants.dart';
 
 class AddCourses extends StatelessWidget {
   AddCourses({super.key});
@@ -120,43 +122,11 @@ class AddCourses extends StatelessWidget {
                           ),
                         ),
                         const SizedBox(height: 30),
-                        TypeAheadField<String?>(
-                          builder: (context,controller,focusNode){
-                            return TextFormField(
-                              controller: coursesProvider.courseBranchController,
-                              focusNode: focusNode,
-                              validator: (value) {
-                                if (value == null || value.isEmpty) {
-                                  return 'Please enter branch';
-                                }
-                                return null;
-                              },
-                              decoration: InputDecoration(
-                                contentPadding: const EdgeInsets.all(20),
-                                hintText: "Enter branch",
-                                filled: true,
-                                hintStyle: TextStyle(
-                                  color: Colors.teal.shade900,
-                                  fontSize: 15,
-                                  fontFamily: "RobotoFlex",
-                                ),
-                                fillColor: Colors.tealAccent.withOpacity(0.4),
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(15),
-                                  borderSide: BorderSide.none,
-                                ),
-                              ),
-                            );
-                          },
-                          itemBuilder: (BuildContext context, value) {
-                            return ListTile(
-                              title: Text(value??"Null")
-                            );
-                          },
-                          onSelected: (Object? value) {final logger = Logger();
-                            logger.i(value.toString());
-                            coursesProvider.courseBranchController.text=value.toString();
-                            }, suggestionsCallback: (String search) { return []; },
+                        ChoiceSelector(
+                          onChanged: (value) => coursesProvider.branch = value!,
+                          value: coursesProvider.branch,
+                          items: Branches.branchList,
+                          hint: "Select Branch",
                         ),
                         const SizedBox(height: 30),
                         Align(
