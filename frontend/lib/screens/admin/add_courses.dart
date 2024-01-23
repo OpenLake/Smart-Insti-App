@@ -1,8 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/courses_provider.dart';
 import '../../components/choice_selector.dart';
 import '../../components/text_divider.dart';
@@ -72,54 +71,18 @@ class AddCourses extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Column(
                       children: [
-                        TextFormField(
+                        MaterialTextFormField(
                           controller: coursesProvider.courseNameController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter course name';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(20),
-                            hintText: "Enter course name",
-                            filled: true,
-                            hintStyle: TextStyle(
-                              color: Colors.teal.shade900,
-                              fontSize: 15,
-                              fontFamily: "RobotoFlex",
-                            ),
-                            fillColor: Colors.tealAccent.withOpacity(0.4),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                          validator: (value) => Validators.nameValidator(value),
+                          hintText: "Enter course name",
+                          hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
-                        TextFormField(
+                        MaterialTextFormField(
                           controller: coursesProvider.courseCodeController,
-                          validator: (value) {
-                            if (value == null || value.isEmpty) {
-                              return 'Please enter course code';
-                            }
-                            return null;
-                          },
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(20),
-                            hintText: "Enter course code",
-                            filled: true,
-                            hintStyle: TextStyle(
-                              color: Colors.teal.shade900,
-                              fontSize: 15,
-                              fontFamily: "RobotoFlex",
-                            ),
-                            fillColor: Colors.tealAccent.withOpacity(0.4),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                          validator: (value) => Validators.courseCodeValidator(value),
+                          hintText: "Enter course code",
+                          hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         ChoiceSelector(
@@ -133,14 +96,12 @@ class AddCourses extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: ElevatedButton(
                             onPressed: () {
-                              if(_formKey.currentState!.validate()){
+                              if (_formKey.currentState!.validate()) {
                                 coursesProvider.addCourse();
-                              }
-                              else{
                                 ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(content: Text('Please fill all the fields')),
+                                  const SnackBar(content: Text('Added Course')),
                                 );
-                              };
+                              }
                             },
                             style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                             child: const Text("Add Course"),

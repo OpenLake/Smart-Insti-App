@@ -1,8 +1,8 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/choice_selector.dart';
+import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/components/text_divider.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/provider/student_provider.dart';
@@ -71,64 +71,25 @@ class AddStudents extends StatelessWidget {
                     padding: const EdgeInsets.symmetric(horizontal: 30),
                     child: Column(
                       children: [
-                        TextFormField(
+                        MaterialTextFormField(
                           controller: studentProvider.studentNameController,
                           validator: (value) => Validators.nameValidator(value),
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(20),
-                            hintText: "Enter Student Name",
-                            filled: true,
-                            hintStyle: TextStyle(
-                              color: Colors.teal.shade900.withOpacity(0.5),
-                              fontSize: 15,
-                              fontFamily: "RobotoFlex",
-                            ),
-                            fillColor: Colors.tealAccent.withOpacity(0.4),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                          hintText: "Enter Student Name",
+                          hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
-                        TextFormField(
+                        MaterialTextFormField(
                           controller: studentProvider.studentRollNoController,
                           validator: (value) => Validators.rollNumberValidator(value),
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(20),
-                            hintText: "Enter Roll Number",
-                            filled: true,
-                            hintStyle: TextStyle(
-                              color: Colors.teal.shade900.withOpacity(0.5),
-                              fontSize: 15,
-                              fontFamily: "RobotoFlex",
-                            ),
-                            fillColor: Colors.tealAccent.withOpacity(0.4),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                          hintText: "Enter Roll Number",
+                          hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
-                        TextFormField(
+                        MaterialTextFormField(
                           controller: studentProvider.studentEmailController,
                           validator: (value) => Validators.emailValidator(value),
-                          decoration: InputDecoration(
-                            contentPadding: const EdgeInsets.all(20),
-                            hintText: "Enter Student Mail",
-                            filled: true,
-                            hintStyle: TextStyle(
-                              color: Colors.teal.shade900.withOpacity(0.5),
-                              fontSize: 15,
-                              fontFamily: "RobotoFlex",
-                            ),
-                            fillColor: Colors.tealAccent.withOpacity(0.4),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(15),
-                              borderSide: BorderSide.none,
-                            ),
-                          ),
+                          hintText: "Enter Student Mail",
+                          hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         ChoiceSelector(
@@ -149,8 +110,12 @@ class AddStudents extends StatelessWidget {
                           alignment: Alignment.centerRight,
                           child: ElevatedButton(
                             onPressed: () {
-                              _formKey.currentState!.validate();
-                              studentProvider.addStudent();
+                              if (_formKey.currentState!.validate()) {
+                                studentProvider.addStudent();
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                  const SnackBar(content: Text('Added Student')),
+                                );
+                              }
                             },
                             style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                             child: const Text("Add Student"),

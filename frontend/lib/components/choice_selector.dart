@@ -31,7 +31,6 @@ class ChoiceSelector extends StatelessWidget {
         dialogBox: false,
         isExpanded: true,
         displayClearIcon: false,
-
         fieldPresentationFn: (Widget fieldWidget, {bool? selectionIsValid}) {
           return InputDecorator(
             decoration: InputDecoration(

@@ -38,7 +38,10 @@ class ViewFaculty extends StatelessWidget {
                   },
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    onPressed: () => context.pop(),
+                    onPressed: () {
+                      facultyProvider.searchFacultyController.clear();
+                      context.pop();
+                    },
                   ),
                   shadowColor: MaterialStateProperty.all(Colors.transparent),
                 ),
@@ -51,7 +54,7 @@ class ViewFaculty extends StatelessWidget {
             if (coursesProvider.filteredFaculties.isEmpty) {
               return const Center(
                 child: Text(
-                  'No Courses so far',
+                  'No Faculties so far',
                   style: TextStyle(fontSize: 30, color: Colors.black38),
                 ),
               );

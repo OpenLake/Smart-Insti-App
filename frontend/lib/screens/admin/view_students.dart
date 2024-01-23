@@ -11,7 +11,7 @@ class ViewStudents extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
- StudentProvider studentProvider = Provider.of<StudentProvider>(context, listen: false);
+    StudentProvider studentProvider = Provider.of<StudentProvider>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       studentProvider.searchStudents();
@@ -37,9 +37,11 @@ class ViewStudents extends StatelessWidget {
                     studentProvider.searchStudents();
                   },
                   leading: IconButton(
-                    icon: const Icon(Icons.arrow_back),
-                    onPressed: () => context.pop(),
-                  ),
+                      icon: const Icon(Icons.arrow_back),
+                      onPressed: () {
+                        studentProvider.searchStudentController.clear();
+                        context.pop();
+                      }),
                   shadowColor: MaterialStateProperty.all(Colors.transparent),
                 ),
               ),
@@ -77,7 +79,7 @@ class ViewStudents extends StatelessWidget {
                             IconButton(
                               iconSize: 20,
                               icon: const Icon(Icons.edit),
-                              onPressed: () =>  showDialog(
+                              onPressed: () => showDialog(
                                 context: context,
                                 builder: (_) => const AlertDialog(
                                   title: Text('Edit Student'),

@@ -1,13 +1,11 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/courses_provider.dart';
-
 import '../../components/text_divider.dart';
+import '../../constants/constants.dart';
 import '../../models/course.dart';
 import '../../provider/faculty_provider.dart';
 
@@ -78,13 +76,17 @@ class AddFaculty extends StatelessWidget {
                     child: Column(
                       children: [
                         MaterialTextFormField(
-                          hintText: 'Faculty Name',
                           controller: facultyProvider.facultyNameController,
+                          validator: (value) => Validators.nameValidator(value),
+                          hintText: 'Faculty Name',
+                          hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         MaterialTextFormField(
-                          hintText: 'Faculty Mail',
                           controller: facultyProvider.facultyEmailController,
+                          validator: (value) => Validators.emailValidator(value),
+                          hintText: 'Faculty Mail',
+                          hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         SearchChoices.multiple(
@@ -145,8 +147,12 @@ class AddFaculty extends StatelessWidget {
                   alignment: Alignment.centerRight,
                   child: ElevatedButton(
                     onPressed: () {
-                      _formKey.currentState!.validate();
-                      facultyProvider.addFaculty();
+                      if (_formKey.currentState!.validate()) {
+                        facultyProvider.addFaculty();
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Added Faculty')),
+                        );
+                      }
                     },
                     style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                     child: const Text("Add Faculty"),

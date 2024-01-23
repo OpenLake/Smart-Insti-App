@@ -3,7 +3,6 @@ import 'package:go_router/go_router.dart';
 import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_scaled_box.dart';
 import 'package:smart_insti_app/provider/courses_provider.dart';
-
 import '../../models/course.dart';
 
 class ViewCourses extends StatelessWidget {
@@ -38,7 +37,10 @@ class ViewCourses extends StatelessWidget {
                   },
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
-                    onPressed: () => context.pop(),
+                    onPressed: () {
+                      coursesProvider.searchCourseController.clear();
+                      context.pop();
+                    },
                   ),
                   shadowColor: MaterialStateProperty.all(Colors.transparent),
                 ),

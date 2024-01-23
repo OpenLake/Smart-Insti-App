@@ -5,12 +5,13 @@ import 'package:slide_switcher/slide_switcher.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/components/rounded_chip.dart';
 import 'package:smart_insti_app/constants/constants.dart';
-
 import '../../components/text_divider.dart';
 import '../../provider/menu_provider.dart';
 
 class AddMessMenu extends StatelessWidget {
-  const AddMessMenu({super.key});
+  AddMessMenu({super.key});
+
+  final _formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
@@ -69,10 +70,12 @@ class AddMessMenu extends StatelessWidget {
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 15),
                   child: Form(
+                    key: _formKey,
                     child: MaterialTextFormField(
                       controller: menuProvider.kitchenNameController,
+                      validator: (value) => Validators.nameValidator(value),
                       hintText: "Enter kitchen name",
-                      validator: (value) => value!.isEmpty ? "Please enter a kitchen name" : null,
+                      hintColor: Colors.teal.shade900.withOpacity(0.5),
                     ),
                   ),
                 ),
@@ -132,10 +135,12 @@ class AddMessMenu extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 20),
                                   child: MaterialTextFormField(
-                                      hintText: "Enter menu items",
-                                      controller: menuProvider.itemNameController,
-                                      onSubmitted: (value) => menuProvider.addMenuItem(),
-                                      validator: (value) => value!.isEmpty ? "Please enter an item name" : null),
+                                    controller: menuProvider.itemNameController,
+                                    onSubmitted: (value) => menuProvider.addMenuItem(),
+                                    validator: (value) => Validators.nameValidator(value),
+                                    hintText: 'Enter Menu Item',
+                                    hintColor: Colors.teal.shade900.withOpacity(0.5),
+                                  ),
                                 ),
                                 const SizedBox(height: 30),
                                 Consumer<MenuProvider>(
@@ -170,8 +175,8 @@ class AddMessMenu extends StatelessWidget {
                                                       padding: const EdgeInsets.symmetric(horizontal: 20),
                                                       alignment: Alignment.centerLeft,
                                                       child: RoundedChip(
-                                                        label: menuProvider.currentMenu.messMenu![menuProvider.weekday]![
-                                                            menuProvider.mealType]![index],
+                                                        label: menuProvider.currentMenu.messMenu![
+                                                            menuProvider.weekday]![menuProvider.mealType]![index],
                                                         color: Colors.tealAccent.shade100,
                                                         onDeleted: () => menuProvider.removeMenuItem(index),
                                                       ),
@@ -200,7 +205,16 @@ class AddMessMenu extends StatelessWidget {
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
-                      onPressed: () => menuProvider.addMenu(),
+                      onPressed: () {
+                        if (_formKey.currentState!.validate()) {
+                          menuProvider.addMenu();
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            const SnackBar(
+                              content: Text("Menu added successfully"),
+                            ),
+                          );
+                        }
+                      },
                       style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                       child: const Text("Add Menu"),
                     ),
