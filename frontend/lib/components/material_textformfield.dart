@@ -1,0 +1,39 @@
+import 'package:flutter/material.dart';
+
+class MaterialTextFormField extends StatelessWidget {
+  const MaterialTextFormField(
+      {super.key, this.controller, this.validator, required this.hintText, this.onChanged, this.onSubmitted, this.contentPadding});
+
+  final TextEditingController? controller;
+  final String? Function(String?)? validator;
+  final Function? onChanged;
+  final Function ?onSubmitted;
+  final String hintText;
+  final EdgeInsets? contentPadding;
+
+  @override
+  Widget build(BuildContext context) {
+    return TextFormField(
+      controller: controller,
+      maxLines: 1,
+      onChanged: (value) => onChanged != null ? onChanged!(value) : null,
+      validator: (value) => validator != null ? validator!(value) : null,
+      onFieldSubmitted: (value) => onSubmitted != null ? onSubmitted!(value) : null,
+      decoration: InputDecoration(
+        contentPadding: contentPadding ?? const EdgeInsets.all(20),
+        hintText: hintText,
+        filled: true,
+        hintStyle: TextStyle(
+          color: Colors.teal.shade900,
+          fontSize: 15,
+          fontFamily: "RobotoFlex",
+        ),
+        fillColor: Colors.tealAccent.withOpacity(0.4),
+        border: OutlineInputBorder(
+          borderRadius: BorderRadius.circular(15),
+          borderSide: BorderSide.none,
+        ),
+      ),
+    );
+  }
+}
