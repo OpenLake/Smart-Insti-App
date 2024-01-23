@@ -29,7 +29,7 @@ class ViewStudents extends StatelessWidget {
                 width: 390,
                 child: SearchBar(
                   controller: studentProvider.searchStudentController,
-                  hintText: 'Enter roll number',
+                  hintText: 'Enter student name',
                   onChanged: (value) {
                     studentProvider.searchStudents();
                   },
@@ -77,7 +77,13 @@ class ViewStudents extends StatelessWidget {
                             IconButton(
                               iconSize: 20,
                               icon: const Icon(Icons.edit),
-                              onPressed: () {},
+                              onPressed: () =>  showDialog(
+                                context: context,
+                                builder: (_) => const AlertDialog(
+                                  title: Text('Edit Student'),
+                                  content: Text("Student editing will be added in future"),
+                                ),
+                              ),
                             ),
                             IconButton(
                               iconSize: 20,
