@@ -1,17 +1,23 @@
 import 'package:flutter/material.dart';
 
 class CollapsingAppBar extends StatelessWidget {
-  const CollapsingAppBar({super.key, required this.title, required this.bottom});
+  const CollapsingAppBar({super.key, required this.bottom, this.height, this.leading, required this.body, this.title});
 
-  final String title;
   final Widget bottom;
+  final double? height;
+  final Widget? leading;
+  final Widget body;
+  final Text? title;
 
   @override
   Widget build(BuildContext context) {
     return SliverAppBar(
+      title: title,
+      titleSpacing: 0,
+      leading: leading,
       backgroundColor: Colors.white,
       surfaceTintColor: Colors.white,
-      expandedHeight: 300,
+      expandedHeight: height ?? 300,
       floating: true,
       pinned: true,
       bottom: PreferredSize(
@@ -19,17 +25,7 @@ class CollapsingAppBar extends StatelessWidget {
         child: bottom,
       ),
       flexibleSpace: FlexibleSpaceBar(
-        background: Center(
-          child: Text(
-            title,
-            textAlign: TextAlign.center,
-            style: const TextStyle(
-              color: Colors.black,
-              fontSize: 36,
-              fontFamily: "RobotoFlex",
-            ),
-          ),
-        ),
+        background: body,
       ),
     );
   }
