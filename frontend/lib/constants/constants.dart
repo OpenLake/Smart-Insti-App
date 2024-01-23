@@ -50,6 +50,36 @@ class StudentRoles {
   ];
 }
 
+class MessMenuConstants{
+ static final List<Text> weekdays = [
+    Text('Sun', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
+    Text('Mon', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
+    Text('Tue', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
+    Text('Wed', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
+    Text('Thu', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
+    Text('Fri', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
+    Text('Sat', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
+  ];
+
+ static final List<Text> mealTypes = [
+   Text('Breakfast',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+   Text('Lunch',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+   Text('Snacks',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+   Text('Dinner',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+ ];
+
+ static const Map<String,String> weekdaysShortToLong = {
+   "Sun":"Sunday",
+   "Mon":"Monday",
+   "Tue":"Tuesday",
+   "Wed":"Wednesday",
+   "Thu":"Thursday",
+   "Fri":"Friday",
+   "Sat":"Saturday",
+ };
+
+}
+
 class Validators {
   static String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
