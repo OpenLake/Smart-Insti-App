@@ -46,7 +46,7 @@ class AddStudents extends StatelessWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () => studentProvider.pickSpreadsheet(),
                         style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
@@ -151,18 +151,6 @@ class AddStudents extends StatelessWidget {
                             onPressed: () {
                               _formKey.currentState!.validate();
                               studentProvider.addStudent();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  elevation: 0,
-                                  behavior: SnackBarBehavior.floating,
-                                  backgroundColor: Colors.transparent,
-                                  content: AwesomeSnackbarContent(
-                                    title: 'Success',
-                                    message: 'You have successfully added a student to the database.',
-                                    contentType: ContentType.success,
-                                  ),
-                                ),
-                              );
                             },
                             style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                             child: const Text("Add Student"),
