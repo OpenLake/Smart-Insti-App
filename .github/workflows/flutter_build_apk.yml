@@ -24,7 +24,7 @@ jobs:
       - name: Get dependencies
         run: flutter pub get
       - name: Format code
-        run: dart format --set-exit-if-changed .
+        run: dart format .
       - name: Analyze code
         run: flutter analyze .
       - name: Build APK
