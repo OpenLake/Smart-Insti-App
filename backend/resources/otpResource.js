@@ -3,7 +3,6 @@ import nodemailer  from 'nodemailer'
 import dotenv from 'dotenv'
 import * as errorConstants from '../constants/errorMessages.js';
 import * as mailOption from '../constants/mailOption.js';
-
 const otpRouter = express.Router();
 
 dotenv.config();
@@ -29,22 +28,52 @@ const transporter = nodemailer.createTransport({
   },
 });
 
+import { MongoClient } from 'mongodb';
+
+// Connection URI for your MongoDB database
+const uri = process.env.MONGODB_URI; // Change this to your actual MongoDB connection URI
+
+// Create a new MongoClient
+const client = new MongoClient(uri);
+
+// Database and collection names
+const dbName = mailOption.dbName;
+const collectionName = mailOption.collectionName;
+
 // Store generated OTPs temporarily (for demo purposes)
 const otpStorage = new Map();
 
-otpRouter.post('/send-otp', (req, res) => {
+otpRouter.post('/send-otp', async (req, res) => {
   const { email } = req.body;
 
   if (!email) {
     return res.status(400).json({ error: errorConstants.emailIsRequired });
   }
-
+  
   // Generate OTP
   const otp = generateOTP();
   console.log(otp);
   // Store OTP with the associated email
   otpStorage.set(email, otp);
+  
+   try {
+    // Connect to the MongoDB server
+    await client.connect();
 
+    // Use a specific database
+    const database = client.db(dbName);
+
+    // Use a specific collection
+    const collection = database.collection(collectionName);
+    await collection.deleteMany({
+      email:email,
+    });
+    await collection.insertOne({ email, otp});
+    console.log('OTP data stored in MongoDB');
+  } finally {
+    // Close the connection when done
+    await client.close();
+  }
   // Nodemailer options
   const mailOptions = {
     from: mailOption.senderEmail,
@@ -52,7 +81,7 @@ otpRouter.post('/send-otp', (req, res) => {
     subject: mailOption.subjectOTPLogin,
     text: mailOption.createOTPEmailBody(otp)
   };
-
+  
   // Send mail
   transporter.sendMail(mailOptions, (error, info) => {
     if (error) {
@@ -62,27 +91,42 @@ otpRouter.post('/send-otp', (req, res) => {
   });
 });
 
-otpRouter.post('/verify-otp', (req, res) => {
+otpRouter.post('/verify-otp', async (req, res) => {
   const { email, otp } = req.body;
+
   if (!email || !otp) {
     return res.status(400).json({ error: errorConstants.emailAndOTPRequired });
   }
 
-  // Retrieve stored OTP for the email
-  const storedOTP = otpStorage.get(email);
+  try {
+    await client.connect();
 
-  if (!storedOTP) {
-    return res.status(400).json({ error: errorConstants.noOTPFoundForEmail});
+    const database = client.db(dbName);
+    const collection = database.collection(collectionName);
+
+    // Retrieve stored OTP and timestamp for the email from the database
+    const result = await collection.findOne({ email });
+    
+    if (!result || !result.otp) {
+      return res.status(400).json({ error: errorConstants.noOTPFoundForEmail });
+    }
+
+    const storedOTP = result.otp;
+
+    // Compare the provided OTP with the stored OTP
+    if (otp === storedOTP) {
+      // Clear OTP from storage after successful verification (for demo purposes)
+      await collection.deleteOne({ email });
+      return res.json({ message: errorConstants.otpVerfied });
+    }
+
+    res.status(401).json({ error: errorConstants.incorrectOTP });
+  } catch (err) {
+    console.error('Error:', err.message);
+    res.status(500).json({ error: 'Internal Server Error' });
+  } finally {
+    await client.close();
   }
-
-  // Compare the provided OTP with the stored OTP
-  if (otp === storedOTP) {
-    // Clear OTP from storage after successful verification (for demo purposes)
-    otpStorage.delete(email);
-    return res.json({ message: errorConstants.otpVerfied});
-  }
-
-  res.status(400).json({ error: errorConstants.incorrectOTP });
 });
 
 export default otpRouter

@@ -1,4 +1,5 @@
 import jwt from "jsonwebtoken";
+const passwordKey = proccess.env.PASSWORD_KEY;
 
 const auth = async (req, res, next) => {
   try {
@@ -6,7 +7,7 @@ const auth = async (req, res, next) => {
     if (!token)
       return res.status(401).json({ msg: "No auth token, access denied" });
 
-    const verified = jwt.verify(token, "passwordKey");
+    const verified = jwt.verify(token, passwordKey);
     if (!verified)
       return res
         .status(401)

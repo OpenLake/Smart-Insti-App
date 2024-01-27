@@ -5,7 +5,7 @@
   "license": "MIT",
   "description": "Backend server for the smart Insti App",
   "scripts": {
-    "start": "nodemon ./bin/www"
+    "start": "node ./bin/www"
   },
   "type": "module",
   "dependencies": {

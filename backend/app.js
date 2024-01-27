@@ -12,7 +12,6 @@ const app = express();
 
 app.use(logger("dev"));
 app.use(express.json())
-app.use(bodyParser.json());;
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
@@ -20,6 +19,7 @@ app.use(cookieParser());
 Connection();
 
 app.use(authResource);
+app.use("/signup",otpResource);
 app.use("/signin",otpResource);
 app.use("/", testResource);
 
