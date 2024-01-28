@@ -4,7 +4,7 @@ import dotenv from 'dotenv'
 import * as errorConstants from '../constants/errorMessages.js';
 import * as mailOption from '../constants/mailOption.js';
 const otpRouter = express.Router();
-
+import xoauth2 from 'xoauth2';
 dotenv.config();
 
 // Nodemailer configuration using Ethereal
@@ -18,15 +18,33 @@ function generateOTP() {
 }
 
 // Nodemailer configuration
-const transporter = nodemailer.createTransport({
-  // Create an ethereal account and replace it in .env file 
-  host: process.env.SMTP_HOST,
-  port: process.env.SMTP_PORT,
-  auth: {
-    user: process.env.SMTP_USER,
-    pass: process.env.SMTP_PASS,
-  },
+var transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+        xoauth2: xoauth2.createXOAuth2Generator({
+            user: process.env.SMTP_USER,
+            // clientId: '{Client ID}',
+            // clientSecret: '{Client Secret}',
+            // refreshToken: '{refresh-token}',
+            // accessToken: '{cached access token}'
+        })
+    }
 });
+// const transporter = nodemailer.createTransport({
+//   // Create an ethereal account and replace it in .env file
+//   service: 'Gmail', 
+//   name: process.env.SMTP_NAME,
+//   host: process.env.SMTP_HOST,
+//   port: process.env.SMTP_PORT,
+//   // auth: {
+//   //   user: process.env.SMTP_USER,
+//   //   pass: process.env.SMTP_PASS,
+//   // },
+//   auth: {
+//       user: process.env.SMTP_USER,
+//       pass: process.env.SMTP_PASS,
+//   }
+// });
 
 import { MongoClient } from 'mongodb';
 
@@ -45,7 +63,6 @@ const otpStorage = new Map();
 
 otpRouter.post('/send-otp', async (req, res) => {
   const { email } = req.body;
-
   if (!email) {
     return res.status(400).json({ error: errorConstants.emailIsRequired });
   }
@@ -87,6 +104,7 @@ otpRouter.post('/send-otp', async (req, res) => {
     if (error) {
       return res.status(500).json({ error: errorConstants.failedToSendOTPEmail });
     }
+    console.log('Message sent: %s', info.messageId);
     res.json({ message: errorConstants.otpSent, email });
   });
 });

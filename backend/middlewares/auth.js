@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-const passwordKey = proccess.env.PASSWORD_KEY;
+const passwordKey = process.env.PASSWORD_KEY;
 
 const auth = async (req, res, next) => {
   try {
