@@ -10,50 +10,67 @@ import '../screens/admin/add_menu.dart';
 import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
+import '../screens/auth/signin_page.dart';
 
 final GoRouter routes = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      pageBuilder: (context, state) => const MaterialPage(child: AdminHome()),
+      pageBuilder: (context, state) => MaterialPage(child: SignIn()),
       routes: [
         GoRoute(
-          path: 'add_students',
-          pageBuilder: (context, state) => MaterialPage(child: AddStudents()),
+          path: 'admin_home',
+          pageBuilder: (context, state) =>
+              const MaterialPage(child: AdminHome()),
+          routes: [
+            GoRoute(
+              path: 'add_students',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: AddStudents()),
+            ),
+            GoRoute(
+              path: 'add_faculty',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: AddFaculty()),
+            ),
+            GoRoute(
+              path: 'add_courses',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: AddCourses()),
+            ),
+            GoRoute(
+              path: 'view_students',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ViewStudents()),
+            ),
+            GoRoute(
+              path: 'view_faculty',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ViewFaculty()),
+            ),
+            GoRoute(
+              path: 'view_courses',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ViewCourses()),
+            ),
+            GoRoute(
+              path: 'add_menu',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: AddMessMenu()),
+            ),
+            GoRoute(
+              path: 'view_menu',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ViewMessMenu()),
+            ),
+            GoRoute(
+              path: 'manage_rooms',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ManageRooms()),
+            )
+          ],
         ),
-        GoRoute(
-          path: 'add_faculty',
-          pageBuilder: (context, state) => MaterialPage(child: AddFaculty()),
-        ),
-        GoRoute(
-          path: 'add_courses',
-          pageBuilder: (context, state) => MaterialPage(child: AddCourses()),
-        ),
-        GoRoute(
-          path: 'view_students',
-          pageBuilder: (context, state) => MaterialPage(child: ViewStudents()),
-        ),
-        GoRoute(
-          path: 'view_faculty',
-          pageBuilder: (context, state) => MaterialPage(child: ViewFaculty()),
-        ),
-        GoRoute(
-          path: 'view_courses',
-          pageBuilder: (context, state) => MaterialPage(child: ViewCourses()),
-        ),
-        GoRoute(
-          path: 'add_menu',
-          pageBuilder: (context, state) => MaterialPage(child: AddMessMenu()),
-        ),
-        GoRoute(
-          path: 'view_menu',
-          pageBuilder: (context, state) => MaterialPage(child: ViewMessMenu()),
-        ),
-        GoRoute(
-          path: 'manage_rooms',
-          pageBuilder: (context, state) => MaterialPage(child: ManageRooms()),
-        )
       ],
-    )
+    ),
   ],
 );

@@ -11,7 +11,7 @@ export const databaseConnectionError = "Error while connecting with the database
 
 // OTP 
 export const emailIsRequired = 'Email is required';
-export const failedToSendOTPEmail = 'Failed to send OTP email';
+export const failedToSendOTPEmail = 'Failed to send OTP to email';
 export const emailAndOTPRequired = 'Email and OTP are required';
 export const noOTPFoundForEmail = 'No OTP found for the email';
 export const incorrectOTP = 'Incorrect OTP';
