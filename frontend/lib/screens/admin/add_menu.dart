@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
@@ -8,15 +8,20 @@ import 'package:smart_insti_app/constants/constants.dart';
 import '../../components/text_divider.dart';
 import '../../provider/menu_provider.dart';
 
-class AddMessMenu extends StatelessWidget {
+class AddMessMenu extends ConsumerWidget {
   AddMessMenu({super.key});
 
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    MenuProvider menuProvider = Provider.of<MenuProvider>(context, listen: false);
-    menuProvider.initMenu();
+  Widget build(BuildContext context, WidgetRef ref) {
+    // MenuProvider menuProvider = Provider.of<MenuProvider>(context, listen: false);
+
+    //ref.read(menuProvider.notifier).initMenu();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(menuProvider.notifier).clear();
+    });
+
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
@@ -48,7 +53,7 @@ class AddMessMenu extends StatelessWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () => menuProvider.pickSpreadsheet(),
+                        onPressed: () => ref.read(menuProvider.notifier).pickSpreadsheet(),
                         style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
@@ -72,7 +77,7 @@ class AddMessMenu extends StatelessWidget {
                   child: Form(
                     key: _formKey,
                     child: MaterialTextFormField(
-                      controller: menuProvider.kitchenNameController,
+                      controller: ref.read(menuProvider).kitchenNameController,
                       validator: (value) => Validators.nameValidator(value),
                       hintText: "Enter kitchen name",
                       hintColor: Colors.teal.shade900.withOpacity(0.5),
@@ -83,7 +88,7 @@ class AddMessMenu extends StatelessWidget {
                 Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 15),
                   child: SlideSwitcher(
-                    onSelect: (index) => menuProvider.selectMealType(index),
+                    onSelect: (index) => ref.read(menuProvider.notifier).selectMealType(index),
                     containerHeight: 65,
                     containerWight: 380,
                     containerBorderRadius: 20,
@@ -93,15 +98,15 @@ class AddMessMenu extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height: 30),
-                Consumer<MenuProvider>(
-                  builder: (_, menuProvider, ___) {
+                Consumer(
+                  builder: (_, ref, ___) {
                     return Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
                           SlideSwitcher(
-                              onSelect: (index) => menuProvider.selectWeekday(index),
+                              onSelect: (index) => ref.read(menuProvider.notifier).selectWeekday(index),
                               containerHeight: 550,
                               containerWight: 70,
                               containerBorderRadius: 20,
@@ -119,13 +124,18 @@ class AddMessMenu extends StatelessWidget {
                             ),
                             child: Column(
                               children: [
-                                Consumer<MenuProvider>(
-                                  builder: (_, menuProvider, __) {
+                                Consumer(
+                                  builder: (_, ref, __) {
+                                    final weekDayIndex = ref.watch(menuProvider).selectedWeekdayIndex;
+                                    final mealTypeIndex = ref.watch(menuProvider).selectedMealTypeIndex;
+
+                                    final weekDay = ref.watch(menuProvider.notifier).getWeekDay(weekDayIndex);
+                                    final mealType = ref.watch(menuProvider.notifier).getMealType(mealTypeIndex);
                                     return Container(
                                       padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                                       alignment: Alignment.topLeft,
                                       child: Text(
-                                        "${menuProvider.weekday}'s ${menuProvider.mealType}",
+                                        "$weekDay's $mealType",
                                         style: const TextStyle(fontSize: 23, fontFamily: "GoogleSanaFlex"),
                                       ),
                                     );
@@ -135,61 +145,64 @@ class AddMessMenu extends StatelessWidget {
                                 Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 20),
                                   child: MaterialTextFormField(
-                                    controller: menuProvider.itemNameController,
-                                    onSubmitted: (value) => menuProvider.addMenuItem(),
+                                    controller: ref.read(menuProvider).itemNameController,
+                                    onSubmitted: (value) => ref.read(menuProvider.notifier).addMenuItem(),
                                     validator: (value) => Validators.nameValidator(value),
                                     hintText: 'Enter Menu Item',
                                     hintColor: Colors.teal.shade900.withOpacity(0.5),
                                   ),
                                 ),
                                 const SizedBox(height: 30),
-                                Consumer<MenuProvider>(
-                                  builder: (_, menuProvider, __) {
-                                    return Container(
-                                      width: 250,
-                                      height: 360,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(20),
-                                        border: Border.all(color: Colors.transparent, width: 0),
-                                        color: Colors.white,
+                                Container(
+                                  width: 250,
+                                  height: 360,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(20),
+                                    border: Border.all(color: Colors.transparent, width: 0),
+                                    color: Colors.white,
+                                  ),
+                                  child: Column(
+                                    children: [
+                                      Container(
+                                        padding: const EdgeInsets.only(left: 20, top: 15),
+                                        alignment: Alignment.topLeft,
+                                        child: const Text(
+                                          "Menu Item",
+                                          style: TextStyle(fontSize: 18, fontFamily: "GoogleSanaFlex"),
+                                        ),
                                       ),
-                                      child: Column(
-                                        children: [
-                                          Container(
-                                            padding: const EdgeInsets.only(left: 20, top: 15),
-                                            alignment: Alignment.topLeft,
-                                            child: const Text(
-                                              "Menu Item",
-                                              style: TextStyle(fontSize: 18, fontFamily: "GoogleSanaFlex"),
-                                            ),
-                                          ),
-                                          const Divider(height: 20),
-                                          Expanded(
-                                            child: Consumer<MenuProvider>(
-                                              builder: (_, menuProvider, ___) {
-                                                return ListView.builder(
-                                                  itemCount: menuProvider.currentMenu
-                                                      .messMenu![menuProvider.weekday]![menuProvider.mealType]!.length,
-                                                  itemBuilder: (context, index) {
-                                                    return Container(
-                                                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                                                      alignment: Alignment.centerLeft,
-                                                      child: RoundedChip(
-                                                        label: menuProvider.currentMenu.messMenu![
-                                                            menuProvider.weekday]![menuProvider.mealType]![index],
-                                                        color: Colors.tealAccent.shade100,
-                                                        onDeleted: () => menuProvider.removeMenuItem(index),
-                                                      ),
-                                                    );
-                                                  },
+                                      const Divider(height: 20),
+                                      Expanded(
+                                        child: Consumer(
+                                          builder: (_, ref, ___) {
+                                            final menuState = ref.watch(menuProvider);
+                                            final weekDay = ref
+                                                .watch(menuProvider.notifier)
+                                                .getWeekDay(menuState.selectedWeekdayIndex);
+                                            final mealType = ref
+                                                .watch(menuProvider.notifier)
+                                                .getMealType(menuState.selectedMealTypeIndex);
+                                            final currentMenu = ref.watch(menuProvider).currentMenu;
+                                            return ListView.builder(
+                                              itemCount: currentMenu.messMenu![weekDay]![mealType]!.length,
+                                              itemBuilder: (context, index) {
+                                                return Container(
+                                                  padding: const EdgeInsets.symmetric(horizontal: 20),
+                                                  alignment: Alignment.centerLeft,
+                                                  child: RoundedChip(
+                                                    label: currentMenu.messMenu![weekDay]![mealType]![index],
+                                                    color: Colors.tealAccent.shade100,
+                                                    onDeleted: () =>
+                                                        ref.watch(menuProvider.notifier).removeMenuItem(index),
+                                                  ),
                                                 );
                                               },
-                                            ),
-                                          ),
-                                        ],
+                                            );
+                                          },
+                                        ),
                                       ),
-                                    );
-                                  },
+                                    ],
+                                  ),
                                 ),
                               ],
                             ),
@@ -207,7 +220,7 @@ class AddMessMenu extends StatelessWidget {
                     child: ElevatedButton(
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
-                          menuProvider.addMenu();
+                          ref.read(menuProvider.notifier).addMenu();
                           ScaffoldMessenger.of(context).showSnackBar(
                             const SnackBar(
                               content: Text("Menu added successfully"),
