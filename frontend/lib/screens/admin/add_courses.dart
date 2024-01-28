@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/courses_provider.dart';
@@ -7,14 +7,15 @@ import '../../components/choice_selector.dart';
 import '../../components/text_divider.dart';
 import '../../constants/constants.dart';
 
-class AddCourses extends StatelessWidget {
+class AddCourses extends ConsumerWidget {
   AddCourses({super.key});
 
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    CoursesProvider coursesProvider = Provider.of<CoursesProvider>(context, listen: false);
+  Widget build(BuildContext context, WidgetRef ref) {
+    //  CoursesProvider coursesProvider = Provider.of<CoursesProvider>(context, listen: false);
+    final course = ref.watch(coursesProvider);
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
@@ -46,7 +47,7 @@ class AddCourses extends StatelessWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () => coursesProvider.pickSpreadsheet(),
+                        onPressed: () => ref.read(coursesProvider.notifier).pickSpreadsheet(),
                         style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
@@ -72,22 +73,22 @@ class AddCourses extends StatelessWidget {
                     child: Column(
                       children: [
                         MaterialTextFormField(
-                          controller: coursesProvider.courseNameController,
+                          controller: course.courseNameController,
                           validator: (value) => Validators.nameValidator(value),
                           hintText: "Enter course name",
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         MaterialTextFormField(
-                          controller: coursesProvider.courseCodeController,
+                          controller: course.courseCodeController,
                           validator: (value) => Validators.courseCodeValidator(value),
                           hintText: "Enter course code",
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         ChoiceSelector(
-                          onChanged: (value) => coursesProvider.branch = value!,
-                          value: coursesProvider.branch,
+                          onChanged: (value) => ref.read(coursesProvider.notifier).updateBranch(value),
+                          value: course.branch,
                           items: Branches.branchList,
                           hint: "Select Branch",
                         ),
@@ -97,7 +98,7 @@ class AddCourses extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                coursesProvider.addCourse();
+                                ref.read(coursesProvider.notifier).addCourse();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text('Added Course')),
                                 );
