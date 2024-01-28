@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_scaled_box.dart';
 import 'package:smart_insti_app/provider/faculty_provider.dart';
 
 import '../../models/faculty.dart';
 
-class ViewFaculty extends StatelessWidget {
+class ViewFaculty extends ConsumerWidget {
   const ViewFaculty({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    FacultyProvider facultyProvider = Provider.of<FacultyProvider>(context, listen: false);
-
+  Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      facultyProvider.searchFaculties();
+      ref.read(facultyProvider.notifier).searchFaculties();
     });
 
     return ResponsiveScaledBox(
@@ -28,18 +26,18 @@ class ViewFaculty extends StatelessWidget {
               child: SizedBox(
                 width: 390,
                 child: SearchBar(
-                  controller: facultyProvider.searchFacultyController,
+                  controller: ref.read(facultyProvider.notifier).searchFacultyController,
                   hintText: 'Enter faculty name',
                   onChanged: (value) {
-                    facultyProvider.searchFaculties();
+                    ref.read(facultyProvider.notifier).searchFaculties();
                   },
                   onSubmitted: (value) {
-                    facultyProvider.searchFaculties();
+                    ref.read(facultyProvider.notifier).searchFaculties();
                   },
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      facultyProvider.searchFacultyController.clear();
+                      ref.read(facultyProvider).searchFacultyController.clear();
                       context.pop();
                     },
                   ),
@@ -49,9 +47,9 @@ class ViewFaculty extends StatelessWidget {
             )
           ],
         ),
-        body: Consumer<FacultyProvider>(
-          builder: (_, coursesProvider, ___) {
-            if (coursesProvider.filteredFaculties.isEmpty) {
+        body: Consumer(
+          builder: (_, ref, ___) {
+            if (ref.watch(facultyProvider).filteredFaculties.isEmpty) {
               return const Center(
                 child: Text(
                   'No Faculties so far',
@@ -61,7 +59,7 @@ class ViewFaculty extends StatelessWidget {
             }
             return ListView.builder(
                 itemBuilder: (_, index) {
-                  List<Faculty> faculties = coursesProvider.filteredFaculties;
+                  List<Faculty> faculties = ref.read(facultyProvider).filteredFaculties;
                   return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: ListTile(
@@ -91,7 +89,7 @@ class ViewFaculty extends StatelessWidget {
                             IconButton(
                               iconSize: 20,
                               icon: const Icon(Icons.delete),
-                              onPressed: () => coursesProvider.removeFaculty(faculties[index]),
+                              onPressed: () => ref.read(facultyProvider.notifier).removeFaculty(faculties[index]),
                             ),
                           ],
                         ),
@@ -99,7 +97,7 @@ class ViewFaculty extends StatelessWidget {
                     ),
                   );
                 },
-                itemCount: coursesProvider.filteredFaculties.length);
+                itemCount: ref.read(facultyProvider).filteredFaculties.length);
           },
         ),
       ),
