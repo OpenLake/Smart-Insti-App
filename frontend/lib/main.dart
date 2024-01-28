@@ -1,7 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:smart_insti_app/constants/constants.dart';
-import 'package:smart_insti_app/provider/user_provider.dart';
+import 'package:smart_insti_app/provider/admin_provider.dart';
+import 'package:smart_insti_app/provider/courses_provider.dart';
+import 'package:smart_insti_app/provider/faculty_provider.dart';
+import 'package:smart_insti_app/provider/menu_provider.dart';
+import 'package:smart_insti_app/provider/room_provider.dart';
+import 'package:smart_insti_app/provider/student_provider.dart';
 import 'package:smart_insti_app/routes/routes.dart';
 
 void main() {
@@ -15,7 +20,12 @@ class SmartInstiApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => UserProvider()),
+        ChangeNotifierProvider(create: (_) => StudentProvider()),
+        ChangeNotifierProvider(create: (_) => CoursesProvider()),
+        ChangeNotifierProvider(create: (_) => AdminProvider()),
+        ChangeNotifierProvider(create: (_) => MenuProvider()),
+        ChangeNotifierProvider(create: (_) => FacultyProvider()),
+        ChangeNotifierProvider(create: (_) => RoomProvider()),
       ],
       child: MaterialApp.router(
         title: AppConstants.appName,

@@ -41,6 +41,17 @@ dependencies:
   awesome_notifications: ^0.9.1
   http: ^1.2.0
   flutter_secure_storage: ^9.0.0
+  google_fonts: ^6.1.0
+  search_choices: ^2.2.7
+  calendar_date_picker2: ^0.5.3
+  logger: ^2.0.2+1
+  flutter_typeahead: ^5.0.2
+  file_picker: ^6.1.1
+  grouped_list: ^5.1.2
+  slide_switcher: ^1.1.2
+  awesome_snackbar_content: ^0.1.1
+  email_validator: ^2.1.17
+  delightful_toast: ^1.1.0
 
 dev_dependencies:
   flutter_test:
@@ -52,6 +63,7 @@ dev_dependencies:
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
   flutter_lints: ^3.0.1
+  json_serializable: ^6.7.1
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -65,9 +77,8 @@ flutter:
   uses-material-design: true
 
   # To add assets to your application, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - lib/assets/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
@@ -82,8 +93,13 @@ flutter:
   # example:
   # fonts:
   #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
+  fonts:
+    - family: GoogleSansFlex
+      fonts:
+        - asset: lib/assets/fonts/google_sans_flex.ttf
+    - family: RobotoFlex
+      fonts:
+        - asset: lib/assets/fonts/roboto_flex.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro

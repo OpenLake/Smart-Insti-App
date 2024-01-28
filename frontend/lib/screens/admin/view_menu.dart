@@ -1,0 +1,161 @@
+import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:provider/provider.dart';
+import 'package:responsive_framework/responsive_framework.dart';
+import 'package:slide_switcher/slide_switcher.dart';
+import 'package:smart_insti_app/components/choice_selector.dart';
+import 'package:smart_insti_app/components/material_textformfield.dart';
+import 'package:smart_insti_app/models/mess_menu.dart';
+
+import '../../constants/constants.dart';
+import '../../provider/menu_provider.dart';
+
+class ViewMessMenu extends StatelessWidget {
+  const ViewMessMenu({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    MenuProvider menuProvider = Provider.of<MenuProvider>(context, listen: false);
+    menuProvider.initMenu();
+    menuProvider.selectedViewMenu = menuProvider.messMenus.keys.isNotEmpty ? menuProvider.messMenus.keys.first : null;
+    return ResponsiveScaledBox(
+      width: 411,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Text('Mess Menu'),
+        ),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              const SizedBox(height: 30),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: ChoiceSelector(
+                  onChanged: (value) => menuProvider.setSelectViewMenu(value),
+                  value: menuProvider.messMenus.keys.isNotEmpty ? menuProvider.messMenus.keys.first : null,
+                  items: [
+                    for (String i in menuProvider.messMenus.keys)
+                      DropdownMenuItem<String>(
+                        value: i,
+                        child: Text(i),
+                      ),
+                  ],
+                  hint: 'Select Kitchen',
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+                child: SlideSwitcher(
+                  onSelect: (index) => menuProvider.selectMealType(index),
+                  containerHeight: 65,
+                  containerWight: 380,
+                  containerBorderRadius: 20,
+                  slidersColors: [Colors.tealAccent.shade700.withOpacity(0.7)],
+                  containerColor: Colors.tealAccent.shade100,
+                  children: MessMenuConstants.mealTypes,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      height: 550,
+                      width: 285,
+                      margin: const EdgeInsets.only(right: 15),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        border: Border.all(color: Colors.transparent, width: 0),
+                        color: Colors.grey[200],
+                      ),
+                      child: Column(
+                        children: [
+                          Consumer<MenuProvider>(
+                            builder: (_, menuProvider, __) {
+                              return Column(
+                                children: [
+                                  Container(
+                                    padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                                    alignment: Alignment.topLeft,
+                                    child: Text(
+                                      "${menuProvider.weekday}'s ${menuProvider.mealType}",
+                                      style: const TextStyle(fontSize: 23, fontFamily: "GoogleSanaFlex"),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                          Consumer<MenuProvider>(
+                            builder: (context, menuProvider, child) {
+                              if (menuProvider.selectedViewMenu != null) {
+                                MessMenu? selectedMenu = menuProvider.messMenus[menuProvider.messMenus.keys.first];
+                                selectedMenu = menuProvider.messMenus[menuProvider.selectedViewMenu];
+                                int length =
+                                    selectedMenu?.messMenu?[menuProvider.weekday]?[menuProvider.mealType]?.length ?? 0;
+                                List controllers = List.generate(length, (index) => TextEditingController());
+                                return ListView.builder(
+                                  shrinkWrap: true,
+                                  itemCount: length,
+                                  itemBuilder: (context, index) {
+                                    controllers[index].text = selectedMenu?.messMenu?[menuProvider.weekday]
+                                            ?[menuProvider.mealType]?[index] ??
+                                        '';
+                                    return Container(
+                                      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(15),
+                                        border: Border.all(color: Colors.transparent, width: 0),
+                                      ),
+                                      child: MaterialTextFormField(
+                                        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                        controller: controllers[index],
+                                        hintText: 'Item ${index + 1}',
+                                        onChanged: (value) => selectedMenu?.messMenu?[menuProvider.weekday]
+                                                ?[menuProvider.mealType]?[index] =
+                                            value,
+                                      ),
+                                    );
+                                  },
+                                );
+                              } else {
+                                return const Expanded(
+                                  child: Center(
+                                    child: Text(
+                                      'No menu added yet',
+                                      style: TextStyle(fontSize: 20, color: Colors.black38),
+                                    ),
+                                  ),
+                                );
+                              }
+                            },
+                          ),
+                        ],
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.centerRight,
+                      child: SlideSwitcher(
+                        onSelect: (index) => menuProvider.selectWeekday(index),
+                        containerHeight: 550,
+                        containerWight: 70,
+                        containerBorderRadius: 20,
+                        direction: Axis.vertical,
+                        slidersColors: [Colors.tealAccent.shade700.withOpacity(0.7)],
+                        containerColor: Colors.tealAccent.shade100,
+                        children: MessMenuConstants.weekdays,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 30),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
