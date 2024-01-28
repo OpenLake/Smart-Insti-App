@@ -1,16 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_insti_app/constants/constants.dart';
-import 'package:smart_insti_app/provider/admin_provider.dart';
-import 'package:smart_insti_app/provider/courses_provider.dart';
-import 'package:smart_insti_app/provider/faculty_provider.dart';
-import 'package:smart_insti_app/provider/menu_provider.dart';
-import 'package:smart_insti_app/provider/room_provider.dart';
-import 'package:smart_insti_app/provider/student_provider.dart';
 import 'package:smart_insti_app/routes/routes.dart';
 
 void main() {
-  runApp(const SmartInstiApp());
+  runApp(const ProviderScope(child: SmartInstiApp()));
 }
 
 class SmartInstiApp extends StatelessWidget {
@@ -18,23 +12,13 @@ class SmartInstiApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (_) => StudentProvider()),
-        ChangeNotifierProvider(create: (_) => CoursesProvider()),
-        ChangeNotifierProvider(create: (_) => AdminProvider()),
-        ChangeNotifierProvider(create: (_) => MenuProvider()),
-        ChangeNotifierProvider(create: (_) => FacultyProvider()),
-        ChangeNotifierProvider(create: (_) => RoomProvider()),
-      ],
-      child: MaterialApp.router(
-        title: AppConstants.appName,
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.seedColor),
-          useMaterial3: true,
-        ),
-        routerConfig: routes,
+    return MaterialApp.router(
+      title: AppConstants.appName,
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(seedColor: AppConstants.seedColor),
+        useMaterial3: true,
       ),
+      routerConfig: routes,
     );
   }
 }
