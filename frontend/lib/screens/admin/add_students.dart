@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/choice_selector.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
@@ -7,14 +7,13 @@ import 'package:smart_insti_app/components/text_divider.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/provider/student_provider.dart';
 
-class AddStudents extends StatelessWidget {
+class AddStudents extends ConsumerWidget {
   AddStudents({super.key});
 
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    StudentProvider studentProvider = Provider.of<StudentProvider>(context, listen: false);
+  Widget build(BuildContext context, WidgetRef ref) {
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
@@ -46,7 +45,7 @@ class AddStudents extends StatelessWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () => studentProvider.pickSpreadsheet(),
+                        onPressed: () => ref.read(studentProvider.notifier).pickSpreadsheet(),
                         style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
@@ -72,36 +71,36 @@ class AddStudents extends StatelessWidget {
                     child: Column(
                       children: [
                         MaterialTextFormField(
-                          controller: studentProvider.studentNameController,
+                          controller: ref.watch(studentProvider.notifier).studentNameController,
                           validator: (value) => Validators.nameValidator(value),
                           hintText: "Enter Student Name",
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         MaterialTextFormField(
-                          controller: studentProvider.studentRollNoController,
+                          controller: ref.read(studentProvider.notifier).studentRollNoController,
                           validator: (value) => Validators.rollNumberValidator(value),
                           hintText: "Enter Roll Number",
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         MaterialTextFormField(
-                          controller: studentProvider.studentEmailController,
+                          controller: ref.read(studentProvider.notifier).studentEmailController,
                           validator: (value) => Validators.emailValidator(value),
                           hintText: "Enter Student Mail",
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         ChoiceSelector(
-                          onChanged: (value) => studentProvider.branch = value!,
-                          value: studentProvider.branch,
+                          onChanged: (value) => ref.read(studentProvider.notifier).updateBranch(value!),
+                          value: ref.watch(studentProvider).branch,
                           items: Branches.branchList,
                           hint: "Select Branch",
                         ),
                         const SizedBox(height: 30),
                         ChoiceSelector(
-                          onChanged: (value) => studentProvider.role = value!,
-                          value: studentProvider.role,
+                          onChanged: (value) => ref.read(studentProvider.notifier).updateRole(value!),
+                          value: ref.watch(studentProvider).role,
                           items: StudentRoles.studentRoleList,
                           hint: "Select student role",
                         ),
@@ -111,7 +110,7 @@ class AddStudents extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
-                                studentProvider.addStudent();
+                                ref.read(studentProvider.notifier).addStudent();
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   const SnackBar(content: Text('Added Student')),
                                 );

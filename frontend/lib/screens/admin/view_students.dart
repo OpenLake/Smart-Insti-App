@@ -1,20 +1,17 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/provider/student_provider.dart';
-
 import '../../models/student.dart';
 
-class ViewStudents extends StatelessWidget {
+class ViewStudents extends ConsumerWidget {
   const ViewStudents({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    StudentProvider studentProvider = Provider.of<StudentProvider>(context, listen: false);
-
+  Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      studentProvider.searchStudents();
+      ref.read(studentProvider.notifier).searchStudents();
     });
 
     return ResponsiveScaledBox(
@@ -28,18 +25,18 @@ class ViewStudents extends StatelessWidget {
               child: SizedBox(
                 width: 390,
                 child: SearchBar(
-                  controller: studentProvider.searchStudentController,
+                  controller: ref.read(studentProvider).searchStudentController,
                   hintText: 'Enter student name',
                   onChanged: (value) {
-                    studentProvider.searchStudents();
+                    ref.watch(studentProvider.notifier).searchStudents();
                   },
                   onSubmitted: (value) {
-                    studentProvider.searchStudents();
+                    ref.watch(studentProvider.notifier).searchStudents();
                   },
                   leading: IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        studentProvider.searchStudentController.clear();
+                        ref.read(studentProvider).searchStudentController.clear();
                         context.pop();
                       }),
                   shadowColor: MaterialStateProperty.all(Colors.transparent),
@@ -48,9 +45,9 @@ class ViewStudents extends StatelessWidget {
             )
           ],
         ),
-        body: Consumer<StudentProvider>(
-          builder: (_, coursesProvider, ___) {
-            if (coursesProvider.filteredStudents.isEmpty) {
+        body: Consumer(
+          builder: (_, ref, ___) {
+            if (ref.watch(studentProvider).filteredStudents.isEmpty) {
               return const Center(
                 child: Text(
                   'No students so far',
@@ -60,7 +57,7 @@ class ViewStudents extends StatelessWidget {
             }
             return ListView.builder(
                 itemBuilder: (_, index) {
-                  List<Student> students = coursesProvider.filteredStudents;
+                  List<Student> students = ref.read(studentProvider).filteredStudents;
                   return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: ListTile(
@@ -90,7 +87,7 @@ class ViewStudents extends StatelessWidget {
                             IconButton(
                               iconSize: 20,
                               icon: const Icon(Icons.delete),
-                              onPressed: () => coursesProvider.removeStudent(students[index]),
+                              onPressed: () => ref.read(studentProvider.notifier).removeStudent(students[index]),
                             ),
                           ],
                         ),
@@ -98,7 +95,7 @@ class ViewStudents extends StatelessWidget {
                     ),
                   );
                 },
-                itemCount: coursesProvider.filteredStudents.length);
+                itemCount: ref.read(studentProvider).filteredStudents.length);
           },
         ),
       ),
