@@ -1,15 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/collapsing_app_bar.dart';
 import 'package:smart_insti_app/provider/admin_provider.dart';
 
-class AdminHome extends StatelessWidget {
+class AdminHome extends ConsumerWidget {
   const AdminHome({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    AdminProvider adminProvider = Provider.of<AdminProvider>(context);
+  Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(adminProvider.notifier).buildMenuTiles(context);
+    });
+
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
@@ -29,18 +32,18 @@ class AdminHome extends StatelessWidget {
               ),
               bottom: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Consumer<AdminProvider>(
-                  builder: (_, adminProvider, ___) {
-                    if (adminProvider.toggleSearch) {
+                child: Consumer(
+                  builder: (_, ref, ___) {
+                    if (ref.watch(adminProvider).toggleSearch) {
                       return SearchBar(
-                        controller: adminProvider.searchController,
-                        onChanged: (value) => adminProvider.refreshTiles(),
+                        controller: ref.read(adminProvider.notifier).searchController,
+                        onChanged: (value) => ref.read(adminProvider.notifier).buildMenuTiles(context),
                         leading: IconButton(
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () {
-                            adminProvider.toggleSearchBar();
-                            adminProvider.searchController.clear();
-                            adminProvider.refreshTiles();
+                            ref.read(adminProvider.notifier).searchController.clear();
+                            ref.read(adminProvider.notifier).toggleSearchBar();
+                            ref.read(adminProvider.notifier).buildMenuTiles(context);
                           },
                         ),
                         shadowColor: MaterialStateProperty.all(Colors.transparent),
@@ -51,7 +54,7 @@ class AdminHome extends StatelessWidget {
                         children: [
                           IconButton(
                               iconSize: 30,
-                              onPressed: () => adminProvider.toggleSearchBar(),
+                              onPressed: () => ref.read(adminProvider.notifier).toggleSearchBar(),
                               icon: const Icon(Icons.search)),
                           PopupMenuButton(
                             itemBuilder: (context) {
@@ -92,12 +95,12 @@ class AdminHome extends StatelessWidget {
           ],
           body: Container(
               color: Colors.white,
-              child: Consumer<AdminProvider>(
-                builder: (_, __, ___) {
+              child: Consumer(
+                builder: (_, ref, ___) {
                   return GridView.count(
                     padding: const EdgeInsets.all(10),
                     crossAxisCount: 2,
-                    children: adminProvider.buildMenuTiles(context),
+                    children: ref.watch(adminProvider).menuTiles,
                   );
                 },
               )),
