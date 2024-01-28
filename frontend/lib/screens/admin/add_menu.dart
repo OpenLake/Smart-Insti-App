@@ -15,11 +15,9 @@ class AddMessMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // MenuProvider menuProvider = Provider.of<MenuProvider>(context, listen: false);
 
-    //ref.read(menuProvider.notifier).initMenu();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(menuProvider.notifier).clear();
+      ref.watch(menuProvider.notifier).clear();
     });
 
     return ResponsiveScaledBox(

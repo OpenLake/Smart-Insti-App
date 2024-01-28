@@ -14,7 +14,6 @@ class AddCourses extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    //  CoursesProvider coursesProvider = Provider.of<CoursesProvider>(context, listen: false);
     final course = ref.watch(coursesProvider);
     return ResponsiveScaledBox(
       width: 411,

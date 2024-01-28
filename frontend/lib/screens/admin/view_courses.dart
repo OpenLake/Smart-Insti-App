@@ -10,7 +10,6 @@ class ViewCourses extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // CoursesProvider coursesProvider = Provider.of<CoursesProvider>(context, listen: false);
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(coursesProvider.notifier).searchCourses();

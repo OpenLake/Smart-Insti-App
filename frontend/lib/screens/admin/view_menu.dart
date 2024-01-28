@@ -13,10 +13,10 @@ class ViewMessMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // MenuProvider menuProvider = Provider.of<MenuProvider>(context, listen: false);
-    // ref.read(menuProvider.notifier).initMenu();
-    // ref.read(menuProvider.notifier).selectedViewMenu = ref.read(menuProvider).messMenus.keys.isNotEmpty ? ref.read(menuProvider).messMenus.keys.first : null;
-    // menuProvider.selectedViewMenu = menuProvider.messMenus.keys.isNotEmpty ? menuProvider.messMenus.keys.first : null;
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(menuProvider.notifier).initMenuView();
+    });
+
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
