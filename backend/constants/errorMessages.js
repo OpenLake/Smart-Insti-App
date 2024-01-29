@@ -17,3 +17,7 @@ export const noOTPFoundForEmail = 'No OTP found for the email';
 export const incorrectOTP = 'Incorrect OTP';
 export const otpVerfied = 'OTP verified successfully';
 export const otpSent = 'OTP sent successfully';
+
+// Auth Middleware
+export const noAuthToken = 'No auth token, access denied';
+export const tokenVerificationFailed = 'Token verification failed, authorization denied.';
