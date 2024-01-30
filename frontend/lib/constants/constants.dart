@@ -1,4 +1,3 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 class AppConstants {
@@ -8,7 +7,8 @@ class AppConstants {
 
 class Branches {
   static List<DropdownMenuItem<String>> branchList = const [
-    DropdownMenuItem<String>(value: "Computer Science and Engineering", child: Text("Computer Science and Engineering")),
+    DropdownMenuItem<String>(
+        value: "Computer Science and Engineering", child: Text("Computer Science and Engineering")),
     DropdownMenuItem<String>(value: "Computer Science", child: Text("Computer Science")),
     DropdownMenuItem<String>(value: "Electrical Engineering", child: Text("Electrical Engineering")),
     DropdownMenuItem<String>(value: "Mechanical Engineering", child: Text("Mechanical Engineering")),
@@ -107,22 +107,21 @@ class MessMenuConstants {
   ];
 
   static final List<Text> mealTypes = [
-    Text('Breakfast',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
-    Text('Lunch',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
-    Text('Snacks',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
-    Text('Dinner',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    Text('Breakfast', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    Text('Lunch', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    Text('Snacks', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    Text('Dinner', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
   ];
 
-  static const Map<String,String> weekdaysShortToLong = {
-    "Sun":"Sunday",
-    "Mon":"Monday",
-    "Tue":"Tuesday",
-    "Wed":"Wednesday",
-    "Thu":"Thursday",
-    "Fri":"Friday",
-    "Sat":"Saturday",
+  static const Map<String, String> weekdaysShortToLong = {
+    "Sun": "Sunday",
+    "Mon": "Monday",
+    "Tue": "Tuesday",
+    "Wed": "Wednesday",
+    "Thu": "Thursday",
+    "Fri": "Friday",
+    "Sat": "Saturday",
   };
-
 }
 
 class Validators {
@@ -130,7 +129,7 @@ class Validators {
     if (value == null || value.isEmpty) {
       return "Email cannot be empty";
     }
-    if (!EmailValidator.validate(value)) {
+    if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$").hasMatch(value)) {
       return "Invalid email";
     }
     return null;
