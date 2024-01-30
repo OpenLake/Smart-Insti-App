@@ -108,6 +108,8 @@ otpRouter.post('/verify-otp', async (req, res) => {
     if (otp === storedOTP) {
       await collection.deleteOne({ email });
       const token = jwt.sign({ email }, process.env.ACCESS_TOKEN_SECRET, { expiresIn: '1h' });
+      const userCollection = database.collection('users');
+      await userCollection.updateOne({ email }, { $set: { token } });
       return res.json({ message: errorConstants.otpVerfied, token });
     }
     res.status(401).json({ error: errorConstants.incorrectOTP });
