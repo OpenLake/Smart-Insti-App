@@ -7,7 +7,9 @@ import '../constants/dummy_entries.dart';
 import '../models/course.dart';
 import '../models/faculty.dart';
 
-final facultyProvider = StateNotifierProvider<FacultyStateNotifier, FacultyState>((ref) => FacultyStateNotifier());
+final facultyProvider =
+    StateNotifierProvider<FacultyStateNotifier, FacultyState>(
+        (ref) => FacultyStateNotifier());
 
 class FacultyState {
   final List<Faculty> faculties;
@@ -38,9 +40,12 @@ class FacultyState {
       faculties: faculties ?? this.faculties,
       filteredFaculties: filteredFaculties ?? this.filteredFaculties,
       selectedCourses: selectedCourses ?? this.selectedCourses,
-      facultyNameController: facultyNameController ?? this.facultyNameController,
-      facultyEmailController: facultyEmailController ?? this.facultyEmailController,
-      searchFacultyController: searchFacultyController ?? this.searchFacultyController,
+      facultyNameController:
+          facultyNameController ?? this.facultyNameController,
+      facultyEmailController:
+          facultyEmailController ?? this.facultyEmailController,
+      searchFacultyController:
+          searchFacultyController ?? this.searchFacultyController,
     );
   }
 }
@@ -86,8 +91,9 @@ class FacultyStateNotifier extends StateNotifier<FacultyState> {
 
   void addFaculty() {
     Faculty faculty = Faculty(
+      id: (state.faculties.length + 1).toString(),
       name: state.facultyNameController.text,
-      facultyMail: state.facultyEmailController.text,
+      email: state.facultyEmailController.text,
       courses: state.selectedCourses,
     );
     state = state.copyWith(
@@ -109,8 +115,10 @@ class FacultyStateNotifier extends StateNotifier<FacultyState> {
     String query = state.searchFacultyController.text;
     _logger.i("Searching for faculty: $query");
     state = state.copyWith(
-      filteredFaculties:
-          state.faculties.where((faculty) => faculty.name.toLowerCase().contains(query.toLowerCase())).toList(),
+      filteredFaculties: state.faculties
+          .where((faculty) =>
+              faculty.name.toLowerCase().contains(query.toLowerCase()))
+          .toList(),
     );
   }
 

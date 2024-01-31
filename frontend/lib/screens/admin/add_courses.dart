@@ -46,8 +46,12 @@ class AddCourses extends ConsumerWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () => ref.read(coursesProvider.notifier).pickSpreadsheet(),
-                        style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                        onPressed: () => ref
+                            .read(coursesProvider.notifier)
+                            .pickSpreadsheet(),
+                        style: ButtonStyle(
+                            minimumSize:
+                                MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
                     ],
@@ -80,14 +84,17 @@ class AddCourses extends ConsumerWidget {
                         const SizedBox(height: 30),
                         MaterialTextFormField(
                           controller: course.courseCodeController,
-                          validator: (value) => Validators.courseCodeValidator(value),
+                          validator: (value) =>
+                              Validators.courseCodeValidator(value),
                           hintText: "Enter course code",
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         ChoiceSelector(
-                          onChanged: (value) => ref.read(coursesProvider.notifier).updateBranch(value),
-                          value: course.branch,
+                          onChanged: (value) => ref
+                              .read(coursesProvider.notifier)
+                              .updateBranch(value),
+                          value: course.branches[0],
                           items: Branches.branchList,
                           hint: "Select Branch",
                         ),
@@ -103,7 +110,9 @@ class AddCourses extends ConsumerWidget {
                                 );
                               }
                             },
-                            style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                            style: ButtonStyle(
+                                minimumSize: MaterialStateProperty.all(
+                                    const Size(200, 60))),
                             child: const Text("Add Course"),
                           ),
                         ),

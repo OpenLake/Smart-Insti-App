@@ -1,18 +1,67 @@
-class Student {
-  Student(
-      {required this.name,
-      required this.studentMail,
-      required this.rollNumber,
-      required this.branch,
-      required this.role,
-      this.id,
-      this.collegeId});
+import 'package:smart_insti_app/models/achievement.dart';
+import 'package:smart_insti_app/models/skills.dart';
 
-  final String? id;
-  final String? collegeId;
+class Student {
+  final String id;
   final String name;
-  final String studentMail;
-  final String rollNumber;
-  final String branch;
-  final String role;
+  final String email;
+  final String? rollNumber;
+  final String? about;
+  final String? profilePicURI;
+  final String? branch;
+  final int? graduationYear;
+  final List<Skill>? skills;
+  final List<Achievement>? achievements;
+  final List<String>? roles;
+
+  Student({
+    required this.id,
+    required this.name,
+    required this.email,
+    this.rollNumber,
+    this.about,
+    this.profilePicURI,
+    this.branch,
+    this.graduationYear,
+    this.skills,
+    this.achievements,
+    this.roles,
+  });
+
+  factory Student.fromJson(Map<String, dynamic> json) {
+    return Student(
+      id: json['_id'],
+      name: json['name'] ?? 'Smart Insti User',
+      email: json['email'],
+      rollNumber: json['rollNumber'],
+      about: json['about'],
+      profilePicURI: json['profilePicURI'],
+      branch: json['branch'],
+      graduationYear: json['graduationYear'],
+      skills: (json['skills'] as List<dynamic>)
+          .map((item) => Skill.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      achievements: (json['achievements'] as List<dynamic>)
+          .map((item) => Achievement.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      roles: (json['roles'] as List?)?.map((item) => item as String).toList(),
+    );
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'name': name,
+      'email': email,
+      'rollNumber': rollNumber,
+      'about': about,
+      'profilePicURI': profilePicURI,
+      'branch': branch,
+      'graduationYear': graduationYear,
+      'skills': skills!.map((skill) => skill.toJson()).toList(),
+      'achievements':
+          achievements!.map((achievement) => achievement.toJson()).toList(),
+      'roles': roles,
+    };
+  }
 }

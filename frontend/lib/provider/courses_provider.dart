@@ -7,7 +7,8 @@ import 'dart:io';
 import '../constants/constants.dart';
 import '../models/course.dart';
 
-final coursesProvider = StateNotifierProvider<CoursesNotifier, CoursesState>((ref) => CoursesNotifier());
+final coursesProvider = StateNotifierProvider<CoursesNotifier, CoursesState>(
+    (ref) => CoursesNotifier());
 
 class CoursesState {
   final List<Course> courses;
@@ -15,7 +16,7 @@ class CoursesState {
   final TextEditingController courseCodeController;
   final TextEditingController courseNameController;
   final TextEditingController searchCourseController;
-  final String branch;
+  final List<String> branches;
 
   CoursesState({
     required this.courses,
@@ -23,25 +24,25 @@ class CoursesState {
     required this.courseCodeController,
     required this.courseNameController,
     required this.searchCourseController,
-    required this.branch,
+    required this.branches,
   });
 
   CoursesState copyWith({
-    List<String>? branches,
     List<Course>? courses,
     List<Course>? filteredCourses,
+    List<String>? branches,
     TextEditingController? courseCodeController,
     TextEditingController? courseNameController,
     TextEditingController? searchCourseController,
-    String? branch,
   }) {
     return CoursesState(
       courses: courses ?? this.courses,
       filteredCourses: filteredCourses ?? this.filteredCourses,
       courseCodeController: courseCodeController ?? this.courseCodeController,
       courseNameController: courseNameController ?? this.courseNameController,
-      searchCourseController: searchCourseController ?? this.searchCourseController,
-      branch: branch ?? this.branch,
+      searchCourseController:
+          searchCourseController ?? this.searchCourseController,
+      branches: branches ?? this.branches,
     );
   }
 }
@@ -56,7 +57,7 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
       courseCodeController: TextEditingController(),
       courseNameController: TextEditingController(),
       searchCourseController: TextEditingController(),
-      branch: Branches.branchList[0].value!,
+      branches: Branches.branchList.map((branch) => branch.value!).toList(),
     );
   }
 
@@ -92,8 +93,10 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
     String query = state.searchCourseController.text;
     _logger.i("Searching for courses with query $query");
     state = state.copyWith(
-        filteredCourses:
-            state.courses.where((course) => course.courseName.toLowerCase().contains(query.toLowerCase())).toList());
+        filteredCourses: state.courses
+            .where((course) =>
+                course.courseName.toLowerCase().contains(query.toLowerCase()))
+            .toList());
   }
 
   void removeCourse(Course course) {
@@ -107,9 +110,10 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
   void addCourse() {
     _logger.i("Adding course ${state.courseCodeController.text}");
     final newCourse = Course(
+      id: (state.courses.length + 1).toString(),
       courseCode: state.courseCodeController.text,
       courseName: state.courseNameController.text,
-      branch: state.branch,
+      branches: state.branches,
     );
     state = state.copyWith(
       courses: [
@@ -118,11 +122,11 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
       ],
       courseCodeController: TextEditingController(),
       courseNameController: TextEditingController(),
-      branch: Branches.branchList[0].value!,
+      branches: Branches.branchList.map((branch) => branch.value!).toList(),
     );
   }
 
-  void updateBranch(String newBranch) {
-    state = state.copyWith(branch: newBranch);
+  void updateBranch(List<String> newBranches) {
+    state = state.copyWith(branches: newBranches);
   }
 }
