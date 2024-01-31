@@ -1,11 +1,11 @@
 class Course {
-  final String? id;
+  final String id;
   final String courseCode;
   final String courseName;
   final List<String> branches;
 
   Course({
-    this.id,
+    required this.id,
     required this.courseCode,
     required this.courseName,
     required this.branches,

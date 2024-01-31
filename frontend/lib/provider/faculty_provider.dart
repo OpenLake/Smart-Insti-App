@@ -91,7 +91,7 @@ class FacultyStateNotifier extends StateNotifier<FacultyState> {
 
   void addFaculty() {
     Faculty faculty = Faculty(
-      id: '',
+      id: (state.faculties.length + 1).toString(),
       name: state.facultyNameController.text,
       email: state.facultyEmailController.text,
       courses: state.selectedCourses,

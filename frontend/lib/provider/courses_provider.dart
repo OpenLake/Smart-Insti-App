@@ -110,6 +110,7 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
   void addCourse() {
     _logger.i("Adding course ${state.courseCodeController.text}");
     final newCourse = Course(
+      id: (state.courses.length + 1).toString(),
       courseCode: state.courseCodeController.text,
       courseName: state.courseNameController.text,
       branches: state.branches,
