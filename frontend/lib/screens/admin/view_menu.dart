@@ -1,28 +1,27 @@
 import 'package:flutter/material.dart';
-import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 import 'package:smart_insti_app/components/choice_selector.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/models/mess_menu.dart';
-
+import 'package:smart_insti_app/provider/menu_provider.dart';
 import '../../constants/constants.dart';
-import '../../provider/menu_provider.dart';
 
-class ViewMessMenu extends StatelessWidget {
+class ViewMessMenu extends ConsumerWidget {
   const ViewMessMenu({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    MenuProvider menuProvider = Provider.of<MenuProvider>(context, listen: false);
-    menuProvider.initMenu();
-    menuProvider.selectedViewMenu = menuProvider.messMenus.keys.isNotEmpty ? menuProvider.messMenus.keys.first : null;
+  Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.watch(menuProvider.notifier).initMenuView();
+    });
+
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
         appBar: AppBar(
-          title: Text('Mess Menu'),
+          title: const Text('Mess Menu'),
         ),
         body: SingleChildScrollView(
           child: Column(
@@ -31,10 +30,12 @@ class ViewMessMenu extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: ChoiceSelector(
-                  onChanged: (value) => menuProvider.setSelectViewMenu(value),
-                  value: menuProvider.messMenus.keys.isNotEmpty ? menuProvider.messMenus.keys.first : null,
+                  onChanged: (value) => ref.read(menuProvider.notifier).setSelectViewMenu(value),
+                  value: ref.read(menuProvider).messMenus.keys.isNotEmpty
+                      ? ref.read(menuProvider).messMenus.keys.first
+                      : null,
                   items: [
-                    for (String i in menuProvider.messMenus.keys)
+                    for (String i in ref.read(menuProvider).messMenus.keys)
                       DropdownMenuItem<String>(
                         value: i,
                         child: Text(i),
@@ -46,7 +47,7 @@ class ViewMessMenu extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
                 child: SlideSwitcher(
-                  onSelect: (index) => menuProvider.selectMealType(index),
+                  onSelect: (index) => ref.read(menuProvider.notifier).selectMealType(index),
                   containerHeight: 65,
                   containerWight: 380,
                   containerBorderRadius: 20,
@@ -71,15 +72,20 @@ class ViewMessMenu extends StatelessWidget {
                       ),
                       child: Column(
                         children: [
-                          Consumer<MenuProvider>(
-                            builder: (_, menuProvider, __) {
+                          Consumer(
+                            builder: (_, ref, __) {
+                              final menuState = ref.watch(menuProvider);
+                              final weekDay =
+                                  ref.watch(menuProvider.notifier).getWeekDay(menuState.selectedWeekdayIndex);
+                              final mealType =
+                                  ref.watch(menuProvider.notifier).getMealType(menuState.selectedMealTypeIndex);
                               return Column(
                                 children: [
                                   Container(
                                     padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
                                     alignment: Alignment.topLeft,
                                     child: Text(
-                                      "${menuProvider.weekday}'s ${menuProvider.mealType}",
+                                      "$weekDay's $mealType",
                                       style: const TextStyle(fontSize: 23, fontFamily: "GoogleSanaFlex"),
                                     ),
                                   ),
@@ -87,21 +93,22 @@ class ViewMessMenu extends StatelessWidget {
                               );
                             },
                           ),
-                          Consumer<MenuProvider>(
-                            builder: (context, menuProvider, child) {
-                              if (menuProvider.selectedViewMenu != null) {
-                                MessMenu? selectedMenu = menuProvider.messMenus[menuProvider.messMenus.keys.first];
-                                selectedMenu = menuProvider.messMenus[menuProvider.selectedViewMenu];
-                                int length =
-                                    selectedMenu?.messMenu?[menuProvider.weekday]?[menuProvider.mealType]?.length ?? 0;
+                          Consumer(
+                            builder: (context, ref, child) {
+                              final menuState = ref.watch(menuProvider);
+                              final weekDay =
+                                  ref.watch(menuProvider.notifier).getWeekDay(menuState.selectedWeekdayIndex);
+                              final mealType =
+                                  ref.watch(menuProvider.notifier).getMealType(menuState.selectedMealTypeIndex);
+                              if (menuState.selectedViewMenu != null) {
+                                MessMenu? selectedMenu = menuState.messMenus[menuState.selectedViewMenu];
+                                int length = selectedMenu?.messMenu?[weekDay]?[mealType]?.length ?? 0;
                                 List controllers = List.generate(length, (index) => TextEditingController());
                                 return ListView.builder(
                                   shrinkWrap: true,
                                   itemCount: length,
                                   itemBuilder: (context, index) {
-                                    controllers[index].text = selectedMenu?.messMenu?[menuProvider.weekday]
-                                            ?[menuProvider.mealType]?[index] ??
-                                        '';
+                                    controllers[index].text = selectedMenu?.messMenu?[weekDay]?[mealType]?[index] ?? '';
                                     return Container(
                                       margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                       decoration: BoxDecoration(
@@ -113,9 +120,8 @@ class ViewMessMenu extends StatelessWidget {
                                         contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                         controller: controllers[index],
                                         hintText: 'Item ${index + 1}',
-                                        onChanged: (value) => selectedMenu?.messMenu?[menuProvider.weekday]
-                                                ?[menuProvider.mealType]?[index] =
-                                            value,
+                                        onChanged: (value) =>
+                                            selectedMenu?.messMenu?[weekDay]?[mealType]?[index] = value,
                                       ),
                                     );
                                   },
@@ -138,7 +144,7 @@ class ViewMessMenu extends StatelessWidget {
                     Align(
                       alignment: Alignment.centerRight,
                       child: SlideSwitcher(
-                        onSelect: (index) => menuProvider.selectWeekday(index),
+                        onSelect: (index) => ref.read(menuProvider.notifier).selectWeekday(index),
                         containerHeight: 550,
                         containerWight: 70,
                         containerBorderRadius: 20,

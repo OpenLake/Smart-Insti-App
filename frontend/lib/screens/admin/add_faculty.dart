@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:search_choices/search_choices.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
@@ -9,16 +9,13 @@ import '../../constants/constants.dart';
 import '../../models/course.dart';
 import '../../provider/faculty_provider.dart';
 
-class AddFaculty extends StatelessWidget {
+class AddFaculty extends ConsumerWidget {
   AddFaculty({super.key});
 
   final _formKey = GlobalKey<FormState>();
 
   @override
-  Widget build(BuildContext context) {
-    CoursesProvider coursesProvider = Provider.of<CoursesProvider>(context);
-    FacultyProvider facultyProvider = Provider.of<FacultyProvider>(context);
-
+  Widget build(BuildContext context, WidgetRef ref) {
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
@@ -50,7 +47,7 @@ class AddFaculty extends StatelessWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () => facultyProvider.pickSpreadsheet(),
+                        onPressed: () => ref.read(facultyProvider.notifier).pickSpreadsheet(),
                         style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
@@ -76,14 +73,14 @@ class AddFaculty extends StatelessWidget {
                     child: Column(
                       children: [
                         MaterialTextFormField(
-                          controller: facultyProvider.facultyNameController,
+                          controller: ref.read(facultyProvider.notifier).facultyNameController,
                           validator: (value) => Validators.nameValidator(value),
                           hintText: 'Faculty Name',
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         MaterialTextFormField(
-                          controller: facultyProvider.facultyEmailController,
+                          controller: ref.read(facultyProvider.notifier).facultyEmailController,
                           validator: (value) => Validators.emailValidator(value),
                           hintText: 'Faculty Mail',
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
@@ -98,9 +95,9 @@ class AddFaculty extends StatelessWidget {
                           onChanged: (value) {
                             List<Course> selectedCourses = [];
                             for (int i = 0; i < value.length; i++) {
-                              selectedCourses.add(coursesProvider.courses[value[i]]);
+                              selectedCourses.add(ref.read(coursesProvider).courses[value[i]]);
                             }
-                            facultyProvider.selectedCourses = selectedCourses;
+                            ref.read(facultyProvider.notifier).updateSelectedCourses(selectedCourses);
                           },
                           fieldPresentationFn: (Widget fieldWidget, {bool? selectionIsValid}) {
                             return InputDecorator(
@@ -123,8 +120,8 @@ class AddFaculty extends StatelessWidget {
                             );
                           },
                           items: [
-                            if (coursesProvider.courses.isNotEmpty)
-                              for (Course course in coursesProvider.courses)
+                            if (ref.read(coursesProvider).courses.isNotEmpty)
+                              for (Course course in ref.read(coursesProvider).courses)
                                 DropdownMenuItem(
                                   value: course.courseCode,
                                   child: Text(course.courseName),
@@ -148,7 +145,7 @@ class AddFaculty extends StatelessWidget {
                   child: ElevatedButton(
                     onPressed: () {
                       if (_formKey.currentState!.validate()) {
-                        facultyProvider.addFaculty();
+                        ref.read(facultyProvider.notifier).addFaculty();
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Added Faculty')),
                         );

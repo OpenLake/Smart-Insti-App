@@ -1,19 +1,49 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smart_insti_app/components/menu_tile.dart';
 
-class AdminProvider extends ChangeNotifier {
-  bool toggleSearch = false;
-  late BuildContext context;
-  final TextEditingController _searchController = TextEditingController();
+final adminProvider =
+    StateNotifierProvider<AdminNotifier, AdminState>((ref) => AdminNotifier());
 
-  TextEditingController get searchController => _searchController;
+class AdminState {
+  final bool toggleSearch;
+  final TextEditingController searchController;
+  final List<MenuTile> menuTiles;
 
-  void refreshTiles() {
-    notifyListeners();
+  AdminState({
+    required this.toggleSearch,
+    required this.searchController,
+    required this.menuTiles,
+  });
+
+  AdminState copyWith({
+    bool? toggleSearch,
+    TextEditingController? searchController,
+    List<MenuTile>? menuTiles,
+  }) {
+    return AdminState(
+        toggleSearch: toggleSearch ?? this.toggleSearch,
+        searchController: searchController ?? this.searchController,
+        menuTiles: menuTiles ?? this.menuTiles);
   }
+}
 
-  List<MenuTile> buildMenuTiles(BuildContext context) {
+class AdminNotifier extends StateNotifier<AdminState> {
+  AdminNotifier()
+      : super(AdminState(
+          searchController: TextEditingController(),
+          toggleSearch: false,
+          menuTiles: [],
+        ));
+
+  get searchController => state.searchController;
+
+  get toggleSearch => state.toggleSearch;
+
+  get menuTiles => state.menuTiles;
+
+  void buildMenuTiles(BuildContext context) {
     List<MenuTile> menuTiles = [
       MenuTile(
         title: "Add\nStudents",
@@ -79,15 +109,15 @@ class AdminProvider extends ChangeNotifier {
         secondaryColor: Colors.tealAccent.shade200,
       ),
     ];
-    String query = _searchController.text;
-    return menuTiles
-        .where((element) =>
-            element.title.toLowerCase().contains(query.toLowerCase()))
-        .toList();
+    String query = state.searchController.text;
+    state = state.copyWith(
+        menuTiles: menuTiles
+            .where((element) =>
+                element.title.toLowerCase().contains(query.toLowerCase()))
+            .toList());
   }
 
   void toggleSearchBar() {
-    toggleSearch = !toggleSearch;
-    notifyListeners();
+    state = state.copyWith(toggleSearch: !state.toggleSearch);
   }
 }

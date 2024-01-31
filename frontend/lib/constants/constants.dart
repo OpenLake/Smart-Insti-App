@@ -50,8 +50,53 @@ class StudentRoles {
   ];
 }
 
-class MessMenuConstants{
- static final List<Text> weekdays = [
+class MessMenuConstants {
+  static Map<String, Map<String, List<String>>> emptyMenu = {
+    'Sunday': <String, List<String>>{
+      'Breakfast': <String>[],
+      'Lunch': <String>[],
+      'Snacks': <String>[],
+      'Dinner': <String>[],
+    },
+    'Monday': <String, List<String>>{
+      'Breakfast': <String>[],
+      'Lunch': <String>[],
+      'Snacks': <String>[],
+      'Dinner': <String>[],
+    },
+    'Tuesday': <String, List<String>>{
+      'Breakfast': <String>[],
+      'Lunch': <String>[],
+      'Snacks': <String>[],
+      'Dinner': <String>[],
+    },
+    'Wednesday': <String, List<String>>{
+      'Breakfast': <String>[],
+      'Lunch': <String>[],
+      'Snacks': <String>[],
+      'Dinner': <String>[],
+    },
+    'Thursday': <String, List<String>>{
+      'Breakfast': <String>[],
+      'Lunch': <String>[],
+      'Snacks': <String>[],
+      'Dinner': <String>[],
+    },
+    'Friday': <String, List<String>>{
+      'Breakfast': <String>[],
+      'Lunch': <String>[],
+      'Snacks': <String>[],
+      'Dinner': <String>[],
+    },
+    'Saturday': <String, List<String>>{
+      'Breakfast': <String>[],
+      'Lunch': <String>[],
+      'Snacks': <String>[],
+      'Dinner': <String>[],
+    },
+  };
+
+  static final List<Text> weekdays = [
     Text('Sun', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
     Text('Mon', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
     Text('Tue', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
@@ -61,22 +106,22 @@ class MessMenuConstants{
     Text('Sat', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
   ];
 
- static final List<Text> mealTypes = [
-   Text('Breakfast',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
-   Text('Lunch',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
-   Text('Snacks',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
-   Text('Dinner',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
- ];
+  static final List<Text> mealTypes = [
+    Text('Breakfast',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    Text('Lunch',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    Text('Snacks',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    Text('Dinner',style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+  ];
 
- static const Map<String,String> weekdaysShortToLong = {
-   "Sun":"Sunday",
-   "Mon":"Monday",
-   "Tue":"Tuesday",
-   "Wed":"Wednesday",
-   "Thu":"Thursday",
-   "Fri":"Friday",
-   "Sat":"Saturday",
- };
+  static const Map<String,String> weekdaysShortToLong = {
+    "Sun":"Sunday",
+    "Mon":"Monday",
+    "Tue":"Tuesday",
+    "Wed":"Wednesday",
+    "Thu":"Thursday",
+    "Fri":"Friday",
+    "Sat":"Saturday",
+  };
 
 }
 

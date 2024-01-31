@@ -1,29 +1,70 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/student.dart';
 import 'dart:io';
 
-class StudentProvider extends ChangeNotifier {
-  final TextEditingController _studentNameController = TextEditingController();
-  final TextEditingController _studentEmailController = TextEditingController();
-  final TextEditingController _studentRollNoController = TextEditingController();
-  final TextEditingController _searchStudentController = TextEditingController();
-  String branch = Branches.branchList[0].value!;
-  String role = StudentRoles.studentRoleList[0].value!;
+final studentProvider = StateNotifierProvider<StudentProvider, StudentState>((ref) => StudentProvider());
 
-  TextEditingController get studentNameController => _studentNameController;
+class StudentState {
+  final List<Student> students;
+  final List<Student> filteredStudents;
+  final TextEditingController studentNameController;
+  final TextEditingController studentEmailController;
+  final TextEditingController studentRollNoController;
+  final TextEditingController searchStudentController;
+  final String branch;
+  final String role;
 
-  TextEditingController get studentEmailController => _studentEmailController;
+  StudentState({
+    required this.students,
+    required this.filteredStudents,
+    required this.studentNameController,
+    required this.studentEmailController,
+    required this.studentRollNoController,
+    required this.searchStudentController,
+    required this.branch,
+    required this.role,
+  });
 
-  TextEditingController get studentRollNoController => _studentRollNoController;
+  StudentState copyWith({
+    List<Student>? students,
+    List<Student>? filteredStudents,
+    TextEditingController? studentNameController,
+    TextEditingController? studentEmailController,
+    TextEditingController? studentRollNoController,
+    TextEditingController? searchStudentController,
+    String? branch,
+    String? role,
+  }) {
+    return StudentState(
+      students: students ?? this.students,
+      filteredStudents: filteredStudents ?? this.filteredStudents,
+      studentNameController: studentNameController ?? this.studentNameController,
+      studentEmailController: studentEmailController ?? this.studentEmailController,
+      studentRollNoController: studentRollNoController ?? this.studentRollNoController,
+      searchStudentController: searchStudentController ?? this.searchStudentController,
+      branch: branch ?? this.branch,
+      role: role ?? this.role,
+    );
+  }
+}
 
-  TextEditingController get searchStudentController => _searchStudentController;
-
-  final List<Student> students = DummyStudents.students;
-  List<Student> filteredStudents = [];
+class StudentProvider extends StateNotifier<StudentState> {
+  StudentProvider()
+      : super(StudentState(
+          students: DummyStudents.students,
+          filteredStudents: [],
+          studentNameController: TextEditingController(),
+          studentEmailController: TextEditingController(),
+          studentRollNoController: TextEditingController(),
+          searchStudentController: TextEditingController(),
+          branch: Branches.branchList[0].value!,
+          role: StudentRoles.studentRoleList[0].value!,
+        ));
 
   final Logger _logger = Logger();
 
@@ -47,36 +88,63 @@ class StudentProvider extends ChangeNotifier {
     }
   }
 
+  get studentNameController => state.studentNameController;
+
+  get studentEmailController => state.studentEmailController;
+
+  get studentRollNoController => state.studentRollNoController;
+
+  get searchStudentController => state.searchStudentController;
+
   void searchStudents() {
-    String query = _searchStudentController.text;
+    String query = state.searchStudentController.text;
     _logger.i("Searching for student: $query");
-    filteredStudents =
-        students.where((student) => student.name.toLowerCase().contains(query.toLowerCase())).toList();
-    notifyListeners();
+    final newState = state.copyWith(
+      filteredStudents:
+          state.students.where((student) => student.name.toLowerCase().contains(query.toLowerCase())).toList(),
+    );
+    state = newState;
+  }
+
+  void updateBranch(String value) {
+    final newState = state.copyWith(branch: value);
+    state = newState;
+  }
+
+  void updateRole(String value) {
+    final newState = state.copyWith(role: value);
+    state = newState;
   }
 
   void addStudent() {
-    Student student = Student(
-      name: _studentNameController.text,
-      studentMail: _studentEmailController.text,
-      rollNumber: _studentRollNoController.text,
-      branch: branch,
-      role: role,
+    final newState = state.copyWith(
+      students: [
+        Student(
+          name: state.studentNameController.text,
+          studentMail: state.studentEmailController.text,
+          rollNumber: state.studentRollNoController.text,
+          branch: state.branch,
+          role: state.role,
+        ),
+        ...state.students,
+      ],
+      studentNameController: TextEditingController(),
+      studentEmailController: TextEditingController(),
+      studentRollNoController: TextEditingController(),
+      branch: Branches.branchList[0].value!,
+      role: StudentRoles.studentRoleList[0].value!,
     );
-    students.add(student);
-    _studentNameController.clear();
-    _studentEmailController.clear();
-    _studentRollNoController.clear();
-    _logger.i("Added student: ${student.name}");
-    notifyListeners();
+    state = newState;
   }
 
   void removeStudent(Student student) {
-    students.remove(student);
+    final newStudents = state.students.where((s) => s != student).toList();
+    final newFilteredStudents = state.filteredStudents.where((s) => s != student).toList();
+    final newState = state.copyWith(
+      students: newStudents,
+      filteredStudents: newFilteredStudents,
+    );
+    state = newState;
     _logger.i("Removed student: ${student.name}");
-    String query = _searchStudentController.text;
-    filteredStudents =
-        students.where((student) => student.rollNumber.toLowerCase().contains(query.toLowerCase())).toList();
-    notifyListeners();
   }
 }

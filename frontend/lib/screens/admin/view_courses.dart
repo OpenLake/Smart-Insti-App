@@ -1,19 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_scaled_box.dart';
 import 'package:smart_insti_app/provider/courses_provider.dart';
 import '../../models/course.dart';
 
-class ViewCourses extends StatelessWidget {
+class ViewCourses extends ConsumerWidget {
   const ViewCourses({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    CoursesProvider coursesProvider = Provider.of<CoursesProvider>(context, listen: false);
+  Widget build(BuildContext context, WidgetRef ref) {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      coursesProvider.searchCourses();
+      ref.read(coursesProvider.notifier).searchCourses();
     });
 
     return ResponsiveScaledBox(
@@ -27,18 +26,18 @@ class ViewCourses extends StatelessWidget {
               child: SizedBox(
                 width: 390,
                 child: SearchBar(
-                  controller: coursesProvider.searchCourseController,
+                  controller: ref.read(coursesProvider).searchCourseController,
                   hintText: 'Enter course name',
                   onChanged: (value) {
-                    coursesProvider.searchCourses();
+                    ref.watch(coursesProvider.notifier).searchCourses();
                   },
                   onSubmitted: (value) {
-                    coursesProvider.searchCourses();
+                    ref.watch(coursesProvider.notifier).searchCourses();
                   },
                   leading: IconButton(
                     icon: const Icon(Icons.arrow_back),
                     onPressed: () {
-                      coursesProvider.searchCourseController.clear();
+                      ref.read(coursesProvider).searchCourseController.clear();
                       context.pop();
                     },
                   ),
@@ -48,9 +47,9 @@ class ViewCourses extends StatelessWidget {
             )
           ],
         ),
-        body: Consumer<CoursesProvider>(
-          builder: (_, coursesProvider, ___) {
-            if (coursesProvider.filteredCourses.isEmpty) {
+        body: Consumer(
+          builder: (_, ref, ___) {
+            if (ref.watch(coursesProvider).filteredCourses.isEmpty) {
               return const Center(
                 child: Text(
                   'No Courses so far',
@@ -60,7 +59,7 @@ class ViewCourses extends StatelessWidget {
             }
             return ListView.builder(
                 itemBuilder: (_, index) {
-                  List<Course> courses = coursesProvider.filteredCourses;
+                  List<Course> courses = ref.read(coursesProvider).filteredCourses;
                   return Container(
                     margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: ListTile(
@@ -90,7 +89,7 @@ class ViewCourses extends StatelessWidget {
                             IconButton(
                               iconSize: 20,
                               icon: const Icon(Icons.delete),
-                              onPressed: () => coursesProvider.removeCourse(courses[index]),
+                              onPressed: () => ref.read(coursesProvider.notifier).removeCourse(courses[index]),
                             ),
                           ],
                         ),
@@ -98,7 +97,7 @@ class ViewCourses extends StatelessWidget {
                     ),
                   );
                 },
-                itemCount: coursesProvider.filteredCourses.length);
+                itemCount: ref.read(coursesProvider).filteredCourses.length);
           },
         ),
       ),

@@ -1,22 +1,52 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
-import '../components/menu_tile.dart';
-import '../models/room.dart';
+import 'package:smart_insti_app/components/menu_tile.dart';
+import 'package:smart_insti_app/models/room.dart';
 import 'dart:io';
 
-class RoomProvider extends ChangeNotifier {
-  final TextEditingController _searchRoomController = TextEditingController();
-  final TextEditingController _roomNameController = TextEditingController();
+final roomProvider = StateNotifierProvider<RoomProvider, RoomState>((ref) => RoomProvider());
 
-  TextEditingController get searchRoomController => _searchRoomController;
+class RoomState {
+  final List<Room> roomList;
+  final List<MenuTile> roomTiles;
+  final TextEditingController searchRoomController;
+  final TextEditingController roomNameController;
 
-  TextEditingController get roomNameController => _roomNameController;
+  RoomState({
+    required this.roomList,
+    required this.roomTiles,
+    required this.searchRoomController,
+    required this.roomNameController,
+  });
 
-  List<Room> roomList = DummyRooms.rooms;
-  List<Room> filteredRoomList = [];
+  RoomState copyWith({
+    List<Room>? roomList,
+    List<MenuTile>? roomTiles,
+    TextEditingController? searchRoomController,
+    TextEditingController? roomNameController,
+  }) {
+    return RoomState(
+      roomList: roomList ?? this.roomList,
+      roomTiles: roomTiles ?? this.roomTiles,
+      searchRoomController: searchRoomController ?? this.searchRoomController,
+      roomNameController: roomNameController ?? this.roomNameController,
+    );
+  }
+}
+
+class RoomProvider extends StateNotifier<RoomState> {
+  RoomProvider()
+      : super(RoomState(
+          roomList: DummyRooms.rooms,
+          roomTiles: [],
+          searchRoomController: TextEditingController(),
+          roomNameController: TextEditingController(),
+        ));
 
   final Logger _logger = Logger();
 
@@ -41,18 +71,20 @@ class RoomProvider extends ChangeNotifier {
   }
 
   void addRoom() {
-    Room room = Room(
-      name: _roomNameController.text,
+    final newState = state.copyWith(
+      roomList: [
+        Room(name: state.roomNameController.text),
+        ...state.roomList,
+      ],
+      roomNameController: TextEditingController(),
     );
-    _logger.i("Added room: ${room.name}");
-    roomList.add(room);
-    _roomNameController.clear();
-    notifyListeners();
+    state = newState;
+    _logger.i("Added room: ${state.roomNameController.text}");
   }
 
-  List<MenuTile> buildRoomTiles(BuildContext context) {
-    List<MenuTile> roomTiles = [];
-    for (Room room in filteredRoomList) {
+  void buildRoomTiles(BuildContext context) {
+    final roomTiles = <MenuTile>[];
+    for (Room room in state.roomList) {
       roomTiles.add(
         MenuTile(
           title: room.name,
@@ -77,8 +109,9 @@ class RoomProvider extends ChangeNotifier {
                     const SizedBox(height: 20),
                     BorderlessButton(
                       onPressed: () {
-                        Navigator.pop(context);
                         removeRoom(room);
+                        buildRoomTiles(context);
+                        context.pop();
                       },
                       label: const Text("Remove"),
                       backgroundColor: Colors.red.shade100,
@@ -86,31 +119,29 @@ class RoomProvider extends ChangeNotifier {
                     )
                   ],
                 ),
+                      ),
+                    ),
               ),
-            ),
-          ),
           icon: Icons.add,
           primaryColor: Colors.grey.shade200,
           secondaryColor: Colors.grey.shade300,
         ),
       );
     }
+    String query = state.searchRoomController.text;
+    state = state.copyWith(
+      roomTiles: roomTiles.where((element) => element.title.toLowerCase().contains(query.toLowerCase())).toList(),
+    );
     _logger.i("Built room tiles : ${roomTiles.length}");
-    return roomTiles;
-  }
-
-  void searchRooms() {
-    String query = _searchRoomController.text;
-    _logger.i("Searching for room: $query");
-    filteredRoomList = roomList.where((room) => room.name.toLowerCase().contains(query.toLowerCase())).toList();
-    notifyListeners();
   }
 
   void removeRoom(Room room) {
-    roomList.remove(room);
+    final newState = state.copyWith(
+      roomList: [
+        ...state.roomList.where((element) => element.name != room.name),
+      ],
+    );
+    state = newState;
     _logger.i("Removed room: ${room.name}");
-    String query = _searchRoomController.text;
-    filteredRoomList = roomList.where((room) => room.name.toLowerCase().contains(query.toLowerCase())).toList();
-    notifyListeners();
   }
 }

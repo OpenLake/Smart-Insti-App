@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-import 'package:provider/provider.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/collapsing_app_bar.dart';
@@ -10,15 +10,15 @@ import 'package:smart_insti_app/provider/room_provider.dart';
 
 import '../../components/text_divider.dart';
 
-class ManageRooms extends StatelessWidget {
+class ManageRooms extends ConsumerWidget {
   const ManageRooms({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    RoomProvider roomProvider = Provider.of<RoomProvider>(context, listen: false);
+  Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      roomProvider.searchRooms();
+      ref.read(roomProvider.notifier).buildRoomTiles(context);
     });
+
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
@@ -48,7 +48,7 @@ class ManageRooms extends StatelessWidget {
                         SizedBox(
                           width: 300,
                           child: MaterialTextFormField(
-                            controller: roomProvider.roomNameController,
+                            controller: ref.read(roomProvider).roomNameController,
                             hintText: 'Enter room name',
                           ),
                         ),
@@ -65,9 +65,9 @@ class ManageRooms extends StatelessWidget {
                             BorderlessButton(
                               onPressed: () {
                                 Logger().i("Adding room");
+                                ref.read(roomProvider.notifier).addRoom();
+                                ref.read(roomProvider.notifier).buildRoomTiles(context);
                                 context.pop();
-                                roomProvider.addRoom();
-                                roomProvider.searchRooms();
                               },
                               splashColor: Colors.blueAccent,
                               backgroundColor: Colors.blueAccent.shade100.withOpacity(0.2),
@@ -116,7 +116,7 @@ class ManageRooms extends StatelessWidget {
                         ),
                         const SizedBox(width: 30),
                         ElevatedButton(
-                          onPressed: () => roomProvider.pickSpreadsheet(),
+                          onPressed: () => ref.read(roomProvider.notifier).pickSpreadsheet(),
                           style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                           child: const Text("Upload Spreadsheet"),
                         ),
@@ -137,13 +137,13 @@ class ManageRooms extends StatelessWidget {
                     SizedBox(
                       width: 390,
                       child: SearchBar(
-                        controller: roomProvider.searchRoomController,
+                        controller: ref.read(roomProvider).searchRoomController,
                         hintText: 'Enter room name',
                         onChanged: (value) {
-                          roomProvider.searchRooms();
+                          ref.watch(roomProvider.notifier).buildRoomTiles(context);
                         },
                         onSubmitted: (value) {
-                          roomProvider.searchRooms();
+                          ref.watch(roomProvider.notifier).buildRoomTiles(context);
                         },
                         padding: MaterialStateProperty.all(const EdgeInsets.only(left: 15)),
                         shadowColor: MaterialStateProperty.all(Colors.transparent),
@@ -156,12 +156,12 @@ class ManageRooms extends StatelessWidget {
           ],
           body: Container(
             color: Colors.white,
-            child: Consumer<RoomProvider>(
-              builder: (_, __, ___) {
+            child: Consumer(
+              builder: (_, ref, ___) {
                 return GridView.count(
                   padding: const EdgeInsets.all(10),
                   crossAxisCount: 2,
-                  children: roomProvider.buildRoomTiles(context),
+                  children: ref.watch(roomProvider).roomTiles,
                 );
               },
             ),
