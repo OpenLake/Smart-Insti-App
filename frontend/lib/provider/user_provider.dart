@@ -9,11 +9,9 @@ enum UserType {
 class UserProvider extends ChangeNotifier {
   String? _userType;
   String? _userEmail;
-  String? _userToken;
 
   String? get userType => _userType;
   String? get userEmail => _userEmail;
-  String? get userToken => _userToken;
 
   void setUserType(String? userType) {
     _userType = userType;
@@ -22,11 +20,6 @@ class UserProvider extends ChangeNotifier {
 
   void setUserEmail(String? userEmail) {
     _userEmail = userEmail;
-    notifyListeners();
-  }
-
-  void setUserToken(String? userToken) {
-    _userToken = userToken;
     notifyListeners();
   }
 }

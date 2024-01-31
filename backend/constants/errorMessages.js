@@ -20,4 +20,7 @@ export const otpSent = 'OTP sent successfully';
 
 // Auth Middleware
 export const noAuthToken = 'No auth token, access denied';
+export const invalidAuthToken = 'Invalid token';
 export const tokenVerificationFailed = 'Token verification failed, authorization denied.';
+export const invalidUserType = 'Invalid user type';
+export const tokenUpdateError= 'Error updating token';

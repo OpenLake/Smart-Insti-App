@@ -7,7 +7,8 @@ import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/student.dart';
 import 'dart:io';
 
-final studentProvider = StateNotifierProvider<StudentProvider, StudentState>((ref) => StudentProvider());
+final studentProvider = StateNotifierProvider<StudentProvider, StudentState>(
+    (ref) => StudentProvider());
 
 class StudentState {
   final List<Student> students;
@@ -43,10 +44,14 @@ class StudentState {
     return StudentState(
       students: students ?? this.students,
       filteredStudents: filteredStudents ?? this.filteredStudents,
-      studentNameController: studentNameController ?? this.studentNameController,
-      studentEmailController: studentEmailController ?? this.studentEmailController,
-      studentRollNoController: studentRollNoController ?? this.studentRollNoController,
-      searchStudentController: searchStudentController ?? this.searchStudentController,
+      studentNameController:
+          studentNameController ?? this.studentNameController,
+      studentEmailController:
+          studentEmailController ?? this.studentEmailController,
+      studentRollNoController:
+          studentRollNoController ?? this.studentRollNoController,
+      searchStudentController:
+          searchStudentController ?? this.searchStudentController,
       branch: branch ?? this.branch,
       role: role ?? this.role,
     );
@@ -100,8 +105,10 @@ class StudentProvider extends StateNotifier<StudentState> {
     String query = state.searchStudentController.text;
     _logger.i("Searching for student: $query");
     final newState = state.copyWith(
-      filteredStudents:
-          state.students.where((student) => student.name.toLowerCase().contains(query.toLowerCase())).toList(),
+      filteredStudents: state.students
+          .where((student) =>
+              student.name.toLowerCase().contains(query.toLowerCase()))
+          .toList(),
     );
     state = newState;
   }
@@ -120,11 +127,11 @@ class StudentProvider extends StateNotifier<StudentState> {
     final newState = state.copyWith(
       students: [
         Student(
+          id: '',
           name: state.studentNameController.text,
-          studentMail: state.studentEmailController.text,
+          email: state.studentEmailController.text,
           rollNumber: state.studentRollNoController.text,
           branch: state.branch,
-          role: state.role,
         ),
         ...state.students,
       ],
@@ -139,7 +146,8 @@ class StudentProvider extends StateNotifier<StudentState> {
 
   void removeStudent(Student student) {
     final newStudents = state.students.where((s) => s != student).toList();
-    final newFilteredStudents = state.filteredStudents.where((s) => s != student).toList();
+    final newFilteredStudents =
+        state.filteredStudents.where((s) => s != student).toList();
     final newState = state.copyWith(
       students: newStudents,
       filteredStudents: newFilteredStudents,

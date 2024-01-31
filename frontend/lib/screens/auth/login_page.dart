@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:slide_switcher/slide_switcher.dart';
 import '../../components/snackbar.dart';
 import '../../services/auth/auth_service.dart';
 
@@ -106,7 +107,6 @@ class _SignInState extends State<SignIn> {
                       otpController2.text +
                       otpController3.text +
                       otpController4.text;
-                  print('OTP: $otp'); // Print the OTP
                   // Call verifyOTP
                   final isVerified =
                       await authService.verifyOTP(emailController.text, otp);

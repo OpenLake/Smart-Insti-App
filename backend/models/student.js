@@ -1,15 +1,10 @@
 import mongoose from 'mongoose';
-
 const studentSchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        default: 'Smart Insti User'
     },
     email: {
-        type: String,
-        required: true
-    },
-    token: {
         type: String,
         required: true
     },
@@ -28,12 +23,14 @@ const studentSchema = new mongoose.Schema({
     graduationYear: {
         type: Number,
     },
-    skills: {
-        type: [skillSchema],
-    },
-    achievements: {
-        type: [achievementSchema],
-    },
+    skills: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Skill'
+    }],
+    achievements: [{
+        type: mongoose.Schema.Types.ObjectId,
+        ref: 'Achievement'
+    }],
     roles: {
         type: [String],
     }

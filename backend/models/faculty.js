@@ -1,9 +1,9 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose';
 
 const facultySchema = new mongoose.Schema({
     name: {
         type: String,
-        required: true
+        default: 'Smart Insti User'
     },
     email: {
         type: String,
@@ -13,9 +13,8 @@ const facultySchema = new mongoose.Schema({
     courses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
-    }]
+    }],
 });
 
 const Faculty = mongoose.model('Faculty', facultySchema);
-
-module.exports = Faculty;
+export default Faculty;
