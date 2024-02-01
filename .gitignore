@@ -1,5 +1,5 @@
 **/.DS_Store
-
+.vscode/easycode.ignore
 ## Backend ignored file (Root level)
 backend/.DS_Store
 node_modules/
