@@ -125,6 +125,13 @@ class MessMenuConstants {
 }
 
 class Validators {
+  static String? nonEmptyValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Field cannot be empty";
+    }
+    return null;
+  }
+
   static String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Email cannot be empty";
