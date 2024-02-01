@@ -49,7 +49,7 @@ otpRouter.post('/send-otp', async (req, res) => {
   // Store OTP with the associated email
   otpStorage.set(email, otp);
   const mailOptions = {
-    from: mailOption.senderEmail,
+    from: process.env.SENDER_EMAIL,
     to: email,
     subject: mailOption.subjectOTPLogin,
     text: mailOption.createOTPEmailBody(otp)
