@@ -34,19 +34,19 @@ class Home extends ConsumerWidget {
             ),
           ],
         ),
-        body: Padding(
-          padding: const EdgeInsets.all(16.0),
+        body: const Padding(
+          padding: EdgeInsets.all(16.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16),
-              Text(
-                'Welcome, ${student.name}!',
-                style:
-                    const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
-              ),
-              const SizedBox(height: 16),
-              const Text('Tap the icon to view your profile.'),
+              // const SizedBox(height: 16),
+              // Text(
+              //   'Welcome, ${student.name}!',
+              //   style:
+              //       const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+              // ),
+              SizedBox(height: 16),
+              Text('Tap the icon to view your profile.'),
             ],
           ),
         ),

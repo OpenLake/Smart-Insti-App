@@ -15,7 +15,8 @@ class DummyStudents {
       email: 'john.doe@example.com',
       rollNumber: 'R001',
       about: 'I am a computer science student.',
-      profilePicURI: 'https://example.com/john.jpg',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
       branch: 'Computer Science',
       graduationYear: 2023,
       skills: [DummySkills.skills[1], DummySkills.skills[2]],
@@ -31,7 +32,8 @@ class DummyStudents {
       email: 'john.doe@example.com',
       rollNumber: 'R001',
       about: 'I am a computer science student.',
-      profilePicURI: 'https://example.com/john.jpg',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
       branch: 'Computer Science',
       graduationYear: 2023,
       skills: [DummySkills.skills[1], DummySkills.skills[2]],
@@ -47,7 +49,8 @@ class DummyStudents {
       email: 'john.doe@example.com',
       rollNumber: 'R001',
       about: 'I am a computer science student.',
-      profilePicURI: 'https://example.com/john.jpg',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
       branch: 'Computer Science',
       graduationYear: 2023,
       skills: [DummySkills.skills[1], DummySkills.skills[2]],
@@ -63,7 +66,8 @@ class DummyStudents {
       email: 'john.doe@example.com',
       rollNumber: 'R001',
       about: 'I am a computer science student.',
-      profilePicURI: 'https://example.com/john.jpg',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
       branch: 'Computer Science',
       graduationYear: 2023,
       skills: [DummySkills.skills[1], DummySkills.skills[2]],
@@ -79,7 +83,8 @@ class DummyStudents {
       email: 'john.doe@example.com',
       rollNumber: 'R001',
       about: 'I am a computer science student.',
-      profilePicURI: 'https://example.com/john.jpg',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
       branch: 'Computer Science',
       graduationYear: 2023,
       skills: [DummySkills.skills[1], DummySkills.skills[2]],
