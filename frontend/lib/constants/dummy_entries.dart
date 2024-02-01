@@ -7,165 +7,70 @@ import '../models/student.dart';
 class DummyStudents {
   static List<Student> students = [
     Student(
-        id: '1',
-        collegeId: 'C001',
-        name: 'John Doe',
-        studentMail: 'john.doe@example.com',
-        rollNumber: '12345',
-        branch: 'Computer Science',
-        roles: ['Student']),
+      id: '1',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      rollNumber: 'R001',
+      about: 'I am a computer science student.',
+      profilePicURI: 'https://example.com/john.jpg',
+      branch: 'Computer Science',
+      graduationYear: 2023,
+      skills: [],
+      achievements: [],
+      roles: ['role1', 'role2'],
+    ),
     Student(
-        id: '2',
-        collegeId: 'C002',
-        name: 'Alice Johnson',
-        studentMail: 'alice.johnson@example.com',
-        rollNumber: '67890',
-        branch: 'Mechanical Engineering',
-        roles: ['Student']),
+      id: '2',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      rollNumber: 'R001',
+      about: 'I am a computer science student.',
+      profilePicURI: 'https://example.com/john.jpg',
+      branch: 'Computer Science',
+      graduationYear: 2023,
+      skills: [],
+      achievements: [],
+      roles: ['role1', 'role2'],
+    ),
     Student(
-        id: '3',
-        collegeId: 'C003',
-        name: 'Bob Williams',
-        studentMail: 'bob.williams@example.com',
-        rollNumber: '54321',
-        branch: 'Electrical Engineering',
-        roles: ['Student']),
+      id: '3',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      rollNumber: 'R001',
+      about: 'I am a computer science student.',
+      profilePicURI: 'https://example.com/john.jpg',
+      branch: 'Computer Science',
+      graduationYear: 2023,
+      skills: [],
+      achievements: [],
+      roles: ['role1', 'role2'],
+    ),
     Student(
-        id: '4',
-        collegeId: 'C004',
-        name: 'Eva Davis',
-        studentMail: 'eva.davis@example.com',
-        rollNumber: '98765',
-        branch: 'Civil Engineering',
-        roles: ['Student']),
+      id: '4',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      rollNumber: 'R001',
+      about: 'I am a computer science student.',
+      profilePicURI: 'https://example.com/john.jpg',
+      branch: 'Computer Science',
+      graduationYear: 2023,
+      skills: [],
+      achievements: [],
+      roles: ['role1', 'role2'],
+    ),
     Student(
-        id: '5',
-        collegeId: 'C005',
-        name: 'Chris Taylor',
-        studentMail: 'chris.taylor@example.com',
-        rollNumber: '13579',
-        branch: 'Chemical Engineering',
-        roles: ['Student']),
-    Student(
-        id: '6',
-        collegeId: 'C006',
-        name: 'Grace Miller',
-        studentMail: 'grace.miller@example.com',
-        rollNumber: '24680',
-        branch: 'Biotechnology',
-        roles: ['Student']),
-    Student(
-        id: '7',
-        collegeId: 'C007',
-        name: 'Daniel Brown',
-        studentMail: 'daniel.brown@example.com',
-        rollNumber: '97531',
-        branch: 'Aerospace Engineering',
-        roles: ['Student']),
-    Student(
-        id: '8',
-        collegeId: 'C008',
-        name: 'Sophia Wilson',
-        studentMail: 'sophia.wilson@example.com',
-        rollNumber: '86420',
-        branch: 'Information Technology',
-        roles: ['Student']),
-    Student(
-        id: '9',
-        collegeId: 'C009',
-        name: 'Matthew White',
-        studentMail: 'matthew.white@example.com',
-        rollNumber: '12340',
-        branch: 'Mechatronics',
-        roles: ['Student']),
-    Student(
-        id: '10',
-        collegeId: 'C010',
-        name: 'Olivia Harris',
-        studentMail: 'olivia.harris@example.com',
-        rollNumber: '56789',
-        branch: 'Robotics Engineering',
-        roles: ['Student']),
-    Student(
-        id: '11',
-        collegeId: 'C011',
-        name: 'William Turner',
-        studentMail: 'william.turner@example.com',
-        rollNumber: '34567',
-        branch: 'Industrial Engineering',
-        roles: ['Student']),
-    Student(
-        id: '12',
-        collegeId: 'C012',
-        name: 'Emma Clark',
-        studentMail: 'emma.clark@example.com',
-        rollNumber: '89012',
-        branch: 'Computer Engineering',
-        roles: ['Student']),
-    Student(
-        id: '13',
-        collegeId: 'C013',
-        name: 'Ryan Allen',
-        studentMail: 'ryan.allen@example.com',
-        rollNumber: '67890',
-        branch: 'Software Engineering',
-        roles: ['Student']),
-    Student(
-        id: '14',
-        collegeId: 'C014',
-        name: 'Ava Young',
-        studentMail: 'ava.young@example.com',
-        rollNumber: '23456',
-        branch: 'Environmental Engineering',
-        roles: ['Student']),
-    Student(
-        id: '15',
-        collegeId: 'C015',
-        name: 'Jackson Walker',
-        studentMail: 'jackson.walker@example.com',
-        rollNumber: '87654',
-        branch: 'Petroleum Engineering',
-        roles: ['Student']),
-    Student(
-        id: '16',
-        collegeId: 'C016',
-        name: 'Sophie Lee',
-        studentMail: 'sophie.lee@example.com',
-        rollNumber: '54321',
-        branch: 'Nuclear Engineering',
-        roles: ['Student']),
-    Student(
-        id: '17',
-        collegeId: 'C017',
-        name: 'David Hall',
-        studentMail: 'david.hall@example.com',
-        rollNumber: '10987',
-        branch: 'Biomedical Engineering',
-        roles: ['Student']),
-    Student(
-        id: '18',
-        collegeId: 'C018',
-        name: 'Isabella Miller',
-        studentMail: 'isabella.miller@example.com',
-        rollNumber: '87654',
-        branch: 'Chemical Engineering',
-        roles: ['Student']),
-    Student(
-        id: '19',
-        collegeId: 'C019',
-        name: 'Mason Baker',
-        studentMail: 'mason.baker@example.com',
-        rollNumber: '54321',
-        branch: 'Electronics Engineering',
-        roles: ['Student']),
-    Student(
-        id: '20',
-        collegeId: 'C020',
-        name: 'Ella Turner',
-        studentMail: 'ella.turner@example.com',
-        rollNumber: '98765',
-        branch: 'Computer Science',
-        roles: ['Student']),
+      id: '5',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      rollNumber: 'R001',
+      about: 'I am a computer science student.',
+      profilePicURI: 'https://example.com/john.jpg',
+      branch: 'Computer Science',
+      graduationYear: 2023,
+      skills: [],
+      achievements: [],
+      roles: ['role1', 'role2'],
+    ),
   ];
 }
 
@@ -173,294 +78,213 @@ class DummyCourses {
   static List<Course> courses = [
     Course(
         id: '1',
-        collegeId: 'C001',
         courseCode: 'CS101',
         courseName: 'Introduction to Computer Science',
-        branch: 'Computer Science'),
+        branches: ['Computer Science']),
     Course(
         id: '2',
-        collegeId: 'C002',
         courseCode: 'ME102',
         courseName: 'Mechanical Engineering Basics',
-        branch: 'Mechanical Engineering'),
+        branches: ['Mechanical Engineering']),
     Course(
         id: '3',
-        collegeId: 'C003',
         courseCode: 'EE103',
         courseName: 'Electrical Engineering Fundamentals',
-        branch: 'Electrical Engineering'),
+        branches: ['Electrical Engineering']),
     Course(
         id: '4',
-        collegeId: 'C004',
-        courseCode: 'CE104',
+        courseCode: 'EE104',
         courseName: 'Civil Engineering Principles',
-        branch: 'Civil Engineering'),
+        branches: ['Civil Engineering']),
     Course(
         id: '5',
-        collegeId: 'C005',
         courseCode: 'CHE105',
         courseName: 'Chemical Engineering Basics',
-        branch: 'Chemical Engineering'),
+        branches: ['Chemical Engineering']),
     Course(
         id: '6',
-        collegeId: 'C006',
         courseCode: 'BT106',
         courseName: 'Biotechnology Fundamentals',
-        branch: 'Biotechnology'),
+        branches: ['Biotechnology']),
     Course(
         id: '7',
-        collegeId: 'C007',
         courseCode: 'AE107',
         courseName: 'Aerospace Engineering Introduction',
-        branch: 'Aerospace Engineering'),
+        branches: ['Aerospace Engineering']),
     Course(
         id: '8',
-        collegeId: 'C008',
         courseCode: 'IT108',
         courseName: 'Information Technology Essentials',
-        branch: 'Information Technology'),
+        branches: ['Information Technology']),
     Course(
         id: '9',
-        collegeId: 'C009',
         courseCode: 'MT109',
         courseName: 'Mechatronics Basics',
-        branch: 'Mechatronics'),
+        branches: ['Mechatronics']),
     Course(
         id: '10',
-        collegeId: 'C010',
         courseCode: 'RE110',
         courseName: 'Robotics Engineering Fundamentals',
-        branch: 'Robotics Engineering'),
+        branches: ['Robotics Engineering']),
     Course(
         id: '11',
-        collegeId: 'C011',
         courseCode: 'IE111',
         courseName: 'Industrial Engineering Principles',
-        branch: 'Industrial Engineering'),
+        branches: ['Industrial Engineering']),
     Course(
         id: '12',
-        collegeId: 'C012',
         courseCode: 'CE112',
         courseName: 'Computer Engineering Basics',
-        branch: 'Computer Engineering'),
+        branches: ['Computer Engineering']),
     Course(
         id: '13',
-        collegeId: 'C013',
         courseCode: 'SE113',
         courseName: 'Software Engineering Fundamentals',
-        branch: 'Software Engineering'),
+        branches: ['Software Engineering']),
     Course(
         id: '14',
-        collegeId: 'C014',
         courseCode: 'EN114',
         courseName: 'Environmental Engineering Basics',
-        branch: 'Environmental Engineering'),
+        branches: ['Environmental Engineering']),
     Course(
         id: '15',
-        collegeId: 'C015',
         courseCode: 'PE115',
         courseName: 'Petroleum Engineering Introduction',
-        branch: 'Petroleum Engineering'),
+        branches: ['Petroleum Engineering']),
     Course(
         id: '16',
-        collegeId: 'C016',
         courseCode: 'NE116',
         courseName: 'Nuclear Engineering Basics',
-        branch: 'Nuclear Engineering'),
+        branches: ['Nuclear Engineering']),
     Course(
         id: '17',
-        collegeId: 'C017',
         courseCode: 'BE117',
         courseName: 'Biomedical Engineering Fundamentals',
-        branch: 'Biomedical Engineering'),
+        branches: ['Biomedical Engineering']),
     Course(
         id: '18',
-        collegeId: 'C018',
         courseCode: 'CE118',
         courseName: 'Chemical Engineering Principles',
-        branch: 'Chemical Engineering'),
+        branches: ['Chemical Engineering']),
     Course(
         id: '19',
-        collegeId: 'C019',
         courseCode: 'EE119',
         courseName: 'Electronics Engineering Basics',
-        branch: 'Electronics Engineering'),
+        branches: ['Electronics Engineering']),
     Course(
         id: '20',
-        collegeId: 'C020',
         courseCode: 'CS120',
         courseName: 'Advanced Computer Science Topics',
-        branch: 'Computer Science'),
+        branches: ['Computer Science']),
   ];
 }
 
 class DummyFaculties {
   static List<Faculty> faculties = [
-    Faculty(
-        id: '1',
-        collegeId: 'C001',
-        name: 'Dr. Smith',
-        facultyMail: 'smith@example.com',
-        courses: [
-          DummyCourses.courses[0],
-          DummyCourses.courses[5],
-          DummyCourses.courses[10]
-        ]),
+    Faculty(id: '1', name: 'Dr. Smith', email: 'smith@example.com', courses: [
+      DummyCourses.courses[0],
+      DummyCourses.courses[5],
+      DummyCourses.courses[10],
+    ]),
     Faculty(
         id: '2',
-        collegeId: 'C002',
         name: 'Prof. Johnson',
-        facultyMail: 'johnson@example.com',
+        email: 'johnson@example.com',
         courses: [
           DummyCourses.courses[1],
           DummyCourses.courses[6],
           DummyCourses.courses[11]
         ]),
-    Faculty(
-        id: '3',
-        collegeId: 'C003',
-        name: 'Dr. Brown',
-        facultyMail: 'brown@example.com',
-        courses: [
-          DummyCourses.courses[2],
-          DummyCourses.courses[7],
-          DummyCourses.courses[12]
-        ]),
-    Faculty(
-        id: '4',
-        collegeId: 'C004',
-        name: 'Prof. Davis',
-        facultyMail: 'davis@example.com',
-        courses: [
-          DummyCourses.courses[3],
-          DummyCourses.courses[8],
-          DummyCourses.courses[13]
-        ]),
-    Faculty(
-        id: '5',
-        collegeId: 'C005',
-        name: 'Dr. Wilson',
-        facultyMail: 'wilson@example.com',
-        courses: [
-          DummyCourses.courses[4],
-          DummyCourses.courses[9],
-          DummyCourses.courses[14]
-        ]),
+    Faculty(id: '3', name: 'Dr. Brown', email: 'brown@example.com', courses: [
+      DummyCourses.courses[2],
+      DummyCourses.courses[7],
+      DummyCourses.courses[12]
+    ]),
+    Faculty(id: '4', name: 'Prof. Davis', email: 'davis@example.com', courses: [
+      DummyCourses.courses[3],
+      DummyCourses.courses[8],
+      DummyCourses.courses[13]
+    ]),
+    Faculty(id: '5', name: 'Dr. Wilson', email: 'wilson@example.com', courses: [
+      DummyCourses.courses[4],
+      DummyCourses.courses[9],
+      DummyCourses.courses[14]
+    ]),
     Faculty(
         id: '6',
-        collegeId: 'C006',
         name: 'Prof. Miller',
-        facultyMail: 'miller@example.com',
+        email: 'miller@example.com',
         courses: [
           DummyCourses.courses[0],
           DummyCourses.courses[5],
           DummyCourses.courses[10]
         ]),
-    Faculty(
-        id: '7',
-        collegeId: 'C007',
-        name: 'Dr. Turner',
-        facultyMail: 'turner@example.com',
-        courses: [
-          DummyCourses.courses[1],
-          DummyCourses.courses[6],
-          DummyCourses.courses[11]
-        ]),
-    Faculty(
-        id: '8',
-        collegeId: 'C008',
-        name: 'Prof. Clark',
-        facultyMail: 'clark@example.com',
-        courses: [
-          DummyCourses.courses[2],
-          DummyCourses.courses[7],
-          DummyCourses.courses[12]
-        ]),
-    Faculty(
-        id: '9',
-        collegeId: 'C009',
-        name: 'Dr. Harris',
-        facultyMail: 'harris@example.com',
-        courses: [
-          DummyCourses.courses[3],
-          DummyCourses.courses[8],
-          DummyCourses.courses[13]
-        ]),
+    Faculty(id: '7', name: 'Dr. Turner', email: 'turner@example.com', courses: [
+      DummyCourses.courses[1],
+      DummyCourses.courses[6],
+      DummyCourses.courses[11]
+    ]),
+    Faculty(id: '8', name: 'Prof. Clark', email: 'clark@example.com', courses: [
+      DummyCourses.courses[2],
+      DummyCourses.courses[7],
+      DummyCourses.courses[12]
+    ]),
+    Faculty(id: '9', name: 'Dr. Harris', email: 'harris@example.com', courses: [
+      DummyCourses.courses[3],
+      DummyCourses.courses[8],
+      DummyCourses.courses[13]
+    ]),
     Faculty(
         id: '10',
-        collegeId: 'C010',
         name: 'Prof. Turner',
-        facultyMail: 'turner@example.com',
+        email: 'turner@example.com',
         courses: [
           DummyCourses.courses[4],
           DummyCourses.courses[9],
           DummyCourses.courses[14]
         ]),
-    Faculty(
-        id: '11',
-        collegeId: 'C011',
-        name: 'Dr. White',
-        facultyMail: 'white@example.com',
-        courses: [
-          DummyCourses.courses[0],
-          DummyCourses.courses[5],
-          DummyCourses.courses[10]
-        ]),
+    Faculty(id: '11', name: 'Dr. White', email: 'white@example.com', courses: [
+      DummyCourses.courses[0],
+      DummyCourses.courses[5],
+      DummyCourses.courses[10]
+    ]),
     Faculty(
         id: '12',
-        collegeId: 'C012',
         name: 'Prof. Allen',
-        facultyMail: 'allen@example.com',
+        email: 'allen@example.com',
         courses: [
           DummyCourses.courses[1],
           DummyCourses.courses[6],
           DummyCourses.courses[11]
         ]),
-    Faculty(
-        id: '13',
-        collegeId: 'C013',
-        name: 'Dr. Young',
-        facultyMail: 'young@example.com',
-        courses: [
-          DummyCourses.courses[2],
-          DummyCourses.courses[7],
-          DummyCourses.courses[12]
-        ]),
+    Faculty(id: '13', name: 'Dr. Young', email: 'young@example.com', courses: [
+      DummyCourses.courses[2],
+      DummyCourses.courses[7],
+      DummyCourses.courses[12]
+    ]),
     Faculty(
         id: '14',
-        collegeId: 'C014',
         name: 'Prof. Walker',
-        facultyMail: 'walker@example.com',
+        email: 'walker@example.com',
         courses: [
           DummyCourses.courses[3],
           DummyCourses.courses[8],
           DummyCourses.courses[13]
         ]),
-    Faculty(
-        id: '15',
-        collegeId: 'C015',
-        name: 'Dr. Lee',
-        facultyMail: 'lee@example.com',
-        courses: [
-          DummyCourses.courses[4],
-          DummyCourses.courses[9],
-          DummyCourses.courses[14]
-        ]),
-    Faculty(
-        id: '16',
-        collegeId: 'C016',
-        name: 'Prof. Hall',
-        facultyMail: 'hall@example.com',
-        courses: [
-          DummyCourses.courses[0],
-          DummyCourses.courses[5],
-          DummyCourses.courses[10]
-        ]),
+    Faculty(id: '15', name: 'Dr. Lee', email: 'lee@example.com', courses: [
+      DummyCourses.courses[4],
+      DummyCourses.courses[9],
+      DummyCourses.courses[14]
+    ]),
+    Faculty(id: '16', name: 'Prof. Hall', email: 'hall@example.com', courses: [
+      DummyCourses.courses[0],
+      DummyCourses.courses[5],
+      DummyCourses.courses[10]
+    ]),
     Faculty(
         id: '17',
-        collegeId: 'C017',
         name: 'Dr. Miller',
-        facultyMail: 'miller@example.com',
+        email: 'miller@example.com',
         courses: [
           DummyCourses.courses[1],
           DummyCourses.courses[6],
@@ -468,9 +292,8 @@ class DummyFaculties {
         ]),
     Faculty(
         id: '18',
-        collegeId: 'C018',
         name: 'Prof. Baker',
-        facultyMail: 'baker@example.com',
+        email: 'baker@example.com',
         courses: [
           DummyCourses.courses[2],
           DummyCourses.courses[7],
@@ -478,9 +301,8 @@ class DummyFaculties {
         ]),
     Faculty(
         id: '19',
-        collegeId: 'C019',
         name: 'Dr. Turner',
-        facultyMail: 'turner@example.com',
+        email: 'turner@example.com',
         courses: [
           DummyCourses.courses[3],
           DummyCourses.courses[8],
@@ -488,9 +310,8 @@ class DummyFaculties {
         ]),
     Faculty(
         id: '20',
-        collegeId: 'C020',
         name: 'Prof. Smith',
-        facultyMail: 'smith@example.com',
+        email: 'smith@example.com',
         courses: [
           DummyCourses.courses[4],
           DummyCourses.courses[9],

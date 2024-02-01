@@ -127,11 +127,11 @@ class StudentProvider extends StateNotifier<StudentState> {
     final newState = state.copyWith(
       students: [
         Student(
+          id: (state.students.length + 1).toString(),
           name: state.studentNameController.text,
-          studentMail: state.studentEmailController.text,
+          email: state.studentEmailController.text,
           rollNumber: state.studentRollNoController.text,
           branch: state.branch,
-          role: state.role,
         ),
         ...state.students,
       ],

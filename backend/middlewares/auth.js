@@ -1,24 +1,26 @@
 import jwt from "jsonwebtoken";
-const passwordKey = proccess.env.PASSWORD_KEY;
+import * as errorMessages from "../constants/errorMessages.js";
+const secretKey = process.env.ACCESS_TOKEN_SECRET;
 
 const auth = async (req, res, next) => {
-  try {
-    const token = req.header("x-auth-token");
-    if (!token)
-      return res.status(401).json({ msg: "No auth token, access denied" });
-
-    const verified = jwt.verify(token, passwordKey);
-    if (!verified)
-      return res
-        .status(401)
-        .json({ msg: "Token verification failed, authorization denied." });
-
-    req.user = verified.id;
-    req.token = token;
-    next();
-  } catch (err) {
-    res.status(500).json({ error: err.message });
-  }
+    try {
+      const bearerHeader = req.headers['authorization'];
+      if(typeof bearerHeader !== 'undefined') {
+      const bearer = bearerHeader.split(' ');
+      const bearerToken = bearer[1];
+     // Verify the token
+      jwt.verify(bearerToken, secretKey, (err, user) => {
+      if(err) {
+        res.sendStatus(403);
+      } else {
+        req.user = user;
+        next();
+      }
+    });
+  } 
+    } catch (error) {
+      res.status(500).json({ error: err.message });
+    }
 };
 
 export default auth;

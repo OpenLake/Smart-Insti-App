@@ -1,49 +1,67 @@
+import 'package:smart_insti_app/models/achievement.dart';
+import 'package:smart_insti_app/models/skills.dart';
+
 class Student {
+  final String id;
+  final String name;
+  final String email;
+  final String? rollNumber;
+  final String? about;
+  final String? profilePicURI;
+  final String? branch;
+  final int? graduationYear;
+  final List<Skill>? skills;
+  final List<Achievement>? achievements;
+  final List<String>? roles;
+
   Student({
     required this.id,
     required this.name,
-    required this.studentMail,
-    required this.rollNumber,
+    required this.email,
+    this.rollNumber,
     this.about,
     this.profilePicURI,
+    this.branch,
     this.graduationYear,
-    required this.branch,
-    this.roles,
     this.skills,
     this.achievements,
-    required this.collegeId,
+    this.roles,
   });
 
-  final String id;
-  final String name;
-  final String studentMail;
-  final String rollNumber;
-  String? about;
-  final String? profilePicURI;
-  final String? graduationYear;
-  final String branch;
-  final List<String>? roles;
-  List<String>? skills;
-  List<Achievement>? achievements;
-  final String? collegeId;
-}
+  factory Student.fromJson(Map<String, dynamic> json) {
+    return Student(
+      id: json['_id'],
+      name: json['name'] ?? 'Smart Insti User',
+      email: json['email'],
+      rollNumber: json['rollNumber'],
+      about: json['about'],
+      profilePicURI: json['profilePicURI'],
+      branch: json['branch'],
+      graduationYear: json['graduationYear'],
+      skills: (json['skills'] as List<dynamic>)
+          .map((item) => Skill.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      achievements: (json['achievements'] as List<dynamic>)
+          .map((item) => Achievement.fromJson(item as Map<String, dynamic>))
+          .toList(),
+      roles: (json['roles'] as List?)?.map((item) => item as String).toList(),
+    );
+  }
 
-class Skills {
-  final String text;
-  final double proficiency;
-
-  Skills({
-    required this.text,
-    required this.proficiency,
-  });
-}
-
-class Achievement {
-  final String title;
-  final String description;
-
-  Achievement({
-    required this.title,
-    required this.description,
-  });
+  Map<String, dynamic> toJson() {
+    return {
+      '_id': id,
+      'name': name,
+      'email': email,
+      'rollNumber': rollNumber,
+      'about': about,
+      'profilePicURI': profilePicURI,
+      'branch': branch,
+      'graduationYear': graduationYear,
+      'skills': skills!.map((skill) => skill.toJson()).toList(),
+      'achievements':
+          achievements!.map((achievement) => achievement.toJson()).toList(),
+      'roles': roles,
+    };
+  }
 }
