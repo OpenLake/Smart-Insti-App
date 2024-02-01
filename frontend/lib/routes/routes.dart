@@ -57,6 +57,16 @@ final GoRouter routes = GoRouter(
           pageBuilder: (context, state) => MaterialPage(child: ManageRooms()),
         )
       ],
-    )
+    ),
+    GoRoute(path: '/home', pageBuilder: (context, state) => const MaterialPage(child: Home()), routes: [
+      GoRoute(
+        path: 'classroom_vacancy',
+        pageBuilder: (context, state) => const MaterialPage(child: ClassroomVacancy()),
+      ),
+      GoRoute(
+        path: 'lost_and_found',
+        pageBuilder: (context, state) => const MaterialPage(child: Home()),
+      ),
+    ])
   ],
 );
