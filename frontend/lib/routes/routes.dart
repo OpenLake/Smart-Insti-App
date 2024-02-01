@@ -5,13 +5,16 @@ import 'package:smart_insti_app/screens/admin/add_students.dart';
 import 'package:smart_insti_app/screens/admin/admin_home.dart';
 import 'package:smart_insti_app/screens/admin/manage_rooms.dart';
 import 'package:smart_insti_app/screens/admin/view_students.dart';
+import 'package:smart_insti_app/screens/home.dart';
 import '../screens/admin/add_faculty.dart';
 import '../screens/admin/add_menu.dart';
 import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
+import '../screens/classroom_vacancy.dart';
 
 final GoRouter routes = GoRouter(
+  initialLocation: '/home',
   routes: [
     GoRoute(
       path: '/',
