@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import '../constants/dummy.dart';
 
-import '../models/student2.dart';
-import '../routes/student_provide.dart';
+import '../models/student.dart';
+import '../provider/student_provider.dart';
 
 bool isEditMode = false;
 TextEditingController achievementsController = TextEditingController();

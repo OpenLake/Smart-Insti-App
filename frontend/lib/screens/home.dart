@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/constants.dart';
-import '../routes/student_provide.dart';
+import '../provider/student_provider.dart';
 // import '../screens/user_profile.dart';
 
 class Home extends ConsumerWidget {
