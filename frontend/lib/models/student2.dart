@@ -11,6 +11,7 @@ class Student {
     this.roles,
     this.skills,
     this.achievements,
+    required this.collegeId,
   });
 
   final String id;
@@ -24,6 +25,7 @@ class Student {
   final List<String>? roles;
   List<String>? skills;
   List<Achievement>? achievements;
+  final String? collegeId;
 }
 
 class Skills {

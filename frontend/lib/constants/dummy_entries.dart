@@ -13,7 +13,7 @@ class DummyStudents {
         studentMail: 'john.doe@example.com',
         rollNumber: '12345',
         branch: 'Computer Science',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '2',
         collegeId: 'C002',
@@ -21,7 +21,7 @@ class DummyStudents {
         studentMail: 'alice.johnson@example.com',
         rollNumber: '67890',
         branch: 'Mechanical Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '3',
         collegeId: 'C003',
@@ -29,7 +29,7 @@ class DummyStudents {
         studentMail: 'bob.williams@example.com',
         rollNumber: '54321',
         branch: 'Electrical Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '4',
         collegeId: 'C004',
@@ -37,7 +37,7 @@ class DummyStudents {
         studentMail: 'eva.davis@example.com',
         rollNumber: '98765',
         branch: 'Civil Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '5',
         collegeId: 'C005',
@@ -45,7 +45,7 @@ class DummyStudents {
         studentMail: 'chris.taylor@example.com',
         rollNumber: '13579',
         branch: 'Chemical Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '6',
         collegeId: 'C006',
@@ -53,7 +53,7 @@ class DummyStudents {
         studentMail: 'grace.miller@example.com',
         rollNumber: '24680',
         branch: 'Biotechnology',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '7',
         collegeId: 'C007',
@@ -61,7 +61,7 @@ class DummyStudents {
         studentMail: 'daniel.brown@example.com',
         rollNumber: '97531',
         branch: 'Aerospace Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '8',
         collegeId: 'C008',
@@ -69,7 +69,7 @@ class DummyStudents {
         studentMail: 'sophia.wilson@example.com',
         rollNumber: '86420',
         branch: 'Information Technology',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '9',
         collegeId: 'C009',
@@ -77,7 +77,7 @@ class DummyStudents {
         studentMail: 'matthew.white@example.com',
         rollNumber: '12340',
         branch: 'Mechatronics',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '10',
         collegeId: 'C010',
@@ -85,7 +85,7 @@ class DummyStudents {
         studentMail: 'olivia.harris@example.com',
         rollNumber: '56789',
         branch: 'Robotics Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '11',
         collegeId: 'C011',
@@ -93,7 +93,7 @@ class DummyStudents {
         studentMail: 'william.turner@example.com',
         rollNumber: '34567',
         branch: 'Industrial Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '12',
         collegeId: 'C012',
@@ -101,7 +101,7 @@ class DummyStudents {
         studentMail: 'emma.clark@example.com',
         rollNumber: '89012',
         branch: 'Computer Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '13',
         collegeId: 'C013',
@@ -109,7 +109,7 @@ class DummyStudents {
         studentMail: 'ryan.allen@example.com',
         rollNumber: '67890',
         branch: 'Software Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '14',
         collegeId: 'C014',
@@ -117,7 +117,7 @@ class DummyStudents {
         studentMail: 'ava.young@example.com',
         rollNumber: '23456',
         branch: 'Environmental Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '15',
         collegeId: 'C015',
@@ -125,7 +125,7 @@ class DummyStudents {
         studentMail: 'jackson.walker@example.com',
         rollNumber: '87654',
         branch: 'Petroleum Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '16',
         collegeId: 'C016',
@@ -133,7 +133,7 @@ class DummyStudents {
         studentMail: 'sophie.lee@example.com',
         rollNumber: '54321',
         branch: 'Nuclear Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '17',
         collegeId: 'C017',
@@ -141,7 +141,7 @@ class DummyStudents {
         studentMail: 'david.hall@example.com',
         rollNumber: '10987',
         branch: 'Biomedical Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '18',
         collegeId: 'C018',
@@ -149,7 +149,7 @@ class DummyStudents {
         studentMail: 'isabella.miller@example.com',
         rollNumber: '87654',
         branch: 'Chemical Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '19',
         collegeId: 'C019',
@@ -157,7 +157,7 @@ class DummyStudents {
         studentMail: 'mason.baker@example.com',
         rollNumber: '54321',
         branch: 'Electronics Engineering',
-        role: 'Student'),
+        roles: ['Student']),
     Student(
         id: '20',
         collegeId: 'C020',
@@ -165,7 +165,7 @@ class DummyStudents {
         studentMail: 'ella.turner@example.com',
         rollNumber: '98765',
         branch: 'Computer Science',
-        role: 'Student'),
+        roles: ['Student']),
   ];
 }
 
@@ -219,7 +219,12 @@ class DummyCourses {
         courseCode: 'IT108',
         courseName: 'Information Technology Essentials',
         branch: 'Information Technology'),
-    Course(id: '9', collegeId: 'C009', courseCode: 'MT109', courseName: 'Mechatronics Basics', branch: 'Mechatronics'),
+    Course(
+        id: '9',
+        collegeId: 'C009',
+        courseCode: 'MT109',
+        courseName: 'Mechatronics Basics',
+        branch: 'Mechatronics'),
     Course(
         id: '10',
         collegeId: 'C010',
@@ -296,121 +301,201 @@ class DummyFaculties {
         collegeId: 'C001',
         name: 'Dr. Smith',
         facultyMail: 'smith@example.com',
-        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]]),
+        courses: [
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10]
+        ]),
     Faculty(
         id: '2',
         collegeId: 'C002',
         name: 'Prof. Johnson',
         facultyMail: 'johnson@example.com',
-        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]]),
+        courses: [
+          DummyCourses.courses[1],
+          DummyCourses.courses[6],
+          DummyCourses.courses[11]
+        ]),
     Faculty(
         id: '3',
         collegeId: 'C003',
         name: 'Dr. Brown',
         facultyMail: 'brown@example.com',
-        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]]),
+        courses: [
+          DummyCourses.courses[2],
+          DummyCourses.courses[7],
+          DummyCourses.courses[12]
+        ]),
     Faculty(
         id: '4',
         collegeId: 'C004',
         name: 'Prof. Davis',
         facultyMail: 'davis@example.com',
-        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]]),
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ]),
     Faculty(
         id: '5',
         collegeId: 'C005',
         name: 'Dr. Wilson',
         facultyMail: 'wilson@example.com',
-        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]]),
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ]),
     Faculty(
         id: '6',
         collegeId: 'C006',
         name: 'Prof. Miller',
         facultyMail: 'miller@example.com',
-        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]]),
+        courses: [
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10]
+        ]),
     Faculty(
         id: '7',
         collegeId: 'C007',
         name: 'Dr. Turner',
         facultyMail: 'turner@example.com',
-        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]]),
+        courses: [
+          DummyCourses.courses[1],
+          DummyCourses.courses[6],
+          DummyCourses.courses[11]
+        ]),
     Faculty(
         id: '8',
         collegeId: 'C008',
         name: 'Prof. Clark',
         facultyMail: 'clark@example.com',
-        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]]),
+        courses: [
+          DummyCourses.courses[2],
+          DummyCourses.courses[7],
+          DummyCourses.courses[12]
+        ]),
     Faculty(
         id: '9',
         collegeId: 'C009',
         name: 'Dr. Harris',
         facultyMail: 'harris@example.com',
-        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]]),
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ]),
     Faculty(
         id: '10',
         collegeId: 'C010',
         name: 'Prof. Turner',
         facultyMail: 'turner@example.com',
-        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]]),
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ]),
     Faculty(
         id: '11',
         collegeId: 'C011',
         name: 'Dr. White',
         facultyMail: 'white@example.com',
-        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]]),
+        courses: [
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10]
+        ]),
     Faculty(
         id: '12',
         collegeId: 'C012',
         name: 'Prof. Allen',
         facultyMail: 'allen@example.com',
-        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]]),
+        courses: [
+          DummyCourses.courses[1],
+          DummyCourses.courses[6],
+          DummyCourses.courses[11]
+        ]),
     Faculty(
         id: '13',
         collegeId: 'C013',
         name: 'Dr. Young',
         facultyMail: 'young@example.com',
-        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]]),
+        courses: [
+          DummyCourses.courses[2],
+          DummyCourses.courses[7],
+          DummyCourses.courses[12]
+        ]),
     Faculty(
         id: '14',
         collegeId: 'C014',
         name: 'Prof. Walker',
         facultyMail: 'walker@example.com',
-        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]]),
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ]),
     Faculty(
         id: '15',
         collegeId: 'C015',
         name: 'Dr. Lee',
         facultyMail: 'lee@example.com',
-        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]]),
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ]),
     Faculty(
         id: '16',
         collegeId: 'C016',
         name: 'Prof. Hall',
         facultyMail: 'hall@example.com',
-        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]]),
+        courses: [
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10]
+        ]),
     Faculty(
         id: '17',
         collegeId: 'C017',
         name: 'Dr. Miller',
         facultyMail: 'miller@example.com',
-        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]]),
+        courses: [
+          DummyCourses.courses[1],
+          DummyCourses.courses[6],
+          DummyCourses.courses[11]
+        ]),
     Faculty(
         id: '18',
         collegeId: 'C018',
         name: 'Prof. Baker',
         facultyMail: 'baker@example.com',
-        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]]),
+        courses: [
+          DummyCourses.courses[2],
+          DummyCourses.courses[7],
+          DummyCourses.courses[12]
+        ]),
     Faculty(
         id: '19',
         collegeId: 'C019',
         name: 'Dr. Turner',
         facultyMail: 'turner@example.com',
-        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]]),
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ]),
     Faculty(
         id: '20',
         collegeId: 'C020',
         name: 'Prof. Smith',
         facultyMail: 'smith@example.com',
-        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]]),
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ]),
   ];
 }
 
@@ -679,7 +764,11 @@ class DummyRooms {
     Room(id: '16', name: 'Outdoor Sports Arena', vacant: true),
     Room(id: '17', name: 'Medical Clinic', vacant: false, occupantId: 'S004'),
     Room(id: '18', name: 'Music Room', vacant: true),
-    Room(id: '19', name: 'Student Council Office', vacant: false, occupantId: 'T005'),
+    Room(
+        id: '19',
+        name: 'Student Council Office',
+        vacant: false,
+        occupantId: 'T005'),
     Room(id: '20', name: 'Virtual Reality Lab', vacant: true),
   ];
 }

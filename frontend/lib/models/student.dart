@@ -1,18 +1,49 @@
 class Student {
-  Student(
-      {required this.name,
-      required this.studentMail,
-      required this.rollNumber,
-      required this.branch,
-      required this.role,
-      this.id,
-      this.collegeId});
+  Student({
+    required this.id,
+    required this.name,
+    required this.studentMail,
+    required this.rollNumber,
+    this.about,
+    this.profilePicURI,
+    this.graduationYear,
+    required this.branch,
+    this.roles,
+    this.skills,
+    this.achievements,
+    required this.collegeId,
+  });
 
-  final String? id;
-  final String? collegeId;
+  final String id;
   final String name;
   final String studentMail;
   final String rollNumber;
+  String? about;
+  final String? profilePicURI;
+  final String? graduationYear;
   final String branch;
-  final String role;
+  final List<String>? roles;
+  List<String>? skills;
+  List<Achievement>? achievements;
+  final String? collegeId;
+}
+
+class Skills {
+  final String text;
+  final double proficiency;
+
+  Skills({
+    required this.text,
+    required this.proficiency,
+  });
+}
+
+class Achievement {
+  final String title;
+  final String description;
+
+  Achievement({
+    required this.title,
+    required this.description,
+  });
 }

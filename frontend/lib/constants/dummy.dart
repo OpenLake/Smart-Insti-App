@@ -41,6 +41,7 @@ class DummyStudents {
     Student(
       id: '1',
       name: 'John Doe',
+      collegeId: 'C001',
       studentMail: 'john.doe@example.com',
       rollNumber: '12345678',
       about: 'Hi , i am a CSE Undergrad of IIT BHOPAL.',
@@ -64,6 +65,7 @@ class DummyStudents {
     Student(
       id: '2',
       name: 'Talla',
+      collegeId: 'C001',
       studentMail: 'talla.doe@example.com',
       rollNumber: '12345789',
       about: 'Hi , i am a CSE Undergrad of IIT BHOjpur.',
