@@ -80,136 +80,204 @@ class DummyCourses {
         id: '1',
         courseCode: 'CS101',
         courseName: 'Introduction to Computer Science',
-        branches: ['Computer Science']),
+        branches: ['Computer Science'],
+        credits: 3,
+        primaryRoom: 'LT-1'),
     Course(
         id: '2',
         courseCode: 'ME102',
         courseName: 'Mechanical Engineering Basics',
-        branches: ['Mechanical Engineering']),
+        branches: ['Mechanical Engineering'],
+        credits: 3,
+        primaryRoom: 'LT-2'),
     Course(
         id: '3',
         courseCode: 'EE103',
         courseName: 'Electrical Engineering Fundamentals',
-        branches: ['Electrical Engineering']),
+        branches: ['Electrical Engineering'],
+        credits: 3,
+        primaryRoom: 'LT-3'),
     Course(
         id: '4',
         courseCode: 'EE104',
         courseName: 'Civil Engineering Principles',
-        branches: ['Civil Engineering']),
+        branches: ['Civil Engineering'],
+        credits: 3,
+        primaryRoom: 'LT-4'),
     Course(
         id: '5',
         courseCode: 'CHE105',
         courseName: 'Chemical Engineering Basics',
-        branches: ['Chemical Engineering']),
+        branches: ['Chemical Engineering'],
+        credits: 3,
+        primaryRoom: 'LH-1'),
     Course(
         id: '6',
         courseCode: 'BT106',
         courseName: 'Biotechnology Fundamentals',
-        branches: ['Biotechnology']),
+        branches: ['Biotechnology'],
+        credits: 3,
+        primaryRoom: 'LH-2'),
     Course(
         id: '7',
         courseCode: 'AE107',
         courseName: 'Aerospace Engineering Introduction',
-        branches: ['Aerospace Engineering']),
+        branches: ['Aerospace Engineering'],
+        credits: 3,
+        primaryRoom: 'LH-3'),
     Course(
         id: '8',
         courseCode: 'IT108',
         courseName: 'Information Technology Essentials',
-        branches: ['Information Technology']),
+        branches: ['Information Technology'],
+        credits: 3,
+        primaryRoom: 'LH-4'),
     Course(
         id: '9',
         courseCode: 'MT109',
         courseName: 'Mechatronics Basics',
-        branches: ['Mechatronics']),
+        branches: ['Mechatronics'],
+        credits: 3,
+        primaryRoom: 'LH-5'),
     Course(
         id: '10',
         courseCode: 'RE110',
         courseName: 'Robotics Engineering Fundamentals',
-        branches: ['Robotics Engineering']),
+        branches: ['Robotics Engineering'],
+        credits: 3,
+        primaryRoom: 'LH-6'),
     Course(
         id: '11',
         courseCode: 'IE111',
         courseName: 'Industrial Engineering Principles',
-        branches: ['Industrial Engineering']),
+        branches: ['Industrial Engineering'],
+        credits: 3,
+        primaryRoom: 'LH-7'),
     Course(
         id: '12',
         courseCode: 'CE112',
         courseName: 'Computer Engineering Basics',
-        branches: ['Computer Engineering']),
+        branches: ['Computer Engineering'],
+        credits: 3,
+        primaryRoom: 'LH-8'),
     Course(
         id: '13',
         courseCode: 'SE113',
         courseName: 'Software Engineering Fundamentals',
-        branches: ['Software Engineering']),
+        branches: ['Software Engineering'],
+        credits: 3,
+        primaryRoom: 'ROOM-101'),
     Course(
         id: '14',
         courseCode: 'EN114',
         courseName: 'Environmental Engineering Basics',
-        branches: ['Environmental Engineering']),
+        branches: ['Environmental Engineering'],
+        credits: 3,
+        primaryRoom: 'ROOM-102'),
     Course(
         id: '15',
         courseCode: 'PE115',
         courseName: 'Petroleum Engineering Introduction',
-        branches: ['Petroleum Engineering']),
+        branches: ['Petroleum Engineering'],
+        credits: 3,
+        primaryRoom: 'ROOM-103'),
     Course(
         id: '16',
         courseCode: 'NE116',
         courseName: 'Nuclear Engineering Basics',
-        branches: ['Nuclear Engineering']),
+        branches: ['Nuclear Engineering'],
+        credits: 3,
+        primaryRoom: 'ROOM-104'),
     Course(
         id: '17',
         courseCode: 'BE117',
         courseName: 'Biomedical Engineering Fundamentals',
-        branches: ['Biomedical Engineering']),
+        branches: ['Biomedical Engineering'],
+        credits: 3,
+        primaryRoom: 'ROOM-201'),
     Course(
         id: '18',
         courseCode: 'CE118',
         courseName: 'Chemical Engineering Principles',
-        branches: ['Chemical Engineering']),
+        branches: ['Chemical Engineering'],
+        credits: 3,
+        primaryRoom: 'ROOM-202'),
     Course(
         id: '19',
         courseCode: 'EE119',
         courseName: 'Electronics Engineering Basics',
-        branches: ['Electronics Engineering']),
+        branches: ['Electronics Engineering'],
+        credits: 3,
+        primaryRoom: 'ROOM-203'),
     Course(
         id: '20',
         courseCode: 'CS120',
         courseName: 'Advanced Computer Science Topics',
-        branches: ['Computer Science']),
+        branches: ['Computer Science'],
+        credits: 3,
+        primaryRoom: 'ROOM-204'),
   ];
 }
 
 class DummyFaculties {
   static List<Faculty> faculties = [
-    Faculty(id: '1', name: 'Dr. Smith', email: 'smith@example.com', courses: [
-      DummyCourses.courses[0],
-      DummyCourses.courses[5],
-      DummyCourses.courses[10],
-    ]),
     Faculty(
-        id: '2',
-        name: 'Prof. Johnson',
-        email: 'johnson@example.com',
+        id: '1',
+        name: 'Dr. Smith',
+        email: 'smith@example.com',
         courses: [
-          DummyCourses.courses[1],
-          DummyCourses.courses[6],
-          DummyCourses.courses[11]
-        ]),
-    Faculty(id: '3', name: 'Dr. Brown', email: 'brown@example.com', courses: [
-      DummyCourses.courses[2],
-      DummyCourses.courses[7],
-      DummyCourses.courses[12]
-    ]),
-    Faculty(id: '4', name: 'Prof. Davis', email: 'davis@example.com', courses: [
-      DummyCourses.courses[3],
-      DummyCourses.courses[8],
-      DummyCourses.courses[13]
-    ]),
-    Faculty(id: '5', name: 'Dr. Wilson', email: 'wilson@example.com', courses: [
-      DummyCourses.courses[4],
-      DummyCourses.courses[9],
-      DummyCourses.courses[14]
-    ]),
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10],
+        ],
+        cabinNumber: 'C-101',
+        department: 'Computer Science'),
+    Faculty(
+      id: '2',
+      name: 'Prof. Johnson',
+      email: 'johnson@example.com',
+      courses: [
+        DummyCourses.courses[1],
+        DummyCourses.courses[6],
+        DummyCourses.courses[11]
+      ],
+      cabinNumber: 'C-102',
+      department: 'Mechanical Engineering',
+    ),
+    Faculty(
+      id: '3',
+      name: 'Dr. Brown',
+      email: 'brown@example.com',
+      courses: [
+        DummyCourses.courses[2],
+        DummyCourses.courses[7],
+        DummyCourses.courses[12]
+      ],
+      cabinNumber: 'C-103',
+      department: 'Electrical Engineering',
+    ),
+    Faculty(
+        id: '4',
+        name: 'Prof. Davis',
+        email: 'davis@example.com',
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ],
+        cabinNumber: 'C-104',
+        department: 'Civil Engineering'),
+    Faculty(
+        id: '5',
+        name: 'Dr. Wilson',
+        email: 'wilson@example.com',
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ],
+        cabinNumber: 'C-105',
+        department: 'Chemical Engineering'),
     Faculty(
         id: '6',
         name: 'Prof. Miller',
@@ -218,22 +286,42 @@ class DummyFaculties {
           DummyCourses.courses[0],
           DummyCourses.courses[5],
           DummyCourses.courses[10]
-        ]),
-    Faculty(id: '7', name: 'Dr. Turner', email: 'turner@example.com', courses: [
-      DummyCourses.courses[1],
-      DummyCourses.courses[6],
-      DummyCourses.courses[11]
-    ]),
-    Faculty(id: '8', name: 'Prof. Clark', email: 'clark@example.com', courses: [
-      DummyCourses.courses[2],
-      DummyCourses.courses[7],
-      DummyCourses.courses[12]
-    ]),
-    Faculty(id: '9', name: 'Dr. Harris', email: 'harris@example.com', courses: [
-      DummyCourses.courses[3],
-      DummyCourses.courses[8],
-      DummyCourses.courses[13]
-    ]),
+        ],
+        cabinNumber: 'C-106',
+        department: 'Biotechnology'),
+    Faculty(
+        id: '7',
+        name: 'Dr. Turner',
+        email: 'turner@example.com',
+        courses: [
+          DummyCourses.courses[1],
+          DummyCourses.courses[6],
+          DummyCourses.courses[11]
+        ],
+        cabinNumber: 'C-107',
+        department: 'Aerospace Engineering'),
+    Faculty(
+        id: '8',
+        name: 'Prof. Clark',
+        email: 'clark@example.com',
+        courses: [
+          DummyCourses.courses[2],
+          DummyCourses.courses[7],
+          DummyCourses.courses[12]
+        ],
+        cabinNumber: 'C-108',
+        department: 'Information Technology'),
+    Faculty(
+        id: '9',
+        name: 'Dr. Harris',
+        email: 'harris@example.com',
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ],
+        cabinNumber: 'C-109',
+        department: 'Mechatronics'),
     Faculty(
         id: '10',
         name: 'Prof. Turner',
@@ -242,12 +330,20 @@ class DummyFaculties {
           DummyCourses.courses[4],
           DummyCourses.courses[9],
           DummyCourses.courses[14]
-        ]),
-    Faculty(id: '11', name: 'Dr. White', email: 'white@example.com', courses: [
-      DummyCourses.courses[0],
-      DummyCourses.courses[5],
-      DummyCourses.courses[10]
-    ]),
+        ],
+        cabinNumber: 'C-110',
+        department: 'Robotics Engineering'),
+    Faculty(
+        id: '11',
+        name: 'Dr. White',
+        email: 'white@example.com',
+        courses: [
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10]
+        ],
+        cabinNumber: 'D-101',
+        department: 'Industrial Engineering'),
     Faculty(
         id: '12',
         name: 'Prof. Allen',
@@ -256,12 +352,20 @@ class DummyFaculties {
           DummyCourses.courses[1],
           DummyCourses.courses[6],
           DummyCourses.courses[11]
-        ]),
-    Faculty(id: '13', name: 'Dr. Young', email: 'young@example.com', courses: [
-      DummyCourses.courses[2],
-      DummyCourses.courses[7],
-      DummyCourses.courses[12]
-    ]),
+        ],
+        cabinNumber: 'D-102',
+        department: 'Computer Engineering'),
+    Faculty(
+        id: '13',
+        name: 'Dr. Young',
+        email: 'young@example.com',
+        courses: [
+          DummyCourses.courses[2],
+          DummyCourses.courses[7],
+          DummyCourses.courses[12]
+        ],
+        cabinNumber: 'D-103',
+        department: 'Software Engineering'),
     Faculty(
         id: '14',
         name: 'Prof. Walker',
@@ -270,17 +374,31 @@ class DummyFaculties {
           DummyCourses.courses[3],
           DummyCourses.courses[8],
           DummyCourses.courses[13]
-        ]),
-    Faculty(id: '15', name: 'Dr. Lee', email: 'lee@example.com', courses: [
-      DummyCourses.courses[4],
-      DummyCourses.courses[9],
-      DummyCourses.courses[14]
-    ]),
-    Faculty(id: '16', name: 'Prof. Hall', email: 'hall@example.com', courses: [
-      DummyCourses.courses[0],
-      DummyCourses.courses[5],
-      DummyCourses.courses[10]
-    ]),
+        ],
+        cabinNumber: 'D-104',
+        department: 'Environmental Engineering'),
+    Faculty(
+        id: '15',
+        name: 'Dr. Lee',
+        email: 'lee@example.com',
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ],
+        cabinNumber: 'D-105',
+        department: 'Petroleum Engineering'),
+    Faculty(
+        id: '16',
+        name: 'Prof. Hall',
+        email: 'hall@example.com',
+        courses: [
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10]
+        ],
+        cabinNumber: 'D-106',
+        department: 'Nuclear Engineering'),
     Faculty(
         id: '17',
         name: 'Dr. Miller',
@@ -289,7 +407,9 @@ class DummyFaculties {
           DummyCourses.courses[1],
           DummyCourses.courses[6],
           DummyCourses.courses[11]
-        ]),
+        ],
+        cabinNumber: 'D-107',
+        department: 'Biomedical Engineering'),
     Faculty(
         id: '18',
         name: 'Prof. Baker',
@@ -298,7 +418,9 @@ class DummyFaculties {
           DummyCourses.courses[2],
           DummyCourses.courses[7],
           DummyCourses.courses[12]
-        ]),
+        ],
+        cabinNumber: 'D-108',
+        department: 'Chemical Engineering'),
     Faculty(
         id: '19',
         name: 'Dr. Turner',
@@ -307,7 +429,9 @@ class DummyFaculties {
           DummyCourses.courses[3],
           DummyCourses.courses[8],
           DummyCourses.courses[13]
-        ]),
+        ],
+        cabinNumber: 'D-109',
+        department: 'Electronics Engineering'),
     Faculty(
         id: '20',
         name: 'Prof. Smith',
@@ -316,7 +440,9 @@ class DummyFaculties {
           DummyCourses.courses[4],
           DummyCourses.courses[9],
           DummyCourses.courses[14]
-        ]),
+        ],
+        cabinNumber: 'D-110',
+        department: 'Computer Science'),
   ];
 }
 

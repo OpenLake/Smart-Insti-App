@@ -10,6 +10,14 @@ const courseSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    primary_room: {
+        type: String,
+        required: true,
+    },
+    credits: {
+        type: Number,
+        required: true,
+    },
     branches: [{
         type: String,
         required: true

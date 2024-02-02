@@ -12,7 +12,7 @@ class Admin {
   factory Admin.fromJson(Map<String, dynamic> json) {
     return Admin(
       id: json['_id'],
-      name: json['name'] ?? 'Smart Insti User',
+      name: json['name'] ?? 'Admin',
       email: json['email'],
     );
   }
