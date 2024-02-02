@@ -3,6 +3,7 @@ export const userAlreadyExists = "User with this email already exists!";
 export const userNotFound = "User with this email does not exist!";
 export const incorrectPassword = "Incorrect password.";
 export const internalServerError = "Internal Server Error. Please try again later.";
+export const userCreated = "User created successfully";
 
 //Database Connection
 export const databaseConnected = "Database connected successfully";
