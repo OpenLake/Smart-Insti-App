@@ -1,4 +1,3 @@
-import 'package:email_validator/email_validator.dart';
 import 'package:flutter/material.dart';
 
 class AppConstants {
@@ -137,8 +136,7 @@ class MessMenuConstants {
   ];
 
   static final List<Text> mealTypes = [
-    Text('Breakfast',
-        style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    Text('Breakfast', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
     Text('Lunch', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
     Text('Snacks', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
     Text('Dinner', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
@@ -160,7 +158,7 @@ class Validators {
     if (value == null || value.isEmpty) {
       return "Email cannot be empty";
     }
-    if (!EmailValidator.validate(value)) {
+    if (!RegExp(r"^[a-zA-Z0-9+_.-]+@[a-zA-Z0-9.-]+$").hasMatch(value)) {
       return "Invalid email";
     }
     return null;
