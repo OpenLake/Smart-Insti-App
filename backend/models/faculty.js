@@ -10,7 +10,7 @@ const facultySchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    cabin_number: {
+    cabinNumber: {
         type: String,
     },
     department: {
