@@ -10,14 +10,14 @@ const courseSchema = new mongoose.Schema({
         required: true,
         unique: true
     },
-    primaryRoom: {
+    primary_room: {
         type: String,
     },
     credits: {
         type: Number,
         required: true,
     },
-    professorId: {
+    professor_id: {
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Faculty',
         required: true,

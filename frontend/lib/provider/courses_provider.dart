@@ -126,7 +126,6 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
           ? 0
           : int.parse(state.courseCreditController.text),
       primaryRoom: '',
-      professorId: '',
     );
     state = state.copyWith(
       courses: [

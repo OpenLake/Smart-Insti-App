@@ -1,5 +1,4 @@
 class LostAndFoundItem {
-  String userId;
   String name;
   String lastSeenLocation;
   String imagePath;
@@ -8,7 +7,6 @@ class LostAndFoundItem {
   bool isLost;
 
   LostAndFoundItem({
-    required this.userId,
     required this.name,
     required this.lastSeenLocation,
     required this.imagePath,
@@ -19,7 +17,6 @@ class LostAndFoundItem {
 
   factory LostAndFoundItem.fromJson(Map<String, dynamic> json) {
     return LostAndFoundItem(
-      userId: json['user_id'],
       name: json['name'],
       lastSeenLocation: json['lastSeenLocation'],
       imagePath: json['imagePath'],
@@ -31,7 +28,6 @@ class LostAndFoundItem {
 
   Map<String, dynamic> toJson() {
     return {
-      'user_id': userId,
       'name': name,
       'lastSeenLocation': lastSeenLocation,
       'imagePath': imagePath,

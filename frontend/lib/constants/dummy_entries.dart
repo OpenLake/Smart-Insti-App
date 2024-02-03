@@ -260,7 +260,7 @@ class DummyCourses {
         branches: ['Computer Science'],
         credits: 3,
         primaryRoom: 'LT-1',
-        professorId: DummyFaculties.faculties[0].id),
+        professor_id: DummyFaculties.faculties[0].id),
     Course(
         id: '2',
         courseCode: 'ME102',
@@ -268,7 +268,7 @@ class DummyCourses {
         branches: ['Mechanical Engineering'],
         credits: 3,
         primaryRoom: 'LT-2',
-        professorId: DummyFaculties.faculties[1].id),
+        professor_id: DummyFaculties.faculties[1].id),
     Course(
         id: '3',
         courseCode: 'EE103',
@@ -276,7 +276,7 @@ class DummyCourses {
         branches: ['Electrical Engineering'],
         credits: 3,
         primaryRoom: 'LT-3',
-        professorId: DummyFaculties.faculties[2].id),
+        professor_id: DummyFaculties.faculties[2].id),
     Course(
         id: '4',
         courseCode: 'EE104',
@@ -284,7 +284,7 @@ class DummyCourses {
         branches: ['Civil Engineering'],
         credits: 3,
         primaryRoom: 'LT-4',
-        professorId: DummyFaculties.faculties[3].id),
+        professor_id: DummyFaculties.faculties[3].id),
     Course(
         id: '5',
         courseCode: 'CHE105',
@@ -292,7 +292,7 @@ class DummyCourses {
         branches: ['Chemical Engineering'],
         credits: 3,
         primaryRoom: 'LH-1',
-        professorId: DummyFaculties.faculties[4].id),
+        professor_id: DummyFaculties.faculties[4].id),
     Course(
         id: '6',
         courseCode: 'BT106',
@@ -300,7 +300,7 @@ class DummyCourses {
         branches: ['Biotechnology'],
         credits: 3,
         primaryRoom: 'LH-2',
-        professorId: DummyFaculties.faculties[5].id),
+        professor_id: DummyFaculties.faculties[5].id),
     Course(
         id: '7',
         courseCode: 'AE107',
@@ -308,7 +308,7 @@ class DummyCourses {
         branches: ['Aerospace Engineering'],
         credits: 3,
         primaryRoom: 'LH-3',
-        professorId: DummyFaculties.faculties[6].id),
+        professor_id: DummyFaculties.faculties[6].id),
     Course(
         id: '8',
         courseCode: 'IT108',
@@ -316,7 +316,7 @@ class DummyCourses {
         branches: ['Information Technology'],
         credits: 3,
         primaryRoom: 'LH-4',
-        professorId: DummyFaculties.faculties[7].id),
+        professor_id: DummyFaculties.faculties[7].id),
     Course(
         id: '9',
         courseCode: 'MT109',
@@ -324,7 +324,7 @@ class DummyCourses {
         branches: ['Mechatronics'],
         credits: 3,
         primaryRoom: 'LH-5',
-        professorId: DummyFaculties.faculties[8].id),
+        professor_id: DummyFaculties.faculties[8].id),
     Course(
         id: '10',
         courseCode: 'RE110',
@@ -332,7 +332,7 @@ class DummyCourses {
         branches: ['Robotics Engineering'],
         credits: 3,
         primaryRoom: 'LH-6',
-        professorId: DummyFaculties.faculties[9].id),
+        professor_id: DummyFaculties.faculties[9].id),
     Course(
         id: '11',
         courseCode: 'IE111',
@@ -340,7 +340,7 @@ class DummyCourses {
         branches: ['Industrial Engineering'],
         credits: 3,
         primaryRoom: 'LH-7',
-        professorId: DummyFaculties.faculties[10].id),
+        professor_id: DummyFaculties.faculties[10].id),
     Course(
         id: '12',
         courseCode: 'CE112',
@@ -348,7 +348,7 @@ class DummyCourses {
         branches: ['Computer Engineering'],
         credits: 3,
         primaryRoom: 'LH-8',
-        professorId: DummyFaculties.faculties[11].id),
+        professor_id: DummyFaculties.faculties[11].id),
     Course(
         id: '13',
         courseCode: 'SE113',
@@ -356,7 +356,7 @@ class DummyCourses {
         branches: ['Software Engineering'],
         credits: 3,
         primaryRoom: 'ROOM-101',
-        professorId: DummyFaculties.faculties[12].id),
+        professor_id: DummyFaculties.faculties[12].id),
     Course(
         id: '14',
         courseCode: 'EN114',
@@ -364,7 +364,7 @@ class DummyCourses {
         branches: ['Environmental Engineering'],
         credits: 3,
         primaryRoom: 'ROOM-102',
-        professorId: DummyFaculties.faculties[13].id),
+        professor_id: DummyFaculties.faculties[13].id),
     Course(
         id: '15',
         courseCode: 'PE115',
@@ -372,7 +372,7 @@ class DummyCourses {
         branches: ['Petrolesum[ Engineer]ing'],
         credits: 3,
         primaryRoom: 'ROOM-103',
-        professorId: DummyFaculties.faculties[14].id),
+        professor_id: DummyFaculties.faculties[14].id),
     Course(
         id: '16',
         courseCode: 'NE116',
@@ -380,7 +380,7 @@ class DummyCourses {
         branches: ['Nuclear Engineering'],
         credits: 3,
         primaryRoom: 'ROOM-104',
-        professorId: DummyFaculties.faculties[15].id),
+        professor_id: DummyFaculties.faculties[15].id),
     Course(
         id: '17',
         courseCode: 'BE117',
@@ -388,7 +388,7 @@ class DummyCourses {
         branches: ['Biomedical Engineering'],
         credits: 3,
         primaryRoom: 'ROOM-201',
-        professorId: DummyFaculties.faculties[16].id),
+        professor_id: DummyFaculties.faculties[16].id),
     Course(
         id: '18',
         courseCode: 'CE118',
@@ -396,7 +396,7 @@ class DummyCourses {
         branches: ['Chemical Engineering'],
         credits: 3,
         primaryRoom: 'ROOM-202',
-        professorId: DummyFaculties.faculties[17].id),
+        professor_id: DummyFaculties.faculties[17].id),
     Course(
         id: '19',
         courseCode: 'EE119',
@@ -404,7 +404,7 @@ class DummyCourses {
         branches: ['Electronics Engineering'],
         credits: 3,
         primaryRoom: 'ROOM-203',
-        professorId: DummyFaculties.faculties[18].id),
+        professor_id: DummyFaculties.faculties[18].id),
     Course(
         id: '20',
         courseCode: 'CS120',
@@ -412,7 +412,7 @@ class DummyCourses {
         branches: ['Computer Science'],
         credits: 3,
         primaryRoom: 'ROOM-204',
-        professorId: DummyFaculties.faculties[19].id),
+        professor_id: DummyFaculties.faculties[19].id),
   ];
 }
 

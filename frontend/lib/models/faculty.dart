@@ -22,7 +22,7 @@ class Faculty {
       id: json['_id'],
       name: json['name'] ?? 'Smart Insti User',
       email: json['email'],
-      cabinNumber: json['cabinNumber'],
+      cabinNumber: json['cabin_number'],
       department: json['department'],
       courses: (json['courses'] as List)
           .map((item) => Course.fromJson(item))
@@ -35,7 +35,7 @@ class Faculty {
       '_id': id,
       'name': name,
       'email': email,
-      'cabinNumber': cabinNumber,
+      'cabin_number': cabinNumber,
       'department': department,
       'courses': courses,
     };
