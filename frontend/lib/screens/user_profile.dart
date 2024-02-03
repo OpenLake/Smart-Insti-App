@@ -24,74 +24,77 @@ class UserProfile extends ConsumerWidget {
       appBar: AppBar(
         title: const Text('User Profile'),
       ),
-      body: Container(
-        decoration: const BoxDecoration(
-          color: Colors.lightBlueAccent,
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Consumer(builder: (context, ref, child) {
-                return CircleAvatar(
-                  backgroundImage: student.profilePicURI != null
-                      ? NetworkImage(student.profilePicURI!)
-                      : const AssetImage('assets/openlake.png')
-                          as ImageProvider<Object>,
-                  radius: 55,
-                  child: student.profilePicURI == null
-                      ? const Icon(
-                          Icons.person,
-                          size: 55,
-                          color: Colors.grey,
-                        )
-                      : null,
-                );
-              }),
-              const SizedBox(height: 16),
-              Card(
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20.0),
-                ),
-                elevation: 5,
-                child: Padding(
-                  padding: const EdgeInsets.all(16.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        student.studentNameController.text,
-                        style: const TextStyle(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
+      body: SingleChildScrollView(
+        child: Container(
+          decoration: const BoxDecoration(
+            color: Colors.lightBlueAccent,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Consumer(builder: (context, ref, child) {
+                  return CircleAvatar(
+                    backgroundImage: student.profilePicURI != null
+                        ? NetworkImage(student.profilePicURI!)
+                        : const AssetImage('assets/openlake.png')
+                            as ImageProvider<Object>,
+                    radius: 55,
+                    child: student.profilePicURI == null
+                        ? const Icon(
+                            Icons.person,
+                            size: 55,
+                            color: Colors.grey,
+                          )
+                        : null,
+                  );
+                }),
+                const SizedBox(height: 16),
+                Card(
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                  ),
+                  elevation: 5,
+                  child: Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          student.studentNameController.text,
+                          style: const TextStyle(
+                            fontSize: 28,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
-                      ),
-                      const SizedBox(height: 16),
-                      buildInfoRow("ID", student.studentRollNoController.text),
-                      buildInfoRow(
-                          "Email", student.studentEmailController.text),
-                      buildInfoRow("Branch", student.branch),
-                      // buildInfoRow(
-                      //     "Class of", student.graduationYear ?? "202x"),
-                      const SizedBox(height: 16),
-                      AboutEditorWidget(),
-                      // _buildInfoField("About", aboutController),
-                      // const SizedBox(height: 16),
-                      // _buildInfoField("Roles", values: student.role),
-                      const SizedBox(height: 16),
-                      SkillsEditWidget(skillsController: skillsController),
-                      const SizedBox(height: 16),
-                      AchievementsEditWidget(
-                          achievementsController: achievementsController),
-                      const SizedBox(height: 16),
-                      buildAchievementsColumn(student.achievements),
-                    ],
+                        const SizedBox(height: 16),
+                        buildInfoRow(
+                            "ID", student.studentRollNoController.text),
+                        buildInfoRow(
+                            "Email", student.studentEmailController.text),
+                        buildInfoRow("Branch", student.branch),
+                        // buildInfoRow(
+                        //     "Class of", student.graduationYear ?? "202x"),
+                        const SizedBox(height: 16),
+                        AboutEditorWidget(),
+                        // _buildInfoField("About", aboutController),
+                        // const SizedBox(height: 16),
+                        // _buildInfoField("Roles", values: student.role),
+                        const SizedBox(height: 16),
+                        SkillsEditWidget(skillsController: skillsController),
+                        const SizedBox(height: 16),
+                        AchievementsEditWidget(
+                            achievementsController: achievementsController),
+                        const SizedBox(height: 16),
+                        buildAchievementsColumn(student.achievements),
+                      ],
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),
