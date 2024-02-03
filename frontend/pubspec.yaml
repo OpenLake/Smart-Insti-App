@@ -51,6 +51,7 @@ dependencies:
   slide_switcher: ^1.1.2
   awesome_snackbar_content: ^0.1.1
   delightful_toast: ^1.1.0
+  syncfusion_flutter_sliders: ^24.2.3
 
 dev_dependencies:
   flutter_test:

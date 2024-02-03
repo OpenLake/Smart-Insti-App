@@ -6,6 +6,8 @@ import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/student.dart';
 import 'dart:io';
+import '../models/achievement.dart';
+import '../models/skills.dart';
 
 final studentProvider = StateNotifierProvider<StudentProvider, StudentState>(
     (ref) => StudentProvider());
@@ -18,7 +20,12 @@ class StudentState {
   final TextEditingController studentRollNoController;
   final TextEditingController searchStudentController;
   final String branch;
-  final String role;
+  final String? role;
+  final String? profilePicURI;
+  final String? about;
+  final int? graduationYear;
+  final List<Skill>? skills;
+  final List<Achievement>? achievements;
 
   StudentState({
     required this.students,
@@ -29,6 +36,11 @@ class StudentState {
     required this.searchStudentController,
     required this.branch,
     required this.role,
+    this.profilePicURI,
+    this.about,
+    this.achievements,
+    this.graduationYear,
+    this.skills,
   });
 
   StudentState copyWith({
@@ -40,6 +52,10 @@ class StudentState {
     TextEditingController? searchStudentController,
     String? branch,
     String? role,
+    String? about,
+    String? profilePicURI,
+    List<Skill>? skills,
+    List<Achievement>? achievements,
   }) {
     return StudentState(
       students: students ?? this.students,
@@ -120,6 +136,21 @@ class StudentProvider extends StateNotifier<StudentState> {
 
   void updateRole(String value) {
     final newState = state.copyWith(role: value);
+    state = newState;
+  }
+
+  void editAbout(String newAbout) {
+    final newState = state.copyWith(about: newAbout);
+    state = newState;
+  }
+
+  void editSkills(List<Skill> newSkills) {
+    final newState = state.copyWith(skills: newSkills);
+    state = newState;
+  }
+
+  void editAchievements(List<Achievement> newAchievements) {
+    final newState = state.copyWith(achievements: newAchievements);
     state = newState;
   }
 

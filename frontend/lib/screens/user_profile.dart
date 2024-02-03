@@ -1,49 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../constants/dummy.dart';
-
-import '../models/student.dart';
 import '../provider/student_provider.dart';
-
-bool isEditMode = false;
-TextEditingController achievementsController = TextEditingController();
+import '../models/achievement.dart';
+import '../provider/achievements_edit_widget.dart';
+import '../provider/skills_edit_widget.dart';
+import '../provider/about_Edit_widget.dart';
 
 class UserProfile extends ConsumerWidget {
-  const UserProfile({super.key});
+  const UserProfile({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final student = ref.read(studentProvider);
+
     final TextEditingController aboutController =
         TextEditingController(text: student.about);
     final TextEditingController skillsController =
-        TextEditingController(text: student.skills?.join(", ") ?? "");
-    // final TextEditingController achievementController = TextEditingController();
-    // final TextEditingController achievementsController = TextEditingController(
-    //     text: student.achievements?.map((ach) => "${ach.title}: ${ach.description}").join("\n") ?? "");
-
-    // bool isEditMode = false;
+        TextEditingController(text: student.skills?.toString() ?? "");
+    final TextEditingController achievementsController =
+        TextEditingController(text: student.achievements?.toString() ?? "");
 
     return Scaffold(
       appBar: AppBar(
         title: const Text('User Profile'),
-        actions: [
-          IconButton(
-            icon: Icon(isEditMode ? Icons.save : Icons.edit),
-            onPressed: () {
-              ref.refresh(studentProvider);
-
-              // setState(() {
-              //   if (isEditMode) {
-              //     // Save changes to the student object
-              //     // student.about = aboutController.text;
-              //     // student.skills = skillsController.text.split(", ").toList();
-              //     // student.achievements = _parseAchievements();
-              //   }
-              //   isEditMode = !isEditMode;
-              // });
-            },
-          ),
-        ],
       ),
       body: Container(
         decoration: const BoxDecoration(
@@ -54,20 +33,22 @@ class UserProfile extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              CircleAvatar(
-                backgroundImage: student.profilePicURI != null
-                    ? NetworkImage(student.profilePicURI!)
-                    : const AssetImage('assets/openlake.png')
-                        as ImageProvider<Object>,
-                radius: 55,
-                child: student.profilePicURI == null
-                    ? const Icon(
-                        Icons.person,
-                        size: 55,
-                        color: Colors.grey,
-                      )
-                    : null,
-              ),
+              Consumer(builder: (context, ref, child) {
+                return CircleAvatar(
+                  backgroundImage: student.profilePicURI != null
+                      ? NetworkImage(student.profilePicURI!)
+                      : const AssetImage('assets/openlake.png')
+                          as ImageProvider<Object>,
+                  radius: 55,
+                  child: student.profilePicURI == null
+                      ? const Icon(
+                          Icons.person,
+                          size: 55,
+                          color: Colors.grey,
+                        )
+                      : null,
+                );
+              }),
               const SizedBox(height: 16),
               Card(
                 color: Colors.white,
@@ -81,37 +62,29 @@ class UserProfile extends ConsumerWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        student.name,
+                        student.studentNameController.text,
                         style: const TextStyle(
                           fontSize: 28,
                           fontWeight: FontWeight.bold,
                         ),
                       ),
                       const SizedBox(height: 16),
-                      buildInfoRow("ID", student.rollNumber),
-                      buildInfoRow("Email", student.studentMail),
-                      buildInfoRow("Branch", student.branch),
+                      buildInfoRow("ID", student.studentRollNoController.text),
                       buildInfoRow(
-                          "Class of", student.graduationYear ?? "202x"),
+                          "Email", student.studentEmailController.text),
+                      buildInfoRow("Branch", student.branch),
+                      // buildInfoRow(
+                      //     "Class of", student.graduationYear ?? "202x"),
                       const SizedBox(height: 16),
-                      _buildEditableField(
-                        "About",
-                        aboutController,
-                        isEditMode,
-                      ),
+                      AboutEditorWidget(),
+                      // _buildInfoField("About", aboutController),
                       const SizedBox(height: 16),
-                      _buildEditableField(
-                        "Roles",
-                        null,
-                        isEditMode,
-                        values: student.roles,
-                      ),
+                      _buildInfoField("Roles", values: student.role),
                       const SizedBox(height: 16),
-                      _buildEditableField(
-                        "Skills",
-                        skillsController,
-                        isEditMode,
-                      ),
+                      SkillsEditWidget(skillsController: skillsController),
+                      const SizedBox(height: 16),
+                      AchievementsEditWidget(
+                          achievementsController: achievementsController),
                       const SizedBox(height: 16),
                       buildAchievementsColumn(student.achievements),
                     ],
@@ -140,10 +113,9 @@ class UserProfile extends ConsumerWidget {
     );
   }
 
-  Widget _buildEditableField(
-    String title,
+  Widget _buildInfoField(
+    String title, {
     TextEditingController? controller,
-    bool isEditable, {
     List<String>? values,
   }) {
     return Column(
@@ -155,11 +127,8 @@ class UserProfile extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        if (isEditable) ...[
-          if (controller != null) TextField(controller: controller),
-          if (values != null) ...[
-            for (var value in values) Text('- $value'),
-          ]
+        if (controller != null) ...[
+          TextField(controller: controller, enabled: false),
         ] else ...[
           if (values != null && values.isNotEmpty)
             for (var value in values) Text('- $value'),
@@ -179,23 +148,520 @@ class UserProfile extends ConsumerWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        if (isEditMode) ...[
-          if (achievementsController != null)
-            TextField(controller: achievementsController),
-        ] else ...[
-          if (achievements != null)
-            for (var achievement in achievements)
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text('- ${achievement.title}'),
-                  Text('  ${achievement.description}'),
-                ],
-              ),
-        ],
+        if (achievements != null)
+          for (var achievement in achievements)
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text('- ${achievement.name}'),
+                Text('  ${achievement.description}'),
+              ],
+            ),
       ],
     );
   }
+}
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import '../provider/student_provider.dart';
+// import '../models/achievement.dart';
+
+// class UserProfile extends ConsumerWidget {
+//   const UserProfile({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final student = ref.read(studentProvider);
+
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('User Profile'),
+//       ),
+//       body: Container(
+//         decoration: const BoxDecoration(
+//           color: Colors.lightBlueAccent,
+//         ),
+//         child: Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               ConsumerWidget(builder: (_, ref, __) {
+//                 return CircleAvatar(
+//                   backgroundImage: student.profilePicURI != null
+//                       ? NetworkImage(student.profilePicURI!)
+//                       : const AssetImage('assets/openlake.png')
+//                           as ImageProvider<Object>,
+//                   radius: 55,
+//                   child: student.profilePicURI == null
+//                       ? const Icon(
+//                           Icons.person,
+//                           size: 55,
+//                           color: Colors.grey,
+//                         )
+//                       : null,
+//                 );
+//               }),
+//               const SizedBox(height: 16),
+//               Card(
+//                 color: Colors.white,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(20.0),
+//                 ),
+//                 elevation: 5,
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(16.0),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         student.studentNameController.text,
+//                         style: const TextStyle(
+//                           fontSize: 28,
+//                           fontWeight: FontWeight.bold,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 16),
+//                       buildInfoRow("ID", student.studentRollNoController.text),
+//                       buildInfoRow("Email", student.studentEmailController.text),
+//                       buildInfoRow("Branch", student.branch),
+//                       buildInfoRow(
+//                           "Class of", student.graduationYear ?? "202x"),
+//                       const SizedBox(height: 16),
+//                       _buildInfoField("About", aboutController),
+//                       const SizedBox(height: 16),
+//                       _buildInfoField("Roles", values: student.role),
+//                       const SizedBox(height: 16),
+//                       _buildInfoField("Skills", skillsController),
+//                       const SizedBox(height: 16),
+//                       buildAchievementsColumn(student.achievements),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget buildInfoRow(String title, String value) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Text(
+//           title,
+//           style: const TextStyle(
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         Text(value),
+//       ],
+//     );
+//   }
+
+//   Widget _buildInfoField(
+//     String title, {
+//     TextEditingController? controller,
+//     List<String>? values,
+//   }) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(
+//           title,
+//           style: const TextStyle(
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         if (controller != null) ...[
+//           TextField(controller: controller, enabled: false),
+//         ] else ...[
+//           if (values != null && values.isNotEmpty)
+//             for (var value in values) Text('- $value'),
+//           if (values == null || values.isEmpty) const Text('- No Information'),
+//         ],
+//       ],
+//     );
+//   }
+
+//   Widget buildAchievementsColumn(List<Achievement>? achievements) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         const Text(
+//           'Achievements:',
+//           style: TextStyle(
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         if (achievements != null)
+//           for (var achievement in achievements)
+//             Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text('- ${achievement.title}'),
+//                 Text('  ${achievement.description}'),
+//               ],
+//             ),
+//       ],
+//     );
+//   }
+// }
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// // import '../models/student.dart';
+// import '../provider/student_provider.dart';
+// import '../models/achievement.dart';
+// // import '../models/skills.dart';
+
+// class UserProfile extends ConsumerWidget {
+//   const UserProfile({Key? key}) : super(key: key);
+
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final student = ref.watch(studentProvider.notifier);
+
+//     final TextEditingController aboutController =
+//         TextEditingController(text: student.about);
+//     final TextEditingController skillsController =
+//         TextEditingController(text: student.skills?.join(", ") ?? "");
+
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('User Profile'),
+//       ),
+//       body: Container(
+//         decoration: const BoxDecoration(
+//           color: Colors.lightBlueAccent,
+//         ),
+//         child: Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               CircleAvatar(
+//                 backgroundImage: student.profilePicURI != null
+//                     ? NetworkImage(student.profilePicURI!)
+//                     : const AssetImage('assets/openlake.png')
+//                         as ImageProvider<Object>,
+//                 radius: 55,
+//                 child: student.profilePicURI == null
+//                     ? const Icon(
+//                         Icons.person,
+//                         size: 55,
+//                         color: Colors.grey,
+//                       )
+//                     : null,
+//               ),
+//               const SizedBox(height: 16),
+//               Card(
+//                 color: Colors.white,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(20.0),
+//                 ),
+//                 elevation: 5,
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(16.0),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         student.name,
+//                         style: const TextStyle(
+//                           fontSize: 28,
+//                           fontWeight: FontWeight.bold,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 16),
+//                       buildInfoRow("ID", student.rollNumber),
+//                       buildInfoRow("Email", student.email),
+//                       buildInfoRow("Branch", student.branch),
+//                       buildInfoRow(
+//                           "Class of", student.graduationYear ?? "202x"),
+//                       const SizedBox(height: 16),
+//                       _buildInfoField("About", aboutController),
+//                       const SizedBox(height: 16),
+//                       _buildInfoField("Roles", values: student.roles),
+//                       const SizedBox(height: 16),
+//                       _buildInfoField("Skills", skillsController),
+//                       const SizedBox(height: 16),
+//                       buildAchievementsColumn(student.achievements),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget buildInfoRow(String title, String value) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Text(
+//           title,
+//           style: const TextStyle(
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         Text(value),
+//       ],
+//     );
+//   }
+
+//   Widget _buildInfoField(
+//     String title, {
+//     TextEditingController? controller,
+//     List<String>? values,
+//   }) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(
+//           title,
+//           style: const TextStyle(
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         if (controller != null) ...[
+//           TextField(controller: controller, enabled: false),
+//         ] else ...[
+//           if (values != null && values.isNotEmpty)
+//             for (var value in values) Text('- $value'),
+//           if (values == null || values.isEmpty) const Text('- No Information'),
+//         ],
+//       ],
+//     );
+//   }
+
+//   Widget buildAchievementsColumn(List<Achievement>? achievements) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         const Text(
+//           'Achievements:',
+//           style: TextStyle(
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         if (achievements != null)
+//           for (var achievement in achievements)
+//             Column(
+//               crossAxisAlignment: CrossAxisAlignment.start,
+//               children: [
+//                 Text('- ${achievement.title}'),
+//                 Text('  ${achievement.description}'),
+//               ],
+//             ),
+//       ],
+//     );
+//   }
+// }
+
+
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// // import '../constants/dummy.dart';
+
+// import '../models/student.dart';
+// import '../provider/student_provider.dart';
+
+// bool isEditMode = false;
+// TextEditingController achievementsController = TextEditingController();
+
+// class UserProfile extends ConsumerWidget {
+//   const UserProfile({super.key});
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final student = ref.read(studentProvider);
+//     final TextEditingController aboutController =
+//         TextEditingController(text: student.about);
+//     final TextEditingController skillsController =
+//         TextEditingController(text: student.skills?.join(", ") ?? "");
+//     // final TextEditingController achievementController = TextEditingController();
+//     // final TextEditingController achievementsController = TextEditingController(
+//     //     text: student.achievements?.map((ach) => "${ach.title}: ${ach.description}").join("\n") ?? "");
+
+//     // bool isEditMode = false;
+
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('User Profile'),
+//         actions: [
+//           IconButton(
+//             icon: Icon(isEditMode ? Icons.save : Icons.edit),
+//             onPressed: () {
+//               ref.refresh(studentProvider);
+
+//               // setState(() {
+//               //   if (isEditMode) {
+//               //     // Save changes to the student object
+//               //     // student.about = aboutController.text;
+//               //     // student.skills = skillsController.text.split(", ").toList();
+//               //     // student.achievements = _parseAchievements();
+//               //   }
+//               //   isEditMode = !isEditMode;
+//               // });
+//             },
+//           ),
+//         ],
+//       ),
+//       body: Container(
+//         decoration: const BoxDecoration(
+//           color: Colors.lightBlueAccent,
+//         ),
+//         child: Padding(
+//           padding: const EdgeInsets.all(16.0),
+//           child: Column(
+//             crossAxisAlignment: CrossAxisAlignment.center,
+//             children: [
+//               CircleAvatar(
+//                 backgroundImage: student.profilePicURI != null
+//                     ? NetworkImage(student.profilePicURI!)
+//                     : const AssetImage('assets/openlake.png')
+//                         as ImageProvider<Object>,
+//                 radius: 55,
+//                 child: student.profilePicURI == null
+//                     ? const Icon(
+//                         Icons.person,
+//                         size: 55,
+//                         color: Colors.grey,
+//                       )
+//                     : null,
+//               ),
+//               const SizedBox(height: 16),
+//               Card(
+//                 color: Colors.white,
+//                 shape: RoundedRectangleBorder(
+//                   borderRadius: BorderRadius.circular(20.0),
+//                 ),
+//                 elevation: 5,
+//                 child: Padding(
+//                   padding: const EdgeInsets.all(16.0),
+//                   child: Column(
+//                     crossAxisAlignment: CrossAxisAlignment.start,
+//                     children: [
+//                       Text(
+//                         student.name,
+//                         style: const TextStyle(
+//                           fontSize: 28,
+//                           fontWeight: FontWeight.bold,
+//                         ),
+//                       ),
+//                       const SizedBox(height: 16),
+//                       buildInfoRow("ID", student.rollNumber),
+//                       buildInfoRow("Email", student.studentMail),
+//                       buildInfoRow("Branch", student.branch),
+//                       buildInfoRow(
+//                           "Class of", student.graduationYear ?? "202x"),
+//                       const SizedBox(height: 16),
+//                       _buildEditableField(
+//                         "About",
+//                         aboutController,
+//                         isEditMode,
+//                       ),
+//                       const SizedBox(height: 16),
+//                       _buildEditableField(
+//                         "Roles",
+//                         null,
+//                         isEditMode,
+//                         values: student.roles,
+//                       ),
+//                       const SizedBox(height: 16),
+//                       _buildEditableField(
+//                         "Skills",
+//                         skillsController,
+//                         isEditMode,
+//                       ),
+//                       const SizedBox(height: 16),
+//                       buildAchievementsColumn(student.achievements),
+//                     ],
+//                   ),
+//                 ),
+//               ),
+//             ],
+//           ),
+//         ),
+//       ),
+//     );
+//   }
+
+//   Widget buildInfoRow(String title, String value) {
+//     return Row(
+//       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//       children: [
+//         Text(
+//           title,
+//           style: const TextStyle(
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         Text(value),
+//       ],
+//     );
+//   }
+
+//   Widget _buildEditableField(
+//     String title,
+//     TextEditingController? controller,
+//     bool isEditable, {
+//     List<String>? values,
+//   }) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         Text(
+//           title,
+//           style: const TextStyle(
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         if (isEditable) ...[
+//           if (controller != null) TextField(controller: controller),
+//           if (values != null) ...[
+//             for (var value in values) Text('- $value'),
+//           ]
+//         ] else ...[
+//           if (values != null && values.isNotEmpty)
+//             for (var value in values) Text('- $value'),
+//           if (values == null || values.isEmpty) const Text('- No Information'),
+//         ],
+//       ],
+//     );
+//   }
+
+//   Widget buildAchievementsColumn(List<Achievement>? achievements) {
+//     return Column(
+//       crossAxisAlignment: CrossAxisAlignment.start,
+//       children: [
+//         const Text(
+//           'Achievements:',
+//           style: TextStyle(
+//             fontWeight: FontWeight.bold,
+//           ),
+//         ),
+//         if (isEditMode) ...[
+//           if (achievementsController != null)
+//             TextField(controller: achievementsController),
+//         ] else ...[
+//           if (achievements != null)
+//             for (var achievement in achievements)
+//               Column(
+//                 crossAxisAlignment: CrossAxisAlignment.start,
+//                 children: [
+//                   Text('- ${achievement.title}'),
+//                   Text('  ${achievement.description}'),
+//                 ],
+//               ),
+//         ],
+//       ],
+//     );
+//   }
 
   // List<Achievement>? _parseAchievements() {
   //   final lines = achievementsController.text.split("\n");
@@ -207,7 +673,7 @@ class UserProfile extends ConsumerWidget {
   //       .where((ach) => ach.title.isNotEmpty && ach.description.isNotEmpty)
   //       .toList();
   // }
-}
+// }
 // import 'package:flutter/material.dart';
 // import '../constants/dummy.dart';
 // import '../models/student.dart';
