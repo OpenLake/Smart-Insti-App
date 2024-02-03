@@ -1,10 +1,6 @@
 import mongoose from 'mongoose';
 
 const lostAndFoundItemSchema = new mongoose.Schema({
-    userId: {
-        type: String,
-        required: true
-    },
     name: {
         type: String,
         required: true
