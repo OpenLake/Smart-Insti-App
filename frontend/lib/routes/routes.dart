@@ -14,6 +14,8 @@ import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
 import '../screens/auth/signin_page.dart';
 import '../screens/classroom_vacancy.dart';
+import '../screens/auth/admin_login.dart';
+import '../screens/auth/user_login.dart';
 
 final GoRouter routes = GoRouter(
   initialLocation: '/home',
@@ -24,43 +26,53 @@ final GoRouter routes = GoRouter(
       routes: [
         GoRoute(
           path: 'admin_home',
-          pageBuilder: (context, state) => const MaterialPage(child: AdminHome()),
+          pageBuilder: (context, state) =>
+              const MaterialPage(child: AdminHome()),
           routes: [
             GoRoute(
               path: 'add_students',
-              pageBuilder: (context, state) => MaterialPage(child: AddStudents()),
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: AddStudents()),
             ),
             GoRoute(
               path: 'add_faculty',
-              pageBuilder: (context, state) => MaterialPage(child: AddFaculty()),
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: AddFaculty()),
             ),
             GoRoute(
               path: 'add_courses',
-              pageBuilder: (context, state) => MaterialPage(child: AddCourses()),
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: AddCourses()),
             ),
             GoRoute(
               path: 'view_students',
-              pageBuilder: (context, state) => MaterialPage(child: ViewStudents()),
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ViewStudents()),
             ),
             GoRoute(
               path: 'view_faculty',
-              pageBuilder: (context, state) => MaterialPage(child: ViewFaculty()),
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ViewFaculty()),
             ),
             GoRoute(
               path: 'view_courses',
-              pageBuilder: (context, state) => MaterialPage(child: ViewCourses()),
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ViewCourses()),
             ),
             GoRoute(
               path: 'add_menu',
-              pageBuilder: (context, state) => MaterialPage(child: AddMessMenu()),
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: AddMessMenu()),
             ),
             GoRoute(
               path: 'view_menu',
-              pageBuilder: (context, state) => MaterialPage(child: ViewMessMenu()),
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ViewMessMenu()),
             ),
             GoRoute(
               path: 'manage_rooms',
-              pageBuilder: (context, state) => MaterialPage(child: ManageRooms()),
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: ManageRooms()),
             )
           ],
         ),
@@ -72,13 +84,15 @@ final GoRouter routes = GoRouter(
       routes: [
         GoRoute(
           path: 'classroom_vacancy',
-          pageBuilder: (context, state) => const MaterialPage(child: ClassroomVacancy()),
+          pageBuilder: (context, state) =>
+              const MaterialPage(child: ClassroomVacancy()),
         ),
         GoRoute(
           path: 'lost_and_found',
-          pageBuilder: (context, state) => const MaterialPage(child: LostAndFound()),
+          pageBuilder: (context, state) =>
+              const MaterialPage(child: LostAndFound()),
         ),
       ],
-    )
+    ),
   ],
 );
