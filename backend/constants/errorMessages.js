@@ -29,3 +29,4 @@ export const tokenUpdateError= 'Error updating token';
 // Resources
 export const studentNotFound = 'Student not found';
 export const skillNotFound = 'Skill not found';
+export const achievementNotFound = 'Achievement not found';

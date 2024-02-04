@@ -7,9 +7,11 @@ import authResource from "./resources/authResource.js";
 import otpResource from "./resources/otpResource.js";
 import studentResource from "./resources/studentResouce.js";
 import skillResource from "./resources/skillResource.js";
+import achievementResource from "./resources/achievementResource.js";
 import Connection from "./database/db.js";
 import cors from "cors";
 import auth from "./middlewares/auth.js";
+import achievementRouter from "./resources/achievementResource.js";
 const PORT =`${process.env.PORT || 3000}`;
 const app = express();
 
@@ -26,6 +28,7 @@ app.use(userResource);
 app.use(otpResource);
 app.use(studentResource);
 app.use(skillResource);
+app.use(achievementResource);
 app.use("/", testResource);
 
 app.get('/protected', auth, (req, res) => {
