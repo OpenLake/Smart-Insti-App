@@ -21,6 +21,7 @@ app.use(cors());
 // Get Database connection
 Connection();
 app.use(authResource);
+app.use(userResource);
 app.use(otpResource);
 app.use("/", testResource);
 
