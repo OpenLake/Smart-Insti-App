@@ -26,5 +26,6 @@ export const tokenVerificationFailed = 'Token verification failed, authorization
 export const invalidUserType = 'Invalid user type';
 export const tokenUpdateError= 'Error updating token';
 
-// Student Resource
+// Resources
 export const studentNotFound = 'Student not found';
+export const skillNotFound = 'Skill not found';

@@ -6,6 +6,7 @@ import userResource from "./resources/userResource.js";
 import authResource from "./resources/authResource.js";
 import otpResource from "./resources/otpResource.js";
 import studentResource from "./resources/studentResouce.js";
+import skillResource from "./resources/skillResource.js";
 import Connection from "./database/db.js";
 import cors from "cors";
 import auth from "./middlewares/auth.js";
@@ -24,6 +25,7 @@ app.use(authResource);
 app.use(userResource);
 app.use(otpResource);
 app.use(studentResource);
+app.use(skillResource);
 app.use("/", testResource);
 
 app.get('/protected', auth, (req, res) => {
