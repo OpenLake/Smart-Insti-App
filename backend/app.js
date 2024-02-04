@@ -2,11 +2,11 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import testResource from "./resources/testResource.js";
-
+import userResource from "./resources/userResource.js";
 import authResource from "./resources/authResource.js";
 import otpResource from "./resources/otpResource.js";
+import studentResource from "./resources/studentResouce.js";
 import Connection from "./database/db.js";
-import bodyParser from "body-parser";
 import cors from "cors";
 import auth from "./middlewares/auth.js";
 const PORT =`${process.env.PORT || 3000}`;
@@ -23,6 +23,7 @@ Connection();
 app.use(authResource);
 app.use(userResource);
 app.use(otpResource);
+app.use(studentResource);
 app.use("/", testResource);
 
 app.get('/protected', auth, (req, res) => {

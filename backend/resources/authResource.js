@@ -1,10 +1,7 @@
-import mongoose from 'mongoose';
 import express from 'express';
 import bcryptjs from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import * as errorMessages from '../constants/errorMessages.js';
-import Student from '../models/Student.js';
-import Faculty from '../models/faculty.js';
 import Admin from '../models/admin.js';
 
 const authRouter = express.Router();
