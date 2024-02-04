@@ -28,20 +28,15 @@ class DummyStudents {
     ),
     Student(
       id: '2',
-      name: 'John Doe',
-      email: 'john.doe@example.com',
-      rollNumber: 'R001',
-      about: 'I am a computer science student.',
-      profilePicURI:
-          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
-      branch: 'Computer Science',
-      graduationYear: 2023,
-      skills: [DummySkills.skills[1], DummySkills.skills[2]],
-      achievements: [
-        Dummyachievements.achievements[1],
-        Dummyachievements.achievements[2]
-      ],
-      roles: ['Core Member', 'Coordinator'],
+      name: 'Alice Johnson',
+      email: 'alice.johnson@example.com',
+      rollNumber: '67890',
+      about: 'I am a mechanical engineering student.',
+      profilePicURI: '',
+      branch: 'Mechanical Engineering',
+      roles: ['Student,Class Representative'],
+      skills: DummySkills.skills.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '3',

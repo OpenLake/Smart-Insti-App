@@ -13,7 +13,7 @@ class UserProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final student = ref.read(studentProvider);
-    final Student? currentStudent = student.getStudentById('1');
+    final Student? currentStudent = student.getStudentById('2');
 
     return Scaffold(
       appBar: AppBar(
@@ -63,100 +63,143 @@ class UserProfile extends ConsumerWidget {
                   ),
                   elevation: 5,
                   child: Container(
-                    height: MediaQuery.of(context).size.height * 0.6,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          buildInfoRow("ID", currentStudent?.rollNumber ?? ''),
-                          buildInfoRow("Email", currentStudent?.email ?? ''),
-                          buildInfoRow("Branch", currentStudent?.branch ?? ''),
-                          buildInfoRow("Class of",
-                              "${currentStudent?.graduationYear}" ?? ''),
-                          const SizedBox(height: 16),
-                          const Text(
-                            'About:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                    constraints: BoxConstraints(
+                      minHeight: MediaQuery.of(context).size.height * 0.6,
+                    ),
+                    child: IntrinsicHeight(
+                      child: Padding(
+                        padding: const EdgeInsets.all(16.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            buildInfoRow(
+                                "ID", currentStudent?.rollNumber ?? ''),
+                            buildInfoRow("Email", currentStudent?.email ?? ''),
+                            buildInfoRow(
+                                "Branch", currentStudent?.branch ?? ''),
+                            buildInfoRow("Class of",
+                                "${currentStudent?.graduationYear}" ?? ''),
+                            const SizedBox(height: 16),
+                            const Text(
+                              'About:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Text(currentStudent?.about ?? 'No information'),
+                            Text(currentStudent?.about ?? 'No information'),
 
-                          const SizedBox(height: 5),
+                            const SizedBox(height: 5),
 
-                          const Text(
-                            'Skills:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                            const Text(
+                              'Skills:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
+                            const SizedBox(height: 5),
+                            // const Text(
+                            //   'scroll right >> ',
+                            //   style: TextStyle(
+                            //     fontWeight: FontWeight.w100,
+                            //     fontSize: 12,
+                            //   ),
+                            // ),
 
-                          // Display Skills as separate pie charts
-                          if (currentStudent?.skills != null)
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: currentStudent!.skills!
-                                    .map(
-                                      (skill) => SizedBox(
-                                        width: 120,
-                                        height: 80,
-                                        child: PieChart(
-                                          PieChartData(
-                                            sections: [
-                                              PieChartSectionData(
-                                                value: skill.level.toDouble(),
-                                                title: skill.name,
-                                                color: getRandomColor(),
+                            // Display Skills as separate pie charts
+                            if (currentStudent?.skills != null)
+                              Column(
+                                children: [
+                                  SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Row(
+                                      children: currentStudent!.skills!
+                                          .map(
+                                            (skill) => SizedBox(
+                                              width: 105,
+                                              height: 80,
+                                              child: PieChart(
+                                                PieChartData(
+                                                  sections: [
+                                                    PieChartSectionData(
+                                                      value: skill.level
+                                                          .toDouble(),
+                                                      title: skill.name,
+                                                      color: getRandomColor(),
+                                                    ),
+                                                    PieChartSectionData(
+                                                      value: (100 - skill.level)
+                                                          .toDouble(),
+                                                      title: '',
+                                                      color: Color.fromARGB(
+                                                          255, 184, 212, 240),
+                                                    ),
+                                                  ],
+                                                  sectionsSpace: 0,
+                                                  centerSpaceRadius: 0,
+                                                  borderData: FlBorderData(
+                                                    show: false,
+                                                  ),
+                                                ),
                                               ),
-                                              PieChartSectionData(
-                                                value: (100 - skill.level)
-                                                    .toDouble(),
-                                                color: Colors.transparent,
-                                              ),
-                                            ],
-                                            sectionsSpace: 0,
-                                            centerSpaceRadius: 0,
-                                            borderData: FlBorderData(
-                                              show: false,
                                             ),
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                    .toList(),
+                                          )
+                                          .toList(),
+                                    ),
+                                  ),
+                                  const SizedBox(height: 10),
+                                  Slider(
+                                    value: 10,
+                                    onChanged: (double value) {},
+                                    min: 0,
+                                    max: 100,
+                                  ),
+                                ],
+                              ),
+
+                            const SizedBox(height: 5),
+
+                            const Text(
+                              'Achievements:',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
 
-                          const SizedBox(height: 5),
-
-                          const Text(
-                            'Achievements:',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
+                            // Make Achievements section scrollable
+                            SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Row(
+                                children: currentStudent?.achievements
+                                        ?.map(
+                                          (achievement) => SizedBox(
+                                            width: (MediaQuery.of(context)
+                                                        .size
+                                                        .width -
+                                                    48 -
+                                                    40) /
+                                                2,
+                                            child: buildAchievementCard(
+                                                achievement),
+                                          ),
+                                        )
+                                        .toList() ??
+                                    [],
+                              ),
                             ),
-                          ),
-
-                          // Display Achievements as cards in 2 columns
-                          if (currentStudent?.achievements != null)
-                            Wrap(
-                              spacing: 16,
-                              runSpacing: 16,
-                              children: currentStudent!.achievements!
-                                  .map(
-                                    (achievement) => SizedBox(
-                                      width:
-                                          (MediaQuery.of(context).size.width -
-                                                  48 -
-                                                  40) /
-                                              2,
-                                      child: buildAchievementCard(achievement),
-                                    ),
-                                  )
-                                  .toList(),
+                            const SizedBox(height: 10),
+// Add a vertical slider for achievements
+                            Slider(
+                              value: 10,
+                              onChanged: (double value) {},
+                              min: 0,
+                              max: 100,
+                              divisions:
+                                  5, // Adjust the number of divisions as needed
+                              label: 'Achievement Slider',
+                              // vertical: true, // Set to true for a vertical slider
                             ),
-                        ],
+                          ],
+                        ),
                       ),
                     ),
                   ),
