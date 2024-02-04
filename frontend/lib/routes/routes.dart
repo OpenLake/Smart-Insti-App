@@ -14,6 +14,8 @@ import '../screens/auth/login_page.dart';
 import '../screens/user_profile.dart';
 import '../screens/home.dart';
 import '../screens/auth/login_page.dart';
+import '../screens/auth/admin_login.dart';
+import '../screens/auth/user_login.dart';
 
 final GoRouter routes = GoRouter(
   routes: [
@@ -25,6 +27,12 @@ final GoRouter routes = GoRouter(
           path: 'user_profile',
           pageBuilder: (context, state) =>
               const MaterialPage(child: UserProfile()),
+//       pageBuilder: (context, state) => MaterialPage(child: UserLogin()),
+//       routes: [
+//         GoRoute(
+//           path: 'admin_login',
+//           pageBuilder: (context, state) =>
+//               const MaterialPage(child: AdminLogin()),
         ),
         GoRoute(
           path: 'admin_home',

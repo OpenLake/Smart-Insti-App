@@ -10,10 +10,17 @@ const facultySchema = new mongoose.Schema({
         required: true,
         unique: true
     },
+    cabinNumber: {
+        type: String,
+    },
+    department: {
+        type: String,
+    },
     courses: [{
         type: mongoose.Schema.Types.ObjectId,
         ref: 'Course'
     }],
+    
 });
 
 const Faculty = mongoose.model('Faculty', facultySchema);

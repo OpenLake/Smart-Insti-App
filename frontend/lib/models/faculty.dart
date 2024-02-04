@@ -4,12 +4,16 @@ class Faculty {
   final String id;
   final String name;
   final String email;
+  final String cabinNumber;
+  final String department;
   final List<Course> courses;
 
   Faculty({
     required this.id,
     required this.name,
     required this.email,
+    required this.cabinNumber,
+    required this.department,
     required this.courses,
   });
 
@@ -18,6 +22,8 @@ class Faculty {
       id: json['_id'],
       name: json['name'] ?? 'Smart Insti User',
       email: json['email'],
+      cabinNumber: json['cabinNumber'],
+      department: json['department'],
       courses: (json['courses'] as List)
           .map((item) => Course.fromJson(item))
           .toList(),
@@ -29,6 +35,8 @@ class Faculty {
       '_id': id,
       'name': name,
       'email': email,
+      'cabinNumber': cabinNumber,
+      'department': department,
       'courses': courses,
     };
   }
