@@ -1,5 +1,6 @@
 import '../models/course.dart';
 import '../models/faculty.dart';
+import '../models/lost_and_found_item.dart';
 import '../models/mess_menu.dart';
 import '../models/room.dart';
 import '../models/student.dart';
@@ -681,5 +682,90 @@ class DummyRooms {
     Room(id: '18', name: 'Music Room', vacant: true),
     Room(id: '19', name: 'Student Council Office', vacant: false, occupantId: 'T005'),
     Room(id: '20', name: 'Virtual Reality Lab', vacant: true),
+  ];
+}
+
+class DummyLostAndFound {
+  static List<LostAndFoundItem> lostAndFoundItems = [
+    LostAndFoundItem(
+      name: 'Laptop',
+      description: 'Black Dell laptop with a sticker on the back',
+      lastSeenLocation: 'Library',
+      contactNumber: '+91 1234567890',
+      imagePath: 'assets/images/laptop.jpg',
+      isLost: false,
+    ),
+    LostAndFoundItem(
+      name: 'Mobile Phone',
+      description: 'White iPhone 12 with a black case',
+      lastSeenLocation: 'Cafeteria',
+      contactNumber: '+91 9876543210',
+      imagePath: 'assets/images/phone.jpg',
+      isLost: true,
+    ),
+    LostAndFoundItem(
+      name: 'Water Bottle',
+      description: 'Blue steel water bottle with a dent on the bottom',
+      lastSeenLocation: 'Gymnasium',
+      contactNumber: '+91 4567890123',
+      imagePath: 'assets/images/bottle.jpg',
+      isLost: false,
+    ),
+    LostAndFoundItem(
+      name: 'Backpack',
+      description: 'Red and black backpack with a broken zipper',
+      lastSeenLocation: 'Auditorium',
+      contactNumber: '+91 7890123456',
+      imagePath: 'assets/images/backpack.jpg',
+      isLost: true,
+    ),
+    LostAndFoundItem(
+      name: 'Watch',
+      description: 'Silver wristwatch with a black leather strap',
+      lastSeenLocation: 'Classroom 101',
+      contactNumber: '+91 2345678901',
+      imagePath: 'assets/images/watch.jpg',
+      isLost: false,
+    ),
+    LostAndFoundItem(
+      name: 'Umbrella',
+      description: 'Green and white striped umbrella with a broken handle',
+      lastSeenLocation: 'Student Lounge',
+      contactNumber: '+91 8901234567',
+      imagePath: 'assets/images/umbrella.jpg',
+      isLost: true,
+    ),
+    LostAndFoundItem(
+      name: 'Sunglasses',
+      description: 'Black aviator sunglasses with a scratch on the left lens',
+      lastSeenLocation: 'Cafeteria',
+      contactNumber: '+91 3456789012',
+      imagePath: 'assets/images/sunglasses.jpg',
+      isLost: false,
+    ),
+    LostAndFoundItem(
+      name: 'Wallet',
+      description: 'Brown leather wallet with a broken zipper',
+      lastSeenLocation: 'Library',
+      contactNumber: '+91 9012345678',
+      imagePath: 'assets/images/wallet.jpg',
+      isLost: true,
+    ),
+    LostAndFoundItem(
+      name: 'Headphones',
+      description: 'Black over-ear headphones with a missing ear cushion',
+      lastSeenLocation: 'Auditorium',
+      contactNumber: '+91 6789012345',
+      imagePath: 'assets/images/headphones.jpg',
+      isLost: false,
+    ),
+    LostAndFoundItem(
+      name: 'Jacket',
+      description: 'Blue denim jacket with a tear on the left sleeve',
+      lastSeenLocation: 'Gymnasium',
+      contactNumber: '+91 5678901234',
+      imagePath: 'assets/images/jacket.jpg',
+      isLost: true,
+    ),
   ];
 }
