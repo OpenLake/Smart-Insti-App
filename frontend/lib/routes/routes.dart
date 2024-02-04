@@ -10,10 +10,8 @@ import '../screens/admin/add_menu.dart';
 import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
-import '../screens/auth/login_page.dart';
 import '../screens/user_profile.dart';
 import '../screens/home.dart';
-import '../screens/auth/login_page.dart';
 import '../screens/auth/admin_login.dart';
 import '../screens/auth/user_login.dart';
 

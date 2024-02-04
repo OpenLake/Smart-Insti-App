@@ -287,30 +287,30 @@ class DummyStudents {
   ];
 }
 
-class DummySkills {
-  static List<Skill> skills = [
-    Skill(id: '1', name: 'Flutter', level: 80),
-    Skill(id: '2', name: 'C++', level: 100),
-    Skill(id: '3', name: 'javascript', level: 20),
-    Skill(id: '4', name: 'Nodejs', level: 30),
-    Skill(id: '5', name: 'Reactjs', level: 40),
-    Skill(id: '6', name: 'MongoDB', level: 50),
-    Skill(id: '7', name: 'Graphic Designing', level: 60),
-    Skill(id: '8', name: 'chess', level: 70),
-    Skill(id: '9', name: 'cricket', level: 80),
-    Skill(id: '10', name: 'VScode', level: 100),
-    Skill(id: '11', name: 'Dart', level: 100),
-    Skill(id: '12', name: 'Typing', level: 90),
-    Skill(id: '13', name: 'Drawing', level: 80),
-    Skill(id: '14', name: 'Painting', level: 70),
-    Skill(id: '15', name: 'Sketching', level: 60),
-    Skill(id: '16', name: 'Programming', level: 50),
-    Skill(id: '17', name: 'Python', level: 40),
-    Skill(id: '18', name: 'C', level: 30),
-    Skill(id: '19', name: 'Speaking', level: 20),
-    Skill(id: '20', name: 'Sleeping', level: 10)
-  ];
-}
+// class DummySkills {
+//   static List<Skill> skills = [
+//     Skill(id: '1', name: 'Flutter', level: 80),
+//     Skill(id: '2', name: 'C++', level: 100),
+//     Skill(id: '3', name: 'javascript', level: 20),
+//     Skill(id: '4', name: 'Nodejs', level: 30),
+//     Skill(id: '5', name: 'Reactjs', level: 40),
+//     Skill(id: '6', name: 'MongoDB', level: 50),
+//     Skill(id: '7', name: 'Graphic Designing', level: 60),
+//     Skill(id: '8', name: 'chess', level: 70),
+//     Skill(id: '9', name: 'cricket', level: 80),
+//     Skill(id: '10', name: 'VScode', level: 100),
+//     Skill(id: '11', name: 'Dart', level: 100),
+//     Skill(id: '12', name: 'Typing', level: 90),
+//     Skill(id: '13', name: 'Drawing', level: 80),
+//     Skill(id: '14', name: 'Painting', level: 70),
+//     Skill(id: '15', name: 'Sketching', level: 60),
+//     Skill(id: '16', name: 'Programming', level: 50),
+//     Skill(id: '17', name: 'Python', level: 40),
+//     Skill(id: '18', name: 'C', level: 30),
+//     Skill(id: '19', name: 'Speaking', level: 20),
+//     Skill(id: '20', name: 'Sleeping', level: 10)
+//   ];
+// }
 
 class Dummyachievements {
   static List<Achievement> achievements = [
