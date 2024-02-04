@@ -28,13 +28,6 @@ class EditProfileScreen extends ConsumerWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
-                'Edit About',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 20,
-                ),
-              ),
               AboutEditWidget(),
               // UI for editing skills
               SkillsEditWidget(

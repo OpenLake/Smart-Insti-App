@@ -94,10 +94,7 @@ class StudentState {
         branch: 'Computer Science',
         graduationYear: 2023,
         skills: [DummySkills.skills[1], DummySkills.skills[2]],
-        achievements: [
-          Dummyachievements.achievements[1],
-          Dummyachievements.achievements[2],
-        ],
+        achievements: Dummyachievements.achievements.sublist(0, 5),
         roles: ['Core Member', 'Coordinator'],
       );
     }

@@ -13,7 +13,7 @@ class UserProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final student = ref.read(studentProvider);
-    final Student? currentStudent = student.getStudentById('2');
+    final Student? currentStudent = student.getStudentById('1');
 
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +53,17 @@ class UserProfile extends ConsumerWidget {
                       : null,
                 ),
 
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
+
+                Text(
+                  currentStudent?.name ?? '',
+                  style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 18,
+                  ),
+                ),
+
+                const SizedBox(height: 8),
 
                 // User Details Card
                 Card(
@@ -89,6 +99,18 @@ class UserProfile extends ConsumerWidget {
                             Text(currentStudent?.about ?? 'No information'),
 
                             const SizedBox(height: 5),
+
+                            const Text(
+                              'Roles: ',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            Text(
+                                '${currentStudent?.roles?.join(", ") ?? "No roles"}'),
+                            // style: TextStyle(),)
+
+                            const SizedBox(height: 16),
 
                             const Text(
                               'Skills:',
@@ -165,7 +187,6 @@ class UserProfile extends ConsumerWidget {
                               ),
                             ),
 
-                            // Make Achievements section scrollable
                             SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Row(
@@ -187,16 +208,13 @@ class UserProfile extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(height: 10),
-// Add a vertical slider for achievements
                             Slider(
                               value: 10,
                               onChanged: (double value) {},
                               min: 0,
                               max: 100,
-                              divisions:
-                                  5, // Adjust the number of divisions as needed
+                              divisions: 5,
                               label: 'Achievement Slider',
-                              // vertical: true, // Set to true for a vertical slider
                             ),
                           ],
                         ),
