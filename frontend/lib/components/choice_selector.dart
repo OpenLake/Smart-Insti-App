@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:search_choices/search_choices.dart';
 
 class ChoiceSelector extends StatelessWidget {
-
-  const ChoiceSelector({super.key, required this.onChanged, required this.value,required this.items, required this.hint});
+  const ChoiceSelector(
+      {super.key,
+      required this.onChanged,
+      required this.value,
+      required this.items,
+      required this.hint});
 
   final Function onChanged;
   final List<DropdownMenuItem<String>> items;
@@ -12,7 +16,7 @@ class ChoiceSelector extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-     return Theme(
+    return Theme(
       data: Theme.of(context).copyWith(
         highlightColor: Colors.transparent,
         splashColor: Colors.transparent,
@@ -39,7 +43,8 @@ class ChoiceSelector extends StatelessWidget {
                 fontSize: 15,
                 fontFamily: "RobotoFlex",
               ),
-              contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              contentPadding:
+                  const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
               isDense: true,
               filled: true,
               fillColor: Colors.tealAccent.withOpacity(0.4),
@@ -52,7 +57,7 @@ class ChoiceSelector extends StatelessWidget {
           );
         },
         menuConstraints: BoxConstraints.tight(const Size.fromHeight(350)),
-        validator:null,
+        validator: null,
         menuBackgroundColor: Colors.tealAccent.shade100,
       ),
     );

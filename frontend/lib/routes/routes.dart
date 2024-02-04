@@ -10,14 +10,20 @@ import '../screens/admin/add_menu.dart';
 import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
-import '../screens/auth/signin_page.dart';
+import '../screens/auth/admin_login.dart';
+import '../screens/auth/user_login.dart';
 
 final GoRouter routes = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      pageBuilder: (context, state) => MaterialPage(child: SignIn()),
+      pageBuilder: (context, state) => MaterialPage(child: UserLogin()),
       routes: [
+        GoRoute(
+          path: 'admin_login',
+          pageBuilder: (context, state) =>
+              const MaterialPage(child: AdminLogin()),
+        ),
         GoRoute(
           path: 'admin_home',
           pageBuilder: (context, state) =>

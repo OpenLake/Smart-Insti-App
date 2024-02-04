@@ -3,6 +3,7 @@ export const userAlreadyExists = "User with this email already exists!";
 export const userNotFound = "User with this email does not exist!";
 export const incorrectPassword = "Incorrect password.";
 export const internalServerError = "Internal Server Error. Please try again later.";
+export const userCreated = "User created successfully";
 
 //Database Connection
 export const databaseConnected = "Database connected successfully";
@@ -20,4 +21,7 @@ export const otpSent = 'OTP sent successfully';
 
 // Auth Middleware
 export const noAuthToken = 'No auth token, access denied';
+export const invalidAuthToken = 'Invalid token';
 export const tokenVerificationFailed = 'Token verification failed, authorization denied.';
+export const invalidUserType = 'Invalid user type';
+export const tokenUpdateError= 'Error updating token';
