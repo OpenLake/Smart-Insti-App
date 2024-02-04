@@ -5,6 +5,8 @@ class AppConstants {
   static const Color seedColor = Colors.lightBlueAccent;
 }
 
+enum LoadingState { progress, success, error }
+
 class Branches {
   static List<DropdownMenuItem<String>> branchList = const [
     DropdownMenuItem<String>(
@@ -48,6 +50,11 @@ class StudentRoles {
     DropdownMenuItem<String>(value: "President", child: Text("President")),
     DropdownMenuItem<String>(value: "Instructor", child: Text("Instructor")),
   ];
+}
+
+class LostAndFoundConstants {
+  static const String lostState = 'Lost';
+  static const String foundState = 'Found';
 }
 
 class MessMenuConstants {
