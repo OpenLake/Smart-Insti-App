@@ -21,7 +21,7 @@ class Home extends ConsumerWidget {
           crossAxisCount: 2,
           children: [
             MenuTile(
-              title: 'Classroom\nVacancy',
+              title: 'Room\nVacancy',
               onTap: () => context.push('/home/classroom_vacancy'),
               body: [
                 const SizedBox(height: 5),
@@ -39,7 +39,7 @@ class Home extends ConsumerWidget {
             ),
             MenuTile(
                 title: "Lost\n&\nFound",
-                onTap: () {},
+                onTap: () => context.push('/home/lost_and_found'),
                 primaryColor: Colors.orangeAccent.shade100,
                 secondaryColor: Colors.orangeAccent.shade200,
                 icon: Icons.search),
