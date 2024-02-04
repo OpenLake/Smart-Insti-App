@@ -5,6 +5,7 @@ import '../models/skills.dart';
 import '../models/achievement.dart';
 import '../provider/skills_edit_widget.dart';
 import '../provider/achievements_edit_widget.dart';
+import 'dart:convert';
 
 class EditProfileScreen extends ConsumerWidget {
   @override
@@ -14,6 +15,9 @@ class EditProfileScreen extends ConsumerWidget {
 
     List<Skill> skills = ref.watch(skillsProvider);
     List<Achievement> achievements = ref.watch(achievementsProvider);
+
+    String skillsJson = jsonEncode(skills);
+    String achievementsJson = jsonEncode(achievements);
 
     return Scaffold(
       appBar: AppBar(
@@ -45,13 +49,14 @@ class EditProfileScreen extends ConsumerWidget {
 
               // UI for editing skills
               SkillsEditWidget(
-                  skillsController:
-                      TextEditingController(text: skills.toString())),
+                skillsController: TextEditingController(text: skillsJson),
+              ),
 
               // UI for editing achievements
               AchievementsEditWidget(
-                  achievementsController:
-                      TextEditingController(text: achievements.toString())),
+                achievementsController:
+                    TextEditingController(text: achievementsJson),
+              ),
             ],
           ),
         ),
