@@ -4,8 +4,8 @@ import 'dart:math';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../screens/edit_profile.dart';
 import '../provider/student_provider.dart';
-import '../provider/user_providers.dart';
 import '../models/achievement.dart';
+import '../models/student.dart';
 
 class UserProfile extends ConsumerWidget {
   const UserProfile({Key? key}) : super(key: key);
@@ -13,6 +13,9 @@ class UserProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final student = ref.read(studentProvider);
+
+    // Retrieve student data by ID
+    final Student? currentStudent = student.getStudentById('1');
 
     return Scaffold(
       appBar: AppBar(
@@ -41,12 +44,12 @@ class UserProfile extends ConsumerWidget {
                 Column(
                   children: [
                     CircleAvatar(
-                      backgroundImage: student.profilePicURI != null
-                          ? NetworkImage(student.profilePicURI!)
+                      backgroundImage: currentStudent?.profilePicURI != null
+                          ? NetworkImage(currentStudent!.profilePicURI!)
                           : const AssetImage('assets/openlake.png')
                               as ImageProvider<Object>,
                       radius: 55,
-                      child: student.profilePicURI == null
+                      child: currentStudent?.profilePicURI == null
                           ? const Icon(
                               Icons.person,
                               size: 55,
@@ -56,7 +59,7 @@ class UserProfile extends ConsumerWidget {
                     ),
                     const SizedBox(height: 8),
                     Text(
-                      student.studentNameController.text,
+                      currentStudent?.name ?? 'Unknown',
                       style: const TextStyle(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
@@ -72,61 +75,60 @@ class UserProfile extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(20.0),
                   ),
                   elevation: 5,
-                  child: Padding(
-                    padding: const EdgeInsets.all(16.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        buildInfoRow(
-                          "ID",
-                          student.studentRollNoController.text,
-                        ),
-                        buildInfoRow(
-                          "Email",
-                          student.studentEmailController.text,
-                        ),
-                        buildInfoRow(
-                          "Branch",
-                          student.branch,
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'About:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                  child: Container(
+                    height: MediaQuery.of(context).size.height * 0.6,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          buildInfoRow("ID", currentStudent?.rollNumber ?? ''),
+                          buildInfoRow("Email", currentStudent?.email ?? ''),
+                          buildInfoRow("Branch", currentStudent?.branch ?? ''),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'About:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        Text(student.about ?? 'No information'),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Skills:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
+                          Text(currentStudent?.about ?? 'No information'),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Skills:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        // Display Skills as a pie chart
-                        PieChart(
-                          PieChartData(
-                            sections: ref.watch(skillsProvider).map((skill) {
-                              return PieChartSectionData(
-                                value: skill.level.toDouble(),
-                                title: skill.name,
-                                color: getRandomColor(),
-                              );
-                            }).toList(),
+                          // Display Skills as a pie chart
+                          if (currentStudent?.skills != null)
+                            PieChart(
+                              PieChartData(
+                                sections: currentStudent!.skills!
+                                    .map(
+                                      (skill) => PieChartSectionData(
+                                        value: skill.level.toDouble(),
+                                        title: skill.name,
+                                        color: getRandomColor(),
+                                      ),
+                                    )
+                                    .toList(),
+                              ),
+                            ),
+                          const SizedBox(height: 16),
+                          const Text(
+                            'Achievements:',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          'Achievements:',
-                          style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                        // Display Achievements as cards
-                        for (var achievement in ref.watch(achievementsProvider))
-                          buildAchievementCard(achievement),
-                      ],
+                          // Display Achievements as cards
+                          if (currentStudent?.achievements != null)
+                            for (var achievement
+                                in currentStudent!.achievements!)
+                              buildAchievementCard(achievement),
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -175,7 +177,10 @@ class UserProfile extends ConsumerWidget {
               'Date: ${achievement.date}',
               style: const TextStyle(fontSize: 12),
             ),
-            // Add description here
+            Text(
+              achievement.description,
+              style: const TextStyle(fontSize: 12),
+            ),
           ],
         ),
       ),
