@@ -50,6 +50,7 @@ dependencies:
   grouped_list: ^5.1.2
   slide_switcher: ^1.1.2
   awesome_snackbar_content: ^0.1.1
+  email_validator: ^2.1.17
   delightful_toast: ^1.1.0
   syncfusion_flutter_sliders: ^24.2.3
   fl_chart: ^0.66.1

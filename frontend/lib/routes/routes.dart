@@ -13,6 +13,7 @@ import '../screens/admin/view_menu.dart';
 import '../screens/auth/login_page.dart';
 import '../screens/user_profile.dart';
 import '../screens/home.dart';
+import '../screens/auth/login_page.dart';
 
 final GoRouter routes = GoRouter(
   routes: [
@@ -78,7 +79,7 @@ final GoRouter routes = GoRouter(
           ],
         ),
       ],
-    )
+    ),
   ],
 );
 
