@@ -4,16 +4,16 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 class SkillsEditWidget extends StatelessWidget {
   final TextEditingController skillsController;
 
-  SkillsEditWidget({required this.skillsController});
+  const SkillsEditWidget({required this.skillsController});
 
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
+        const Text(
           'Skills',
-          style: const TextStyle(
+          style: TextStyle(
             fontWeight: FontWeight.bold,
           ),
         ),

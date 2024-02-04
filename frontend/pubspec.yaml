@@ -52,6 +52,7 @@ dependencies:
   awesome_snackbar_content: ^0.1.1
   delightful_toast: ^1.1.0
   syncfusion_flutter_sliders: ^24.2.3
+  fl_chart: ^0.66.1
 
 dev_dependencies:
   flutter_test:

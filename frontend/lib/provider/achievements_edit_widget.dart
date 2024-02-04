@@ -8,7 +8,7 @@ class AchievementsEditWidget extends StatelessWidget {
   AchievementsEditWidget({
     required this.achievementsController,
     Key? key,
-  })  : _selectedDate = [DateTime.now()], // Initialize _selectedDate
+  })  : _selectedDate = [DateTime.now()],
         super(key: key);
 
   @override
@@ -39,39 +39,3 @@ class AchievementsEditWidget extends StatelessWidget {
     );
   }
 }
-// class AchievementsEditWidget extends StatelessWidget {
-//   final TextEditingController achievementsController;
-//   final DateTime? _selectedDate;
-
-//   AchievementsEditWidget({required this.achievementsController})
-//       : _selectedDate = DateTime.now(); // Initialize _selectedDate
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         const Text(
-//           'Achievements',
-//           style: TextStyle(
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//         TextFormField(
-//           controller: achievementsController,
-//           decoration: const InputDecoration(labelText: 'Achievement'),
-//         ),
-//         // Add more fields like description, date picker, etc.
-//         CalendarDatePicker2(
-//           config: CalendarDatePicker2Config(),
-//           value: _selectedDate,
-//           onValueChanged: (dates) {
-//             if (dates != null && dates.isNotEmpty) {
-//               _selectedDate = dates.first;
-//             }
-//           },
-//         ),
-//       ],
-//     );
-//   }
-// }
