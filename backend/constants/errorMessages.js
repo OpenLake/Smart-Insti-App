@@ -30,3 +30,5 @@ export const tokenUpdateError= 'Error updating token';
 export const studentNotFound = 'Student not found';
 export const skillNotFound = 'Skill not found';
 export const achievementNotFound = 'Achievement not found';
+export const facultyNotFound = 'Faculty not found';
+export const courseNotFound = 'Course not found';

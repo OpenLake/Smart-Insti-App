@@ -9,6 +9,7 @@ import studentResource from "./resources/studentResouce.js";
 import facultyResource from "./resources/facultyResource.js";
 import skillResource from "./resources/skillResource.js";
 import achievementResource from "./resources/achievementResource.js";
+import courseResource from "./resources/courseResource.js";
 import Connection from "./database/db.js";
 import cors from "cors";
 import auth from "./middlewares/auth.js";
@@ -30,6 +31,7 @@ app.use(otpResource);
 app.use(studentResource);
 app.use(facultyResource);
 app.use(skillResource);
+app.use(courseResource);
 app.use(achievementResource);
 app.use("/", testResource);
 
