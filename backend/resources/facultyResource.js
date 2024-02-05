@@ -5,7 +5,7 @@ const facultyRouter = express.Router();
 
 facultyRouter.get('/faculties', async (req, res) => {
     try {
-        const faculties = await Faculty.find({});
+        const faculties = await Faculty.find().populate('courses');
         res.json(faculties);
     } catch (err) {
         res.status(500).json({ message: errorMessages.internalServerError });
