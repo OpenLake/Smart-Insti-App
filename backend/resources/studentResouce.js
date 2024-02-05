@@ -5,7 +5,7 @@ const studentRouter = express.Router();
 
 studentRouter.get('/students', async (req, res) => {
     try {
-        const students = await Student.find({});
+        const students = await Student.find().populate('skills').populate('achievements');
         res.json(students);
     } catch (err) {
         res.status(500).json({ message: errorMessages.internalServerError });
