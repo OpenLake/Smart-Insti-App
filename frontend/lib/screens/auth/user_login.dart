@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:slide_switcher/slide_switcher.dart';
 import '../../components/otp_box.dart';
 import '../../components/snackbar.dart';
 import '../../services/auth/auth_service.dart';
