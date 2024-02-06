@@ -8,7 +8,7 @@ class Room {
 
   factory Room.fromJson(Map<String, dynamic> json) {
     return Room(
-      id: json['id'],
+      id: json['_id'],
       name: json['name'],
       vacant: json['vacant'],
       occupantId: json['occupantId'],
@@ -17,7 +17,6 @@ class Room {
 
   Map<String, dynamic> toJson() {
     return {
-      'id': id,
       'name': name,
       'vacant': vacant,
       'occupantId': occupantId,
