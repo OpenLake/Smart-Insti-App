@@ -9,6 +9,10 @@ import Connection from "./database/db.js";
 import bodyParser from "body-parser";
 import cors from "cors";
 import auth from "./middlewares/auth.js";
+import roomListResource from "./resources/rooms/roomListResource.js";
+import roomResource from "./resources/rooms/roomResource.js";
+import lostAndFoundListResource from "./resources/lostAndFound/lostAndFoundListResource.js";
+
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
 
@@ -23,6 +27,9 @@ Connection();
 app.use(authResource);
 app.use(otpResource);
 app.use("/", testResource);
+app.use("/rooms", roomListResource);
+app.use("/room", roomResource);
+app.use("/lost-and-found", lostAndFoundListResource);
 
 app.get("/protected", auth, (req, res) => {
   res.json({ message: "Access granted" });
