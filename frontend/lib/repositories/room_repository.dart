@@ -20,4 +20,22 @@ class RoomRepository {
       return DummyRooms.rooms;
     }
   }
+
+  Future<void> reserveRoom(String roomId, String occupantId) async {
+    try {
+      final response = await _client.put('/room/$roomId', data: {'occupantId': occupantId});
+      Logger().i(response.data);
+    } catch (e) {
+      Logger().e(e);
+    }
+  }
+
+  void addRoom(Room room) async {
+    try {
+      final response = await _client.post('/rooms', data: room.toJson());
+      Logger().i(response.data);
+    } catch (e) {
+      Logger().e(e);
+    }
+  }
 }
