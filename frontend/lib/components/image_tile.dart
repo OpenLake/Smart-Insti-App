@@ -43,7 +43,7 @@ class ImageTile extends StatelessWidget {
                             ? ClipRRect(borderRadius: BorderRadius.circular(10), child: image)
                             : Container(
                                 width: double.infinity,
-                                height: 100,
+                                height: 115,
                                 decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
