@@ -434,11 +434,7 @@ class DummyFaculties {
       id: '2',
       name: 'Prof. Johnson',
       email: 'johnson@example.com',
-      courses: [
-        DummyCourses.courses[1],
-        DummyCourses.courses[6],
-        DummyCourses.courses[11]
-      ],
+      courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]],
       cabinNumber: 'C-102',
       department: 'Mechanical Engineering',
     ),
@@ -446,11 +442,7 @@ class DummyFaculties {
       id: '3',
       name: 'Dr. Brown',
       email: 'brown@example.com',
-      courses: [
-        DummyCourses.courses[2],
-        DummyCourses.courses[7],
-        DummyCourses.courses[12]
-      ],
+      courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]],
       cabinNumber: 'C-103',
       department: 'Electrical Engineering',
     ),
@@ -458,187 +450,119 @@ class DummyFaculties {
         id: '4',
         name: 'Prof. Davis',
         email: 'davis@example.com',
-        courses: [
-          DummyCourses.courses[3],
-          DummyCourses.courses[8],
-          DummyCourses.courses[13]
-        ],
+        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]],
         cabinNumber: 'C-104',
         department: 'Civil Engineering'),
     Faculty(
         id: '5',
         name: 'Dr. Wilson',
         email: 'wilson@example.com',
-        courses: [
-          DummyCourses.courses[4],
-          DummyCourses.courses[9],
-          DummyCourses.courses[14]
-        ],
+        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]],
         cabinNumber: 'C-105',
         department: 'Chemical Engineering'),
     Faculty(
         id: '6',
         name: 'Prof. Miller',
         email: 'miller@example.com',
-        courses: [
-          DummyCourses.courses[0],
-          DummyCourses.courses[5],
-          DummyCourses.courses[10]
-        ],
+        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]],
         cabinNumber: 'C-106',
         department: 'Biotechnology'),
     Faculty(
         id: '7',
         name: 'Dr. Turner',
         email: 'turner@example.com',
-        courses: [
-          DummyCourses.courses[1],
-          DummyCourses.courses[6],
-          DummyCourses.courses[11]
-        ],
+        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]],
         cabinNumber: 'C-107',
         department: 'Aerospace Engineering'),
     Faculty(
         id: '8',
         name: 'Prof. Clark',
         email: 'clark@example.com',
-        courses: [
-          DummyCourses.courses[2],
-          DummyCourses.courses[7],
-          DummyCourses.courses[12]
-        ],
+        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]],
         cabinNumber: 'C-108',
         department: 'Information Technology'),
     Faculty(
         id: '9',
         name: 'Dr. Harris',
         email: 'harris@example.com',
-        courses: [
-          DummyCourses.courses[3],
-          DummyCourses.courses[8],
-          DummyCourses.courses[13]
-        ],
+        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]],
         cabinNumber: 'C-109',
         department: 'Mechatronics'),
     Faculty(
         id: '10',
         name: 'Prof. Turner',
         email: 'turner@example.com',
-        courses: [
-          DummyCourses.courses[4],
-          DummyCourses.courses[9],
-          DummyCourses.courses[14]
-        ],
+        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]],
         cabinNumber: 'C-110',
         department: 'Robotics Engineering'),
     Faculty(
         id: '11',
         name: 'Dr. White',
         email: 'white@example.com',
-        courses: [
-          DummyCourses.courses[0],
-          DummyCourses.courses[5],
-          DummyCourses.courses[10]
-        ],
+        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]],
         cabinNumber: 'D-101',
         department: 'Industrial Engineering'),
     Faculty(
         id: '12',
         name: 'Prof. Allen',
         email: 'allen@example.com',
-        courses: [
-          DummyCourses.courses[1],
-          DummyCourses.courses[6],
-          DummyCourses.courses[11]
-        ],
+        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]],
         cabinNumber: 'D-102',
         department: 'Computer Engineering'),
     Faculty(
         id: '13',
         name: 'Dr. Young',
         email: 'young@example.com',
-        courses: [
-          DummyCourses.courses[2],
-          DummyCourses.courses[7],
-          DummyCourses.courses[12]
-        ],
+        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]],
         cabinNumber: 'D-103',
         department: 'Software Engineering'),
     Faculty(
         id: '14',
         name: 'Prof. Walker',
         email: 'walker@example.com',
-        courses: [
-          DummyCourses.courses[3],
-          DummyCourses.courses[8],
-          DummyCourses.courses[13]
-        ],
+        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]],
         cabinNumber: 'D-104',
         department: 'Environmental Engineering'),
     Faculty(
         id: '15',
         name: 'Dr. Lee',
         email: 'lee@example.com',
-        courses: [
-          DummyCourses.courses[4],
-          DummyCourses.courses[9],
-          DummyCourses.courses[14]
-        ],
+        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]],
         cabinNumber: 'D-105',
         department: 'Petrolesum[ Engineer]ing'),
     Faculty(
         id: '16',
         name: 'Prof. Hall',
         email: 'hall@example.com',
-        courses: [
-          DummyCourses.courses[0],
-          DummyCourses.courses[5],
-          DummyCourses.courses[10]
-        ],
+        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]],
         cabinNumber: 'D-106',
         department: 'Nuclear Engineering'),
     Faculty(
         id: '17',
         name: 'Dr. Miller',
         email: 'miller@example.com',
-        courses: [
-          DummyCourses.courses[1],
-          DummyCourses.courses[6],
-          DummyCourses.courses[11]
-        ],
+        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]],
         cabinNumber: 'D-107',
         department: 'Biomedical Engineering'),
     Faculty(
         id: '18',
         name: 'Prof. Baker',
         email: 'baker@example.com',
-        courses: [
-          DummyCourses.courses[2],
-          DummyCourses.courses[7],
-          DummyCourses.courses[12]
-        ],
+        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]],
         cabinNumber: 'D-108',
         department: 'Chemical Engineering'),
     Faculty(
         id: '19',
         name: 'Dr. Turner',
         email: 'turner@example.com',
-        courses: [
-          DummyCourses.courses[3],
-          DummyCourses.courses[8],
-          DummyCourses.courses[13]
-        ],
+        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]],
         cabinNumber: 'D-109',
         department: 'Electronics Engineering'),
     Faculty(
         id: '20',
         name: 'Prof. Smith',
         email: 'smith@example.com',
-        courses: [
-          DummyCourses.courses[4],
-          DummyCourses.courses[9],
-          DummyCourses.courses[14]
-        ],
+        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]],
         cabinNumber: 'D-110',
         department: 'Computer Science'),
   ];
@@ -890,6 +814,7 @@ class DummyMenus {
 }
 
 class DummyRooms {
+  //static List<Room> rooms = [];
   static List<Room> rooms = [
     Room(id: '1', name: 'Auditorium', vacant: true),
     Room(id: '2', name: 'Classroom 101', vacant: false, occupantId: 'T001'),
@@ -909,11 +834,7 @@ class DummyRooms {
     Room(id: '16', name: 'Outdoor Sports Arena', vacant: true),
     Room(id: '17', name: 'Medical Clinic', vacant: false, occupantId: 'S004'),
     Room(id: '18', name: 'Music Room', vacant: true),
-    Room(
-        id: '19',
-        name: 'Student Council Office',
-        vacant: false,
-        occupantId: 'T005'),
+    Room(id: '19', name: 'Student Council Office', vacant: false, occupantId: 'T005'),
     Room(id: '20', name: 'Virtual Reality Lab', vacant: true),
   ];
 }
@@ -925,7 +846,6 @@ class DummyLostAndFound {
       description: 'Black Dell laptop with a sticker on the back',
       lastSeenLocation: 'Library',
       contactNumber: '+91 1234567890',
-      imagePath: 'assets/images/laptop.jpg',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -933,7 +853,6 @@ class DummyLostAndFound {
       description: 'White iPhone 12 with a black case',
       lastSeenLocation: 'Cafeteria',
       contactNumber: '+91 9876543210',
-      imagePath: 'assets/images/phone.jpg',
       isLost: true,
     ),
     LostAndFoundItem(
@@ -941,7 +860,6 @@ class DummyLostAndFound {
       description: 'Blue steel water bottle with a dent on the bottom',
       lastSeenLocation: 'Gymnasium',
       contactNumber: '+91 4567890123',
-      imagePath: 'assets/images/bottle.jpg',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -949,7 +867,6 @@ class DummyLostAndFound {
       description: 'Red and black backpack with a broken zipper',
       lastSeenLocation: 'Auditorium',
       contactNumber: '+91 7890123456',
-      imagePath: 'assets/images/backpack.jpg',
       isLost: true,
     ),
     LostAndFoundItem(
@@ -957,7 +874,6 @@ class DummyLostAndFound {
       description: 'Silver wristwatch with a black leather strap',
       lastSeenLocation: 'Classroom 101',
       contactNumber: '+91 2345678901',
-      imagePath: 'assets/images/watch.jpg',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -965,7 +881,6 @@ class DummyLostAndFound {
       description: 'Green and white striped umbrella with a broken handle',
       lastSeenLocation: 'Student Lounge',
       contactNumber: '+91 8901234567',
-      imagePath: 'assets/images/umbrella.jpg',
       isLost: true,
     ),
     LostAndFoundItem(
@@ -973,7 +888,6 @@ class DummyLostAndFound {
       description: 'Black aviator sunglasses with a scratch on the left lens',
       lastSeenLocation: 'Cafeteria',
       contactNumber: '+91 3456789012',
-      imagePath: 'assets/images/sunglasses.jpg',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -981,7 +895,6 @@ class DummyLostAndFound {
       description: 'Brown leather wallet with a broken zipper',
       lastSeenLocation: 'Library',
       contactNumber: '+91 9012345678',
-      imagePath: 'assets/images/wallet.jpg',
       isLost: true,
     ),
     LostAndFoundItem(
@@ -989,7 +902,6 @@ class DummyLostAndFound {
       description: 'Black over-ear headphones with a missing ear cushion',
       lastSeenLocation: 'Auditorium',
       contactNumber: '+91 6789012345',
-      imagePath: 'assets/images/headphones.jpg',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -997,7 +909,6 @@ class DummyLostAndFound {
       description: 'Blue denim jacket with a tear on the left sleeve',
       lastSeenLocation: 'Gymnasium',
       contactNumber: '+91 5678901234',
-      imagePath: 'assets/images/jacket.jpg',
       isLost: true,
     ),
   ];
@@ -1100,15 +1011,13 @@ class DummyAchievements {
       id: '12',
       name: 'Training and Development',
       date: DateTime(2022, 4, 22),
-      description:
-          'Contributed significantly to employee training and development.',
+      description: 'Contributed significantly to employee training and development.',
     ),
     Achievement(
       id: '13',
       name: 'Quality Assurance Recognition',
       date: DateTime(2023, 2, 14),
-      description:
-          'Acknowledged for ensuring high-quality standards in projects.',
+      description: 'Acknowledged for ensuring high-quality standards in projects.',
     ),
     Achievement(
       id: '14',
@@ -1144,16 +1053,14 @@ class DummyAchievements {
       id: '19',
       name: 'Health and Wellness Initiative',
       date: DateTime(2023, 9, 10),
-      description:
-          'Led initiatives to promote health and wellness in the workplace.',
+      description: 'Led initiatives to promote health and wellness in the workplace.',
     ),
     Achievement(
       id: '20',
       name: 'Public Speaking Achievement',
       date: DateTime(2022, 1, 30),
-      description:
-          'Received acclaim for public speaking skills at a conference.',
+      description: 'Received acclaim for public speaking skills at a conference.',
     ),
   ];
-  // You can use the dummyEntries list as needed in your application
+// You can use the dummyEntries list as needed in your application
 }
