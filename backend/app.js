@@ -6,7 +6,6 @@ import testResource from "./resources/testResource.js";
 import authResource from "./resources/authResource.js";
 import otpResource from "./resources/otpResource.js";
 import Connection from "./database/db.js";
-import bodyParser from "body-parser";
 import cors from "cors";
 import auth from "./middlewares/auth.js";
 import roomListResource from "./resources/rooms/roomListResource.js";
