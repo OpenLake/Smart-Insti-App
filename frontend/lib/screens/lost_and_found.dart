@@ -197,30 +197,109 @@ class LostAndFound extends ConsumerWidget {
               ),
               label: const Text('Add Listing'),
             ),
-            const SizedBox(width: 10),
-            IconButton(
-              icon: const Icon(Icons.search),
-              onPressed: () {},
-            ),
+            const SizedBox(width: 20),
           ],
         ),
-        body: GridView.count(
-          crossAxisCount: 2,
-          childAspectRatio: 0.8,
-          children: <Widget>[
-            ImageTile(
-              primaryColor: Colors.grey.shade300,
-              secondaryColor: Colors.blue[200]!,
-              onTap: () {},
-            ),
-            ImageTile(
-              image: Image.asset("lib/assets/placeholder.png"),
-              primaryColor: Colors.grey.shade300,
-              secondaryColor: Colors.blue[200]!,
-              onTap: () {},
-            ),
-          ],
-        ),
+        body: ref.watch(lostAndFoundProvider).loadingState == LoadingState.success
+            ? (ref.read(lostAndFoundProvider).lostAndFoundItemList.isNotEmpty
+                ? GridView.count(
+                    crossAxisCount: 2,
+                    childAspectRatio: 0.8,
+                    children: <Widget>[
+                      for (var item in ref.watch(lostAndFoundProvider).lostAndFoundItemList)
+                        ImageTile(
+                          image: item.imagePath != null
+                              ? ref.read(lostAndFoundProvider.notifier).imageFromBase64String(item.imagePath!)
+                              : null,
+                          body: [
+                            Text(
+                              "Item : ${item.name}",
+                              textAlign: TextAlign.center,
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              "Last Seen at : ${item.lastSeenLocation}",
+                              maxLines: 1,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                            Text(
+                              item.isLost ? " Status : Lost" : "Status : Found",
+                              textAlign: TextAlign.center,
+                              style: const TextStyle(
+                                fontSize: 14,
+                              ),
+                            ),
+                          ],
+                          primaryColor: item.isLost ? Colors.redAccent.shade100 : Colors.tealAccent.shade100,
+                          secondaryColor: item.isLost ? Colors.redAccent.shade200 : Colors.tealAccent.shade200,
+                          onTap: () => showDialog(
+                            context: context,
+                            builder: (_) => Dialog(
+                              child: Padding(
+                                padding: const EdgeInsets.all(15.0),
+                                child: Column(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      "Item name : ${item.name}",
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 20),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      "Item description : \n${item.description}",
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Text(
+                                      "Last seen at : ${item.lastSeenLocation}",
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(fontSize: 16),
+                                    ),
+                                    const SizedBox(height: 20),
+                                    Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          item.contactNumber,
+                                          style: const TextStyle(fontSize: 16),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        IconButton(
+                                            onPressed: () => ref
+                                                .read(lostAndFoundProvider.notifier)
+                                                .launchCaller(item.contactNumber),
+                                            icon: const Icon(Icons.call, color: Colors.green)),
+                                      ],
+                                    ),
+                                    const SizedBox(height: 20),
+                                    BorderlessButton(
+                                      onPressed: () => context.pop(),
+                                      backgroundColor: Colors.redAccent.shade100.withOpacity(0.5),
+                                      splashColor: Colors.red.shade700,
+                                      label: const Text('Close'),
+                                    ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                    ],
+                  )
+                : const Center(
+                    child: Text("No Listings"),
+                  ))
+            : const Center(child: CircularProgressIndicator()),
       ),
     );
   }
