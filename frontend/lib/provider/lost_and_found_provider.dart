@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -7,8 +7,9 @@ import 'package:logger/logger.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'package:smart_insti_app/models/lost_and_found_item.dart';
 import 'package:smart_insti_app/repositories/lost_and_found_repository.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:io';
-import '../components/image_tile.dart';
 import '../constants/constants.dart';
 
 final lostAndFoundProvider =
@@ -16,6 +17,7 @@ final lostAndFoundProvider =
 
 class LostAndFoundState {
   final List<LostAndFoundItem> lostAndFoundItemList;
+  final List<File> lostAndFoundImageList;
   final TextEditingController itemNameController;
   final TextEditingController itemDescriptionController;
   final TextEditingController lastSeenLocationController;
@@ -23,10 +25,11 @@ class LostAndFoundState {
   final TextEditingController contactNumberController;
   final String listingStatus;
   final File? selectedImage;
-  final LoadingState gridLoadingState;
+  final LoadingState loadingState;
 
   LostAndFoundState({
     required this.lostAndFoundItemList,
+    required this.lostAndFoundImageList,
     required this.itemNameController,
     required this.itemDescriptionController,
     required this.lastSeenLocationController,
@@ -34,11 +37,12 @@ class LostAndFoundState {
     required this.contactNumberController,
     required this.listingStatus,
     this.selectedImage,
-    required this.gridLoadingState,
+    required this.loadingState,
   });
 
   LostAndFoundState copyWith({
     List<LostAndFoundItem>? lostAndFoundItemList,
+    List<File>? lostAndFoundImageList,
     TextEditingController? itemNameController,
     TextEditingController? itemDescriptionController,
     TextEditingController? lastSeenLocationController,
@@ -46,10 +50,11 @@ class LostAndFoundState {
     TextEditingController? contactNumberController,
     String? listingStatus,
     File? selectedImage,
-    LoadingState? gridLoadingState,
+    LoadingState? loadingState,
   }) {
     return LostAndFoundState(
       lostAndFoundItemList: lostAndFoundItemList ?? this.lostAndFoundItemList,
+      lostAndFoundImageList: lostAndFoundImageList ?? this.lostAndFoundImageList,
       itemNameController: itemNameController ?? this.itemNameController,
       itemDescriptionController: itemDescriptionController ?? this.itemDescriptionController,
       lastSeenLocationController: lastSeenLocationController ?? this.lastSeenLocationController,
@@ -57,7 +62,7 @@ class LostAndFoundState {
       contactNumberController: contactNumberController ?? this.contactNumberController,
       listingStatus: listingStatus ?? this.listingStatus,
       selectedImage: selectedImage,
-      gridLoadingState: gridLoadingState ?? this.gridLoadingState,
+      loadingState: loadingState ?? this.loadingState,
     );
   }
 }
@@ -68,6 +73,7 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
         super(
           LostAndFoundState(
             lostAndFoundItemList: DummyLostAndFound.lostAndFoundItems,
+            lostAndFoundImageList: [],
             itemNameController: TextEditingController(),
             itemDescriptionController: TextEditingController(),
             lastSeenLocationController: TextEditingController(),
@@ -75,28 +81,49 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
             contactNumberController: TextEditingController(),
             listingStatus: LostAndFoundConstants.lostState,
             selectedImage: null,
-            gridLoadingState: LoadingState.progress,
+            loadingState: LoadingState.progress,
           ),
-        );
+        ) {
+    loadItems();
+  }
 
   final LostAndFoundRepository _api;
 
   final Logger _logger = Logger();
 
   void addItem() {
-    final item = LostAndFoundItem(
+    final LostAndFoundItem item = LostAndFoundItem(
       name: state.itemNameController.text,
       lastSeenLocation: state.lastSeenLocationController.text,
-      imagePath: state.selectedImage?.path ?? '',
+      imagePath: state.selectedImage?.path,
       description: state.itemDescriptionController.text,
       isLost: state.listingStatus == LostAndFoundConstants.lostState,
       contactNumber: state.contactNumberController.text,
     );
-    state = state.copyWith(lostAndFoundItemList: [item, ...state.lostAndFoundItemList]);
+    state = state.copyWith(loadingState: LoadingState.progress);
+    _api.addLostAndFoundItem(item);
+    loadItems();
+  }
+
+  launchCaller(String number) async {
+    final url = "tel:$number";
+    if (await canLaunchUrlString(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
   }
 
   void updateListingStatus(String status) {
     state = state.copyWith(listingStatus: status);
+  }
+
+  void clearControllers() {
+    state.itemNameController.clear();
+    state.itemDescriptionController.clear();
+    state.lastSeenLocationController.clear();
+    state.contactNumberController.clear();
+    state = state.copyWith(selectedImage: null);
   }
 
   Future<CroppedFile?> _cropImage(XFile image) {
@@ -143,38 +170,12 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
     _logger.d('Image selection reset');
   }
 
-  List<ImageTile> buildImageTiles() {
-    return state.lostAndFoundItemList.map((item) {
-      return ImageTile(
-        image: Image.file(File(item.imagePath)),
-        body: [
-          Text(
-            item.name,
-            style: const TextStyle(
-              fontSize: 20,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            item.lastSeenLocation,
-            style: const TextStyle(
-              fontSize: 15,
-              fontWeight: FontWeight.w500,
-            ),
-          ),
-        ],
-        primaryColor: Colors.tealAccent,
-        secondaryColor: Colors.teal,
-        onTap: () {},
-      );
-    }).toList();
+  void loadItems() async {
+    final items = await _api.lostAndFoundItems();
+    state = state.copyWith(lostAndFoundItemList: items, loadingState: LoadingState.success);
   }
 
-  void removeItem() {}
-
-  void updateItem() {}
-
-  void loadItems() async {
-    final result = await _api.lostAndFoundItems();
+  Image imageFromBase64String(String base64String) {
+    return Image.memory(base64Decode(base64String));
   }
 }
