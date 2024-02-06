@@ -158,6 +158,27 @@ class MessMenuConstants {
 }
 
 class Validators {
+  static String? descriptionValidator(String? value) {
+    if (value != null && value.length > 250) {
+      return "Description cannot exceed 250 characters";
+    }
+
+    return null;
+  }
+
+  static String? contactNumberValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Contact number cannot be empty";
+    }
+
+    // Check if the contact number contains only digits
+    if (!RegExp(r'^\+?\d+$').hasMatch(value)) {
+      return "Invalid contact number format";
+    }
+
+    return null;
+  }
+
   static String? nonEmptyValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Field cannot be empty";
