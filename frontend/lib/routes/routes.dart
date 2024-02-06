@@ -13,9 +13,7 @@ import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
 import '../screens/auth/signin_page.dart';
-import '../screens/classroom_vacancy.dart';
-import '../screens/auth/admin_login.dart';
-import '../screens/auth/user_login.dart';
+import '../screens/room_vacancy.dart';
 
 final GoRouter routes = GoRouter(
   initialLocation: '/home',
@@ -84,13 +82,11 @@ final GoRouter routes = GoRouter(
       routes: [
         GoRoute(
           path: 'classroom_vacancy',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: ClassroomVacancy()),
+          pageBuilder: (context, state) => const MaterialPage(child: RoomVacancy()),
         ),
         GoRoute(
           path: 'lost_and_found',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: LostAndFound()),
+          pageBuilder: (context, state) => MaterialPage(child: LostAndFound()),
         ),
       ],
     ),
