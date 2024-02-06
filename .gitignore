@@ -4,8 +4,6 @@
 backend/.DS_Store
 node_modules/
 backend/.env
-backend/.idea/
-
 
 ## Frontend ignored file (Root level)
 
