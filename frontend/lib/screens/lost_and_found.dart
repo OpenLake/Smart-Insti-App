@@ -105,22 +105,36 @@ class LostAndFound extends ConsumerWidget {
                             },
                           ),
                           const SizedBox(height: 20),
-                          MaterialTextFormField(
-                            hintText: "Item Name",
-                            controller: ref.read(lostAndFoundProvider).itemNameController,
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                MaterialTextFormField(
+                                  hintText: "Item Name",
+                                  controller: ref.read(lostAndFoundProvider).itemNameController,
+                                  validator: (value) => Validators.nameValidator(value),
+                                ),
+                                const SizedBox(height: 20),
+                                MaterialTextFormField(
+                                  hintText: "Item Description",
+                                  controller: ref.read(lostAndFoundProvider).itemDescriptionController,
+                                  validator: (value) => Validators.descriptionValidator(value),
+                                ),
+                                const SizedBox(height: 20),
+                                MaterialTextFormField(
+                                  hintText: "Contact Number",
+                                  controller: ref.read(lostAndFoundProvider).contactNumberController,
+                                  validator: (value) => Validators.contactNumberValidator(value),
+                                ),
+                                const SizedBox(height: 20),
+                                MaterialTextFormField(
+                                  hintText: "Last seen at location",
+                                  controller: ref.read(lostAndFoundProvider).lastSeenLocationController,
+                                  validator: (value) => Validators.nonEmptyValidator(value),
+                                ),
+                              ],
+                            ),
                           ),
-                          const SizedBox(height: 20),
-                          MaterialTextFormField(
-                              hintText: "Item Description",
-                              controller: ref.read(lostAndFoundProvider).itemDescriptionController),
-                          const SizedBox(height: 20),
-                          MaterialTextFormField(
-                              hintText: "Contact Number",
-                              controller: ref.read(lostAndFoundProvider).contactNumberController),
-                          const SizedBox(height: 20),
-                          MaterialTextFormField(
-                              hintText: "Last seen at location",
-                              controller: ref.read(lostAndFoundProvider).lastSeenLocationController),
                           const SizedBox(height: 20),
                           Align(
                             alignment: Alignment.centerRight,
