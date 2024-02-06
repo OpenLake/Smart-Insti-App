@@ -12,6 +12,22 @@ studentRouter.get('/students', async (req, res) => {
     }
 });
 
+studentRouter.post('/students', async (req, res) => {
+    const {email} = req.body;
+    let existingUser = await Student.findOne({ email });
+    try {
+        if (!existingUser) {
+            const newUser = new Student({ email });
+            await newUser.save();
+            res.send({ message: errorMessages.userCreated, user: newUser });
+        } else {
+            res.send({ message: errorMessages.userAlreadyExists, user: existingUser});
+        }
+    } catch (error) {
+        res.status(500).json({ message: errorMessages.internalServerError });
+    }
+});
+
 studentRouter.get('/students/:id', async (req, res) => {
     const studentId = req.params.id;
     
