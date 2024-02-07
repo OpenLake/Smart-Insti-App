@@ -6,7 +6,8 @@ class AppConstants {
 }
 
 class AuthConstants {
-  static List<String>? roles = [];
+  static const String facultyAuthLabel = "Faculty";
+  static const String studentAuthLabel = "Student";
 }
 
 class Branches {
