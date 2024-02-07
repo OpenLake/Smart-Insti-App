@@ -1,27 +1,48 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class OTPBox extends StatelessWidget {
+class MaterialOTPBox extends StatelessWidget {
+  const MaterialOTPBox({super.key, required this.controller, required this.focusNode, required this.hintText});
+
   final TextEditingController controller;
   final FocusNode focusNode;
-  OTPBox({required this.controller, required this.focusNode});
+  final String hintText;
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: 50.0,
-      height: 50.0,
-      decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey),
-        borderRadius: BorderRadius.circular(8.0),
-      ),
-      child: TextField(
+    return SizedBox(
+      width: 60.0,
+      height: 60.0,
+      child: TextFormField(
+        showCursor: false,
         controller: controller,
         focusNode: focusNode,
+        buildCounter: (BuildContext context, {int? currentLength, int? maxLength, bool? isFocused}) => null,
         keyboardType: TextInputType.number,
-        maxLength: 1,
+        expands: true,
+        maxLines: null,
+        maxLength: null,
+        style: const TextStyle(
+          fontSize: 30.0,
+          fontWeight: FontWeight.w300,
+        ),
         textAlign: TextAlign.center,
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(1),
+          FilteringTextInputFormatter.digitsOnly,
+        ],
         decoration: InputDecoration(
-          counterText: '',
-          border: InputBorder.none,
+          contentPadding: const EdgeInsets.all(0),
+          hintText: hintText,
+          hintStyle: const TextStyle(
+            fontSize: 30.0,
+            fontFamily: 'Poppins',
+            color: Colors.black12,
+            fontWeight: FontWeight.w300,
+          ),
+          filled: true,
+          fillColor: Colors.lightBlueAccent.withOpacity(0.4),
+          border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(15)),
         ),
       ),
     );
