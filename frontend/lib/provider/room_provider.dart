@@ -8,46 +8,58 @@ import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'package:smart_insti_app/components/menu_tile.dart';
 import 'package:smart_insti_app/models/room.dart';
 import 'dart:io';
+import '../constants/constants.dart';
+import '../repositories/room_repository.dart';
 
-final roomProvider = StateNotifierProvider<RoomProvider, RoomState>((ref) => RoomProvider());
+final roomProvider = StateNotifierProvider<RoomProvider, RoomState>((ref) => RoomProvider(ref));
 
 class RoomState {
   final List<Room> roomList;
   final List<MenuTile> roomTiles;
   final TextEditingController searchRoomController;
   final TextEditingController roomNameController;
+  final LoadingState loadingState;
 
-  RoomState({
-    required this.roomList,
-    required this.roomTiles,
-    required this.searchRoomController,
-    required this.roomNameController,
-  });
+  RoomState(
+      {required this.roomList,
+      required this.roomTiles,
+      required this.searchRoomController,
+      required this.roomNameController,
+      required this.loadingState});
 
   RoomState copyWith({
     List<Room>? roomList,
     List<MenuTile>? roomTiles,
     TextEditingController? searchRoomController,
     TextEditingController? roomNameController,
+    LoadingState? loadingState,
   }) {
     return RoomState(
       roomList: roomList ?? this.roomList,
       roomTiles: roomTiles ?? this.roomTiles,
       searchRoomController: searchRoomController ?? this.searchRoomController,
       roomNameController: roomNameController ?? this.roomNameController,
+      loadingState: loadingState ?? this.loadingState,
     );
   }
 }
 
 class RoomProvider extends StateNotifier<RoomState> {
-  RoomProvider()
-      : super(RoomState(
-          roomList: DummyRooms.rooms,
-          roomTiles: [],
-          searchRoomController: TextEditingController(),
-          roomNameController: TextEditingController(),
-        ));
+  RoomProvider(Ref ref)
+      : _api = ref.read(roomRepositoryProvider),
+        super(
+          RoomState(
+            roomList: DummyRooms.rooms,
+            roomTiles: [],
+            searchRoomController: TextEditingController(),
+            roomNameController: TextEditingController(),
+            loadingState: LoadingState.progress,
+          ),
+        ) {
+    loadRooms();
+  }
 
+  final RoomRepository _api;
   final Logger _logger = Logger();
 
   void pickSpreadsheet() async {
@@ -70,6 +82,16 @@ class RoomProvider extends StateNotifier<RoomState> {
     }
   }
 
+  int getVacantCount() {
+    int vacantCount = 0;
+    for (Room room in state.roomList) {
+      if (room.vacant) {
+        vacantCount++;
+      }
+    }
+    return vacantCount;
+  }
+
   void addRoom() {
     final newState = state.copyWith(
       roomList: [
@@ -82,7 +104,23 @@ class RoomProvider extends StateNotifier<RoomState> {
     _logger.i("Added room: ${state.roomNameController.text}");
   }
 
-  void buildRoomTiles(BuildContext context) {
+  Future<void> loadRooms() async {
+    final rooms = await _api.getRooms();
+    final newState = state.copyWith(roomList: rooms, loadingState: LoadingState.success);
+    state = newState;
+  }
+
+  Future<void> reserveRoom(Room room) async {
+    state = state.copyWith(
+      loadingState: LoadingState.progress,
+    );
+
+    await _api.reserveRoom(room.id!, '12345');
+
+    await loadRooms();
+  }
+
+  void buildRoomTiles(BuildContext context) async {
     final roomTiles = <MenuTile>[];
     for (Room room in state.roomList) {
       roomTiles.add(
@@ -119,9 +157,9 @@ class RoomProvider extends StateNotifier<RoomState> {
                     )
                   ],
                 ),
-                      ),
-                    ),
               ),
+            ),
+          ),
           icon: Icons.add,
           primaryColor: Colors.grey.shade200,
           secondaryColor: Colors.grey.shade300,
