@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/models/broadcast_schema.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 final broadcastRepositoryProvider =
     Provider<BroadcastRepository>((_) => BroadcastRepository());

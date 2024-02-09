@@ -62,6 +62,16 @@ class Home extends ConsumerWidget {
                 primaryColor: Colors.orangeAccent.shade100,
                 secondaryColor: Colors.orangeAccent.shade200,
                 icon: Icons.search),
+            MenuTile(
+              title: 'Broadcast',
+              onTap: () {
+                // Navigate to the broadcast page
+                context.push('/broadcast');
+              },
+              icon: Icons.announcement,
+              primaryColor: Colors.greenAccent.shade100,
+              secondaryColor: Colors.greenAccent.shade200,
+            ),
           ],
         ),
       ),

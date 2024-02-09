@@ -15,14 +15,20 @@ import '../screens/admin/view_menu.dart';
 import '../screens/user_profile.dart';
 import '../screens/auth/signin_page.dart';
 import '../screens/room_vacancy.dart';
+import '../screens/broadcast.dart';
 
 final GoRouter routes = GoRouter(
-  initialLocation: '/home',
+  // initialLocation: '/home',
   routes: [
     GoRoute(
       path: '/',
-      pageBuilder: (context, state) => MaterialPage(child: SignIn()),
+      pageBuilder: (context, state) => const MaterialPage(child: Home()),
+      // pageBuilder: (context, state) => MaterialPage(child: SignIn()),
       routes: [
+        GoRoute(
+          path: 'broadcast',
+          pageBuilder: (context, state) => MaterialPage(child: BroadcastPage()),
+        ),
         GoRoute(
           path: 'user_profile',
           pageBuilder: (context, state) =>
