@@ -13,7 +13,6 @@ import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
 import '../screens/user_profile.dart';
-import '../screens/home.dart';
 import '../screens/auth/signin_page.dart';
 import '../screens/room_vacancy.dart';
 
