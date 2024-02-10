@@ -5,9 +5,7 @@ class AppConstants {
   static const Color seedColor = Colors.lightBlueAccent;
 }
 
-class AuthConstants {
-  static List<String>? roles = [];
-}
+enum LoadingState { progress, success, error }
 
 class Branches {
   static List<DropdownMenuItem<String>> branchList = const [
@@ -79,6 +77,11 @@ class StudentRoles {
   ];
 }
 
+class LostAndFoundConstants {
+  static const String lostState = 'Lost';
+  static const String foundState = 'Found';
+}
+
 class MessMenuConstants {
   static Map<String, Map<String, List<String>>> emptyMenu = {
     'Sunday': <String, List<String>>{
@@ -136,7 +139,8 @@ class MessMenuConstants {
   ];
 
   static final List<Text> mealTypes = [
-    Text('Breakfast', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    Text('Breakfast',
+        style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
     Text('Lunch', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
     Text('Snacks', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
     Text('Dinner', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
@@ -154,6 +158,34 @@ class MessMenuConstants {
 }
 
 class Validators {
+  static String? descriptionValidator(String? value) {
+    if (value != null && value.length > 250) {
+      return "Description cannot exceed 250 characters";
+    }
+
+    return null;
+  }
+
+  static String? contactNumberValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Contact number cannot be empty";
+    }
+
+    // Check if the contact number contains only digits
+    if (!RegExp(r'^\+?\d+$').hasMatch(value)) {
+      return "Invalid contact number format";
+    }
+
+    return null;
+  }
+
+  static String? nonEmptyValidator(String? value) {
+    if (value == null || value.isEmpty) {
+      return "Field cannot be empty";
+    }
+    return null;
+  }
+
   static String? emailValidator(String? value) {
     if (value == null || value.isEmpty) {
       return "Email cannot be empty";
