@@ -39,7 +39,6 @@ dependencies:
   go_router: ^13.0.1
   responsive_framework: ^1.1.1
   awesome_notifications: ^0.9.1
-  http: ^1.2.0
   flutter_secure_storage: ^9.0.0
   google_fonts: ^6.1.0
   search_choices: ^2.2.7
@@ -53,6 +52,7 @@ dependencies:
   delightful_toast: ^1.1.0
   animated_toggle_switch: ^0.8.0
   dio: ^5.4.0
+  animated_text_kit: ^4.2.2
 
 dev_dependencies:
   flutter_test:
