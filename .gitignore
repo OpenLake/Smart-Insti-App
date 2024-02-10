@@ -8,6 +8,7 @@ backend/.idea
 
 
 ## Frontend ignored file (Root level)
+frontend/.env
 
 # Miscellaneous
 frontend/*.class
