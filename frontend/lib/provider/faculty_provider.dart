@@ -63,7 +63,7 @@ class FacultyState {
 class FacultyStateNotifier extends StateNotifier<FacultyState> {
   FacultyStateNotifier()
       : super(FacultyState(
-          faculties: DummyFaculties.faculties,
+          faculties: [],
           filteredFaculties: [],
           selectedCourses: [],
           facultyNameController: TextEditingController(),
