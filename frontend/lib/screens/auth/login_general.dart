@@ -14,6 +14,8 @@ class GeneralLogin extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.read(authProvider.notifier).initializeOtpFocusNodes();
+
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
@@ -62,7 +64,7 @@ class GeneralLogin extends ConsumerWidget {
                                 Hero(
                                   tag: 'admin_page',
                                   child: BorderlessButton(
-                                    onPressed: () => context.push('/admin_login'),
+                                    onPressed: () => context.push('/login/admin_login'),
                                     backgroundColor: Colors.tealAccent.withOpacity(0.5),
                                     label: const Text('Admin'),
                                     splashColor: Colors.teal.shade700,
@@ -77,7 +79,7 @@ class GeneralLogin extends ConsumerWidget {
                             ),
                             AnimatedSwitcher(
                               duration: const Duration(milliseconds: 500),
-                              child: ref.watch(authProvider).switchAuthLabel == AuthConstants.studentAuthLabel
+                              child: ref.watch(authProvider).emailSent
                                   ? SizedBox(
                                       child: Column(children: [
                                         const SizedBox(height: 20),
@@ -85,29 +87,29 @@ class GeneralLogin extends ConsumerWidget {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             MaterialOTPBox(
-                                              controller: TextEditingController(),
-                                              focusNode: FocusNode(),
+                                              controller: ref.watch(authProvider).otpDigitControllers[0],
+                                              focusNode: ref.watch(authProvider).otpFocusNodes[0],
                                               hintText: 'O',
                                             ),
-                                            MaterialOTPBox(
-                                              controller: TextEditingController(),
-                                              focusNode: FocusNode(),
+                                      MaterialOTPBox(
+                                              controller: ref.watch(authProvider).otpDigitControllers[1],
+                                              focusNode: ref.watch(authProvider).otpFocusNodes[1],
                                               hintText: 'T',
                                             ),
-                                            MaterialOTPBox(
-                                              controller: TextEditingController(),
-                                              focusNode: FocusNode(),
+                                      MaterialOTPBox(
+                                              controller: ref.watch(authProvider).otpDigitControllers[2],
+                                              focusNode: ref.watch(authProvider).otpFocusNodes[2],
                                               hintText: 'P',
                                             ),
-                                            MaterialOTPBox(
-                                              controller: TextEditingController(),
-                                              focusNode: FocusNode(),
+                                      MaterialOTPBox(
+                                              controller: ref.watch(authProvider).otpDigitControllers[3],
+                                              focusNode: ref.watch(authProvider).otpFocusNodes[3],
                                               hintText: ':)',
                                             )
                                           ],
-                                        ),
-                                      ]),
-                                    )
+                                  ),
+                                ]),
+                              )
                                   : null,
                             ),
                             const SizedBox(height: 20),
@@ -124,24 +126,24 @@ class GeneralLogin extends ConsumerWidget {
                                   textBuilder: (value) => Text(value),
                                   styleBuilder: (value) => value == AuthConstants.studentAuthLabel
                                       ? ToggleStyle(
-                                          indicatorColor: Colors.redAccent,
-                                          backgroundColor: Colors.redAccent.shade100,
-                                          borderColor: Colors.transparent,
-                                        )
+                                    indicatorColor: Colors.redAccent,
+                                    backgroundColor: Colors.redAccent.shade100,
+                                    borderColor: Colors.transparent,
+                                  )
                                       : ToggleStyle(
-                                          indicatorColor: Colors.teal,
-                                          backgroundColor: Colors.tealAccent.shade100,
-                                          borderColor: Colors.transparent,
-                                        ),
+                                    indicatorColor: Colors.teal,
+                                    backgroundColor: Colors.tealAccent.shade100,
+                                    borderColor: Colors.transparent,
+                                  ),
                                   iconBuilder: (value) => value == AuthConstants.studentAuthLabel
                                       ? const Icon(
-                                          Icons.book_outlined,
-                                          color: Colors.white,
-                                        )
+                                    Icons.book_outlined,
+                                    color: Colors.white,
+                                  )
                                       : const Icon(
-                                          Icons.portrait_rounded,
-                                          color: Colors.white,
-                                        ),
+                                    Icons.portrait_rounded,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               ),
                             ),
@@ -151,15 +153,15 @@ class GeneralLogin extends ConsumerWidget {
                                 Consumer(
                                   builder: (_, ref, __) => ref.watch(authProvider).emailSent
                                       ? SizedBox(
-                                          height: 45,
-                                          width: 100,
-                                          child: BorderlessButton(
-                                            onPressed: () {},
-                                            backgroundColor: Colors.lightBlueAccent.withOpacity(0.5),
-                                            label: const Text('Resend'),
-                                            splashColor: Colors.blue.shade700,
-                                          ),
-                                        )
+                                    height: 45,
+                                    width: 100,
+                                    child: BorderlessButton(
+                                      onPressed: () {},
+                                      backgroundColor: Colors.lightBlueAccent.withOpacity(0.5),
+                                      label: const Text('Resend'),
+                                      splashColor: Colors.blue.shade700,
+                                    ),
+                                  )
                                       : Container(),
                                 ),
                                 const Spacer(),
