@@ -105,13 +105,11 @@ class AdminHome extends ConsumerWidget {
                                 PopupMenuItem(
                                   value: "logout",
                                   child: const Text("Log Out"),
-                                  onTap: () => showDialog(
-                                    context: context,
-                                    builder: (_) => const AlertDialog(
-                                      title: Text('Log Out'),
-                                      content: Text('Auth will be inplemented in future'),
-                                    ),
-                                  ),
+                                  onTap: () {
+                                    ref.read(authServiceProvider).clearCredentials();
+                                    ref.read(authProvider.notifier).clearCurrentUser();
+                                    context.go('/');
+                                  },
                                 ),
                               ];
                             },
