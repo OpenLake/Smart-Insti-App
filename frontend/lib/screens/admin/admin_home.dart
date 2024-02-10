@@ -19,15 +19,46 @@ class AdminHome extends ConsumerWidget {
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
             CollapsingAppBar(
-              body: const Center(
-                child: Text(
-                  'Welcome\nAdmin',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 36,
-                    fontFamily: "RobotoFlex",
-                  ),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Welcome',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 45,
+                        fontFamily: "RobotoFlex",
+                      ),
+                    ),
+                    Consumer(
+                      builder: (_, ref, __) {
+                        if (ref.watch(authProvider).currentUser != null) {
+                          Admin admin = ref.read(authProvider).currentUser as Admin;
+                          return AnimatedTextKit(
+                            repeatForever: true,
+                            pause: const Duration(milliseconds: 1500),
+                            animatedTexts: [
+                              TyperAnimatedText(
+                                'Admin',
+                                textStyle: const TextStyle(fontSize: 45, fontFamily: "RobotoFlex"),
+                                speed: const Duration(milliseconds: 300),
+                              ),
+                              TyperAnimatedText(
+                                admin.name,
+                                textStyle: const TextStyle(
+                                    fontSize: 45, fontFamily: "RobotoFlex", overflow: TextOverflow.ellipsis),
+                                speed: const Duration(milliseconds: 300),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const Text('Admin', style: TextStyle(fontSize: 45, fontFamily: "Jost"));
+                        }
+                      },
+                    )
+                  ],
                 ),
               ),
               bottom: Padding(
@@ -36,12 +67,12 @@ class AdminHome extends ConsumerWidget {
                   builder: (_, ref, ___) {
                     if (ref.watch(adminProvider).toggleSearch) {
                       return SearchBar(
-                        controller: ref.read(adminProvider.notifier).searchController,
+                        controller: ref.read(adminProvider).searchController,
                         onChanged: (value) => ref.read(adminProvider.notifier).buildMenuTiles(context),
                         leading: IconButton(
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () {
-                            ref.read(adminProvider.notifier).searchController.clear();
+                            ref.read(adminProvider).searchController.clear();
                             ref.read(adminProvider.notifier).toggleSearchBar();
                             ref.read(adminProvider.notifier).buildMenuTiles(context);
                           },
