@@ -1,8 +1,13 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/collapsing_app_bar.dart';
 import 'package:smart_insti_app/provider/admin_provider.dart';
+import 'package:smart_insti_app/provider/auth_provider.dart';
+import 'package:smart_insti_app/services/auth/auth_service.dart';
+import '../../models/admin.dart';
 
 class AdminHome extends ConsumerWidget {
   const AdminHome({super.key});
@@ -90,6 +95,11 @@ class AdminHome extends ConsumerWidget {
                           PopupMenuButton(
                             itemBuilder: (context) {
                               return [
+                                PopupMenuItem(
+                                  value: "profile",
+                                  child: const Text("Profile"),
+                                  onTap: () => context.push('/admin/profile'),
+                                ),
                                 PopupMenuItem(
                                   value: "about",
                                   child: const Text("About"),
