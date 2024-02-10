@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/achievement.dart';
 
 final achievementsProvider = Provider<List<Achievement>>((ref) {
-  // Your achievements data
   return ref.watch(achievementsControllerProvider);
 });
 

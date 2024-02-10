@@ -213,28 +213,4 @@ class StudentProvider extends StateNotifier<StudentState> {
     state = newState;
     _logger.i("Removed student: ${student.name}");
   }
-
-  // Student getStudentById(String studentId) {
-  //   try {
-  //     return state.students.firstWhere((student) => student.id == studentId);
-  //   } catch (e) {
-  //     return Student(
-  //       id: '1',
-  //       name: 'John Doe',
-  //       email: 'john.doe@example.com',
-  //       rollNumber: 'R001',
-  //       about: 'I am a computer science student.',
-  //       profilePicURI:
-  //           'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
-  //       branch: 'Computer Science',
-  //       graduationYear: 2023,
-  //       skills: [DummySkills.skills[1], DummySkills.skills[2]],
-  //       achievements: [
-  //         Dummyachievements.achievements[1],
-  //         Dummyachievements.achievements[2]
-  //       ],
-  //       roles: ['Core Member', 'Coordinator'],
-  //     );
-  //   }
-  // }
 }

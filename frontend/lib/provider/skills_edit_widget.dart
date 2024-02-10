@@ -4,7 +4,6 @@ import 'package:syncfusion_flutter_sliders/sliders.dart';
 import '../models/skills.dart';
 
 final skillsProvider = Provider<List<Skill>>((ref) {
-  // Your skills data
   return ref.watch(skillsControllerProvider);
 });
 
@@ -109,94 +108,3 @@ class SkillsEditWidget extends ConsumerWidget {
     );
   }
 }
-// import 'package:flutter/material.dart';
-// import 'package:syncfusion_flutter_sliders/sliders.dart';
-
-// // class SkillsEditWidget extends StatelessWidget {
-// //   final TextEditingController skillsController;
-
-// //   const SkillsEditWidget({required this.skillsController});
-
-// //   @override
-// //   Widget build(BuildContext context) {
-// //     List<Skill> skills = (jsonDecode(skillsController.text) as List<dynamic>)
-// //         .map((json) => Skill.fromJson(json))
-// //         .toList();
-
-// //     return Column(
-// //       crossAxisAlignment: CrossAxisAlignment.start,
-// //       children: [
-// //         const Text(
-// //           'Skills',
-// //           style: TextStyle(
-// //             fontWeight: FontWeight.bold,
-// //           ),
-// //         ),
-// //         ListView.builder(
-// //           shrinkWrap: true,
-// //           itemCount: skills.length,
-// //           itemBuilder: (context, index) {
-// //             return Row(
-// //               children: [
-// //                 Expanded(
-// //                   child: TextFormField(
-// //                     initialValue: skills[index].name,
-// //                     onChanged: (value) {
-// //                       skills[index].name = value;
-// //                       updateSkills();
-// //                     },
-// //                     decoration: const InputDecoration(labelText: 'Skill'),
-// //                   ),
-// //                 ),
-// //                 Expanded(
-// //                   child: SfSlider(
-// //                     min: 0.0,
-// //                     max: 100.0,
-// //                     value: skills[index].level.toDouble(),
-// //                     onChanged: (dynamic value) {
-// //                       skills[index].level = value.toInt();
-// //                       updateSkills();
-// //                     },
-// //                   ),
-// //                 ),
-// //               ],
-// //             );
-// //           },
-// //         ),
-// //       ],
-// //     );
-// //   }
-
-// //   void updateSkills() {
-// //     skillsController.text = jsonEncode(skills);
-// //   }
-// // }
-
-// class SkillsEditWidget extends StatelessWidget {
-//   final TextEditingController skillsController;
-
-//   const SkillsEditWidget({required this.skillsController});
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         const Text(
-//           'Skills',
-//           style: TextStyle(
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//         SfSlider(
-//           min: 0.0,
-//           max: 100.0,
-//           value: double.parse(skillsController.text),
-//           onChanged: (dynamic value) {
-//             skillsController.text = value.toStringAsFixed(0);
-//           },
-//         ),
-//       ],
-//     );
-//   }
-// }

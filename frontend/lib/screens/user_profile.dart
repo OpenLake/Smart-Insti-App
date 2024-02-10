@@ -119,15 +119,7 @@ class UserProfile extends ConsumerWidget {
                               ),
                             ),
                             const SizedBox(height: 5),
-                            // const Text(
-                            //   'scroll right >> ',
-                            //   style: TextStyle(
-                            //     fontWeight: FontWeight.w100,
-                            //     fontSize: 12,
-                            //   ),
-                            // ),
 
-                            // Display Skills as separate pie charts
                             if (currentStudent?.skills != null)
                               Column(
                                 children: [
