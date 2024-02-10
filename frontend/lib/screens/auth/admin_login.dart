@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
-
 import '../../components/borderless_button.dart';
 import '../../components/material_textformfield.dart';
 import '../../constants/constants.dart';
@@ -72,17 +71,26 @@ class AdminLogin extends ConsumerWidget {
                             ),
                             const SizedBox(height: 20),
                             MaterialTextFormField(
+                              controller: ref.read(authProvider).emailController,
                               hintText: "Email",
                               validator: (value) => Validators.emailValidator(value),
                             ),
                             const SizedBox(height: 20),
-                            MaterialTextFormField(hintText: "Password"),
+                            MaterialTextFormField(
+                              controller: ref.read(authProvider).passwordController,
+                              hintText: "Password",
+                            ),
                             const SizedBox(height: 20),
                             SizedBox(
                               height: 45,
                               width: 100,
                               child: BorderlessButton(
-                                onPressed: () {},
+                                onPressed: () async {
+                                  if (await ref.read(authProvider.notifier).loginAdmin() && context.mounted) {
+                                    ref.read(authProvider.notifier).clearControllers();
+                                    context.go('/');
+                                  }
+                                },
                                 backgroundColor: Colors.orangeAccent.withOpacity(0.5),
                                 label: const Text('Login'),
                                 splashColor: Colors.orange.shade700,
