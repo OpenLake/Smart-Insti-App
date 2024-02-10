@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'dart:io';
-import '../constants/dummy_entries.dart';
 import '../models/course.dart';
 import '../models/faculty.dart';
 
