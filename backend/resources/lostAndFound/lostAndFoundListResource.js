@@ -1,7 +1,7 @@
 import { Router } from "express";
 import LostAndFoundItem from "../../models/lost_and_found.js";
 import fs from "fs/promises";
-import uploader from "../../database/multerConfig.js";
+import uploader from "../../middlewares/multerConfig.js";
 
 const router = Router();
 
