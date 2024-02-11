@@ -10,6 +10,10 @@ import cors from "cors";
 import tokenRequired from "./middlewares/tokenRequired.js";
 import adminResource from "./resources/adminResource.js";
 
+import roomListResource from "./resources/rooms/roomListResource.js";
+import roomResource from "./resources/rooms/roomResource.js";
+import lostAndFoundListResource from "./resources/lostAndFound/lostAndFoundListResource.js";
+
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
 
@@ -26,6 +30,9 @@ app.use("/admin-auth", adminAuthResource);
 app.use(authResource);
 app.use("otp", otpResource);
 app.use("/", testResource);
+app.use("/rooms", roomListResource);
+app.use("/room", roomResource);
+app.use("/lost-and-found", lostAndFoundListResource);
 
 app.get("/protected", tokenRequired, (req, res) => {
   res.json({ message: "Access granted" });
