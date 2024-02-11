@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 
-class MenuTile extends StatelessWidget {
-  const MenuTile(
+class ImageTile extends StatelessWidget {
+  const ImageTile(
       {super.key,
-      required this.title,
       this.icon,
       required this.onTap,
       required this.primaryColor,
       required this.secondaryColor,
       this.body,
-      this.contentPadding});
+      this.contentPadding,
+      this.image});
 
-  final String title;
+  final Image? image;
   final List<Widget>? body;
   final IconData? icon;
   final Function onTap;
@@ -33,20 +33,24 @@ class MenuTile extends StatelessWidget {
             splashColor: secondaryColor,
             onTap: () => onTap(),
             child: Center(
-              child: Padding(
+              child: Container(
                 padding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
-                        Text(
-                          title,
-                          textAlign: TextAlign.center,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 21,
-                            fontFamily: "GoogleSansFlex",
-                          ),
-                        ),
+                        const SizedBox(height: 20),
+                        image != null
+                            ? ClipRRect(borderRadius: BorderRadius.circular(10), child: image)
+                            : Container(
+                                width: double.infinity,
+                                height: 115,
+                                decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Colors.white,
+                                ),
+                                child: const Icon(Icons.image, size: 50, color: Colors.black45),
+                              ),
+                        const SizedBox(height: 10),
                       ] +
                       (body ?? []),
                 ),

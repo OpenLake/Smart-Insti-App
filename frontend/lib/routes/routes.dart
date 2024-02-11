@@ -5,6 +5,8 @@ import 'package:smart_insti_app/screens/admin/add_students.dart';
 import 'package:smart_insti_app/screens/admin/admin_home.dart';
 import 'package:smart_insti_app/screens/admin/manage_rooms.dart';
 import 'package:smart_insti_app/screens/admin/view_students.dart';
+import 'package:smart_insti_app/screens/home.dart';
+import 'package:smart_insti_app/screens/lost_and_found.dart';
 import '../screens/admin/add_faculty.dart';
 import '../screens/admin/add_menu.dart';
 import '../screens/admin/view_courses.dart';
@@ -14,24 +16,16 @@ import '../screens/user_profile.dart';
 import '../screens/home.dart';
 import '../screens/auth/admin_login.dart';
 import '../screens/auth/user_login.dart';
+import '../screens/auth/signin_page.dart';
+import '../screens/room_vacancy.dart';
 
 final GoRouter routes = GoRouter(
+  initialLocation: '/home',
   routes: [
     GoRoute(
       path: '/',
-      pageBuilder: (context, state) => const MaterialPage(child: Home()),
+      pageBuilder: (context, state) => MaterialPage(child: SignIn()),
       routes: [
-        GoRoute(
-          path: 'user_profile',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: UserProfile()),
-//       pageBuilder: (context, state) => MaterialPage(child: UserLogin()),
-//       routes: [
-//         GoRoute(
-//           path: 'admin_login',
-//           pageBuilder: (context, state) =>
-//               const MaterialPage(child: AdminLogin()),
-        ),
         GoRoute(
           path: 'admin_home',
           pageBuilder: (context, state) =>
@@ -83,6 +77,25 @@ final GoRouter routes = GoRouter(
                   MaterialPage(child: ManageRooms()),
             )
           ],
+        ),
+      ],
+    ),
+    GoRoute(
+      path: '/home',
+      pageBuilder: (context, state) => const MaterialPage(child: Home()),
+      routes: [
+        GoRoute(
+          path: 'classroom_vacancy',
+          pageBuilder: (context, state) => const MaterialPage(child: RoomVacancy()),
+        ),
+        GoRoute(
+          path: 'lost_and_found',
+          pageBuilder: (context, state) => MaterialPage(child: LostAndFound()),
+        ),
+        GoRoute(
+          path: 'user_profile',
+          pageBuilder: (context, state) =>
+              const MaterialPage(child: UserProfile()),
         ),
       ],
     ),
