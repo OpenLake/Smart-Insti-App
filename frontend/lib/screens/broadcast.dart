@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_insti_app/provider/broadcast_provider.dart';
-// import 'package:smart_insti_app/models/broadcast_schema.dart';
+import 'package:smart_insti_app/models/broadcast_schema.dart';
 
 class BroadcastPage extends ConsumerWidget {
   @override
@@ -11,58 +11,135 @@ class BroadcastPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Broadcasts'),
+        backgroundColor: Colors.blue, // Set app bar background color
       ),
-      body: broadcasts.when(
-        data: (broadcasts) {
-          return SingleChildScrollView(
-            child: Column(
-              children: broadcasts.map((broadcast) {
-                return Card(
-                  margin: const EdgeInsets.all(8.0),
-                  child: Padding(
+      body: Container(
+        color: Colors.blue[50], // Set body background color
+        child: broadcasts.when(
+          data: (broadcasts) {
+            return SingleChildScrollView(
+              child: Column(
+                children: broadcasts.map((broadcast) {
+                  return Padding(
                     padding: const EdgeInsets.all(8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    child: Card(
+                      elevation: 4, // Add elevation to card
+                      color: Colors.white, // Set card background color
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(
+                            10), // Add border radius to card
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(12.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(
-                              broadcast.title,
-                              style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 18.0,
-                              ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                Text(
+                                  broadcast.title,
+                                  style: const TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0,
+                                  ),
+                                ),
+                                Text(
+                                  '${broadcast.time.hour > 12 ? broadcast.time.hour - 12 : broadcast.time.hour}:${broadcast.time.minute} ${broadcast.time.hour >= 12 ? 'PM' : 'AM'}',
+                                  style: const TextStyle(
+                                    fontSize: 16.0,
+                                  ),
+                                ),
+                              ],
                             ),
+                            const SizedBox(height: 8.0),
                             Text(
-                              '${broadcast.time.hour > 12 ? broadcast.time.hour - 12 : broadcast.time.hour}:${broadcast.time.minute} ${broadcast.time.hour >= 12 ? 'PM' : 'AM'}',
+                              broadcast.body,
                               style: const TextStyle(
                                 fontSize: 16.0,
                               ),
                             ),
                           ],
                         ),
-                        const SizedBox(height: 8.0),
-                        Text(
-                          broadcast.body,
-                          style: const TextStyle(
-                            fontSize: 16.0,
-                          ),
-                        ),
-                      ],
+                      ),
                     ),
-                  ),
-                );
-              }).toList(),
-            ),
-          );
-        },
-        loading: () => const Center(child: CircularProgressIndicator()),
-        error: (error, stackTrace) => Center(child: Text('Error: $error')),
+                  );
+                }).toList(),
+              ),
+            );
+          },
+          loading: () => const Center(child: CircularProgressIndicator()),
+          error: (error, stackTrace) => Center(child: Text('Error: $error')),
+        ),
       ),
     );
   }
 }
+// import 'package:flutter/material.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
+// import 'package:smart_insti_app/provider/broadcast_provider.dart';
+// // import 'package:smart_insti_app/models/broadcast_schema.dart';
+
+// class BroadcastPage extends ConsumerWidget {
+//   @override
+//   Widget build(BuildContext context, WidgetRef ref) {
+//     final broadcasts = ref.watch(broadcastProvider);
+
+//     return Scaffold(
+//       appBar: AppBar(
+//         title: const Text('Broadcasts'),
+//       ),
+//       body: broadcasts.when(
+//         data: (broadcasts) {
+//           return SingleChildScrollView(
+//             child: Column(
+//               children: broadcasts.map((broadcast) {
+//                 return Card(
+//                   margin: const EdgeInsets.all(8.0),
+//                   child: Padding(
+//                     padding: const EdgeInsets.all(8.0),
+//                     child: Column(
+//                       crossAxisAlignment: CrossAxisAlignment.start,
+//                       children: [
+//                         Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+//                           children: [
+//                             Text(
+//                               broadcast.title,
+//                               style: const TextStyle(
+//                                 fontWeight: FontWeight.bold,
+//                                 fontSize: 18.0,
+//                               ),
+//                             ),
+//                             Text(
+//                               '${broadcast.time.hour > 12 ? broadcast.time.hour - 12 : broadcast.time.hour}:${broadcast.time.minute} ${broadcast.time.hour >= 12 ? 'PM' : 'AM'}',
+//                               style: const TextStyle(
+//                                 fontSize: 16.0,
+//                               ),
+//                             ),
+//                           ],
+//                         ),
+//                         const SizedBox(height: 8.0),
+//                         Text(
+//                           broadcast.body,
+//                           style: const TextStyle(
+//                             fontSize: 16.0,
+//                           ),
+//                         ),
+//                       ],
+//                     ),
+//                   ),
+//                 );
+//               }).toList(),
+//             ),
+//           );
+//         },
+//         loading: () => const Center(child: CircularProgressIndicator()),
+//         error: (error, stackTrace) => Center(child: Text('Error: $error')),
+//       ),
+//     );
+//   }
+// }
 // class BroadcastPage extends ConsumerWidget {
 //   @override
 //   Widget build(BuildContext context, WidgetRef ref) {
