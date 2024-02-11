@@ -13,12 +13,15 @@ import courseResource from "./resources/courseResource.js";
 import Connection from "./database/db.js";
 import cors from "cors";
 import auth from "./middlewares/auth.js";
-import achievementRouter from "./resources/achievementResource.js";
-const PORT =`${process.env.PORT || 3000}`;
+import roomListResource from "./resources/rooms/roomListResource.js";
+import roomResource from "./resources/rooms/roomResource.js";
+import lostAndFoundListResource from "./resources/lostAndFound/lostAndFoundListResource.js";
+
+const PORT = `${process.env.PORT || 3000}`;
 const app = express();
 
 app.use(logger("dev"));
-app.use(express.json())
+app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(cors());
@@ -34,8 +37,11 @@ app.use(skillResource);
 app.use(courseResource);
 app.use(achievementResource);
 app.use("/", testResource);
+app.use("/rooms", roomListResource);
+app.use("/room", roomResource);
+app.use("/lost-and-found", lostAndFoundListResource);
 
-app.get('/protected', auth, (req, res) => {
-  res.json({ message: 'Access granted' });
+app.get("/protected", auth, (req, res) => {
+  res.json({ message: "Access granted" });
 });
 export default app;
