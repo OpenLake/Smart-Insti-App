@@ -26,8 +26,9 @@ class StudentRepository {
     }
   }
 
-  Future<Student> getStudent(String? id) async {
+  Future<Student> getStudent(String email) async {
     try {
+      final id = await storage.read(key: email);
       final response = await _client.get('/students/$id');
       return Student.fromJson(response.data);
     } catch (e) {
