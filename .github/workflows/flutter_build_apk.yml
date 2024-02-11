@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - workflow-build-hotfix
   pull_request:
     branches:
       - main
