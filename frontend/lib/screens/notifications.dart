@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../provider/notifications_provider.dart';
+import '../models/notifications_schema.dart';
 
 class NotificationsPage extends ConsumerWidget with WidgetsBindingObserver {
   @override
@@ -16,19 +17,29 @@ class NotificationsPage extends ConsumerWidget with WidgetsBindingObserver {
     return Scaffold(
       appBar: AppBar(
         title: Text('Notifications'),
+        backgroundColor: Colors.blue, // Change app bar color to blue
       ),
       body: ListView.builder(
-        itemCount: notifications.length,
+        itemCount: notifications.length > 5 ? 5 : notifications.length,
         itemBuilder: (context, index) {
           final notification = notifications[index];
-          return ListTile(
-            title: Text(notification.message),
+          return Card(
+            elevation: 4,
+            margin: EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+            child: ListTile(
+              title: Text(
+                notification.message,
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+            ),
           );
         },
       ),
     );
   }
 }
+
+
 
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
