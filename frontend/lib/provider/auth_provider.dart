@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/models/admin.dart';
-import 'package:smart_insti_app/repositories/adminRepository.dart';
+import 'package:smart_insti_app/repositories/admin_repository.dart';
 import 'package:smart_insti_app/services/auth/auth_service.dart';
 
 final authProvider = StateNotifierProvider<AuthProvider, AuthState>((ref) => AuthProvider(ref));

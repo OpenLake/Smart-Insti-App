@@ -19,7 +19,6 @@ import '../screens/auth/admin_login.dart';
 import '../screens/room_vacancy.dart';
 
 final GoRouter routes = GoRouter(
-  initialLocation: '/home',
   routes: [
     GoRoute(
       path: '/',
