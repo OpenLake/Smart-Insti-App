@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - workflow-build-hotfix
   pull_request:
     branches:
       - main
@@ -26,6 +27,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "beta"
+      - name: Create .env file
+        run: touch .env
       - name: Get dependencies
         run: flutter pub get
       - name: Format code
@@ -36,4 +39,4 @@ jobs:
         uses: actions/upload-artifact@v2
         with:
           name: release-apk
-          path: frontend/build/app/outputs/apk/release/app-release.apk
+          path: build/app/outputs/apk/release/app-release.apk
