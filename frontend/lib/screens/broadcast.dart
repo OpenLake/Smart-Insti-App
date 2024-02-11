@@ -11,10 +11,10 @@ class BroadcastPage extends ConsumerWidget {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Broadcasts'),
-        backgroundColor: Colors.blue, // Set app bar background color
+        backgroundColor: Colors.blue,
       ),
       body: Container(
-        color: Colors.blue[50], // Set body background color
+        color: Colors.blue[50],
         child: broadcasts.when(
           data: (broadcasts) {
             return SingleChildScrollView(
@@ -23,11 +23,10 @@ class BroadcastPage extends ConsumerWidget {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Card(
-                      elevation: 4, // Add elevation to card
-                      color: Colors.white, // Set card background color
+                      elevation: 4,
+                      color: Colors.white,
                       shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(
-                            10), // Add border radius to card
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Padding(
                         padding: const EdgeInsets.all(12.0),
@@ -45,7 +44,7 @@ class BroadcastPage extends ConsumerWidget {
                                   ),
                                 ),
                                 Text(
-                                  '${broadcast.time.hour > 12 ? broadcast.time.hour - 12 : broadcast.time.hour}:${broadcast.time.minute} ${broadcast.time.hour >= 12 ? 'PM' : 'AM'}',
+                                  '${broadcast.date.day}-${broadcast.date.month}-${broadcast.date.year}',
                                   style: const TextStyle(
                                     fontSize: 16.0,
                                   ),
@@ -75,6 +74,7 @@ class BroadcastPage extends ConsumerWidget {
     );
   }
 }
+
 // import 'package:flutter/material.dart';
 // import 'package:flutter_riverpod/flutter_riverpod.dart';
 // import 'package:smart_insti_app/provider/broadcast_provider.dart';
