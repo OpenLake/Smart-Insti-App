@@ -94,6 +94,41 @@ class AuthProvider extends StateNotifier<AuthState> {
     }
   }
 
+  Future<bool> verifyOTPAndLogin(BuildContext context) async {
+    state = state.copyWith(loginProgressState: LoadingState.progress);
+
+    String otp = state.otpDigitControllers.fold<String>(
+      '',
+      (previousValue, element) => previousValue + element.text,
+    );
+
+    try {
+      ({int statusCode, String message}) response =
+          await _authService.verifyOtp(state.emailController.text, otp);
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(response.message),
+            duration: const Duration(seconds: 2),
+          ),
+        );
+      }
+    } catch (e) {
+      _logger.e(e);
+      state = state.copyWith(loginProgressState: LoadingState.error);
+      return false;
+    }
+
+    try {
+      final response =
+          await _authService.loginFacultyOrStudent(state.emailController.text, state.switchAuthLabel.toLowerCase());
+      await _authService.saveCredentials(response);
+      state = state.copyWith(loginProgressState: LoadingState.success);
+      return true;
+    } catch (e) {
+      _logger.e(e);
+      state = state.copyWith(loginProgressState: LoadingState.error);
+      return false;
   }
   }
 
