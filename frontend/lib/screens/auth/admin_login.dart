@@ -8,7 +8,9 @@ import '../../constants/constants.dart';
 import '../../provider/auth_provider.dart';
 
 class AdminLogin extends ConsumerWidget {
-  const AdminLogin({super.key});
+  AdminLogin({super.key});
+
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,18 +71,26 @@ class AdminLogin extends ConsumerWidget {
                                 )
                               ],
                             ),
-                            const SizedBox(height: 20),
-                            MaterialTextFormField(
-                              controller: ref.read(authProvider).emailController,
-                              hintText: "Email",
-                              validator: (value) => Validators.emailValidator(value),
+                            Form(
+                              key: formKey,
+                              child: Column(
+                                children: [
+                                  const SizedBox(height: 20),
+                                  MaterialTextFormField(
+                                    controller: ref.read(authProvider).emailController,
+                                    hintText: "Email",
+                                    validator: (value) => Validators.emailValidator(value),
+                                  ),
+                                  const SizedBox(height: 20),
+                                  MaterialTextFormField(
+                                    controller: ref.read(authProvider).passwordController,
+                                    hintText: "Password",
+                                    validator: (value) => Validators.nonEmptyValidator(value),
+                                  ),
+                                  const SizedBox(height: 20),
+                                ],
+                              ),
                             ),
-                            const SizedBox(height: 20),
-                            MaterialTextFormField(
-                              controller: ref.read(authProvider).passwordController,
-                              hintText: "Password",
-                            ),
-                            const SizedBox(height: 20),
                             SizedBox(
                               height: 45,
                               width: 100,
@@ -92,7 +102,28 @@ class AdminLogin extends ConsumerWidget {
                                   }
                                 },
                                 backgroundColor: Colors.orangeAccent.withOpacity(0.5),
-                                label: const Text('Login'),
+                                label: Row(
+                                  children: [
+                                    const Text('Login'),
+                                    Consumer(
+                                      builder: (_, ref, __) {
+                                        return ref.watch(authProvider).loginProgressState == LoadingState.progress
+                                            ? Padding(
+                                          padding: const EdgeInsets.only(left: 15),
+                                          child: SizedBox(
+                                            height: 20,
+                                            width: 20,
+                                            child: CircularProgressIndicator(
+                                              strokeWidth: 2,
+                                              color: Colors.orange.shade700,
+                                            ),
+                                          ),
+                                        )
+                                            : const SizedBox.shrink();
+                                      },
+                                    )
+                                  ],
+                                ),
                                 splashColor: Colors.orange.shade700,
                               ),
                             ),
