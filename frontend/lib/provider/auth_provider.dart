@@ -97,11 +97,15 @@ class AuthProvider extends StateNotifier<AuthState> {
 
   Future<bool> loginAdmin() async {
     // Login the admin
+    state = state.copyWith(loginProgressState: LoadingState.progress);
     try {
       final response = await _authService.loginAdmin(state.emailController.text, state.passwordController.text);
       await _authService.saveCredentials(response);
+      state = state.copyWith(loginProgressState: LoadingState.success);
       return true;
     } catch (e) {
+      state = state.copyWith(loginProgressState: LoadingState.error);
+      _logger.e(e);
       return false;
     }
   }
