@@ -140,8 +140,12 @@ class AuthProvider extends StateNotifier<AuthState> {
         state = state.copyWith(currentUser: admin, currentUserRole: 'admin');
         break;
       case 'student':
+        Student? student = await _studentRepository.getStudentById(credentials['_id']!);
+        state = state.copyWith(currentUser: student, currentUserRole: 'student');
         break;
       case 'faculty':
+        Faculty? faculty = await _facultyRepository.getFacultyById(credentials ['_id']!);
+        state = state.copyWith(currentUser: faculty, currentUserRole: 'faculty');
         break;
       default:
         break;
