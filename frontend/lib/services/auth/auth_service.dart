@@ -86,6 +86,22 @@ class AuthService {
       return (statusCode: 500, message: 'Internal Server Error');
     }
   }
+  Future<({int statusCode, String message})> verifyOtp(String email, String otp) async {
+    try {
+      final response = await _client.post(
+        '/otp/verify-otp',
+        data: {
+          'email': email,
+          'otp': otp,
+        },
+      );
+      _logger.i(response.data);
+      return (statusCode: response.statusCode!, message: response.data['message'] as String);
+    } catch (e) {
+      _logger.e(e);
+      return (statusCode: 500, message: 'Internal Server Error');
+    }
+  }
 
   Future<Map<String, dynamic>> loginAdmin(String email, String password) async {
     try {
