@@ -67,6 +67,23 @@ class AuthService {
     }
   }
 
+  Future<({int statusCode, String message})> sendOtp(String email, String loginForRole) async {
+    try {
+      final response = await _client.post(
+        '/otp/send-otp',
+        data: {
+          'email': email,
+          'loginForRole': loginForRole,
+        },
+      );
+      _logger.i(response.data);
+      return (statusCode: response.statusCode!, message: response.data['message'] as String);
+    } catch (e) {
+      _logger.e(e);
+      return (statusCode: 500, message: 'Internal Server Error');
+    }
+  }
+
   Future<Map<String, dynamic>> loginAdmin(String email, String password) async {
     try {
       final response = await _client.post(
