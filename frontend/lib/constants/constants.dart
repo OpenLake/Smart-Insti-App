@@ -5,7 +5,7 @@ class AppConstants {
   static const Color seedColor = Colors.lightBlueAccent;
 }
 
-enum LoadingState { progress, success, error }
+enum LoadingState { idle, progress, success, error }
 
 class AuthConstants {
   static const String facultyAuthLabel = "Faculty";
