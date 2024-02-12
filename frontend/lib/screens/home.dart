@@ -5,7 +5,6 @@ import 'package:smart_insti_app/components/menu_tile.dart';
 import '../constants/constants.dart';
 import '../provider/student_provider.dart';
 import '../provider/room_provider.dart';
-import '../screens/notifications.dart';
 
 class Home extends ConsumerWidget {
   const Home({Key? key});
@@ -22,14 +21,6 @@ class Home extends ConsumerWidget {
           ),
           backgroundColor: Colors.lightBlueAccent,
           actions: [
-            // Icon for Notifications Page
-            IconButton(
-              icon: Icon(Icons.notifications),
-              onPressed: () {
-                // Navigate to notifications page
-                context.push('/notifications');
-              },
-            ),
             IconButton(
               icon: Icon(Icons.person),
               onPressed: () {

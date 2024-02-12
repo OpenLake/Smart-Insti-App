@@ -8,7 +8,6 @@ import 'package:smart_insti_app/screens/admin/view_students.dart';
 import 'package:smart_insti_app/screens/broadcast.dart';
 import 'package:smart_insti_app/screens/home.dart';
 import 'package:smart_insti_app/screens/lost_and_found.dart';
-import 'package:smart_insti_app/screens/notifications.dart';
 import '../screens/admin/add_faculty.dart';
 import '../screens/admin/add_menu.dart';
 import '../screens/admin/view_courses.dart';
@@ -84,11 +83,6 @@ final GoRouter routes = GoRouter(
                   MaterialPage(child: ManageRooms()),
             )
           ],
-        ),
-        GoRoute(
-          path: 'notifications',
-          pageBuilder: (context, state) =>
-              MaterialPage(child: NotificationsPage()),
         ),
       ],
     ),
