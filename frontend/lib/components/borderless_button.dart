@@ -11,7 +11,7 @@ class BorderlessButton extends StatelessWidget {
   final Color backgroundColor;
   final Color splashColor;
   final Function() onPressed;
-  final Text label;
+  final Widget label;
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +23,7 @@ class BorderlessButton extends StatelessWidget {
         side: const BorderSide(color: Colors.transparent, width: 0),
       ),
       onPressed: onPressed,
-      child: label,
+      child: IntrinsicWidth(child: label),
     );
   }
 }
