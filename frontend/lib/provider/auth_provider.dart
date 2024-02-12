@@ -91,6 +91,19 @@ class AuthProvider extends StateNotifier<AuthState> {
     }
   }
 
+  void verifyLoginToken(BuildContext context) async {
+    final Map<String, String> credentials = await _authService.checkCredentials();
+    if(credentials['token'] == '' && context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please login to continue'),
+          duration: Duration(seconds: 2),
+        ),
+      );
+      context.go('/');
+    }
+  }
+
   void clearCurrentUser() {
     state = state.copyWith(currentUser: null, currentUserRole: null);
   }
