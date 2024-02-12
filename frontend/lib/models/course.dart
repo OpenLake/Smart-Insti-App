@@ -1,11 +1,11 @@
 class Course {
   final String id;
-  final String courseCode;
-  final String courseName;
-  final int credits;
-  final List<String> branches;
-  final String primaryRoom;
-  final String professorId;
+  final String? courseCode;
+  final String? courseName;
+  final int? credits;
+  final List<String>? branches;
+  final String? primaryRoom;
+  final String? professorId;
 
   Course({
     required this.id,

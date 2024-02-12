@@ -4,8 +4,8 @@ import 'package:logger/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'dart:io';
-import '../constants/constants.dart';
-import '../models/course.dart';
+import '../../constants/constants.dart';
+import '../../models/course.dart';
 
 final coursesProvider = StateNotifierProvider<CoursesNotifier, CoursesState>(
     (ref) => CoursesNotifier());
@@ -103,7 +103,7 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
     state = state.copyWith(
         filteredCourses: state.courses
             .where((course) =>
-                course.courseName.toLowerCase().contains(query.toLowerCase()))
+                course.courseName!.toLowerCase().contains(query.toLowerCase()))
             .toList());
   }
 
