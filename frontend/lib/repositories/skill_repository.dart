@@ -21,4 +21,41 @@ class SkillRepository {
       return DummySkills.skills;
     }
   }
+
+  Future<Skill> addSkill(Skill skill) async {
+    try {
+      final response = await _client.post('/skills', data: skill.toJson());
+      return Skill.fromJson(response.data);
+    } catch (e) {
+      return skill;
+    }
+  }
+
+  Future<Skill> updateSkill(Skill skill) async {
+    try {
+      final response =
+          await _client.put('/skills/${skill.id}', data: skill.toJson());
+      return Skill.fromJson(response.data);
+    } catch (e) {
+      return skill;
+    }
+  }
+
+  Future<Skill> deleteSkill(Skill skill) async {
+    try {
+      final response = await _client.delete('/skills/${skill.id}');
+      return Skill.fromJson(response.data);
+    } catch (e) {
+      return skill;
+    }
+  }
+
+  Future<Skill> getSkill(Skill skill) async {
+    try {
+      final response = await _client.get('/skills/$skill.id');
+      return Skill.fromJson(response.data);
+    } catch (e) {
+      return skill;
+    }
+  }
 }
