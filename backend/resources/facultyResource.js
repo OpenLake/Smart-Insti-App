@@ -12,6 +12,22 @@ facultyRouter.get('/faculties', async (req, res) => {
     }
 });
 
+facultyRouter.post('/faculties', async (req, res) => {
+    const {email} = req.body;
+    let existingUser = await Faculty.findOne({ email });
+    try {
+        if (!existingUser) {
+            const newUser = new Faculty({ email });
+            await newUser.save();
+            res.send({ message: errorMessages.userCreated, user: newUser });
+        } else {
+            res.send({ message: errorMessages.userAlreadyExists, user: existingUser});
+        }
+    } catch (error) {
+        res.status(500).json({ message: errorMessages.internalServerError });
+    }
+});
+
 facultyRouter.get('/faculties/:id', async (req, res) => {
     const facultyId = req.params.id;
     
