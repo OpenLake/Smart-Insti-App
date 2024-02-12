@@ -7,6 +7,7 @@ import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/models/mess_menu.dart';
 import 'package:smart_insti_app/provider/menu_provider.dart';
 import '../../constants/constants.dart';
+import '../../provider/auth_provider.dart';
 
 class ViewMessMenu extends ConsumerWidget {
   const ViewMessMenu({super.key});
@@ -15,6 +16,9 @@ class ViewMessMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.watch(menuProvider.notifier).initMenuView();
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
     });
 
     return ResponsiveScaledBox(

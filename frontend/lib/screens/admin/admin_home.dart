@@ -7,6 +7,7 @@ import 'package:smart_insti_app/components/collapsing_app_bar.dart';
 import 'package:smart_insti_app/provider/admin_provider.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
 import 'package:smart_insti_app/services/auth/auth_service.dart';
+import '../../constants/constants.dart';
 import '../../models/admin.dart';
 
 class AdminHome extends ConsumerWidget {
@@ -16,6 +17,9 @@ class AdminHome extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(adminProvider.notifier).buildMenuTiles(context);
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
     });
 
     return ResponsiveScaledBox(

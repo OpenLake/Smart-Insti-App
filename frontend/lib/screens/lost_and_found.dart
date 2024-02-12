@@ -8,6 +8,7 @@ import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/lost_and_found_provider.dart';
 import '../components/image_tile.dart';
 import '../constants/constants.dart';
+import '../provider/auth_provider.dart';
 
 class LostAndFound extends ConsumerWidget {
   LostAndFound({super.key});
@@ -16,6 +17,11 @@ class LostAndFound extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
+    });
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(

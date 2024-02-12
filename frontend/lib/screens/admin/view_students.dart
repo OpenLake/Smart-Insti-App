@@ -3,7 +3,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/provider/student_provider.dart';
+import '../../constants/constants.dart';
 import '../../models/student.dart';
+import '../../provider/auth_provider.dart';
 
 class ViewStudents extends ConsumerWidget {
   const ViewStudents({super.key});
@@ -12,6 +14,9 @@ class ViewStudents extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(studentProvider.notifier).searchStudents();
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
     });
 
     return ResponsiveScaledBox(

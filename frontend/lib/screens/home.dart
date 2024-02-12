@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:smart_insti_app/components/menu_tile.dart';
 import 'package:smart_insti_app/models/student.dart';
 import '../components/collapsing_app_bar.dart';
+import '../constants/constants.dart';
 import '../models/faculty.dart';
 import '../provider/auth_provider.dart';
 import '../provider/room_provider.dart';
@@ -15,6 +16,11 @@ class Home extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
+    });
     return SafeArea(
       child: Scaffold(
         body: NestedScrollView(

@@ -25,6 +25,7 @@ class AuthState {
   final bool emailSent;
   final LoadingState emailSendingState;
   final LoadingState loginProgressState;
+  final LoadingState tokenCheckProgress;
 
   AuthState({
     this.currentUser,
@@ -37,6 +38,7 @@ class AuthState {
     required this.emailSent,
     required this.emailSendingState,
     required this.loginProgressState,
+    required this.tokenCheckProgress,
   });
 
   AuthState copyWith({
@@ -50,6 +52,7 @@ class AuthState {
     bool? emailSent,
     LoadingState? emailSendingState,
     LoadingState? loginProgressState,
+    LoadingState? tokenCheckProgress,
   }) {
     return AuthState(
       currentUser: currentUser,
@@ -62,6 +65,7 @@ class AuthState {
       emailSent: emailSent ?? this.emailSent,
       emailSendingState: emailSendingState ?? this.emailSendingState,
       loginProgressState: loginProgressState ?? this.loginProgressState,
+      tokenCheckProgress: tokenCheckProgress ?? this.tokenCheckProgress,
     );
   }
 }
@@ -82,6 +86,7 @@ class AuthProvider extends StateNotifier<AuthState> {
             emailSent: false,
             emailSendingState: LoadingState.idle,
             loginProgressState: LoadingState.idle,
+            tokenCheckProgress: LoadingState.idle,
           ),
         );
 
@@ -171,7 +176,8 @@ class AuthProvider extends StateNotifier<AuthState> {
     }
   }
 
-  void verifyLoginToken(BuildContext context) async {
+  void verifyAuthTokenExistence(BuildContext context) async {
+    state = state.copyWith(tokenCheckProgress: LoadingState.progress);
     final Map<String, String> credentials = await _authService.checkCredentials();
     if (credentials['token'] == '' && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -182,6 +188,7 @@ class AuthProvider extends StateNotifier<AuthState> {
       );
       context.go('/');
     }
+    state = state.copyWith(tokenCheckProgress: LoadingState.success);
   }
 
   void clearCurrentUser() {

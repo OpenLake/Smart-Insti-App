@@ -7,12 +7,18 @@ import 'package:smart_insti_app/components/menu_tile.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/provider/room_provider.dart';
 import '../models/room.dart';
+import '../provider/auth_provider.dart';
 
 class RoomVacancy extends ConsumerWidget {
   const RoomVacancy({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
+    });
     if (ref.read(roomProvider).loadingState == LoadingState.progress) ref.read(roomProvider.notifier).loadRooms();
     return ResponsiveScaledBox(
       width: 411,

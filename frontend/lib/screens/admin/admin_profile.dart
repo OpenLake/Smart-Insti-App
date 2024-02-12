@@ -4,6 +4,7 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
 
+import '../../constants/constants.dart';
 import '../../models/admin.dart';
 
 class AdminProfile extends ConsumerWidget {
@@ -11,6 +12,11 @@ class AdminProfile extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
+    });
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(

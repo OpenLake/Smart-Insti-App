@@ -6,6 +6,7 @@ import 'package:smart_insti_app/provider/courses_provider.dart';
 import '../../components/choice_selector.dart';
 import '../../components/text_divider.dart';
 import '../../constants/constants.dart';
+import '../../provider/auth_provider.dart';
 
 class AddCourses extends ConsumerWidget {
   AddCourses({super.key});
@@ -14,6 +15,11 @@ class AddCourses extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
+    });
     final course = ref.watch(coursesProvider);
     return ResponsiveScaledBox(
       width: 411,

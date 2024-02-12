@@ -7,6 +7,8 @@ import 'package:smart_insti_app/components/text_divider.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/provider/student_provider.dart';
 
+import '../../provider/auth_provider.dart';
+
 class AddStudents extends ConsumerWidget {
   AddStudents({super.key});
 
@@ -14,6 +16,11 @@ class AddStudents extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
+    });
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(

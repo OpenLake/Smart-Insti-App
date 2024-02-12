@@ -4,7 +4,9 @@ import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_scaled_box.dart';
 import 'package:smart_insti_app/provider/faculty_provider.dart';
 
+import '../../constants/constants.dart';
 import '../../models/faculty.dart';
+import '../../provider/auth_provider.dart';
 
 class ViewFaculty extends ConsumerWidget {
   const ViewFaculty({super.key});
@@ -13,6 +15,9 @@ class ViewFaculty extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(facultyProvider.notifier).searchFaculties();
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
     });
 
     return ResponsiveScaledBox(

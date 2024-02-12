@@ -19,6 +19,7 @@ import '../screens/auth/admin_login.dart';
 import '../screens/room_vacancy.dart';
 
 final GoRouter routes = GoRouter(
+  initialLocation: '/home/lost_and_found',
   routes: [
     GoRoute(
       path: '/',

@@ -6,6 +6,7 @@ import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/components/rounded_chip.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import '../../components/text_divider.dart';
+import '../../provider/auth_provider.dart';
 import '../../provider/menu_provider.dart';
 
 class AddMessMenu extends ConsumerWidget {
@@ -18,6 +19,9 @@ class AddMessMenu extends ConsumerWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.watch(menuProvider.notifier).clear();
+      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+      }
     });
 
     return ResponsiveScaledBox(
