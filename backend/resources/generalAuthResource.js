@@ -1,39 +1,42 @@
 import express from "express";
-import * as errorMessages from "../constants/messages.js";
+import * as messages from "../constants/messages.js";
 import Student from "../models/student.js";
 import Faculty from "../models/faculty.js";
-import Admin from "../models/admin.js";
+import jwt from "jsonwebtoken";
+import dotenv from "dotenv";
 
 const generalAuthRouter = express.Router();
+dotenv.config();
 
 generalAuthRouter.post("/login", async (req, res) => {
-  const { email, userType } = req.body;
+  try {
+    const { email, loginForRole } = req.body;
 
-  let userCollection;
-  let existingUser;
+    let userCollection;
 
-  switch (userType) {
-    case "student":
-      userCollection = Student;
-      break;
-    case "faculty":
-      userCollection = Faculty;
-      break;
-    case "admin":
-      userCollection = Admin;
-      break;
-    default:
-      return res.status(400).send({ error: errorMessages.invalidUserType });
-  }
+    switch (loginForRole) {
+      case "student":
+        userCollection = Student;
+        break;
+      case "faculty":
+        userCollection = Faculty;
+        break;
+      default:
+        return res.status(400).send({ error: messages.invalidUserType });
+    }
 
-  existingUser = await userCollection.findOne({ email });
+    const user = await userCollection.findOne({ email });
+    const token = jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET);
 
-  if (!existingUser) {
-    const newUser = new userCollection({ email });
-    await newUser.save();
-    res.send({ message: errorMessages.userCreated, user: newUser });
-  } else {
-    res.send({ message: errorMessages.userAlreadyExists, user: existingUser });
+    res.send({
+      token: token,
+      _id: user._id,
+      name: user.name,
+      email: user.email,
+      role: loginForRole,
+    });
+  } catch (e) {
+    res.status(500).json({ error: messages.internalServerError });
   }
 });
 
