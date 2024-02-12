@@ -133,16 +133,17 @@ class AdminHome extends ConsumerWidget {
             )
           ],
           body: Container(
-              color: Colors.white,
-              child: Consumer(
-                builder: (_, ref, ___) {
-                  return GridView.count(
-                    padding: const EdgeInsets.all(10),
-                    crossAxisCount: 2,
-                    children: ref.watch(adminProvider).menuTiles,
-                  );
-                },
-              )),
+            color: Colors.white,
+            child: Consumer(
+              builder: (_, ref, ___) {
+                return GridView.count(
+                  padding: const EdgeInsets.all(10),
+                  crossAxisCount: 2,
+                  children: ref.watch(adminProvider).menuTiles,
+                );
+              },
+            ),
+          ),
         ),
       ),
     );

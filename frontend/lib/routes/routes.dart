@@ -26,13 +26,11 @@ final GoRouter routes = GoRouter(
     ),
     GoRoute(
       path: '/login',
-      pageBuilder: (context, state) =>
-          const MaterialPage(child: GeneralLogin()),
+      pageBuilder: (context, state) => MaterialPage(child: GeneralLogin()),
       routes: [
         GoRoute(
           path: 'admin_login',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: AdminLogin()),
+          pageBuilder: (context, state) => MaterialPage(child: AdminLogin()),
         ),
       ],
     ),
