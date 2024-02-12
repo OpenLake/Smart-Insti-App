@@ -4,7 +4,6 @@ import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 import '../constants/dummy_entries.dart';
 import '../models/student.dart';
-import '../provider/user_provider.dart';
 
 final studentRepositoryProvider =
     Provider<StudentRepository>((_) => StudentRepository());
@@ -29,6 +28,7 @@ class StudentRepository {
   Future<Student> getStudent(String email) async {
     try {
       final id = await storage.read(key: email);
+
       final response = await _client.get('/students/$id');
       return Student.fromJson(response.data);
     } catch (e) {
@@ -46,7 +46,8 @@ class StudentRepository {
       );
 
       storage.write(
-          key: response.data['user']['email'], value: response.data['_id']);
+          key: response.data['user']['email'],
+          value: response.data['user']['_id']);
 
       return Student.fromJson(response.data['user']);
     } catch (e) {
