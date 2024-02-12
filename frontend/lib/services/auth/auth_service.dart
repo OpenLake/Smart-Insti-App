@@ -8,7 +8,10 @@ final authServiceProvider = Provider<AuthService>((_) => AuthService());
 class AuthService {
   final _client = Dio(
     BaseOptions(
-      baseUrl: 'http://10.0.2.2:3000',
+      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      validateStatus: (status) {
+        return status! < 500;
+      },
     ),
   );
 
