@@ -13,10 +13,10 @@ import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
 import '../screens/auth/admin_login.dart';
-
 import '../screens/room_vacancy.dart';
 import '../screens/user/user_home.dart';
-import '../screens/user_profile.dart';
+import '../screens/user/faculty_profile.dart';
+import '../screens/user/student_profile.dart';
 
 final GoRouter routes = GoRouter(
   initialLocation: '/',
@@ -65,9 +65,14 @@ final GoRouter routes = GoRouter(
                   MaterialPage(child: ManageRooms()),
             ),
             GoRoute(
-              path: 'user_profile',
+              path: 'student_profile',
               pageBuilder: (context, state) =>
-                  MaterialPage(child: UserProfile()),
+                  MaterialPage(child: StudentProfile()),
+            ),
+            GoRoute(
+              path: 'faculty_profile',
+              pageBuilder: (context, state) =>
+                  MaterialPage(child: FacultyProfile()),
             ),
           ],
         ),

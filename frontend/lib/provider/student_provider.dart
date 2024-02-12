@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
-import '../models/student.dart';
+import '../../models/student.dart';
 import 'dart:io';
 
 final studentProvider = StateNotifierProvider<StudentProvider, StudentState>(
