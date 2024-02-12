@@ -71,8 +71,30 @@ class AuthProvider extends StateNotifier<AuthState> {
   final AdminRepository _adminRepository;
   final _logger = Logger();
 
-  void toggleEmailSent() {
-    state = state.copyWith(emailSent: !state.emailSent);
+  Future<void> sendOtp(BuildContext context) async {
+    // Send OTP to the email
+    state = state.copyWith(emailSendingState: LoadingState.progress);
+
+    ({int statusCode, String message}) response =
+        await _authService.sendOtp(state.emailController.text, state.switchAuthLabel.toLowerCase());
+
+    if (context.mounted) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(response.message),
+          duration: const Duration(seconds: 2),
+        ),
+      );
+    }
+
+    if (response.statusCode == 200) {
+      state = state.copyWith(emailSent: true, emailSendingState: LoadingState.success);
+    } else {
+      state = state.copyWith(emailSent: false, emailSendingState: LoadingState.error);
+    }
+  }
+
+  }
   }
 
   void getCurrentUser() async {
