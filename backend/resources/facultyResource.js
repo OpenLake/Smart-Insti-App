@@ -16,7 +16,7 @@ facultyRouter.get('/faculties/:id', async (req, res) => {
     const facultyId = req.params.id;
     
     try {
-        const facultyDetails = await Faculty.findById(facultyId);
+        const facultyDetails = await Faculty.findById(facultyId).populate('courses');
 
         if (!facultyDetails) {
             return res.status(404).json({ message: errorMessages.facultyNotFound });
@@ -28,12 +28,28 @@ facultyRouter.get('/faculties/:id', async (req, res) => {
     }
 });
 
+facultyRouter.post('/faculties', async (req, res) => {
+    const {email} = req.body;
+    let existingUser = await Faculty.findOne({ email });
+    try {
+        if (!existingUser) {
+            const newUser = new Faculty({ email });
+            await newUser.save();
+            res.send({ message: errorMessages.userCreated, user: newUser });
+        } else {
+            res.send({ message: errorMessages.userAlreadyExists, user: existingUser});
+        }
+    } catch (error) {
+        res.status(500).json({ message: errorMessages.internalServerError });
+    }
+});
+
 facultyRouter.put('/faculties/:id', async (req, res) => {
     const facultyId = req.params.id;
     const facultyData = req.body;
     
     try {
-        const updatedFaculty = await Faculty.findByIdAndUpdate(facultyId,facultyData,{new:true});
+        const updatedFaculty = await Faculty.findByIdAndUpdate(facultyId,facultyData,{new:true}).populate('courses');
         res.json(updatedFaculty);
     } catch (error) {
         res.status(500).json({ message: errorMessages.internalServerError });
@@ -45,7 +61,7 @@ facultyRouter.delete('/faculties/:id', async (req, res) => {
     const facultyId = req.params.id;
     
     try {
-        const deletedFaculty = await Faculty.findByIdAndDelete(facultyId);
+        const deletedFaculty = await Faculty.findByIdAndDelete(facultyId).populate('courses');
         res.json(deletedFaculty);
     } catch (error) {
         res.status(500).json({ message: errorMessages.internalServerError });
