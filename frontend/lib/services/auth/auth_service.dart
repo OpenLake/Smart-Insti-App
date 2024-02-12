@@ -1,7 +1,9 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final authServiceProvider = Provider<AuthService>((_) => AuthService());
 
@@ -86,6 +88,7 @@ class AuthService {
       return (statusCode: 500, message: 'Internal Server Error');
     }
   }
+
   Future<({int statusCode, String message})> verifyOtp(String email, String otp) async {
     try {
       final response = await _client.post(
@@ -120,12 +123,19 @@ class AuthService {
     }
   }
 
-  void loginStudent() async {
+  Future<Map<String, dynamic>> loginFacultyOrStudent(String email, String loginForRole) async {
     try {
-      final response = await _client.post('/login/student');
-      _logger.i(response.data);
+      final response = await _client.post(
+        '/general-auth/login',
+        data: {
+          'email': email,
+          'loginForRole': loginForRole,
+        },
+      );
+      return response.data;
     } catch (e) {
       _logger.e(e);
+      return {};
     }
   }
 }
