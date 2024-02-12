@@ -10,7 +10,9 @@ import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
 
 class GeneralLogin extends ConsumerWidget {
-  const GeneralLogin({super.key});
+  GeneralLogin({super.key});
+
+  final GlobalKey<FormState> _emailFormKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -61,119 +63,258 @@ class GeneralLogin extends ConsumerWidget {
                                   ),
                                 ),
                                 const Spacer(),
-                                Hero(
-                                  tag: 'admin_page',
-                                  child: BorderlessButton(
-                                    onPressed: () => context.push('/login/admin_login'),
-                                    backgroundColor: Colors.tealAccent.withOpacity(0.5),
-                                    label: const Text('Admin'),
-                                    splashColor: Colors.teal.shade700,
-                                  ),
+                                Consumer(
+                                  builder: (_, ref, __) => !ref.watch(authProvider).emailSent
+                                      ? Hero(
+                                          tag: 'admin_page',
+                                          child: BorderlessButton(
+                                            onPressed: () => context.push('/login/admin_login'),
+                                            backgroundColor: Colors.tealAccent.withOpacity(0.5),
+                                            label: const Text('Admin'),
+                                            splashColor: Colors.teal.shade700,
+                                          ),
+                                        )
+                                      : const SizedBox.shrink(),
                                 )
                               ],
                             ),
                             const SizedBox(height: 20),
-                            MaterialTextFormField(
-                              hintText: "Email",
-                              validator: (value) => Validators.emailValidator(value),
+                            Consumer(
+                              builder: (_, ref, __) => Form(
+                                key: _emailFormKey,
+                                child: MaterialTextFormField(
+                                  hintText: "Email",
+                                  validator: (value) => Validators.emailValidator(value),
+                                  controller: ref.watch(authProvider).emailController,
+                                  enabled: !ref.watch(authProvider).emailSent,
+                                ),
+                              ),
                             ),
                             AnimatedSwitcher(
                               duration: const Duration(milliseconds: 500),
                               child: ref.watch(authProvider).emailSent
                                   ? SizedBox(
-                                      child: Column(children: [
-                                        const SizedBox(height: 20),
-                                        Row(
-                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            MaterialOTPBox(
-                                              controller: ref.watch(authProvider).otpDigitControllers[0],
-                                              focusNode: ref.watch(authProvider).otpFocusNodes[0],
-                                              hintText: 'O',
-                                            ),
-                                      MaterialOTPBox(
-                                              controller: ref.watch(authProvider).otpDigitControllers[1],
-                                              focusNode: ref.watch(authProvider).otpFocusNodes[1],
-                                              hintText: 'T',
-                                            ),
-                                      MaterialOTPBox(
-                                              controller: ref.watch(authProvider).otpDigitControllers[2],
-                                              focusNode: ref.watch(authProvider).otpFocusNodes[2],
-                                              hintText: 'P',
-                                            ),
-                                      MaterialOTPBox(
-                                              controller: ref.watch(authProvider).otpDigitControllers[3],
-                                              focusNode: ref.watch(authProvider).otpFocusNodes[3],
-                                              hintText: ':)',
-                                            )
-                                          ],
-                                  ),
-                                ]),
-                              )
+                                      child: Column(
+                                        children: [
+                                          const SizedBox(height: 20),
+                                          Row(
+                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              MaterialOTPBox(
+                                                controller: ref.watch(authProvider).otpDigitControllers[0],
+                                                focusNode: ref.watch(authProvider).otpFocusNodes[0],
+                                                hintText: 'O',
+                                              ),
+                                              MaterialOTPBox(
+                                                controller: ref.watch(authProvider).otpDigitControllers[1],
+                                                focusNode: ref.watch(authProvider).otpFocusNodes[1],
+                                                hintText: 'T',
+                                              ),
+                                              MaterialOTPBox(
+                                                controller: ref.watch(authProvider).otpDigitControllers[2],
+                                                focusNode: ref.watch(authProvider).otpFocusNodes[2],
+                                                hintText: 'P',
+                                              ),
+                                              MaterialOTPBox(
+                                                controller: ref.watch(authProvider).otpDigitControllers[3],
+                                                focusNode: ref.watch(authProvider).otpFocusNodes[3],
+                                                hintText: ':)',
+                                              )
+                                            ],
+                                          ),
+                                        ],
+                                      ),
+                                    )
                                   : null,
                             ),
                             const SizedBox(height: 20),
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Consumer(
-                                builder: (_, ref, __) => AnimatedToggleSwitch.dual(
-                                  height: 45,
-                                  spacing: 40,
-                                  current: ref.watch(authProvider).switchAuthLabel,
-                                  first: AuthConstants.studentAuthLabel,
-                                  second: AuthConstants.facultyAuthLabel,
-                                  onChanged: (value) => ref.read(authProvider.notifier).toggleAuthSwitch(),
-                                  textBuilder: (value) => Text(value),
-                                  styleBuilder: (value) => value == AuthConstants.studentAuthLabel
-                                      ? ToggleStyle(
-                                    indicatorColor: Colors.redAccent,
-                                    backgroundColor: Colors.redAccent.shade100,
-                                    borderColor: Colors.transparent,
-                                  )
-                                      : ToggleStyle(
-                                    indicatorColor: Colors.teal,
-                                    backgroundColor: Colors.tealAccent.shade100,
-                                    borderColor: Colors.transparent,
-                                  ),
-                                  iconBuilder: (value) => value == AuthConstants.studentAuthLabel
-                                      ? const Icon(
-                                    Icons.book_outlined,
-                                    color: Colors.white,
-                                  )
-                                      : const Icon(
-                                    Icons.portrait_rounded,
-                                    color: Colors.white,
-                                  ),
-                                ),
+                                builder: (_, ref, __) => !ref.watch(authProvider).emailSent
+                                    ? AnimatedToggleSwitch.dual(
+                                        height: 45,
+                                        spacing: 40,
+                                        current: ref.watch(authProvider).switchAuthLabel,
+                                        first: AuthConstants.studentAuthLabel,
+                                        second: AuthConstants.facultyAuthLabel,
+                                        onChanged: ref.watch(authProvider).emailSendingState == LoadingState.progress
+                                            ? (value) {}
+                                            : (value) => ref.read(authProvider.notifier).toggleAuthSwitch(),
+                                        textBuilder: (value) => Text(value),
+                                        styleBuilder: (value) => value == AuthConstants.studentAuthLabel
+                                            ? ToggleStyle(
+                                                indicatorColor: Colors.blue,
+                                                backgroundColor: Colors.blue.shade100,
+                                                borderColor: Colors.transparent,
+                                              )
+                                            : ToggleStyle(
+                                                indicatorColor: Colors.green,
+                                                backgroundColor: Colors.green.shade100,
+                                                borderColor: Colors.transparent,
+                                              ),
+                                        iconBuilder: (value) => value == AuthConstants.studentAuthLabel
+                                            ? const Icon(
+                                                Icons.book_outlined,
+                                                color: Colors.white,
+                                              )
+                                            : const Icon(
+                                                Icons.portrait_rounded,
+                                                color: Colors.white,
+                                              ),
+                                      )
+                                    : const SizedBox.shrink(),
                               ),
                             ),
-                            const SizedBox(height: 20),
+                            const SizedBox(height: 10),
                             Row(
                               children: [
                                 Consumer(
                                   builder: (_, ref, __) => ref.watch(authProvider).emailSent
-                                      ? SizedBox(
-                                    height: 45,
-                                    width: 100,
-                                    child: BorderlessButton(
-                                      onPressed: () {},
-                                      backgroundColor: Colors.lightBlueAccent.withOpacity(0.5),
-                                      label: const Text('Resend'),
-                                      splashColor: Colors.blue.shade700,
-                                    ),
-                                  )
+                                      ? Row(
+                                          children: [
+                                            SizedBox(
+                                              height: 45,
+                                              child: BorderlessButton(
+                                                onPressed:
+                                                    ref.watch(authProvider).emailSendingState == LoadingState.progress
+                                                        ? () {}
+                                                        : () async => ref.read(authProvider.notifier).sendOtp(context),
+                                                backgroundColor: Colors.lightBlueAccent.withOpacity(0.5),
+                                                label: Row(
+                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  children: [
+                                                    const Text('Resend'),
+                                                    Consumer(
+                                                      builder: (_, ref, __) {
+                                                        return ref.watch(authProvider).emailSendingState ==
+                                                                LoadingState.progress
+                                                            ? Padding(
+                                                                padding: const EdgeInsets.only(left: 15),
+                                                                child: SizedBox(
+                                                                  height: 20,
+                                                                  width: 20,
+                                                                  child: CircularProgressIndicator(
+                                                                    strokeWidth: 2,
+                                                                    color: Colors.blue.shade700,
+                                                                  ),
+                                                                ),
+                                                              )
+                                                            : const SizedBox.shrink();
+                                                      },
+                                                    )
+                                                  ],
+                                                ),
+                                                splashColor: Colors.blue.shade700,
+                                              ),
+                                            ),
+                                            const SizedBox(width: 15),
+                                            Container(
+                                              width: 45,
+                                              height: 45,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                color: Colors.tealAccent.withOpacity(0.5),
+                                              ),
+                                              child: GestureDetector(
+                                                onTap: () => ref.read(authProvider.notifier).clearControllers(),
+                                                child: const Icon(
+                                                  Icons.refresh,
+                                                  color: Colors.teal,
+                                                ),
+                                              ),
+                                            )
+                                          ],
+                                        )
                                       : Container(),
                                 ),
                                 const Spacer(),
-                                SizedBox(
-                                  height: 45,
-                                  width: 100,
-                                  child: BorderlessButton(
-                                    onPressed: () {},
-                                    backgroundColor: Colors.orangeAccent.withOpacity(0.5),
-                                    label: const Text('Login'),
-                                    splashColor: Colors.orange.shade700,
-                                  ),
+                                Consumer(
+                                  builder: (_, ref, __) {
+                                    if (ref.watch(authProvider).emailSent) {
+                                      return SizedBox(
+                                        height: 45,
+                                        child: BorderlessButton(
+                                          onPressed: (ref.watch(authProvider).emailSendingState ==
+                                                      LoadingState.progress ||
+                                                  ref.watch(authProvider).loginProgressState == LoadingState.progress)
+                                              ? () {}
+                                              : () async {
+                                                  if (await ref
+                                                          .read(authProvider.notifier)
+                                                          .verifyOTPAndLogin(context) &&
+                                                      context.mounted) {
+                                                    ref.read(authProvider.notifier).clearControllers();
+                                                    context.go('/');
+                                                  }
+                                                },
+                                          backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+                                          label: Row(
+                                            children: [
+                                              const Text('Submit'),
+                                              Consumer(
+                                                builder: (_, ref, __) {
+                                                  return ref.watch(authProvider).loginProgressState ==
+                                                          LoadingState.progress
+                                                      ? Padding(
+                                                          padding: const EdgeInsets.only(left: 15),
+                                                          child: SizedBox(
+                                                            height: 20,
+                                                            width: 20,
+                                                            child: CircularProgressIndicator(
+                                                              strokeWidth: 2,
+                                                              color: Colors.orange.shade700,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : const SizedBox.shrink();
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          splashColor: Colors.orange.shade700,
+                                        ),
+                                      );
+                                    } else {
+                                      return SizedBox(
+                                        height: 45,
+                                        child: BorderlessButton(
+                                          onPressed: ref.watch(authProvider).emailSendingState == LoadingState.progress
+                                              ? () {}
+                                              : () async {
+                                                  if (_emailFormKey.currentState!.validate()) {
+                                                    ref.read(authProvider.notifier).sendOtp(context);
+                                                  }
+                                                },
+                                          backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+                                          label: Row(
+                                            children: [
+                                              const Text('Login'),
+                                              Consumer(
+                                                builder: (_, ref, __) {
+                                                  return ref.watch(authProvider).emailSendingState ==
+                                                          LoadingState.progress
+                                                      ? Padding(
+                                                          padding: const EdgeInsets.only(left: 15),
+                                                          child: SizedBox(
+                                                            height: 20,
+                                                            width: 20,
+                                                            child: CircularProgressIndicator(
+                                                              strokeWidth: 2,
+                                                              color: Colors.orange.shade700,
+                                                            ),
+                                                          ),
+                                                        )
+                                                      : const SizedBox.shrink();
+                                                },
+                                              )
+                                            ],
+                                          ),
+                                          splashColor: Colors.orange.shade700,
+                                        ),
+                                      );
+                                    }
+                                  },
                                 ),
                               ],
                             ),
