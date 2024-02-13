@@ -77,18 +77,18 @@ class AuthProvider extends StateNotifier<AuthState> {
         _adminRepository = ref.read(adminRepositoryProvider),
         _authService = ref.read(authServiceProvider),
         super(
-          AuthState(
-            emailController: TextEditingController(),
-            passwordController: TextEditingController(),
-            otpDigitControllers: List.generate(4, (index) => TextEditingController()),
-            otpFocusNodes: List.generate(4, (index) => FocusNode()),
-            switchAuthLabel: AuthConstants.studentAuthLabel,
-            emailSent: false,
-            emailSendingState: LoadingState.idle,
-            loginProgressState: LoadingState.idle,
-            fetchUserProgress: LoadingState.idle,
-          ),
-        );
+        AuthState(
+          emailController: TextEditingController(),
+          passwordController: TextEditingController(),
+          otpDigitControllers: List.generate(4, (index) => TextEditingController()),
+          otpFocusNodes: List.generate(4, (index) => FocusNode()),
+          switchAuthLabel: AuthConstants.studentAuthLabel,
+          emailSent: false,
+          emailSendingState: LoadingState.idle,
+          loginProgressState: LoadingState.idle,
+          fetchUserProgress: LoadingState.idle,
+        ),
+      );
 
   final AuthService _authService;
   final AdminRepository _adminRepository;
@@ -102,7 +102,7 @@ class AuthProvider extends StateNotifier<AuthState> {
     state = state.copyWith(emailSendingState: LoadingState.progress);
 
     ({int statusCode, String message}) response =
-        await _authService.sendOtp(state.emailController.text, state.switchAuthLabel.toLowerCase());
+    await _authService.sendOtp(state.emailController.text, state.switchAuthLabel.toLowerCase());
 
     if (context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -125,7 +125,7 @@ class AuthProvider extends StateNotifier<AuthState> {
 
     String otp = state.otpDigitControllers.fold<String>(
       '',
-      (previousValue, element) => previousValue + element.text,
+          (previousValue, element) => previousValue + element.text,
     );
 
     try {
@@ -146,7 +146,7 @@ class AuthProvider extends StateNotifier<AuthState> {
 
     try {
       final response =
-          await _authService.loginFacultyOrStudent(state.emailController.text, state.switchAuthLabel.toLowerCase());
+      await _authService.loginFacultyOrStudent(state.emailController.text, state.switchAuthLabel.toLowerCase());
       await _authService.saveCredentials(response);
       state = state.copyWith(loginProgressState: LoadingState.success);
       return true;
@@ -157,20 +157,44 @@ class AuthProvider extends StateNotifier<AuthState> {
     }
   }
 
-  Future<String> getCurrentUser() async {
+  Future<String> getCurrentUser(BuildContext context) async {
     final Map<String, String> credentials = await _authService.checkCredentials();
     switch (credentials['role']) {
       case 'admin':
-        Admin? admin = await _adminRepository.getAdminById(credentials['_id']!);
-        state = state.copyWith(currentUser: admin, currentUserRole: 'admin');
+        try {
+          Admin? admin = await _adminRepository.getAdminById(credentials['_id']!,credentials['token']!);
+          if (admin == null) {
+            throw Exception("Admin is null");
+          }
+          state = state.copyWith(currentUser: admin, currentUserRole: 'admin');
+        } catch (e) {
+          await _authService.clearCredentials();
+          clearCurrentUser();
+        }
         break;
       case 'student':
-        Student? student = await _studentRepository.getStudentById(credentials['_id']!);
-        state = state.copyWith(currentUser: student, currentUserRole: 'student');
+        try {
+          Student? student = await _studentRepository.getStudentById(credentials['_id']!,credentials['token']!);
+          if (student == null) {
+            throw Exception("Student is null");
+          }
+          state = state.copyWith(currentUser: student, currentUserRole: 'student');
+        } catch (e) {
+          await _authService.clearCredentials();
+          clearCurrentUser();
+        }
         break;
       case 'faculty':
-        Faculty? faculty = await _facultyRepository.getFacultyById(credentials['_id']!);
-        state = state.copyWith(currentUser: faculty, currentUserRole: 'faculty');
+        try {
+          Faculty? faculty = await _facultyRepository.getFacultyById(credentials['_id']!, credentials['token']!);
+          if (faculty == null) {
+            throw Exception("Faculty is null");
+          }
+          state = state.copyWith(currentUser: faculty, currentUserRole: 'faculty');
+        } catch (e) {
+          await _authService.clearCredentials();
+          clearCurrentUser();
+        }
         break;
       default:
         break;
@@ -232,7 +256,7 @@ class AuthProvider extends StateNotifier<AuthState> {
   void initializeOtpFocusNodes() {
     for (TextEditingController i in state.otpDigitControllers) {
       i.addListener(
-        () {
+            () {
           if (i.text.length == 1) {
             final int index = state.otpDigitControllers.indexOf(i);
             if (index != state.otpDigitControllers.length - 1) {
