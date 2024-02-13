@@ -1,7 +1,7 @@
 import express from "express";
-import * as messages from "../constants/messages.js";
-import Student from "../models/student.js";
-import Faculty from "../models/faculty.js";
+import * as messages from "../../constants/messages.js";
+import Student from "../../models/student.js";
+import Faculty from "../../models/faculty.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 

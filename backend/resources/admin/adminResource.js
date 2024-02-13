@@ -1,6 +1,6 @@
 import { Router } from "express";
-import Admin from "../models/admin.js";
-import tokenRequired from "../middlewares/tokenRequired.js";
+import Admin from "../../models/admin.js";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 
 const adminResource = Router();
 

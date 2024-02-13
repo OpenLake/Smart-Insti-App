@@ -1,6 +1,6 @@
 import Skill from "../models/Skill.js";
 import express from "express";
-import * as messages from "../constants/messages.js";
+import * as messages from "../../constants/messages.js";
 const skillRouter = express.Router();
 
 skillRouter.get("/skills", async (req, res) => {

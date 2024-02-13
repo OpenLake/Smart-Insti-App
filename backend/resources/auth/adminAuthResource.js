@@ -1,9 +1,9 @@
 import { Router } from "express";
-import Admin from "../models/admin.js";
+import Admin from "../../models/admin.js";
 import dotenv from "dotenv";
 import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
-import * as messages from "../constants/messages.js";
+import * as messages from "../../constants/messages.js";
 
 const adminAuthRouter = Router();
 dotenv.config();

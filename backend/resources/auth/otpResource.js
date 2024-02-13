@@ -1,13 +1,13 @@
 import express from "express";
 import dotenv from "dotenv";
 import { MongoClient } from "mongodb";
-import * as messages from "../constants/messages.js";
-import transporter from "../config/emailTransporter.js";
+import * as messages from "../../constants/messages.js";
+import transporter from "../../config/emailTransporter.js";
 import {
   getMailOptions,
   dbName,
   otpCollectionName,
-} from "../config/mailOptions.js";
+} from "../../config/mailOptions.js";
 
 const otpRouter = express.Router();
 dotenv.config();

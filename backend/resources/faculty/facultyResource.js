@@ -1,7 +1,7 @@
-import Faculty from "../models/faculty.js";
+import Faculty from "../../models/faculty.js";
 import express from "express";
-import * as messages from "../constants/messages.js";
-import tokenRequired from "../middlewares/tokenRequired.js";
+import * as messages from "../../constants/messages.js";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 
 const facultyRouter = express.Router();
 

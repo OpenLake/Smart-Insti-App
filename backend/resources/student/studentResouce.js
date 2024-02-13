@@ -1,7 +1,7 @@
-import Student from "../models/student.js";
+import Student from "../../models/student.js";
 import express from "express";
-import * as messages from "../constants/messages.js";
-import tokenRequired from "../middlewares/tokenRequired.js";
+import * as messages from "../../constants/messages.js";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 const studentRouter = express.Router();
 
 studentRouter.get("/", async (req, res) => {
@@ -36,7 +36,7 @@ studentRouter.post("/", async (req, res) => {
   }
 });
 
-studentRouter.get("/:id", async (req, res) => {
+studentRouter.get("/:id", tokenRequired, async (req, res) => {
   const studentId = req.params.id;
 
   try {

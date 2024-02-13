@@ -1,6 +1,6 @@
-import Achievement from "../models/achievement.js";
+import Achievement from "../../models/achievement.js";
 import express from "express";
-import * as messages from "../constants/messages.js";
+import * as messages from "../../constants/messages.js";
 const achievementRouter = express.Router();
 
 achievementRouter.get("/achievements", async (req, res) => {
