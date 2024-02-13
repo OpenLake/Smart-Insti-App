@@ -178,18 +178,35 @@ class AuthProvider extends StateNotifier<AuthState> {
     return credentials['role'] ?? '';
   }
 
-  Future<void> verifyAuthTokenExistence(BuildContext context) async {
+  Future<void> verifyAuthTokenExistence(BuildContext context, String targetRole) async {
     tokenCheckProgress = LoadingState.progress;
     final Map<String, String> credentials = await _authService.checkCredentials();
-    if (credentials['token'] == '' && context.mounted) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please login to continue'),
-          duration: Duration(seconds: 2),
-        ),
-      );
-      context.go('/');
+
+    bool isInvalidRole = false;
+    if (credentials['token'] == '') {
+      isInvalidRole = true;
+    } else if (targetRole == AuthConstants.adminAuthLabel.toLowerCase() && state.currentUserRole != targetRole) {
+      isInvalidRole = true;
+    } else if (targetRole == AuthConstants.generalAuthLabel.toLowerCase() &&
+        !(state.currentUserRole == AuthConstants.facultyAuthLabel.toLowerCase() ||
+            state.currentUserRole == AuthConstants.studentAuthLabel.toLowerCase())) {
+      isInvalidRole = true;
     }
+
+    if (isInvalidRole) {
+      await _authService.clearCredentials();
+      clearCurrentUser();
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please login to continue'),
+            duration: Duration(seconds: 2),
+          ),
+        );
+        context.go('/');
+      }
+    }
+
     tokenCheckProgress = LoadingState.success;
   }
 
