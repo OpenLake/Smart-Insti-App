@@ -18,7 +18,7 @@ class Home extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
       }
     });
     return SafeArea(
@@ -75,39 +75,38 @@ class Home extends ConsumerWidget {
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Consumer(
                   builder: (_, ref, ___) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          PopupMenuButton(
-                            itemBuilder: (context) {
-                              return [
-                                PopupMenuItem(
-                                  value: "about",
-                                  child: const Text("About"),
-                                  onTap: () => showAboutDialog(
-                                    context: context,
-                                    children: [
-                                      const Text("Smart Insti App"),
-                                      const Text(
-                                          "This app aims to solve the day-to-day problems that students and faculty face in IIT Bhilai and aims to consolidate a lot of useful applications into single app. This could include features like Time Table, Classroom Vacancy, Lost and Found, Chatrooms on various topics like Internet Issues. It could also have a broadcast feature which would be very useful in emergency situations."),
-                                    ],
-                                  ),
+                    return Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        PopupMenuButton(
+                          itemBuilder: (context) {
+                            return [
+                              PopupMenuItem(
+                                value: "about",
+                                child: const Text("About"),
+                                onTap: () => showAboutDialog(
+                                  context: context,
+                                  children: [
+                                    const Text("Smart Insti App"),
+                                    const Text(
+                                        "This app aims to solve the day-to-day problems that students and faculty face in IIT Bhilai and aims to consolidate a lot of useful applications into single app. This could include features like Time Table, Classroom Vacancy, Lost and Found, Chatrooms on various topics like Internet Issues. It could also have a broadcast feature which would be very useful in emergency situations."),
+                                  ],
                                 ),
-                                PopupMenuItem(
-                                  value: "logout",
-                                  child: const Text("Log Out"),
-                                  onTap: () {
-                                    ref.read(authServiceProvider).clearCredentials();
-                                    ref.read(authProvider.notifier).clearCurrentUser();
-                                    context.go('/');
-                                  },
-                                ),
-                              ];
-                            },
-                          ),
-                        ],
-                      );
-
+                              ),
+                              PopupMenuItem(
+                                value: "logout",
+                                child: const Text("Log Out"),
+                                onTap: () {
+                                  ref.read(authServiceProvider).clearCredentials();
+                                  ref.read(authProvider.notifier).clearCurrentUser();
+                                  context.go('/');
+                                },
+                              ),
+                            ];
+                          },
+                        ),
+                      ],
+                    );
                   },
                 ),
               ),
