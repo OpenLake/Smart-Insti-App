@@ -2,11 +2,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class MaterialOTPBox extends StatelessWidget {
-  const MaterialOTPBox({super.key, required this.controller, required this.focusNode, required this.hintText});
+  const MaterialOTPBox(
+      {super.key, required this.controller, required this.focusNode, required this.hintText, this.onChanged});
 
   final TextEditingController controller;
   final FocusNode focusNode;
   final String hintText;
+  final void Function(String?)? onChanged;
 
   @override
   Widget build(BuildContext context) {
@@ -17,6 +19,7 @@ class MaterialOTPBox extends StatelessWidget {
         showCursor: false,
         controller: controller,
         focusNode: focusNode,
+        onChanged: onChanged,
         buildCounter: (BuildContext context, {int? currentLength, int? maxLength, bool? isFocused}) => null,
         keyboardType: TextInputType.number,
         expands: true,

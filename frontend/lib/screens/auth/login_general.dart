@@ -5,7 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
-import 'package:smart_insti_app/components/otp_box.dart';
+import 'package:smart_insti_app/components/material_otp_box.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
 
@@ -109,16 +109,31 @@ class GeneralLogin extends ConsumerWidget {
                                                 controller: ref.watch(authProvider).otpDigitControllers[1],
                                                 focusNode: ref.watch(authProvider).otpFocusNodes[1],
                                                 hintText: 'T',
+                                                onChanged: (value) {
+                                                  if (value != null && value.isEmpty) {
+                                                    ref.watch(authProvider).otpFocusNodes[0].requestFocus();
+                                                  }
+                                                },
                                               ),
                                               MaterialOTPBox(
                                                 controller: ref.watch(authProvider).otpDigitControllers[2],
                                                 focusNode: ref.watch(authProvider).otpFocusNodes[2],
                                                 hintText: 'P',
+                                                onChanged: (value) {
+                                                  if (value != null && value.isEmpty) {
+                                                    ref.watch(authProvider).otpFocusNodes[1].requestFocus();
+                                                  }
+                                                },
                                               ),
                                               MaterialOTPBox(
                                                 controller: ref.watch(authProvider).otpDigitControllers[3],
                                                 focusNode: ref.watch(authProvider).otpFocusNodes[3],
                                                 hintText: ':)',
+                                                onChanged: (value) {
+                                                  if (value != null && value.isEmpty) {
+                                                    ref.watch(authProvider).otpFocusNodes[2].requestFocus();
+                                                  }
+                                                },
                                               )
                                             ],
                                           ),
@@ -217,7 +232,12 @@ class GeneralLogin extends ConsumerWidget {
                                                 color: Colors.tealAccent.withOpacity(0.5),
                                               ),
                                               child: GestureDetector(
-                                                onTap: () => ref.read(authProvider.notifier).clearControllers(),
+                                                onTap: (ref.watch(authProvider).emailSendingState ==
+                                                            LoadingState.progress ||
+                                                        ref.watch(authProvider).loginProgressState ==
+                                                            LoadingState.progress)
+                                                    ? () {}
+                                                    : () => ref.read(authProvider.notifier).clearControllers(),
                                                 child: const Icon(
                                                   Icons.refresh,
                                                   color: Colors.teal,
