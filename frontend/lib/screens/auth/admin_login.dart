@@ -93,7 +93,6 @@ class AdminLogin extends ConsumerWidget {
                             ),
                             SizedBox(
                               height: 45,
-                              width: 100,
                               child: BorderlessButton(
                                 onPressed: () async {
                                   if (await ref.read(authProvider.notifier).loginAdmin() && context.mounted) {

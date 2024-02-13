@@ -19,7 +19,7 @@ class AddMessMenu extends ConsumerWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.watch(menuProvider.notifier).clear();
-      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
         ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
       }
     });

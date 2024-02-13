@@ -16,7 +16,7 @@ class ViewMessMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.watch(menuProvider.notifier).initMenuView();
-      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
         ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
       }
     });

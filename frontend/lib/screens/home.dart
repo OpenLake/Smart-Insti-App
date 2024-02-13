@@ -17,7 +17,7 @@ class Home extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
         ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
       }
     });
@@ -41,7 +41,7 @@ class Home extends ConsumerWidget {
                     ),
                     Consumer(
                       builder: (_, ref, __) {
-                        if (ref.watch(authProvider).currentUser != null) {
+                        if (ref.read(authProvider).currentUser != null) {
                           return AnimatedTextKit(
                             repeatForever: true,
                             pause: const Duration(milliseconds: 1500),

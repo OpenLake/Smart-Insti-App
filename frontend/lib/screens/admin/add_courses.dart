@@ -16,7 +16,7 @@ class AddCourses extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
         ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
       }
     });

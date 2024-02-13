@@ -15,7 +15,7 @@ class ViewCourses extends ConsumerWidget {
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(coursesProvider.notifier).searchCourses();
-      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
         ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
       }
     });

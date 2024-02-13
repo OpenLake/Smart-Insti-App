@@ -13,7 +13,7 @@ class AdminProfile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
         ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
       }
     });
@@ -22,7 +22,7 @@ class AdminProfile extends ConsumerWidget {
       child: Scaffold(
         body: Consumer(
           builder: (_, ref, __) {
-            if (ref.watch(authProvider).currentUser == null) {
+            if (ref.read(authProvider).currentUser == null) {
               return const Center(child: CircularProgressIndicator());
             } else {
               Admin admin = ref.read(authProvider).currentUser as Admin;

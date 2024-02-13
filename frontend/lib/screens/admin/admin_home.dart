@@ -17,7 +17,7 @@ class AdminHome extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(adminProvider.notifier).buildMenuTiles(context);
-      if (ref.read(authProvider).tokenCheckProgress != LoadingState.progress) {
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
         ref.read(authProvider.notifier).verifyAuthTokenExistence(context);
       }
     });
@@ -43,7 +43,7 @@ class AdminHome extends ConsumerWidget {
                     ),
                     Consumer(
                       builder: (_, ref, __) {
-                        if (ref.watch(authProvider).currentUser != null) {
+                        if (ref.read(authProvider).currentUser != null) {
                           Admin admin = ref.read(authProvider).currentUser as Admin;
                           return AnimatedTextKit(
                             repeatForever: true,

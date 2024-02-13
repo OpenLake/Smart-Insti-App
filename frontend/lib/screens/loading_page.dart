@@ -15,23 +15,23 @@ class LoadingPage extends ConsumerWidget {
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
-        body: FutureBuilder<Map<String, String>>(
-          future: ref.read(authServiceProvider).checkCredentials(),
+        body: FutureBuilder<String>(
+          future: ref.read(authProvider.notifier).getCurrentUser(),
           // future: null,
-          builder: (BuildContext context, AsyncSnapshot<Map<String, String>> snapshot) {
-            if (snapshot.data?['role'] == 'admin') {
-              ref.read(authProvider.notifier).getCurrentUser();
+          builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
+            if (snapshot.data == 'admin') {
+              //  ref.read(authProvider.notifier).getCurrentUser();
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.go('/admin');
               });
               return Container();
-            } else if (snapshot.data?['role'] == 'student' || snapshot.data?['role'] == 'faculty') {
-              ref.read(authProvider.notifier).getCurrentUser();
+            } else if (snapshot.data == 'student' || snapshot.data == 'faculty') {
+              //   ref.read(authProvider.notifier).getCurrentUser();
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.go('/home');
               });
               return Container();
-            } else if (snapshot.data?['role'] == '') {
+            } else if (snapshot.data == '') {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.go('/login');
               });
