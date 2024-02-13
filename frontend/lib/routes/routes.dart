@@ -7,8 +7,7 @@ import 'package:smart_insti_app/screens/admin/manage_rooms.dart';
 import 'package:smart_insti_app/screens/admin/view_students.dart';
 import 'package:smart_insti_app/screens/auth/login_general.dart';
 import 'package:smart_insti_app/screens/loading_page.dart';
-import 'package:smart_insti_app/screens/home.dart';
-import 'package:smart_insti_app/screens/lost_and_found.dart';
+import 'package:smart_insti_app/screens/user/lost_and_found.dart';
 import '../screens/admin/add_faculty.dart';
 import '../screens/admin/add_menu.dart';
 import '../screens/admin/admin_profile.dart';
@@ -16,13 +15,13 @@ import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
 import '../screens/auth/admin_login.dart';
-import '../screens/room_vacancy.dart';
+import '../screens/user/room_vacancy.dart';
 import '../screens/user/user_home.dart';
 import '../screens/user/faculty_profile.dart';
 import '../screens/user/student_profile.dart';
 
 final GoRouter routes = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/user_home',
   routes: [
     GoRoute(
       path: '/',
@@ -86,9 +85,19 @@ final GoRouter routes = GoRouter(
       ],
     ),
     GoRoute(
-      path: '/home',
-      pageBuilder: (context, state) => const MaterialPage(child: Home()),
+      path: '/user_home',
+      pageBuilder: (context, state) => const MaterialPage(child: UserHome()),
       routes: [
+        GoRoute(
+          path: 'faculty_profile',
+          pageBuilder: (context, state) =>
+              const MaterialPage(child: FacultyProfile()),
+        ),
+        GoRoute(
+          path: 'student_profile',
+          pageBuilder: (context, state) =>
+              const MaterialPage(child: StudentProfile()),
+        ),
         GoRoute(
           path: 'room_vacancy',
           pageBuilder: (context, state) =>

@@ -25,7 +25,7 @@ class LoadingPage extends ConsumerWidget {
               return Container();
             } else if (snapshot.data == 'student' || snapshot.data == 'faculty') {
               WidgetsBinding.instance.addPostFrameCallback((_) {
-                context.go('/home');
+                context.go('/user_home');
               });
               return Container();
             } else if (snapshot.data == '') {
