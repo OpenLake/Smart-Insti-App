@@ -82,16 +82,6 @@ class RoomProvider extends StateNotifier<RoomState> {
     }
   }
 
-  int getVacantCount() {
-    int vacantCount = 0;
-    for (Room room in state.roomList) {
-      if (room.vacant) {
-        vacantCount++;
-      }
-    }
-    return vacantCount;
-  }
-
   void addRoom() {
     final newState = state.copyWith(
       roomList: [
@@ -105,6 +95,7 @@ class RoomProvider extends StateNotifier<RoomState> {
   }
 
   Future<void> loadRooms() async {
+    state = state.copyWith(loadingState: LoadingState.progress);
     final rooms = await _api.getRooms();
     final newState = state.copyWith(roomList: rooms, loadingState: LoadingState.success);
     state = newState;

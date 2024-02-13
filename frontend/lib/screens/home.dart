@@ -124,7 +124,7 @@ class Home extends ConsumerWidget {
                   const SizedBox(height: 5),
                   Consumer(
                     builder: (_, ref, __) => Text(
-                      '${ref.read(roomProvider.notifier).getVacantCount()} Vacant',
+                      '${ref.watch(roomProvider).roomList.where((element) => element.vacant).length} Vacant',
                       textAlign: TextAlign.center,
                       style: const TextStyle(fontSize: 14),
                     ),
