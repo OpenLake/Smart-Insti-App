@@ -16,17 +16,14 @@ class LoadingPage extends ConsumerWidget {
       width: 411,
       child: Scaffold(
         body: FutureBuilder<String>(
-          future: ref.read(authProvider.notifier).getCurrentUser(),
-          // future: null,
+          future: ref.read(authProvider.notifier).getCurrentUser(context),
           builder: (BuildContext context, AsyncSnapshot<String> snapshot) {
             if (snapshot.data == 'admin') {
-              //  ref.read(authProvider.notifier).getCurrentUser();
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.go('/admin');
               });
               return Container();
             } else if (snapshot.data == 'student' || snapshot.data == 'faculty') {
-              //   ref.read(authProvider.notifier).getCurrentUser();
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.go('/home');
               });
