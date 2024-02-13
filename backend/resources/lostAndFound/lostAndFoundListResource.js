@@ -1,7 +1,7 @@
 import { Router } from "express";
 import LostAndFoundItem from "../../models/lost_and_found.js";
 import fs from "fs/promises";
-import uploader from "../../database/multerConfig.js";
+import uploader from "../../middlewares/multerConfig.js";
 
 const router = Router();
 
@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 
     // Create an empty array to store items with images
     const itemsWithImages = [];
-
+``
     // Iterate through each item
     for (const item of items) {
       // Check if imagePath is null

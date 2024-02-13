@@ -7,9 +7,12 @@ import 'package:http/http.dart' as http;
 
 import '../../components/snackbar.dart';
 import '../../constants/error_handling.dart';
+import '../../provider/student_provider.dart';
+import '../../provider/user_provider.dart';
 
 class AuthService {
   final storage = FlutterSecureStorage();
+
   final String baseUrl =
       'http://10.0.2.2:3000'; // Replace with your backend API URL
   Future<void> signUpAdmin({
@@ -61,12 +64,11 @@ class AuthService {
           'Content-Type': 'application/json; charset=UTF-8',
         },
       );
-
       httpErrorHandle(
         response: res,
         context: context,
         onSuccess: () async {
-          context.go('/admin_home');
+          context.go('/admin_login/admin_home');
         },
       );
     } catch (e) {
@@ -115,7 +117,6 @@ class AuthService {
       if (response.statusCode == 200) {
         final Map<String, dynamic> data = jsonDecode(response.body);
         final String jwt = data['token'];
-        loginUser(email, jwt);
         return true;
       } else {
         return false;

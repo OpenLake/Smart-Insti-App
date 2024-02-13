@@ -113,7 +113,7 @@ class _SignInState extends State<SignIn> {
 
                   if (isVerified) {
                     // Navigate to the admin home page
-                    context.go('/admin_home');
+                    context.go('/admin_login/admin_home');
                   } else {
                     showSnackBar(
                       context,
