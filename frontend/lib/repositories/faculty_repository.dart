@@ -15,7 +15,8 @@ class FacultyRepository {
 
   final Logger _logger = Logger();
 
-  Future<Faculty?> getFacultyById(String id) async {
+  Future<Faculty?> getFacultyById(String id, String token) async {
+    _client.options.headers['authorization'] = token;
     try {
       final response = await _client.get('/faculty/$id');
       return Faculty.fromJson(response.data);

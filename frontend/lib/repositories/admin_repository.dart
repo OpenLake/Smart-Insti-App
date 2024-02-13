@@ -10,12 +10,16 @@ class AdminRepository {
   final _client = Dio(
     BaseOptions(
       baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      validateStatus: (status) {
+        return status! < 500;
+      },
     ),
   );
 
   final Logger _logger = Logger();
 
-  Future<Admin?> getAdminById(String id) async {
+  Future<Admin?> getAdminById(String id, String token) async {
+    _client.options.headers['authorization'] = token;
     try {
       final response = await _client.get('/admin/$id');
       return Admin.fromJson(response.data);
