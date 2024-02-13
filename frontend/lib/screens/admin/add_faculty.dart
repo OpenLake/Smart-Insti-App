@@ -7,6 +7,7 @@ import 'package:smart_insti_app/provider/courses_provider.dart';
 import '../../components/text_divider.dart';
 import '../../constants/constants.dart';
 import '../../models/course.dart';
+import '../../provider/auth_provider.dart';
 import '../../provider/faculty_provider.dart';
 
 class AddFaculty extends ConsumerWidget {
@@ -16,6 +17,11 @@ class AddFaculty extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      }
+    });
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(

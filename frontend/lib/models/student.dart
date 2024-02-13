@@ -5,7 +5,7 @@ class Student {
   final String id;
   final String name;
   final String email;
-  final String? rollNumber;
+  final String rollNumber;
   final String? about;
   final String? profilePicURI;
   final String? branch;
@@ -18,7 +18,7 @@ class Student {
     required this.id,
     required this.name,
     required this.email,
-    this.rollNumber,
+    required this.rollNumber,
     this.about,
     this.profilePicURI,
     this.branch,
@@ -38,13 +38,15 @@ class Student {
       profilePicURI: json['profilePicURI'],
       branch: json['branch'],
       graduationYear: json['graduationYear'],
-      skills: (json['skills'] as List<dynamic>)
-          .map((item) => Skill.fromJson(item as Map<String, dynamic>))
-          .toList(),
-      achievements: (json['achievements'] as List<dynamic>)
-          .map((item) => Achievement.fromJson(item as Map<String, dynamic>))
-          .toList(),
-      roles: (json['roles'] as List?)?.map((item) => item as String).toList(),
+      skills: json['skills'] != null
+          ? (json['skills'] as List<dynamic>).map((item) => Skill.fromJson(item as Map<String, dynamic>)).toList()
+          : [],
+      achievements: json['achievements'] != null
+          ? (json['achievements'] as List<dynamic>)
+              .map((item) => Achievement.fromJson(item as Map<String, dynamic>))
+              .toList()
+          : null,
+      roles: json['roles'] != null ? (json['roles'] as List?)?.map((item) => item as String).toList() : [],
     );
   }
 
@@ -58,9 +60,8 @@ class Student {
       'profilePicURI': profilePicURI,
       'branch': branch,
       'graduationYear': graduationYear,
-      'skills': skills!.map((skill) => skill.toJson()).toList(),
-      'achievements':
-          achievements!.map((achievement) => achievement.toJson()).toList(),
+      'skills': skills != null ? skills!.map((skill) => skill.toJson()).toList() : [],
+      'achievements': achievements != null ? achievements!.map((achievement) => achievement.toJson()).toList() : [],
       'roles': roles,
     };
   }

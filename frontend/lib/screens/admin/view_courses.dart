@@ -3,16 +3,23 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_scaled_box.dart';
 import 'package:smart_insti_app/provider/courses_provider.dart';
+import '../../constants/constants.dart';
 import '../../models/course.dart';
+import '../../provider/auth_provider.dart';
 
 class ViewCourses extends ConsumerWidget {
   const ViewCourses({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    // WidgetsBinding.instance.addPostFrameCallback((_) {
-    //   ref.read(coursesProvider.notifier).searchCourses();
-    // });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(coursesProvider.notifier).searchCourses();
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+          LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.adminAuthLabel.toLowerCase());
+      }
+    });
 
     return ResponsiveScaledBox(
       width: 411,

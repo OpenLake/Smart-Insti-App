@@ -9,7 +9,9 @@ class MaterialTextFormField extends StatelessWidget {
       this.onChanged,
       this.onSubmitted,
       this.contentPadding,
-      this.hintColor});
+      this.hintColor,
+      this.enabled,
+      this.controllerLessValue});
 
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -18,11 +20,18 @@ class MaterialTextFormField extends StatelessWidget {
   final String hintText;
   final Color? hintColor;
   final EdgeInsets? contentPadding;
+  final bool? enabled;
+  final String? controllerLessValue;
 
   @override
   Widget build(BuildContext context) {
+    TextEditingController substituteController = TextEditingController();
+    if (controllerLessValue != null) {
+      substituteController.text = controllerLessValue!;
+    }
     return TextFormField(
-      controller: controller,
+      enabled: enabled ?? true,
+      controller: controller ?? substituteController,
       maxLines: 1,
       onChanged: (value) => onChanged != null ? onChanged!(value) : null,
       validator: (value) => validator != null ? validator!(value) : null,

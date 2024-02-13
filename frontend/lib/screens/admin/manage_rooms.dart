@@ -7,8 +7,9 @@ import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/collapsing_app_bar.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/room_provider.dart';
-
 import '../../components/text_divider.dart';
+import '../../constants/constants.dart';
+import '../../provider/auth_provider.dart';
 
 class ManageRooms extends ConsumerWidget {
   const ManageRooms({super.key});
@@ -17,6 +18,9 @@ class ManageRooms extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(roomProvider.notifier).buildRoomTiles(context);
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      }
     });
 
     return ResponsiveScaledBox(
