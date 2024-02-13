@@ -12,6 +12,9 @@ class StudentRepository {
   final _client = Dio(
     BaseOptions(
       baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      validateStatus: (status) {
+        return status! < 500;
+      },
     ),
   );
 
