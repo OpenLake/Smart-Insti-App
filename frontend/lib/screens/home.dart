@@ -118,7 +118,7 @@ class Home extends ConsumerWidget {
             children: [
               MenuTile(
                 title: 'Room\nVacancy',
-                onTap: () => context.push('/home/classroom_vacancy'),
+                onTap: () => context.push('/home/room_vacancy'),
                 body: [
                   const SizedBox(height: 5),
                   Consumer(
