@@ -45,13 +45,8 @@ class UserState {
 }
 
 class UserProvider extends StateNotifier<UserState> {
-  final StudentRepository _studentApi;
-  final FacultyRepository _facultyApi;
-
   UserProvider(Ref ref)
-      : _studentApi = ref.read(studentRepositoryProvider),
-        _facultyApi = ref.read(facultyRepositoryProvider),
-        super(
+      : super(
           UserState(
             student: Student(
               id: '',
@@ -86,60 +81,6 @@ class UserProvider extends StateNotifier<UserState> {
   get menuTiles => state.menuTiles;
 
   final Logger _logger = Logger();
-
-  Future<void> getStudent(String email) async {
-    try {
-      final student = await _studentApi.getStudent(email);
-      state = state.copyWith(student: student);
-    } catch (e) {
-      Logger().e(e);
-    }
-  }
-
-  Future<void> postStudent(String email) async {
-    try {
-      final newStudent = await _studentApi.addStudent(email);
-      state = state.copyWith(student: newStudent);
-    } catch (e) {
-      Logger().e(e);
-    }
-  }
-
-  Future<void> updateStudent(Student student) async {
-    try {
-      final updatedStudent = await _studentApi.updateStudent(student);
-      state = state.copyWith(student: updatedStudent);
-    } catch (e) {
-      Logger().e(e);
-    }
-  }
-
-  Future<void> getFaculty(String email) async {
-    try {
-      final faculty = await _facultyApi.getFaculty(email);
-      state = state.copyWith(faculty: faculty);
-    } catch (e) {
-      Logger().e(e);
-    }
-  }
-
-  Future<void> postFaculty(String email) async {
-    try {
-      final newFaculty = await _facultyApi.addFaculty(email);
-      state = state.copyWith(faculty: newFaculty);
-    } catch (e) {
-      Logger().e(e);
-    }
-  }
-
-  Future<void> updateFaculty(Faculty faculty) async {
-    try {
-      final updatedFaculty = await _facultyApi.updateFaculty(faculty);
-      state = state.copyWith(faculty: updatedFaculty);
-    } catch (e) {
-      Logger().e(e);
-    }
-  }
 
   void buildMenuTiles(BuildContext context) {
     List<MenuTile> menuTiles = [
