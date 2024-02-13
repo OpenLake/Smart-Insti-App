@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
-import 'package:smart_insti_app/provider/courses_provider.dart';
 import '../../components/choice_selector.dart';
 import '../../components/text_divider.dart';
 import '../../constants/constants.dart';
+import '../../provider/courses_provider.dart';
 
 class AddCourses extends ConsumerWidget {
   AddCourses({super.key});

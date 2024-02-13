@@ -47,8 +47,12 @@ class AddFaculty extends ConsumerWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () => ref.read(facultyProvider.notifier).pickSpreadsheet(),
-                        style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                        onPressed: () => ref
+                            .read(facultyProvider.notifier)
+                            .pickSpreadsheet(),
+                        style: ButtonStyle(
+                            minimumSize:
+                                MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
                     ],
@@ -73,15 +77,20 @@ class AddFaculty extends ConsumerWidget {
                     child: Column(
                       children: [
                         MaterialTextFormField(
-                          controller: ref.read(facultyProvider.notifier).facultyNameController,
+                          controller: ref
+                              .read(facultyProvider.notifier)
+                              .facultyNameController,
                           validator: (value) => Validators.nameValidator(value),
                           hintText: 'Faculty Name',
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         MaterialTextFormField(
-                          controller: ref.read(facultyProvider.notifier).facultyEmailController,
-                          validator: (value) => Validators.emailValidator(value),
+                          controller: ref
+                              .read(facultyProvider.notifier)
+                              .facultyEmailController,
+                          validator: (value) =>
+                              Validators.emailValidator(value),
                           hintText: 'Faculty Mail',
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
@@ -95,11 +104,15 @@ class AddFaculty extends ConsumerWidget {
                           onChanged: (value) {
                             List<Course> selectedCourses = [];
                             for (int i = 0; i < value.length; i++) {
-                              selectedCourses.add(ref.read(coursesProvider).courses[value[i]]);
+                              selectedCourses.add(
+                                  ref.read(coursesProvider).courses[value[i]]);
                             }
-                            ref.read(facultyProvider.notifier).updateSelectedCourses(selectedCourses);
+                            ref
+                                .read(facultyProvider.notifier)
+                                .updateSelectedCourses(selectedCourses);
                           },
-                          fieldPresentationFn: (Widget fieldWidget, {bool? selectionIsValid}) {
+                          fieldPresentationFn: (Widget fieldWidget,
+                              {bool? selectionIsValid}) {
                             return InputDecorator(
                               decoration: InputDecoration(
                                 hintStyle: TextStyle(
@@ -107,13 +120,15 @@ class AddFaculty extends ConsumerWidget {
                                   fontSize: 15,
                                   fontFamily: "RobotoFlex",
                                 ),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
                                 isDense: true,
                                 filled: true,
                                 fillColor: Colors.tealAccent.withOpacity(0.4),
                                 border: const OutlineInputBorder(
                                   borderSide: BorderSide.none,
-                                  borderRadius: BorderRadius.all(Radius.circular(15)),
+                                  borderRadius:
+                                      BorderRadius.all(Radius.circular(15)),
                                 ),
                               ),
                               child: fieldWidget,
@@ -121,17 +136,19 @@ class AddFaculty extends ConsumerWidget {
                           },
                           items: [
                             if (ref.read(coursesProvider).courses.isNotEmpty)
-                              for (Course course in ref.read(coursesProvider).courses)
+                              for (Course course
+                                  in ref.read(coursesProvider).courses)
                                 DropdownMenuItem(
                                   value: course.courseCode,
-                                  child: Text(course.courseName),
+                                  child: Text(course.courseName!),
                                 ),
                           ],
                           hint: 'Select Courses',
                           dialogBox: false,
                           isExpanded: true,
                           displayClearIcon: false,
-                          menuConstraints: BoxConstraints.tight(const Size.fromHeight(350)),
+                          menuConstraints:
+                              BoxConstraints.tight(const Size.fromHeight(350)),
                           validator: null,
                           menuBackgroundColor: Colors.tealAccent.shade100,
                         ),
@@ -151,7 +168,9 @@ class AddFaculty extends ConsumerWidget {
                         );
                       }
                     },
-                    style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                    style: ButtonStyle(
+                        minimumSize:
+                            MaterialStateProperty.all(const Size(200, 60))),
                     child: const Text("Add Faculty"),
                   ),
                 ),

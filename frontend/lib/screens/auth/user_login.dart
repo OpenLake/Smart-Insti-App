@@ -1,58 +1,26 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:slide_switcher/slide_switcher.dart';
+import 'package:smart_insti_app/provider/otp_provider.dart';
+
 import '../../components/otp_box.dart';
 import '../../components/snackbar.dart';
+
+import '../../provider/student_provider.dart';
+import '../../provider/user_provider.dart';
 import '../../services/auth/auth_service.dart';
 
-class UserLogin extends StatefulWidget {
-  @override
-  _UserLoginState createState() => _UserLoginState();
-}
-
-class _UserLoginState extends State<UserLogin> {
-  bool showOTPFields = false;
-  final emailRegex = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final otpController1 = TextEditingController();
-  final otpController2 = TextEditingController();
-  final otpController3 = TextEditingController();
-  final otpController4 = TextEditingController();
-
-  final focusNode1 = FocusNode();
-  final focusNode2 = FocusNode();
-  final focusNode3 = FocusNode();
-  final focusNode4 = FocusNode();
-
-  final authService = AuthService(); // Create an instance of AuthService
+class UserLogin extends ConsumerWidget {
+  const UserLogin({super.key});
 
   @override
-  void initState() {
-    super.initState();
+  Widget build(BuildContext context, WidgetRef ref) {
+    final emailRegex = RegExp(r'^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+');
 
-    // When the text in the first OTPBox changes, request focus for the second OTPBox
-    otpController1.addListener(() {
-      if (otpController1.text.length >= 1) {
-        FocusScope.of(context).requestFocus(focusNode2);
-      }
-    });
+    final authService = AuthService();
 
-    otpController2.addListener(() {
-      if (otpController2.text.length >= 1) {
-        FocusScope.of(context).requestFocus(focusNode3);
-      }
-    });
-
-    otpController3.addListener(() {
-      if (otpController3.text.length >= 1) {
-        FocusScope.of(context).requestFocus(focusNode4);
-      }
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -60,8 +28,8 @@ class _UserLoginState extends State<UserLogin> {
             onTap: () {
               context.go('/admin_login');
             },
-            child: Padding(
-              padding: const EdgeInsets.only(right: 16.0),
+            child: const Padding(
+              padding: EdgeInsets.only(right: 16.0),
               child: Text(
                 'Admin',
                 style: TextStyle(color: Colors.teal),
@@ -69,11 +37,11 @@ class _UserLoginState extends State<UserLogin> {
             ),
           ),
         ],
-        title: Text('Login'),
+        title: const Text('Login'),
       ),
       body: SafeArea(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
+          padding: const EdgeInsets.all(16.0),
           child: Center(
             child: SingleChildScrollView(
               child: Column(
@@ -87,23 +55,25 @@ class _UserLoginState extends State<UserLogin> {
                       fontWeight: FontWeight.w500,
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   TextField(
-                    controller: emailController,
-                    decoration: InputDecoration(
+                    controller: ref.read(otpProvider).emailController,
+                    decoration: const InputDecoration(
                       labelText: 'Email',
                     ),
                   ),
-                  SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
                   ElevatedButton(
                     onPressed: () {
-                      if (emailRegex.hasMatch(emailController.text)) {
-                        setState(() {
-                          showOTPFields = true;
-                        });
+                      if (emailRegex.hasMatch(
+                          ref.read(otpProvider).emailController.text)) {
+                        ref.read(otpProvider.notifier).setShowOTPFields(true);
+                        bool isShowOTPFields =
+                            ref.read(otpProvider).showOTPFields;
+                        print('showOTPFields is $isShowOTPFields');
                         authService.sendOTP(
                           context: context,
-                          email: emailController.text,
+                          email: ref.read(otpProvider).emailController.text,
                         );
                       } else {
                         showSnackBar(
@@ -112,45 +82,89 @@ class _UserLoginState extends State<UserLogin> {
                         );
                       }
                     },
-                    child: Text('Send OTP'),
+                    child: const Text('Send OTP'),
                   ),
-                  SizedBox(height: 16.0),
-                  if (showOTPFields) ...[
-                    SizedBox(height: 16.0),
+                  const SizedBox(height: 16.0),
+                  if (ref.watch(otpProvider).showOTPFields) ...[
+                    const SizedBox(height: 16.0),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [
                         OTPBox(
-                            controller: otpController1, focusNode: focusNode1),
+                          controller: ref.read(otpProvider).otpController1,
+                          focusNode: ref.read(otpProvider).focusNode1,
+                          nextFocusNode: ref.read(otpProvider).focusNode2,
+                        ),
                         OTPBox(
-                            controller: otpController2, focusNode: focusNode2),
+                          controller: ref.read(otpProvider).otpController2,
+                          focusNode: ref.read(otpProvider).focusNode2,
+                          nextFocusNode: ref.read(otpProvider).focusNode3,
+                        ),
                         OTPBox(
-                            controller: otpController3, focusNode: focusNode3),
+                          controller: ref.read(otpProvider).otpController3,
+                          focusNode: ref.read(otpProvider).focusNode3,
+                          nextFocusNode: ref.read(otpProvider).focusNode4,
+                        ),
                         OTPBox(
-                            controller: otpController4, focusNode: focusNode4),
+                          controller: ref.read(otpProvider).otpController4,
+                          focusNode: ref.read(otpProvider).focusNode4,
+                        ),
                       ],
                     ),
-                    ElevatedButton(
-                      onPressed: () async {
-                        final otp = otpController1.text +
-                            otpController2.text +
-                            otpController3.text +
-                            otpController4.text;
-                        final isVerified = await authService.verifyOTP(
-                            emailController.text, otp);
-
-                        if (isVerified) {
-                          context.go('/admin_home');
-                        } else {
-                          showSnackBar(
-                            context,
-                            'Incorrect OTP',
+                    const SizedBox(height: 16.0),
+                    Container(
+                      width: 200,
+                      child: DropdownButton<String>(
+                        value: ref.read(otpProvider).dropdownValue,
+                        icon: const Icon(Icons.arrow_downward),
+                        iconSize: 24,
+                        elevation: 16,
+                        style: const TextStyle(color: Colors.deepPurple),
+                        underline: Container(
+                          height: 2,
+                          color: Colors.deepPurpleAccent,
+                        ),
+                        onChanged: (String? newValue) {
+                          ref
+                              .read(otpProvider.notifier)
+                              .setDropdownValue(newValue!);
+                        },
+                        items: <String>['student', 'faculty']
+                            .map<DropdownMenuItem<String>>((String value) {
+                          return DropdownMenuItem<String>(
+                            value: value,
+                            child: Text(value),
                           );
-                        }
-                      },
-                      child: Text('Verify OTP'),
+                        }).toList(),
+                      ),
                     ),
-                  ]
+                    ElevatedButton(
+                        child: const Text('Verify OTP'),
+                        onPressed: () async {
+                          final otp =
+                              ref.read(otpProvider).otpController1.text +
+                                  ref.read(otpProvider).otpController2.text +
+                                  ref.read(otpProvider).otpController3.text +
+                                  ref.read(otpProvider).otpController4.text;
+                          final isVerified = await authService.verifyOTP(
+                              ref.read(otpProvider).emailController.text, otp);
+                          if (isVerified &&
+                              ref.read(otpProvider).dropdownValue ==
+                                  'student') {
+                            ref.read(userProvider.notifier).postStudent(
+                                ref.read(otpProvider).emailController.text);
+                            context.go('/user_home');
+                          } else if (isVerified &&
+                              ref.read(otpProvider).dropdownValue ==
+                                  'faculty') {
+                            ref.read(userProvider.notifier).postFaculty(
+                                ref.read(otpProvider).emailController.text);
+                            context.go('/user_home');
+                          } else {
+                            showSnackBar(context, 'Incorrect OTP');
+                          }
+                        }),
+                  ],
                 ],
               ),
             ),

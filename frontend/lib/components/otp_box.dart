@@ -3,7 +3,12 @@ import 'package:flutter/material.dart';
 class OTPBox extends StatelessWidget {
   final TextEditingController controller;
   final FocusNode focusNode;
-  OTPBox({required this.controller, required this.focusNode});
+  final FocusNode? nextFocusNode;
+  OTPBox({
+    required this.controller,
+    required this.focusNode,
+    this.nextFocusNode,
+  });
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -16,6 +21,11 @@ class OTPBox extends StatelessWidget {
       child: TextField(
         controller: controller,
         focusNode: focusNode,
+        onChanged: (value) {
+          if (value.length >= 1) {
+            nextFocusNode?.requestFocus();
+          }
+        },
         keyboardType: TextInputType.number,
         maxLength: 1,
         textAlign: TextAlign.center,
