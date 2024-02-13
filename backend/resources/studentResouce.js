@@ -1,6 +1,7 @@
-import Student from "../models/Student.js";
+import Student from "../models/student.js";
 import express from "express";
-import * as errorMessages from "../constants/errorMessages.js";
+import * as messages from "../constants/messages.js";
+import tokenRequired from "../middlewares/tokenRequired.js";
 const studentRouter = express.Router();
 
 studentRouter.get("/", async (req, res) => {
@@ -10,7 +11,7 @@ studentRouter.get("/", async (req, res) => {
       .populate("achievements");
     res.json(students);
   } catch (err) {
-    res.status(500).json({ message: errorMessages.internalServerError });
+    res.status(500).json({ message: messages.internalServerError });
   }
 });
 
@@ -23,15 +24,15 @@ studentRouter.post("/", async (req, res) => {
     if (!existingUser) {
       const newUser = new Student({ email });
       await newUser.save();
-      res.send({ message: errorMessages.userCreated, user: newUser });
+      res.send({ message: messages.userCreated, user: newUser });
     } else {
       res.send({
-        message: errorMessages.userAlreadyExists,
+        message: messages.userAlreadyExists,
         user: existingUser,
       });
     }
   } catch (error) {
-    res.status(500).json({ message: errorMessages.internalServerError });
+    res.status(500).json({ message: messages.internalServerError });
   }
 });
 
@@ -39,17 +40,15 @@ studentRouter.get("/:id", async (req, res) => {
   const studentId = req.params.id;
 
   try {
-    const studentDetails = await Student.findById(studentId)
-      .populate("skills")
-      .populate("achievements");
+    const student = await Student.findById(studentId);
 
-    if (!studentDetails) {
-      return res.status(404).json({ message: errorMessages.studentNotFound });
+    if (!student) {
+      return res.status(404).json({ message: messages.userNotFound });
     }
 
-    res.json(studentDetails);
+    res.json(student);
   } catch (err) {
-    res.status(500).json({ message: errorMessages.internalServerError });
+    res.status(500).json({ message: messages.internalServerError });
   }
 });
 
@@ -67,7 +66,7 @@ studentRouter.put("/:id", async (req, res) => {
       .populate("achievements");
     res.json(updatedStudent);
   } catch (error) {
-    res.status(500).json({ message: errorMessages.internalServerError });
+    res.status(500).json({ message: messages.internalServerError });
   }
 });
 
@@ -80,7 +79,7 @@ studentRouter.delete("/:id", async (req, res) => {
       .populate("achievements");
     res.json(deletedStudent);
   } catch (error) {
-    res.status(500).json({ message: errorMessages.internalServerError });
+    res.status(500).json({ message: messages.internalServerError });
   }
 });
 
