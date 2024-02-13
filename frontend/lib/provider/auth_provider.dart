@@ -25,7 +25,7 @@ class AuthState {
   final bool emailSent;
   final LoadingState emailSendingState;
   final LoadingState loginProgressState;
-  final LoadingState tokenCheckProgress;
+  final LoadingState fetchUserProgress;
 
   AuthState({
     this.currentUser,
@@ -38,7 +38,7 @@ class AuthState {
     required this.emailSent,
     required this.emailSendingState,
     required this.loginProgressState,
-    required this.tokenCheckProgress,
+    required this.fetchUserProgress,
   });
 
   AuthState copyWith({
@@ -52,7 +52,7 @@ class AuthState {
     bool? emailSent,
     LoadingState? emailSendingState,
     LoadingState? loginProgressState,
-    LoadingState? tokenCheckProgress,
+    LoadingState? fetchUserProgress,
   }) {
     return AuthState(
       currentUser: currentUser,
@@ -65,7 +65,7 @@ class AuthState {
       emailSent: emailSent ?? this.emailSent,
       emailSendingState: emailSendingState ?? this.emailSendingState,
       loginProgressState: loginProgressState ?? this.loginProgressState,
-      tokenCheckProgress: tokenCheckProgress ?? this.tokenCheckProgress,
+      fetchUserProgress: fetchUserProgress ?? this.fetchUserProgress,
     );
   }
 }
@@ -86,7 +86,7 @@ class AuthProvider extends StateNotifier<AuthState> {
             emailSent: false,
             emailSendingState: LoadingState.idle,
             loginProgressState: LoadingState.idle,
-            tokenCheckProgress: LoadingState.idle,
+            fetchUserProgress: LoadingState.idle,
           ),
         );
 
@@ -94,6 +94,7 @@ class AuthProvider extends StateNotifier<AuthState> {
   final AdminRepository _adminRepository;
   final StudentRepository _studentRepository;
   final FacultyRepository _facultyRepository;
+  LoadingState tokenCheckProgress = LoadingState.idle;
   final _logger = Logger();
 
   Future<void> sendOtp(BuildContext context) async {
@@ -156,7 +157,7 @@ class AuthProvider extends StateNotifier<AuthState> {
     }
   }
 
-  void getCurrentUser() async {
+  Future<String> getCurrentUser() async {
     final Map<String, String> credentials = await _authService.checkCredentials();
     switch (credentials['role']) {
       case 'admin':
@@ -174,10 +175,11 @@ class AuthProvider extends StateNotifier<AuthState> {
       default:
         break;
     }
+    return credentials['role'] ?? '';
   }
 
-  void verifyAuthTokenExistence(BuildContext context) async {
-    state = state.copyWith(tokenCheckProgress: LoadingState.progress);
+  Future<void> verifyAuthTokenExistence(BuildContext context) async {
+    tokenCheckProgress = LoadingState.progress;
     final Map<String, String> credentials = await _authService.checkCredentials();
     if (credentials['token'] == '' && context.mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
@@ -188,7 +190,7 @@ class AuthProvider extends StateNotifier<AuthState> {
       );
       context.go('/');
     }
-    state = state.copyWith(tokenCheckProgress: LoadingState.success);
+    tokenCheckProgress = LoadingState.success;
   }
 
   void clearCurrentUser() {
