@@ -40,7 +40,6 @@ class UserHome extends ConsumerWidget {
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 45,
-                        fontFamily: "RobotoFlex",
                       ),
                     ),
                     Consumer(
@@ -62,7 +61,7 @@ class UserHome extends ConsumerWidget {
                                     ? (ref.read(authProvider).currentUser as Student).name.split(" ").first
                                     : (ref.read(authProvider).currentUser as Faculty).name.split(" ").first,
                                 textStyle: const TextStyle(
-                                    fontSize: 45, fontFamily: "RobotoFlex", overflow: TextOverflow.ellipsis),
+                                    fontSize: 45, overflow: TextOverflow.ellipsis),
                                 speed: const Duration(milliseconds: 300),
                               ),
                             ],

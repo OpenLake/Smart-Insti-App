@@ -51,13 +51,12 @@ class AdminHome extends ConsumerWidget {
                             animatedTexts: [
                               TyperAnimatedText(
                                 'Admin',
-                                textStyle: const TextStyle(fontSize: 45, fontFamily: "RobotoFlex"),
+                                textStyle: const TextStyle(fontSize: 45),
                                 speed: const Duration(milliseconds: 300),
                               ),
                               TyperAnimatedText(
                                 admin.name,
-                                textStyle: const TextStyle(
-                                    fontSize: 45, fontFamily: "RobotoFlex", overflow: TextOverflow.ellipsis),
+                                textStyle: const TextStyle(fontSize: 45, overflow: TextOverflow.ellipsis),
                                 speed: const Duration(milliseconds: 300),
                               ),
                             ],
