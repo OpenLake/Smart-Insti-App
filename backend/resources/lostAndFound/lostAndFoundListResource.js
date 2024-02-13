@@ -13,7 +13,7 @@ router.get("/", async (req, res) => {
 
     // Create an empty array to store items with images
     const itemsWithImages = [];
-
+``
     // Iterate through each item
     for (const item of items) {
       // Check if imagePath is null

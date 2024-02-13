@@ -72,7 +72,8 @@ class AuthService {
     }
   }
 
-  Future<({int statusCode, String message})> sendOtp(String email, String loginForRole) async {
+  Future<({int statusCode, String message})> sendOtp(
+      String email, String loginForRole) async {
     try {
       final response = await _client.post(
         '/otp/send-otp',
@@ -82,14 +83,18 @@ class AuthService {
         },
       );
       _logger.i(response.data);
-      return (statusCode: response.statusCode!, message: response.data['message'] as String);
+      return (
+        statusCode: response.statusCode!,
+        message: response.data['message'] as String
+      );
     } catch (e) {
       _logger.e(e);
       return (statusCode: 500, message: 'Internal Server Error');
     }
   }
 
-  Future<({int statusCode, String message})> verifyOtp(String email, String otp) async {
+  Future<({int statusCode, String message})> verifyOtp(
+      String email, String otp) async {
     try {
       final response = await _client.post(
         '/otp/verify-otp',
@@ -99,7 +104,10 @@ class AuthService {
         },
       );
       _logger.i(response.data);
-      return (statusCode: response.statusCode!, message: response.data['message'] as String);
+      return (
+        statusCode: response.statusCode!,
+        message: response.data['message'] as String
+      );
     } catch (e) {
       _logger.e(e);
       return (statusCode: 500, message: 'Internal Server Error');
@@ -123,7 +131,8 @@ class AuthService {
     }
   }
 
-  Future<Map<String, dynamic>> loginFacultyOrStudent(String email, String loginForRole) async {
+  Future<Map<String, dynamic>> loginFacultyOrStudent(
+      String email, String loginForRole) async {
     try {
       final response = await _client.post(
         '/general-auth/login',

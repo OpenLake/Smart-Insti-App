@@ -40,7 +40,8 @@ class AdminLogin extends ConsumerWidget {
                         ],
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,7 +53,8 @@ class AdminLogin extends ConsumerWidget {
                                   child: Consumer(
                                     builder: (_, ref, __) => const Text(
                                       'Admin Login',
-                                      style: TextStyle(fontSize: 30, fontFamily: 'Jost'),
+                                      style: TextStyle(
+                                          fontSize: 30, fontFamily: 'Jost'),
                                     ),
                                   ),
                                 ),
@@ -63,7 +65,8 @@ class AdminLogin extends ConsumerWidget {
                                     width: 95,
                                     child: BorderlessButton(
                                       onPressed: () => context.pop(),
-                                      backgroundColor: Colors.tealAccent.withOpacity(0.5),
+                                      backgroundColor:
+                                          Colors.tealAccent.withOpacity(0.5),
                                       label: const Text('Back'),
                                       splashColor: Colors.teal.shade700,
                                     ),
@@ -77,15 +80,20 @@ class AdminLogin extends ConsumerWidget {
                                 children: [
                                   const SizedBox(height: 20),
                                   MaterialTextFormField(
-                                    controller: ref.read(authProvider).emailController,
+                                    controller:
+                                        ref.read(authProvider).emailController,
                                     hintText: "Email",
-                                    validator: (value) => Validators.emailValidator(value),
+                                    validator: (value) =>
+                                        Validators.emailValidator(value),
                                   ),
                                   const SizedBox(height: 20),
                                   MaterialTextFormField(
-                                    controller: ref.read(authProvider).passwordController,
+                                    controller: ref
+                                        .read(authProvider)
+                                        .passwordController,
                                     hintText: "Password",
-                                    validator: (value) => Validators.nonEmptyValidator(value),
+                                    validator: (value) =>
+                                        Validators.nonEmptyValidator(value),
                                   ),
                                   const SizedBox(height: 20),
                                 ],
@@ -95,29 +103,41 @@ class AdminLogin extends ConsumerWidget {
                               height: 45,
                               child: BorderlessButton(
                                 onPressed: () async {
-                                  if (await ref.read(authProvider.notifier).loginAdmin() && context.mounted) {
-                                    ref.read(authProvider.notifier).clearControllers();
+                                  if (await ref
+                                          .read(authProvider.notifier)
+                                          .loginAdmin() &&
+                                      context.mounted) {
+                                    ref
+                                        .read(authProvider.notifier)
+                                        .clearControllers();
                                     context.go('/');
                                   }
                                 },
-                                backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+                                backgroundColor:
+                                    Colors.orangeAccent.withOpacity(0.5),
                                 label: Row(
                                   children: [
                                     const Text('Login'),
                                     Consumer(
                                       builder: (_, ref, __) {
-                                        return ref.watch(authProvider).loginProgressState == LoadingState.progress
+                                        return ref
+                                                    .watch(authProvider)
+                                                    .loginProgressState ==
+                                                LoadingState.progress
                                             ? Padding(
-                                          padding: const EdgeInsets.only(left: 15),
-                                          child: SizedBox(
-                                            height: 20,
-                                            width: 20,
-                                            child: CircularProgressIndicator(
-                                              strokeWidth: 2,
-                                              color: Colors.orange.shade700,
-                                            ),
-                                          ),
-                                        )
+                                                padding: const EdgeInsets.only(
+                                                    left: 15),
+                                                child: SizedBox(
+                                                  height: 20,
+                                                  width: 20,
+                                                  child:
+                                                      CircularProgressIndicator(
+                                                    strokeWidth: 2,
+                                                    color:
+                                                        Colors.orange.shade700,
+                                                  ),
+                                                ),
+                                              )
                                             : const SizedBox.shrink();
                                       },
                                     )
@@ -137,7 +157,8 @@ class AdminLogin extends ConsumerWidget {
             Align(
               alignment: Alignment.topLeft,
               child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 80, horizontal: 35),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 80, horizontal: 35),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),

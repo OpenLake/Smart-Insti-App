@@ -26,6 +26,8 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: "beta"
+      - name: Create .env file
+        run: touch .env
       - name: Get dependencies
         run: flutter pub get
       - name: Format code

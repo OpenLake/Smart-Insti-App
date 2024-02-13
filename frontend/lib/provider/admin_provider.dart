@@ -5,7 +5,8 @@ import 'package:logger/logger.dart';
 import 'package:smart_insti_app/components/menu_tile.dart';
 import 'package:smart_insti_app/models/admin.dart';
 
-final adminProvider = StateNotifierProvider<AdminStateNotifier, AdminState>((ref) => AdminStateNotifier());
+final adminProvider = StateNotifierProvider<AdminStateNotifier, AdminState>(
+    (ref) => AdminStateNotifier());
 
 class AdminState {
   final bool toggleSearch;
@@ -109,7 +110,10 @@ class AdminStateNotifier extends StateNotifier<AdminState> {
     ];
     String query = state.searchController.text;
     state = state.copyWith(
-        menuTiles: menuTiles.where((element) => element.title.toLowerCase().contains(query.toLowerCase())).toList());
+        menuTiles: menuTiles
+            .where((element) =>
+                element.title.toLowerCase().contains(query.toLowerCase()))
+            .toList());
   }
 
   void toggleSearchBar() {

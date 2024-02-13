@@ -5,6 +5,8 @@ import testResource from "./resources/testResource.js";
 import generalAuthResource from "./resources/generalAuthResource.js";
 import adminAuthResource from "./resources/adminAuthResource.js";
 import otpResource from "./resources/otpResource.js";
+import studentResource from "./resources/studentResouce.js";
+import facultyResource from "./resources/facultyResource.js";
 import Connection from "./database/db.js";
 import cors from "cors";
 import tokenRequired from "./middlewares/tokenRequired.js";
@@ -12,8 +14,6 @@ import adminResource from "./resources/adminResource.js";
 import roomListResource from "./resources/rooms/roomListResource.js";
 import roomResource from "./resources/rooms/roomResource.js";
 import lostAndFoundListResource from "./resources/lostAndFound/lostAndFoundListResource.js";
-import studentResource from "./resources/studentResource.js";
-import facultyResource from "./resources/facultyResource.js";
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();

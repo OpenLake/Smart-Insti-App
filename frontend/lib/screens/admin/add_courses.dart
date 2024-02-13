@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
-import 'package:smart_insti_app/provider/courses_provider.dart';
 import '../../components/choice_selector.dart';
 import '../../components/text_divider.dart';
 import '../../constants/constants.dart';
 import '../../provider/auth_provider.dart';
+import '../../provider/courses_provider.dart';
 
 class AddCourses extends ConsumerWidget {
   AddCourses({super.key});
@@ -16,8 +16,10 @@ class AddCourses extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+          LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.adminAuthLabel.toLowerCase());
       }
     });
     final course = ref.watch(coursesProvider);
@@ -52,8 +54,12 @@ class AddCourses extends ConsumerWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () => ref.read(coursesProvider.notifier).pickSpreadsheet(),
-                        style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                        onPressed: () => ref
+                            .read(coursesProvider.notifier)
+                            .pickSpreadsheet(),
+                        style: ButtonStyle(
+                            minimumSize:
+                                MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
                     ],
@@ -86,13 +92,16 @@ class AddCourses extends ConsumerWidget {
                         const SizedBox(height: 30),
                         MaterialTextFormField(
                           controller: course.courseCodeController,
-                          validator: (value) => Validators.courseCodeValidator(value),
+                          validator: (value) =>
+                              Validators.courseCodeValidator(value),
                           hintText: "Enter course code",
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
                         ChoiceSelector(
-                          onChanged: (value) => ref.read(coursesProvider.notifier).updateBranch(value),
+                          onChanged: (value) => ref
+                              .read(coursesProvider.notifier)
+                              .updateBranch(value),
                           value: course.branches[0],
                           items: Branches.branchList,
                           hint: "Select Branch",
@@ -109,7 +118,9 @@ class AddCourses extends ConsumerWidget {
                                 );
                               }
                             },
-                            style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                            style: ButtonStyle(
+                                minimumSize: MaterialStateProperty.all(
+                                    const Size(200, 60))),
                             child: const Text("Add Course"),
                           ),
                         ),

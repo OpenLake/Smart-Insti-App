@@ -5,7 +5,8 @@ import 'package:smart_insti_app/components/choice_selector.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/components/text_divider.dart';
 import 'package:smart_insti_app/constants/constants.dart';
-import 'package:smart_insti_app/provider/student_provider.dart';
+
+import '../../provider/student_provider.dart';
 import '../../provider/auth_provider.dart';
 
 class AddStudents extends ConsumerWidget {
@@ -16,8 +17,10 @@ class AddStudents extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+          LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.adminAuthLabel.toLowerCase());
       }
     });
     return ResponsiveScaledBox(

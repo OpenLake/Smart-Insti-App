@@ -6,6 +6,7 @@ import 'package:smart_insti_app/provider/student_provider.dart';
 import '../../constants/constants.dart';
 import '../../models/student.dart';
 import '../../provider/auth_provider.dart';
+import '../../provider/student_provider.dart';
 
 class ViewStudents extends ConsumerWidget {
   const ViewStudents({super.key});
@@ -14,8 +15,10 @@ class ViewStudents extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(studentProvider.notifier).searchStudents();
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+          LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.adminAuthLabel.toLowerCase());
       }
     });
 
@@ -41,7 +44,10 @@ class ViewStudents extends ConsumerWidget {
                   leading: IconButton(
                       icon: const Icon(Icons.arrow_back),
                       onPressed: () {
-                        ref.read(studentProvider).searchStudentController.clear();
+                        ref
+                            .read(studentProvider)
+                            .searchStudentController
+                            .clear();
                         context.pop();
                       }),
                   shadowColor: MaterialStateProperty.all(Colors.transparent),
@@ -62,18 +68,22 @@ class ViewStudents extends ConsumerWidget {
             }
             return ListView.builder(
                 itemBuilder: (_, index) {
-                  List<Student> students = ref.read(studentProvider).filteredStudents;
+                  List<Student> students =
+                      ref.read(studentProvider).filteredStudents;
                   return Container(
-                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                    margin: const EdgeInsets.symmetric(
+                        horizontal: 20, vertical: 10),
                     child: ListTile(
                       tileColor: Colors.grey.shade200,
                       selectedTileColor: Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                      contentPadding: const EdgeInsets.symmetric(
+                          horizontal: 20, vertical: 10),
                       title: Text('Name ${students[index].name}'),
-                      subtitle: Text('Roll Number : ${students[index].rollNumber}'),
+                      subtitle:
+                          Text('Roll Number : ${students[index].rollNumber}'),
                       trailing: SizedBox(
                         width: 100,
                         child: Row(
@@ -85,14 +95,17 @@ class ViewStudents extends ConsumerWidget {
                                 context: context,
                                 builder: (_) => const AlertDialog(
                                   title: Text('Edit Student'),
-                                  content: Text("Student editing will be added in future"),
+                                  content: Text(
+                                      "Student editing will be added in future"),
                                 ),
                               ),
                             ),
                             IconButton(
                               iconSize: 20,
                               icon: const Icon(Icons.delete),
-                              onPressed: () => ref.read(studentProvider.notifier).removeStudent(students[index]),
+                              onPressed: () => ref
+                                  .read(studentProvider.notifier)
+                                  .removeStudent(students[index]),
                             ),
                           ],
                         ),
