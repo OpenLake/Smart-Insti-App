@@ -5,7 +5,8 @@ import 'package:smart_insti_app/components/choice_selector.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/components/text_divider.dart';
 import 'package:smart_insti_app/constants/constants.dart';
-import 'package:smart_insti_app/provider/student_provider.dart';
+
+import '../../provider/student_provider.dart';
 
 class AddStudents extends ConsumerWidget {
   AddStudents({super.key});

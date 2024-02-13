@@ -1,21 +1,9 @@
 import { Router } from "express";
 import LostAndFoundItem from "../../models/lost_and_found.js";
 import fs from "fs/promises";
-import multer from "multer";
+import uploader from "../../middlewares/multerConfig.js";
 
 const router = Router();
-
-// Define storage configuration
-const storage = multer.diskStorage({
-  destination: function (req, file, cb) {
-    cb(null, "uploads/");
-  },
-  filename: function (req, file, cb) {
-    cb(null, file.originalname);
-  },
-});
-
-const upload = multer({ storage: storage });
 
 // GET method to retrieve all items
 router.get("/", async (req, res) => {
@@ -25,7 +13,7 @@ router.get("/", async (req, res) => {
 
     // Create an empty array to store items with images
     const itemsWithImages = [];
-
+``
     // Iterate through each item
     for (const item of items) {
       // Check if imagePath is null
@@ -63,7 +51,7 @@ router.get("/", async (req, res) => {
 });
 
 // POST method
-router.post("/", upload.single("image"), async (req, res) => {
+router.post("/", uploader.single("image"), async (req, res) => {
   // Access the uploaded file using req.file
   const file = req.file;
 

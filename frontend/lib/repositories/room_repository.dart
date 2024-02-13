@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
@@ -9,7 +10,7 @@ final roomRepositoryProvider = Provider<RoomRepository>((_) => RoomRepository())
 class RoomRepository {
   final _client = Dio(
     BaseOptions(
-      baseUrl: 'http://10.0.2.2:3000',
+      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
     ),
   );
 
