@@ -6,8 +6,8 @@ import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/menu_tile.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/provider/room_provider.dart';
-import '../models/room.dart';
-import '../provider/auth_provider.dart';
+import '../../models/room.dart';
+import '../../provider/auth_provider.dart';
 
 class RoomVacancy extends ConsumerWidget {
   const RoomVacancy({super.key});

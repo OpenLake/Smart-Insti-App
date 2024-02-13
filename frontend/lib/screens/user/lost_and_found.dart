@@ -6,9 +6,9 @@ import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/lost_and_found_provider.dart';
-import '../components/image_tile.dart';
-import '../constants/constants.dart';
-import '../provider/auth_provider.dart';
+import '../../components/image_tile.dart';
+import '../../constants/constants.dart';
+import '../../provider/auth_provider.dart';
 
 class LostAndFound extends ConsumerWidget {
   LostAndFound({super.key});
