@@ -14,6 +14,8 @@ import adminResource from "./resources/admin/adminResource.js";
 import roomListResource from "./resources/rooms/roomListResource.js";
 import roomResource from "./resources/rooms/roomResource.js";
 import lostAndFoundListResource from "./resources/lostAndFound/lostAndFoundListResource.js";
+import studentListResource from "./resources/student/studentListResource.js";
+import facultyListResource from "./resources/faculty/facultyListResource.js";
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
@@ -28,7 +30,9 @@ app.use(cors());
 Connection();
 app.use("/admin", adminResource);
 app.use("/student", studentResource);
+app.use("/students", studentListResource);
 app.use("/faculty", facultyResource);
+app.use("/faculties", facultyListResource);
 app.use("/admin-auth", adminAuthResource);
 app.use("/general-auth", generalAuthResource);
 app.use("/otp", otpResource);
