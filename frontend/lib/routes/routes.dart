@@ -21,7 +21,7 @@ import '../screens/user/faculty_profile.dart';
 import '../screens/user/student_profile.dart';
 
 final GoRouter routes = GoRouter(
-  initialLocation: '/user_home',
+  initialLocation: '/',
   routes: [
     GoRoute(
       path: '/',
