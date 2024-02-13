@@ -1,38 +1,42 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../constants/dummy_entries.dart';
+import 'package:logger/logger.dart';
+import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/faculty.dart';
 
 final facultyRepositoryProvider =
-    Provider<FacultyRepository>((_) => FacultyRepository());
-final storage = FlutterSecureStorage();
+    Provider<FacultyRepository>((ref) => FacultyRepository());
 
 class FacultyRepository {
   final _client = Dio(
     BaseOptions(
       baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      validateStatus: (status) {
+        return status! < 500;
+      },
     ),
   );
 
-  Future<List<Faculty>> faculties() async {
+  final Logger _logger = Logger();
+
+  Future<Faculty?> getFacultyById(String id, String token) async {
+    _client.options.headers['authorization'] = token;
+    try {
+      final response = await _client.get('/faculty/$id');
+      return Faculty.fromJson(response.data);
+    } catch (e) {
+      _logger.e(e);
+      return null;
+    }
+  }
+
+  Future<List<Faculty>> getFaculties() async {
     try {
       final response = await _client.get('/faculties');
       return (response.data as List).map((e) => Faculty.fromJson(e)).toList();
     } catch (e) {
       return DummyFaculties.faculties;
-    }
-  }
-
-  Future<Faculty> getFaculty(String email) async {
-    try {
-      final id = await storage.read(key: email);
-      final response = await _client.get('/faculties/$id');
-      return Faculty.fromJson(response.data);
-    } catch (e) {
-      return DummyFaculties.faculties[0];
     }
   }
 
@@ -44,9 +48,6 @@ class FacultyRepository {
           'email': email,
         },
       );
-
-      storage.write(
-          key: response.data['user']['email'], value: response.data['_id']);
 
       return Faculty.fromJson(response.data['user']);
     } catch (e) {

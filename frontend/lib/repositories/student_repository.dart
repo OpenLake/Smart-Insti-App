@@ -1,39 +1,33 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
-
-import '../constants/dummy_entries.dart';
+import 'package:logger/logger.dart';
+import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/student.dart';
 
 final studentRepositoryProvider =
-    Provider<StudentRepository>((_) => StudentRepository());
-final storage = FlutterSecureStorage();
+    Provider<StudentRepository>((ref) => StudentRepository());
 
 class StudentRepository {
   final _client = Dio(
     BaseOptions(
       baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      validateStatus: (status) {
+        return status! < 500;
+      },
     ),
   );
 
-  Future<List<Student>> students() async {
-    try {
-      final response = await _client.get('/students');
-      return (response.data as List).map((e) => Student.fromJson(e)).toList();
-    } catch (e) {
-      return DummyStudents.students;
-    }
-  }
+  final Logger _logger = Logger();
 
-  Future<Student> getStudent(String email) async {
+  Future<Student?> getStudentById(String id, String token) async {
+    _client.options.headers['authorization'] = token;
     try {
-      final id = await storage.read(key: email);
-
-      final response = await _client.get('/students/$id');
+      final response = await _client.get('/student/$id');
       return Student.fromJson(response.data);
     } catch (e) {
-      return DummyStudents.students[0];
+      _logger.e(e);
+      return null;
     }
   }
 
@@ -46,13 +40,18 @@ class StudentRepository {
         },
       );
 
-      storage.write(
-          key: response.data['user']['email'],
-          value: response.data['user']['_id']);
-
       return Student.fromJson(response.data['user']);
     } catch (e) {
       return DummyStudents.students[0];
+    }
+  }
+
+  Future<List<Student>> getStudents() async {
+    try {
+      final response = await _client.get('/students');
+      return (response.data as List).map((e) => Student.fromJson(e)).toList();
+    } catch (e) {
+      return DummyStudents.students;
     }
   }
 

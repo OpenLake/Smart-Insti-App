@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'dart:io';
 import '../constants/constants.dart';
 import '../models/course.dart';
@@ -57,7 +56,7 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
 
   static CoursesState _initialState() {
     return CoursesState(
-      courses: DummyCourses.courses,
+      courses: [],
       filteredCourses: [],
       courseCodeController: TextEditingController(),
       courseNameController: TextEditingController(),

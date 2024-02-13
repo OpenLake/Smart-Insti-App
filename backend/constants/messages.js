@@ -16,10 +16,10 @@ export const databaseConnectionError =
 export const emailIsRequired = "Email is required";
 export const failedToSendOTPEmail = "Failed to send OTP to to email";
 export const emailAndOTPRequired = "Email and OTP are required";
-export const noOTPFoundForEmail = "No OTP found for the email";
 export const incorrectOTP = "Incorrect OTP";
 export const otpVerfied = "OTP verified successfully";
 export const otpSent = "OTP sent successfully";
+export const otpExpired = "Otp expired";
 
 // Auth Middleware
 export const noAuthToken = "No auth token, access denied";
