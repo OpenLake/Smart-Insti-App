@@ -1,18 +1,27 @@
+import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/collapsing_app_bar.dart';
-import 'package:smart_insti_app/provider/user_provider.dart';
+import 'package:smart_insti_app/provider/auth_provider.dart';
+import 'package:smart_insti_app/provider/home_provider.dart';
+import '../../constants/constants.dart';
+import '../../models/faculty.dart';
+import '../../models/student.dart';
+import '../../services/auth/auth_service.dart';
 
 class UserHome extends ConsumerWidget {
   const UserHome({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.watch(userProvider);
-      ref.read(userProvider.notifier).buildMenuTiles(context);
+      ref.read(homeProvider.notifier).buildMenuTiles(context);
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
+      }
     });
 
     return ResponsiveScaledBox(
@@ -21,43 +30,68 @@ class UserHome extends ConsumerWidget {
         body: NestedScrollView(
           headerSliverBuilder: (context, innerBoxIsScrolled) => [
             CollapsingAppBar(
-              body: const Center(
-                child: Text(
-                  'Welcome\nUser!',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 36,
-                    fontFamily: "RobotoFlex",
-                  ),
+              body: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      'Welcome',
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 45,
+                        fontFamily: "RobotoFlex",
+                      ),
+                    ),
+                    Consumer(
+                      builder: (_, ref, __) {
+                        if (ref.read(authProvider).currentUser != null) {
+                          return AnimatedTextKit(
+                            repeatForever: true,
+                            pause: const Duration(milliseconds: 1500),
+                            animatedTexts: [
+                              TyperAnimatedText(
+                                ref.read(authProvider).currentUserRole!.replaceFirst(
+                                    ref.read(authProvider).currentUserRole![0],
+                                    ref.read(authProvider).currentUserRole![0].toUpperCase()),
+                                textStyle: const TextStyle(fontSize: 45, fontFamily: "RobotoFlex"),
+                                speed: const Duration(milliseconds: 300),
+                              ),
+                              TyperAnimatedText(
+                                ref.read(authProvider).currentUserRole == "student"
+                                    ? (ref.read(authProvider).currentUser as Student).name.split(" ").first
+                                    : (ref.read(authProvider).currentUser as Faculty).name.split(" ").first,
+                                textStyle: const TextStyle(
+                                    fontSize: 45, fontFamily: "RobotoFlex", overflow: TextOverflow.ellipsis),
+                                speed: const Duration(milliseconds: 300),
+                              ),
+                            ],
+                          );
+                        } else {
+                          return const SizedBox.shrink();
+                        }
+                      },
+                    )
+                  ],
                 ),
               ),
               bottom: Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 10),
                 child: Consumer(
                   builder: (_, ref, ___) {
-                    if (ref.watch(userProvider).toggleSearch) {
+                    if (ref.watch(homeProvider).toggleSearch) {
                       return SearchBar(
-                        controller:
-                            ref.read(userProvider.notifier).searchController,
-                        onChanged: (value) => ref
-                            .read(userProvider.notifier)
-                            .buildMenuTiles(context),
+                        controller: ref.read(homeProvider.notifier).searchController,
+                        onChanged: (value) => ref.read(homeProvider.notifier).buildMenuTiles(context),
                         leading: IconButton(
                           icon: const Icon(Icons.arrow_back),
                           onPressed: () {
-                            ref
-                                .read(userProvider.notifier)
-                                .searchController
-                                .clear();
-                            ref.read(userProvider.notifier).toggleSearchBar();
-                            ref
-                                .read(userProvider.notifier)
-                                .buildMenuTiles(context);
+                            ref.read(homeProvider.notifier).searchController.clear();
+                            ref.read(homeProvider.notifier).toggleSearchBar();
+                            ref.read(homeProvider.notifier).buildMenuTiles(context);
                           },
                         ),
-                        shadowColor:
-                            MaterialStateProperty.all(Colors.transparent),
+                        shadowColor: MaterialStateProperty.all(Colors.transparent),
                       );
                     } else {
                       return Row(
@@ -65,13 +99,22 @@ class UserHome extends ConsumerWidget {
                         children: [
                           IconButton(
                               iconSize: 30,
-                              onPressed: () => ref
-                                  .read(userProvider.notifier)
-                                  .toggleSearchBar(),
+                              onPressed: () => ref.read(homeProvider.notifier).toggleSearchBar(),
                               icon: const Icon(Icons.search)),
                           PopupMenuButton(
                             itemBuilder: (context) {
                               return [
+                                PopupMenuItem(
+                                  value: "profile",
+                                  child: const Text("User Profile"),
+                                  onTap: () {
+                                    if (ref.read(authProvider).currentUserRole == 'student') {
+                                      context.go('/user_home/student_profile');
+                                    } else if (ref.read(authProvider).currentUserRole == 'faculty') {
+                                      context.go('/user_home/faculty_profile');
+                                    }
+                                  },
+                                ),
                                 PopupMenuItem(
                                   value: "about",
                                   child: const Text("About"),
@@ -87,32 +130,12 @@ class UserHome extends ConsumerWidget {
                                 PopupMenuItem(
                                   value: "logout",
                                   child: const Text("Log Out"),
-                                  onTap: () => showDialog(
-                                    context: context,
-                                    builder: (_) => const AlertDialog(
-                                      title: Text('Log Out'),
-                                      content: Text(
-                                          'Auth will be inplemented in future'),
-                                    ),
-                                  ),
+                                  onTap: () {
+                                    ref.read(authServiceProvider).clearCredentials();
+                                    ref.read(authProvider.notifier).clearCurrentUser();
+                                    context.go('/');
+                                  },
                                 ),
-                                PopupMenuItem(
-                                    value: "profile",
-                                    child: const Text("User Profile"),
-                                    onTap: () {
-                                      if (ref.read(userProvider).student.id !=
-                                          '') {
-                                        context
-                                            .go('/user_home/student_profile');
-                                      } else if (ref
-                                              .read(userProvider)
-                                              .faculty
-                                              .id !=
-                                          '') {
-                                        context
-                                            .go('/user_home/faculty_profile');
-                                      }
-                                    }),
                               ];
                             },
                           ),
@@ -131,7 +154,7 @@ class UserHome extends ConsumerWidget {
                   return GridView.count(
                     padding: const EdgeInsets.all(10),
                     crossAxisCount: 2,
-                    children: ref.watch(userProvider).menuTiles,
+                    children: ref.watch(homeProvider).menuTiles,
                   );
                 },
               )),
