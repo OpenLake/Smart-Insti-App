@@ -123,7 +123,6 @@ class AuthService {
           'password': password,
         },
       );
-      _logger.i(response.data);
       return response.data;
     } catch (e) {
       _logger.e(e);

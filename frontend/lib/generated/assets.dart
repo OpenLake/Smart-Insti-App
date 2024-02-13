@@ -64,12 +64,12 @@ class Assets {
   static const String providerAuthProvider = 'lib/provider/auth_provider.dart';
   static const String providerCoursesProvider = 'lib/provider/courses_provider.dart';
   static const String providerFacultyProvider = 'lib/provider/faculty_provider.dart';
+  static const String providerHomeProvider = 'lib/provider/home_provider.dart';
   static const String providerLostAndFoundProvider = 'lib/provider/lost_and_found_provider.dart';
   static const String providerMenuProvider = 'lib/provider/menu_provider.dart';
   static const String providerOtpProvider = 'lib/provider/otp_provider.dart';
   static const String providerRoomProvider = 'lib/provider/room_provider.dart';
   static const String providerStudentProvider = 'lib/provider/student_provider.dart';
-  static const String providerUserProvider = 'lib/provider/user_provider.dart';
   static const String repositoriesAchievementRepository = 'lib/repositories/achievement_repository.dart';
   static const String repositoriesAdminRepository = 'lib/repositories/admin_repository.dart';
   static const String repositoriesCourseRepository = 'lib/repositories/course_repository.dart';
@@ -79,11 +79,10 @@ class Assets {
   static const String repositoriesSkillRepository = 'lib/repositories/skill_repository.dart';
   static const String repositoriesStudentRepository = 'lib/repositories/student_repository.dart';
   static const String routesRoutes = 'lib/routes/routes.dart';
-  static const String screensHome = 'lib/screens/home.dart';
   static const String screensLoadingPage = 'lib/screens/loading_page.dart';
-  static const String screensLostAndFound = 'lib/screens/lost_and_found.dart';
-  static const String screensRoomVacancy = 'lib/screens/room_vacancy.dart';
   static const String userFacultyProfile = 'lib/screens/user/faculty_profile.dart';
+  static const String userLostAndFound = 'lib/screens/user/lost_and_found.dart';
+  static const String userRoomVacancy = 'lib/screens/user/room_vacancy.dart';
   static const String userStudentProfile = 'lib/screens/user/student_profile.dart';
   static const String userUserHome = 'lib/screens/user/user_home.dart';
 
