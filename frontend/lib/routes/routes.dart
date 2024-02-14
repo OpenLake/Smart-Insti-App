@@ -14,13 +14,16 @@ import '../screens/admin/admin_profile.dart';
 import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
-import '../screens/auth/signin_page.dart';
+import '../screens/auth/admin_login.dart';
 import '../screens/user/room_vacancy.dart';
 import '../screens/user_profile.dart';
-import '../screens/auth/signin_page.dart';
+import '../screens/user/student_profile.dart';
+import '../screens/user/user_home.dart';
+import '../screens/user/faculty_profile.dart';
+import '../screens/broadcast.dart';
 
 final GoRouter routes = GoRouter(
-  initialLocation: '/home',
+  initialLocation: '/user_home/broadcast',
   routes: [
     GoRoute(
       path: '/',
@@ -106,23 +109,36 @@ final GoRouter routes = GoRouter(
           path: 'lost_and_found',
           pageBuilder: (context, state) => MaterialPage(child: LostAndFound()),
         ),
-      ],
-    ),
-    GoRoute(
-      path: '/home',
-      pageBuilder: (context, state) => const MaterialPage(child: Home()),
-      routes: [
         GoRoute(
-          path: 'classroom_vacancy',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: RoomVacancy()),
-        ),
-        GoRoute(
-          path: 'lost_and_found',
-          pageBuilder: (context, state) => MaterialPage(child: LostAndFound()),
+          path: 'broadcast',
+          pageBuilder: (context, state) => MaterialPage(child: BroadcastPage()),
         ),
       ],
     ),
+    // GoRoute(
+    //   path: '/home',
+    //   pageBuilder: (context, state) => const MaterialPage(child: Home()),
+    //   routes: [
+    //     GoRoute(
+    //       path: 'classroom_vacancy',
+    //       pageBuilder: (context, state) =>
+    //           const MaterialPage(child: RoomVacancy()),
+    //     ),
+    //     GoRoute(
+    //       path: 'lost_and_found',
+    //       pageBuilder: (context, state) => MaterialPage(child: LostAndFound()),
+    //     ),
+    //     GoRoute(
+    //       path: 'broadcast',
+    //       pageBuilder: (context, state) => MaterialPage(child: BroadcastPage()),
+    //     ),
+    //     GoRoute(
+    //       path: 'user_profile',
+    //       pageBuilder: (context, state) =>
+    //           const MaterialPage(child: UserProfile()),
+    //     ),
+    //   ],
+    // ),
   ],
 );// import 'package:flutter/material.dart';
 // import 'package:go_router/go_router.dart';

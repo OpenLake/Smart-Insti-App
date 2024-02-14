@@ -78,6 +78,16 @@ class UserProvider extends StateNotifier<HomeState> {
         secondaryColor: Colors.orangeAccent.shade200,
         icon: Icons.search,
       ),
+      MenuTile(
+        title: 'Broadcast',
+        onTap: () {
+          // Navigate to the broadcast page
+          context.push('/user_home/broadcast');
+        },
+        icon: Icons.announcement,
+        primaryColor: Colors.greenAccent.shade100,
+        secondaryColor: Colors.greenAccent.shade200,
+      ),
     ];
     String query = state.searchController.text;
     state = state.copyWith(
