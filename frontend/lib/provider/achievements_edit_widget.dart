@@ -91,7 +91,6 @@ class AchievementsEditWidget extends ConsumerWidget {
                   },
                 ),
                 TextFormField(
-                  // Add another text field for description
                   initialValue: achievements[index].description,
                   onChanged: (value) {
                     ref

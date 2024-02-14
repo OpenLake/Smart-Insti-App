@@ -14,12 +14,12 @@ import '../screens/admin/admin_profile.dart';
 import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
-import '../screens/user/room_vacancy.dart';
 import '../screens/auth/admin_login.dart';
 import '../screens/user/room_vacancy.dart';
+import '../screens/user/student_profile.dart';
 import '../screens/user/user_home.dart';
 import '../screens/user/faculty_profile.dart';
-import '../screens/user/student_profile.dart';
+import '../screens/user/broadcast.dart';
 
 final GoRouter routes = GoRouter(
   initialLocation: '/',
@@ -107,6 +107,10 @@ final GoRouter routes = GoRouter(
         GoRoute(
           path: 'lost_and_found',
           pageBuilder: (context, state) => MaterialPage(child: LostAndFound()),
+        ),
+        GoRoute(
+          path: 'broadcast',
+          pageBuilder: (context, state) => MaterialPage(child: BroadcastPage()),
         ),
       ],
     ),
