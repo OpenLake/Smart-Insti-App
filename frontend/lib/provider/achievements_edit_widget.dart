@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/achievement.dart';
 
 final achievementsProvider = Provider<List<Achievement>>((ref) {
-  // Your achievements data
   return ref.watch(achievementsControllerProvider);
 });
 
@@ -90,6 +89,24 @@ class AchievementsEditWidget extends ConsumerWidget {
                           );
                     }
                   },
+                ),
+                TextFormField(
+                  // Add another text field for description
+                  initialValue: achievements[index].description,
+                  onChanged: (value) {
+                    ref
+                        .read(achievementsControllerProvider.notifier)
+                        .updateAchievement(
+                          index,
+                          Achievement(
+                            id: achievements[index].id,
+                            name: achievements[index].name,
+                            date: achievements[index].date,
+                            description: value,
+                          ),
+                        );
+                  },
+                  decoration: const InputDecoration(labelText: 'Description'),
                 ),
                 IconButton(
                   icon: const Icon(Icons.delete),

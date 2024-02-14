@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../provider/student_provider.dart';
 
 final aboutProvider = Provider<String?>((ref) {
   return ref.watch(aboutControllerProvider);
@@ -20,14 +19,13 @@ class AboutController extends StateNotifier<String?> {
 }
 
 class AboutEditWidget extends ConsumerWidget {
-  const AboutEditWidget({Key? key}) : super(key: key);
+  final TextEditingController aboutController;
+
+  const AboutEditWidget({required this.aboutController});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final about = ref.watch(aboutProvider);
-
-    final TextEditingController aboutController =
-        TextEditingController(text: about);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,73 +50,3 @@ class AboutEditWidget extends ConsumerWidget {
     );
   }
 }
-// import 'package:flutter/material.dart';
-// import 'package:flutter_riverpod/flutter_riverpod.dart';
-// import '../provider/student_provider.dart';
-
-// class AboutEditorWidget extends ConsumerWidget {
-//   const AboutEditorWidget({Key? key}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context, WidgetRef ref) {
-//     final student = ref.read(studentProvider);
-
-//     final TextEditingController aboutController =
-//         TextEditingController(text: student.about);
-
-//     return Column(
-//       crossAxisAlignment: CrossAxisAlignment.start,
-//       children: [
-//         Text(
-//           'About',
-//           style: const TextStyle(
-//             fontWeight: FontWeight.bold,
-//           ),
-//         ),
-//         TextFormField(
-//           controller: aboutController,
-//           onChanged: (newAbout) {
-//             ref.read(studentProvider.notifier).editAbout(newAbout);
-//           },
-//           decoration: const InputDecoration(
-//             hintText: 'Write something about yourself...',
-//           ),
-//           maxLines: 5,
-//         ),
-//       ],
-//     );
-//   }
-// }
-// // class AboutEditorWidget extends ConsumerWidget {
-// //   const AboutEditorWidget({Key? key}) : super(key: key);
-
-// //   @override
-// //   Widget build(BuildContext context, WidgetRef ref) {
-// //     final student = ref.read(studentProvider);
-
-// //     final TextEditingController aboutController =
-// //         TextEditingController(text: student.about);
-
-// //     return Column(
-// //       crossAxisAlignment: CrossAxisAlignment.start,
-// //       children: [
-// //         Text(
-// //           'About',
-// //           style: const TextStyle(
-// //             fontWeight: FontWeight.bold,
-// //           ),
-// //         ),
-// //         TextField(
-// //           controller: aboutController,
-// //           onChanged: (newAbout) {
-// //             ref.read(studentProvider.notifier).editAbout(newAbout);
-// //           },
-// //           decoration: const InputDecoration(
-// //             hintText: 'Write something about yourself...',
-// //           ),
-// //           maxLines: 5,
-// //         ),
-// //       ],
-// //     );
-// //   }
-// // }
