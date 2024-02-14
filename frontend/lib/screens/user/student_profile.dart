@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_insti_app/models/achievement.dart';
 import 'package:smart_insti_app/models/student.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
-import '../edit_profile.dart';
+import 'edit_profile.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 
 class StudentProfile extends ConsumerWidget {

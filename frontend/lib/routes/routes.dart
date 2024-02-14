@@ -19,7 +19,7 @@ import '../screens/user/room_vacancy.dart';
 import '../screens/user/student_profile.dart';
 import '../screens/user/user_home.dart';
 import '../screens/user/faculty_profile.dart';
-import '../screens/broadcast.dart';
+import '../screens/user/broadcast.dart';
 
 final GoRouter routes = GoRouter(
   initialLocation: '/',
