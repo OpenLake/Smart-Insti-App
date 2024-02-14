@@ -14,8 +14,7 @@ import '../screens/admin/admin_profile.dart';
 import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
-import '../screens/room_vacancy.dart';
-import '../screens/user_profile.dart';
+import '../screens/user/room_vacancy.dart';
 import '../screens/auth/admin_login.dart';
 import '../screens/user/room_vacancy.dart';
 import '../screens/user/user_home.dart';
@@ -23,7 +22,7 @@ import '../screens/user/faculty_profile.dart';
 import '../screens/user/student_profile.dart';
 
 final GoRouter routes = GoRouter(
-  initialLocation: '/',
+  initialLocation: '/user_home/student_profile',
   routes: [
     GoRoute(
       path: '/',
