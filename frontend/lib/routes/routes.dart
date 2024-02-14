@@ -8,6 +8,7 @@ import 'package:smart_insti_app/screens/admin/view_students.dart';
 import 'package:smart_insti_app/screens/auth/login_general.dart';
 import 'package:smart_insti_app/screens/loading_page.dart';
 import 'package:smart_insti_app/screens/user/lost_and_found.dart';
+import 'package:smart_insti_app/screens/user/timetable_editor.dart';
 import '../screens/admin/add_faculty.dart';
 import '../screens/admin/add_menu.dart';
 import '../screens/admin/admin_profile.dart';
@@ -16,6 +17,7 @@ import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
 import '../screens/auth/admin_login.dart';
 import '../screens/user/room_vacancy.dart';
+import '../screens/user/timetables.dart';
 import '../screens/user/user_home.dart';
 import '../screens/user/faculty_profile.dart';
 import '../screens/user/student_profile.dart';
@@ -43,8 +45,7 @@ final GoRouter routes = GoRouter(
       routes: [
         GoRoute(
           path: 'profile',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: AdminProfile()),
+          pageBuilder: (context, state) => const MaterialPage(child: AdminProfile()),
         ),
         GoRoute(
           path: 'add_students',
@@ -90,22 +91,29 @@ final GoRouter routes = GoRouter(
       routes: [
         GoRoute(
           path: 'faculty_profile',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: FacultyProfile()),
+          pageBuilder: (context, state) => const MaterialPage(child: FacultyProfile()),
         ),
         GoRoute(
           path: 'student_profile',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: StudentProfile()),
+          pageBuilder: (context, state) => const MaterialPage(child: StudentProfile()),
         ),
         GoRoute(
           path: 'room_vacancy',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: RoomVacancy()),
+          pageBuilder: (context, state) => const MaterialPage(child: RoomVacancy()),
         ),
         GoRoute(
           path: 'lost_and_found',
           pageBuilder: (context, state) => MaterialPage(child: LostAndFound()),
+        ),
+        GoRoute(
+          path: 'timetables',
+          pageBuilder: (context, state) => const MaterialPage(child: Timetables()),
+          routes: [
+            GoRoute(
+              path: 'editor',
+              pageBuilder: (context, state) => const MaterialPage(child: TimetableEditor()),
+            ),
+          ],
         ),
       ],
     ),

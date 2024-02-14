@@ -78,6 +78,13 @@ class UserProvider extends StateNotifier<HomeState> {
         secondaryColor: Colors.orangeAccent.shade200,
         icon: Icons.search,
       ),
+      MenuTile(
+        title: "Timetables",
+        onTap: () => context.push('/user_home/timetables'),
+        primaryColor: Colors.blueAccent.shade100,
+        secondaryColor: Colors.blueAccent.shade200,
+        icon: Icons.edit,
+      ),
     ];
     String query = state.searchController.text;
     state = state.copyWith(
