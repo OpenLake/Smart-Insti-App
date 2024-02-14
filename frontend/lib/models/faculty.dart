@@ -24,9 +24,11 @@ class Faculty {
       email: json['email'],
       cabinNumber: json['cabinNumber'],
       department: json['department'],
-      courses: (json['courses'] as List)
-          .map((item) => Course.fromJson(item))
-          .toList(),
+      courses: json['courses'] != null
+          ? (json['courses'] as List)
+              .map((item) => Course.fromJson(item))
+              .toList()
+          : [],
     );
   }
 
@@ -37,7 +39,9 @@ class Faculty {
       'email': email,
       'cabinNumber': cabinNumber,
       'department': department,
-      'courses': courses!.map((skill) => skill.toJson()).toList(),
+      'courses': courses != null
+          ? courses!.map((course) => course.toJson()).toList()
+          : [],
     };
   }
 }

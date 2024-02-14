@@ -2,20 +2,20 @@ import express from "express";
 import cookieParser from "cookie-parser";
 import logger from "morgan";
 import testResource from "./resources/testResource.js";
-import userResource from "./resources/userResource.js";
-import authResource from "./resources/authResource.js";
-import otpResource from "./resources/otpResource.js";
-import studentResource from "./resources/studentResouce.js";
-import facultyResource from "./resources/facultyResource.js";
-import skillResource from "./resources/skillResource.js";
-import achievementResource from "./resources/achievementResource.js";
-import courseResource from "./resources/courseResource.js";
+import generalAuthResource from "./resources/auth/generalAuthResource.js";
+import adminAuthResource from "./resources/auth/adminAuthResource.js";
+import otpResource from "./resources/auth/otpResource.js";
+import studentResource from "./resources/student/studentResouce.js";
+import facultyResource from "./resources/faculty/facultyResource.js";
 import Connection from "./database/db.js";
 import cors from "cors";
-import auth from "./middlewares/auth.js";
+import tokenRequired from "./middlewares/tokenRequired.js";
+import adminResource from "./resources/admin/adminResource.js";
 import roomListResource from "./resources/rooms/roomListResource.js";
 import roomResource from "./resources/rooms/roomResource.js";
 import lostAndFoundListResource from "./resources/lostAndFound/lostAndFoundListResource.js";
+import studentListResource from "./resources/student/studentListResource.js";
+import facultyListResource from "./resources/faculty/facultyListResource.js";
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
@@ -28,20 +28,20 @@ app.use(cors());
 
 // Get Database connection
 Connection();
-app.use(authResource);
-app.use(userResource);
-app.use(otpResource);
-app.use(studentResource);
-app.use(facultyResource);
-app.use(skillResource);
-app.use(courseResource);
-app.use(achievementResource);
+app.use("/admin", adminResource);
+app.use("/student", studentResource);
+app.use("/students", studentListResource);
+app.use("/faculty", facultyResource);
+app.use("/faculties", facultyListResource);
+app.use("/admin-auth", adminAuthResource);
+app.use("/general-auth", generalAuthResource);
+app.use("/otp", otpResource);
 app.use("/", testResource);
 app.use("/rooms", roomListResource);
 app.use("/room", roomResource);
 app.use("/lost-and-found", lostAndFoundListResource);
 
-app.get("/protected", auth, (req, res) => {
+app.get("/protected", tokenRequired, (req, res) => {
   res.json({ message: "Access granted" });
 });
 export default app;

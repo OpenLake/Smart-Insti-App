@@ -39,7 +39,6 @@ dependencies:
   go_router: ^13.0.1
   responsive_framework: ^1.1.1
   awesome_notifications: ^0.9.1
-  http: ^1.2.0
   flutter_secure_storage: ^9.0.0
   google_fonts: ^6.1.0
   search_choices: ^2.2.7
@@ -53,10 +52,11 @@ dependencies:
   delightful_toast: ^1.1.0
   syncfusion_flutter_sliders: ^24.2.3
   fl_chart: ^0.66.1
+  animated_toggle_switch: ^0.8.0
   dio: ^5.4.0
+  animated_text_kit: ^4.2.2
   image_picker: ^1.0.7
   image_cropper: ^5.0.1
-  animated_toggle_switch: ^0.8.0
   url_launcher: ^6.2.4
   flutter_dotenv: ^5.1.0
 
@@ -108,6 +108,29 @@ flutter:
     - family: RobotoFlex
       fonts:
         - asset: lib/assets/fonts/roboto_flex.ttf
+    - family: Jost
+      fonts:
+        - asset: lib/assets/fonts/Jost-Regular.ttf
+        - asset: lib/assets/fonts/Jost-SemiBold.ttf
+          weight: 600
+        - asset: lib/assets/fonts/Jost-Light.ttf
+          weight: 300
+    - family: Lexend
+      fonts:
+        - asset: lib/assets/fonts/Lexend-Thin.ttf
+          weight: 100
+        - asset: lib/assets/fonts/Lexend-ExtraLight.ttf
+          weight: 200
+        - asset: lib/assets/fonts/Lexend-Light.ttf
+          weight: 300
+    - family: Poppins
+      fonts:
+        - asset: lib/assets/fonts/Poppins-ExtraLight.ttf
+          weight: 200
+        - asset: lib/assets/fonts/Poppins-Light.ttf
+          weight: 300
+        - asset: lib/assets/fonts/Poppins-Regular.ttf
+          weight: 400
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
