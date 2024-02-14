@@ -14,6 +14,7 @@ import '../screens/admin/admin_profile.dart';
 import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
+import '../screens/user/room_vacancy.dart';
 import '../screens/auth/admin_login.dart';
 import '../screens/user/room_vacancy.dart';
 import '../screens/user/user_home.dart';

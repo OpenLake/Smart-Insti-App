@@ -15,11 +15,13 @@ class DummyStudents {
       email: 'john.doe@example.com',
       rollNumber: '89890',
       about: 'I am a computer science student.',
-      profilePicURI: '',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
       branch: 'Computer Science',
       graduationYear: 2023,
-      skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      skills: [DummySkills.skills[1], DummySkills.skills[2]],
+      achievements: Dummyachievements.achievements.sublist(0, 5),
+      roles: ['Core Member', 'Coordinator'],
     ),
     Student(
       id: '2',
@@ -31,7 +33,38 @@ class DummyStudents {
       branch: 'Mechanical Engineering',
       roles: ['Student,Class Representative'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
+    ),
+    Student(
+      id: '3',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      rollNumber: 'R001',
+      about: 'I am a computer science student.',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
+      branch: 'Computer Science',
+      graduationYear: 2023,
+      skills: [DummySkills.skills[1], DummySkills.skills[2]],
+      achievements: [
+        Dummyachievements.achievements[1],
+        Dummyachievements.achievements[2]
+      ],
+      roles: ['Core Member', 'Coordinator'],
+    ),
+    Student(
+      id: '4',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      rollNumber: 'R001',
+      about: 'I am a computer science student.',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
+      branch: 'Computer Science',
+      graduationYear: 2023,
+      skills: [DummySkills.skills[1], DummySkills.skills[2]],
+      roles: ['Core Member', 'Coordinator'],
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '3',
@@ -43,7 +76,7 @@ class DummyStudents {
       branch: 'Electrical Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '4',
@@ -55,7 +88,7 @@ class DummyStudents {
       branch: 'Civil Engineering',
       roles: ['Student,Class Representative'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '5',
@@ -67,7 +100,7 @@ class DummyStudents {
       branch: 'Chemical Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '6',
@@ -79,7 +112,7 @@ class DummyStudents {
       branch: 'Biotechnology',
       roles: ['Student,Class Representative'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '7',
@@ -91,7 +124,7 @@ class DummyStudents {
       branch: 'Aerospace Engineering',
       roles: ['Student,Teaching Assistant'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '8',
@@ -103,7 +136,7 @@ class DummyStudents {
       branch: 'Information Technology',
       roles: ['Student,Teaching Assistant'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '9',
@@ -115,7 +148,7 @@ class DummyStudents {
       branch: 'Mechatronics',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '10',
@@ -127,7 +160,7 @@ class DummyStudents {
       branch: 'Robotics Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '11',
@@ -139,7 +172,7 @@ class DummyStudents {
       branch: 'Industrial Engineering',
       roles: ['Student,Teaching Assistant'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '12',
@@ -151,7 +184,7 @@ class DummyStudents {
       branch: 'Computer Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '13',
@@ -163,7 +196,7 @@ class DummyStudents {
       branch: 'Software Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '14',
@@ -175,7 +208,7 @@ class DummyStudents {
       branch: 'Environmental Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '15',
@@ -187,7 +220,7 @@ class DummyStudents {
       branch: 'Petrolesum Engineer]ing',
       roles: ['Student,Class Representative'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '16',
@@ -249,6 +282,86 @@ class DummyStudents {
       skills: DummySkills.skills.sublist(0, 5),
       achievements: DummyAchievements.achievements.sublist(0, 5),
     ),
+  ];
+}
+
+// class DummySkills {
+//   static List<Skill> skills = [
+//     Skill(id: '1', name: 'Flutter', level: 80),
+//     Skill(id: '2', name: 'C++', level: 100),
+//     Skill(id: '3', name: 'javascript', level: 20),
+//     Skill(id: '4', name: 'Nodejs', level: 30),
+//     Skill(id: '5', name: 'Reactjs', level: 40),
+//     Skill(id: '6', name: 'MongoDB', level: 50),
+//     Skill(id: '7', name: 'Graphic Designing', level: 60),
+//     Skill(id: '8', name: 'chess', level: 70),
+//     Skill(id: '9', name: 'cricket', level: 80),
+//     Skill(id: '10', name: 'VScode', level: 100),
+//     Skill(id: '11', name: 'Dart', level: 100),
+//     Skill(id: '12', name: 'Typing', level: 90),
+//     Skill(id: '13', name: 'Drawing', level: 80),
+//     Skill(id: '14', name: 'Painting', level: 70),
+//     Skill(id: '15', name: 'Sketching', level: 60),
+//     Skill(id: '16', name: 'Programming', level: 50),
+//     Skill(id: '17', name: 'Python', level: 40),
+//     Skill(id: '18', name: 'C', level: 30),
+//     Skill(id: '19', name: 'Speaking', level: 20),
+//     Skill(id: '20', name: 'Sleeping', level: 10)
+//   ];
+// }
+
+class Dummyachievements {
+  static List<Achievement> achievements = [
+    Achievement(
+        id: '1',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '2',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '3',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '4',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '5',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '6',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '7',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '8',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '9',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '10',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon')
   ];
 }
 
