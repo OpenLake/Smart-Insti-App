@@ -83,7 +83,6 @@ class StudentState {
       return students.firstWhere((student) => student.id == studentId);
     } catch (e) {
       return Student(
-        // Default values or a placeholder student object
         id: '1',
         name: 'John Doe',
         email: 'john.doe@example.com',
