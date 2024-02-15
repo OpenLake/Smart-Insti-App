@@ -16,13 +16,14 @@ import roomResource from "./resources/rooms/roomResource.js";
 import lostAndFoundListResource from "./resources/lostAndFound/lostAndFoundListResource.js";
 import studentListResource from "./resources/student/studentListResource.js";
 import facultyListResource from "./resources/faculty/facultyListResource.js";
+import messageResource from './resources/chatroom/messageListResource.js'
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
 
 app.use(logger("dev"));
 app.use(express.json());
-app.use(express.urlencoded({ extended: false }));
+app.use(express.urlencoded({ extended: true }));
 app.use(cookieParser());
 app.use(cors());
 
@@ -40,6 +41,7 @@ app.use("/", testResource);
 app.use("/rooms", roomListResource);
 app.use("/room", roomResource);
 app.use("/lost-and-found", lostAndFoundListResource);
+app.use("/messages",messageResource);
 
 app.get("/protected", tokenRequired, (req, res) => {
   res.json({ message: "Access granted" });
