@@ -88,6 +88,13 @@ class UserProvider extends StateNotifier<HomeState> {
         primaryColor: Colors.greenAccent.shade100,
         secondaryColor: Colors.greenAccent.shade200,
       ),
+      MenuTile(
+        title: "Chat\nRoom",
+        onTap: () => context.push('/user_home/chat_room'),
+        primaryColor: Colors.blueAccent.shade100,
+        secondaryColor: Colors.blueAccent.shade200,
+        icon: Icons.search,
+      ),
     ];
     String query = state.searchController.text;
     state = state.copyWith(
