@@ -14,12 +14,10 @@ class TimetableButton extends StatelessWidget {
       child: OutlinedButton(
         onPressed: onPressed,
         style: OutlinedButton.styleFrom(
-          primary: Colors.black,
           backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(5),
           ),
-          // padding: const EdgeInsets.all(0),
           side: const BorderSide(color: Colors.black, width: 1),
         ),
         child: child,
