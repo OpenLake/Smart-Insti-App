@@ -248,7 +248,7 @@ class TimetableProvider extends StateNotifier<TimetableState> {
                                             initialEntryMode: TimePickerEntryMode.dial,
                                           );
                                           if (time != null) {
-    state = state.copyWith(
+                                            state = state.copyWith(
                                               timeRanges: [
                                                 ...state.timeRanges.sublist(0, i),
                                                 (state.timeRanges[i].$1, time),
@@ -357,8 +357,14 @@ class TimetableProvider extends StateNotifier<TimetableState> {
     }
   }
 
+  void clearControllers() {
     state = state.copyWith(
-      timetableList: state.timetableList.where((t) => t.id != timetable.id).toList(),
+      timetableNameController: TextEditingController(),
+      rowsController: TextEditingController(text: '6'),
+      columnsController: TextEditingController(),
+      tileControllers: [],
+      timeRanges: [],
+      includeSaturday: true,
     );
   }
 }
