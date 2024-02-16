@@ -168,33 +168,33 @@ class TimetableProvider extends StateNotifier<TimetableState> {
           Column(
             children: [
               TimetableButton(
+                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
                 child: const Text(''),
-                onPressed: () {},
               ),
               TimetableButton(
+                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
                 child: const Text('Monday'),
-                onPressed: () {},
               ),
               TimetableButton(
+                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
                 child: const Text('Tuesday'),
-                onPressed: () {},
               ),
               TimetableButton(
+                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
                 child: const Text('Wednesday'),
-                onPressed: () {},
               ),
               TimetableButton(
+                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
                 child: const Text('Thursday'),
-                onPressed: () {},
               ),
               TimetableButton(
+                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
                 child: const Text('Friday'),
-                onPressed: () {},
               ),
               if (state.includeSaturday)
                 TimetableButton(
+                  onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
                   child: const Text('Saturday'),
-                  onPressed: () {},
                 ),
             ],
           ),
