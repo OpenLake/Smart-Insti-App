@@ -42,4 +42,16 @@ class TimetableRepository {
       return null;
     }
   }
+
+  Future<bool> deleteTimetableById(String id) async {
+    _client.options.headers['authorization'] = await _secureStorage.read(key: 'token') ?? '';
+    try {
+      final response = await _client.delete('/timetables/$id');
+      _logger.i(response.data);
+      return true;
+    } catch (e) {
+      _logger.e(e);
+      return false;
+    }
+  }
 }
