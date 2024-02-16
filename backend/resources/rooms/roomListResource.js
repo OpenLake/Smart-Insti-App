@@ -1,5 +1,6 @@
 import { Router } from "express";
 import Room from "../../models/room.js";
+import * as messages from "../../constants/messages.js";
 const router = Router();
 
 // GET method
@@ -25,16 +26,12 @@ router.post("/", async (req, res) => {
 
     // Save the new room to the database
     await newRoom.save();
-    console.log("Room created successfully");
 
     // Respond with success message
-    res
-      .status(201)
-      .json({ message: "Room created successfully", room: newRoom });
+    res.status(201).json({ message: messages.roomCreated, room: newRoom });
   } catch (error) {
     // Handle errors
-    console.error("Error creating room:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ message: messages.internalServerError });
   }
 });
 

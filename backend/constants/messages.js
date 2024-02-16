@@ -36,3 +36,8 @@ export const deleted = "Deleted";
 export const itemNotFound = "Item not found";
 export const itemAdded = "Item added successfully";
 export const itemDeleted = "Item deleted successfully";
+
+// Rooom Vacancy
+export const roomNotFound = "Room not found";
+export const roomUpdated = "Room updated successfully";
+export const roomCreated = "Room created successfully";
