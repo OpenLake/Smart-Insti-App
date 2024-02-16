@@ -86,17 +86,31 @@ class TimetableProvider extends StateNotifier<TimetableState> {
             tilesDisabled: false,
           ),
         ) {
-    // loadTimetables();
+    loadTimetables();
   }
 
   final TimetableRepository _api;
+  final AuthState _authState;
   final Logger _logger = Logger();
 
   void loadTimetables() async {
+    state = state.copyWith(loadingState: LoadingState.progress);
     try {
-      final List<Timetable> timetables = await _api.getTimetables('');
+      String userId;
+
+      if (_authState.currentUserRole == 'student') {
+        userId = (_authState.currentUser as Student).id;
+      } else if (_authState.currentUserRole == 'faculty') {
+        userId = (_authState.currentUser as Faculty).id;
+      } else if (_authState.currentUserRole == 'admin') {
+        userId = (_authState.currentUser as Admin).id;
+      } else {
+        return;
+      }
+
+      final List<Timetable> timetables = await _api.getTimetablesByCreatorId(userId) ?? [];
       state = state.copyWith(
-        timetableList: timetables,
+        timetables: timetables,
         loadingState: LoadingState.success,
       );
     } catch (e) {
