@@ -116,34 +116,89 @@ class Timetables extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(height: 20),
                     ],
+                        ),
                   ),
                 ),
                 actions: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          BorderlessButton(
+                            onPressed: () {
+                              ref.read(timetableProvider.notifier).clearControllers();
+                              context.pop();
+                            },
+                            label: const Text('Back'),
+                            backgroundColor: Colors.red.shade100,
+                            splashColor: Colors.red.shade700,
+                          ),
                   BorderlessButton(
-                    onPressed: () => context.push('/user_home/timetables/editor'),
+                            onPressed: () {
+                              if (_formKey.currentState!.validate()) {
+                                if (ref.read(timetableProvider).columnsController.text == '') {
+                                  _toolTipKey.currentState?.ensureTooltipVisible();
+                                } else {
+                                  context.pop();
+                                  ref.read(timetableProvider.notifier).initTileControllersAndTime();
+                                  context.push('/user_home/timetables/editor');
+                                }
+                              }
+                            },
                     label: const Text('Add'),
                     backgroundColor: Colors.green.shade100,
                     splashColor: Colors.green.shade700,
                   ),
                 ],
+                      )
+                    ],
+                    actionsAlignment: MainAxisAlignment.spaceBetween,
               ),
             );
           },
           child: const Icon(Icons.add),
         ),
-        body: ListView.builder(
-          itemCount: 20,
+          ),
+        ),
+        body: Consumer(
+          builder: (_, ref, __) {
+            if (ref.watch(timetableProvider).timetables.isEmpty) {
+              return const Center(
+                child: Text(
+                  'No timetables so far',
+                  style: TextStyle(fontSize: 30, color: Colors.black38),
+                ),
+              );
+            } else {
+              return ListView.builder(
+                itemCount: ref.watch(timetableProvider).timetables.length,
           itemBuilder: (context, index) {
-            return OutlinedButton(
-              onPressed: () {
-                // context.push('/user_home/room_vacancy');
+                  return Container(
+                    margin: const EdgeInsets.all(10),
+                    child: ListTile(
+                      title: Text(ref.watch(timetableProvider).timetables[index].name),
+                      tileColor: Colors.grey.shade300,
+                      subtitle: Text('Rows: ${ref.watch(timetableProvider).timetables[index].rows} Columns: ${ref.watch(timetableProvider).timetables[index].columns}'),
+                      onTap: () {
+                        ref.read(timetableProvider.notifier).initTileControllersAndTime(timetable : ref.read(timetableProvider).timetables[index]);
+                        context.push('/user_home/timetables/editor');
               },
-              child: ListTile(
-                title: Text('Time Table $index'),
-              ),
+                      trailing: IconButton(
+                        icon: const Icon(Icons.delete),
+                        iconSize: 21,
+                        onPressed: () async {
+                          await ref.read(timetableProvider.notifier).deleteTimetable(ref.read(timetableProvider).timetables[index]);
+                        },
+                      ),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+
+                    ),
             );
+                },
+              );
+            }
           },
         ),
       ),
