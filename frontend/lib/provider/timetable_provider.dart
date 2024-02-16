@@ -1,43 +1,68 @@
-import 'package:flutter/cupertino.dart';
+import 'package:auto_size_text/auto_size_text.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:smart_insti_app/components/borderless_button.dart';
+import 'package:smart_insti_app/components/material_textformfield.dart';
+import 'package:smart_insti_app/provider/auth_provider.dart';
 import '../components/menu_tile.dart';
+import '../components/timetable_button.dart';
 import '../constants/constants.dart';
+import '../models/admin.dart';
+import '../models/faculty.dart';
+import '../models/student.dart';
 import '../models/timtable.dart';
 import '../repositories/timetable_repository.dart';
 
 final timetableProvider = StateNotifierProvider<TimetableProvider, TimetableState>((ref) => TimetableProvider(ref));
 
 class TimetableState {
-  final List<Timetable> timetableList;
-  final List<MenuTile> timetableTiles;
+  final List<Timetable> timetables;
   final TextEditingController searchTimetableController;
   final TextEditingController timetableNameController;
+  final TextEditingController rowsController;
   final TextEditingController columnsController;
+  final bool includeSaturday;
+  final List<List<TextEditingController>> tileControllers;
+  final List<(TimeOfDay, TimeOfDay)> timeRanges;
+  final bool tilesDisabled;
   final LoadingState loadingState;
 
   TimetableState(
-      {required this.timetableList,
-      required this.timetableTiles,
+      {required this.timetables,
       required this.searchTimetableController,
       required this.timetableNameController,
+      required this.rowsController,
       required this.columnsController,
+      required this.includeSaturday,
+      required this.tileControllers,
+      required this.timeRanges,
+      required this.tilesDisabled,
       required this.loadingState});
 
   TimetableState copyWith({
-    List<Timetable>? timetableList,
+    List<Timetable>? timetables,
     List<MenuTile>? timetableTiles,
     TextEditingController? searchTimetableController,
     TextEditingController? timetableNameController,
+    TextEditingController? rowsController,
     TextEditingController? columnsController,
+    bool? includeSaturday,
+    List<List<TextEditingController>>? tileControllers,
+    List<(TimeOfDay, TimeOfDay)>? timeRanges,
+    bool? tilesDisabled,
     LoadingState? loadingState,
   }) {
     return TimetableState(
-      timetableList: timetableList ?? this.timetableList,
-      timetableTiles: timetableTiles ?? this.timetableTiles,
+      timetables: timetables ?? this.timetables,
       searchTimetableController: searchTimetableController ?? this.searchTimetableController,
       timetableNameController: timetableNameController ?? this.timetableNameController,
+      rowsController: rowsController ?? this.rowsController,
       columnsController: columnsController ?? this.columnsController,
+      includeSaturday: includeSaturday ?? this.includeSaturday,
+      tileControllers: tileControllers ?? this.tileControllers,
+      timeRanges: timeRanges ?? this.timeRanges,
+      tilesDisabled: tilesDisabled ?? this.tilesDisabled,
       loadingState: loadingState ?? this.loadingState,
     );
   }
@@ -45,15 +70,20 @@ class TimetableState {
 
 class TimetableProvider extends StateNotifier<TimetableState> {
   TimetableProvider(Ref ref)
-      : _api = ref.read(timetableRepositoryProvider),
+      : _authState = ref.read(authProvider),
+        _api = ref.read(timetableRepositoryProvider),
         super(
           TimetableState(
-            timetableList: [],
-            timetableTiles: [],
+            timetables: [],
             searchTimetableController: TextEditingController(),
             timetableNameController: TextEditingController(),
+            rowsController: TextEditingController(text: '6'),
             columnsController: TextEditingController(),
+            includeSaturday: true,
+            tileControllers: [],
+            timeRanges: [],
             loadingState: LoadingState.progress,
+            tilesDisabled: false,
           ),
         ) {
     // loadTimetables();
