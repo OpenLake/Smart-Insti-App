@@ -315,6 +315,10 @@ class TimetableProvider extends StateNotifier<TimetableState> {
       child: timeTable,
     );
   }
+
+  void toggleIncludeSaturday() {
+    state.rowsController.text = state.includeSaturday ? '5' : '6';
+    state = state.copyWith(includeSaturday: !state.includeSaturday);
   }
 
   void deleteTimetable(Timetable timetable) {
