@@ -14,7 +14,7 @@ class MaterialTextFormField extends StatelessWidget {
       this.enabled,
       this.controllerLessValue,
       this.textAlign,
-      this.inputFormatters});
+      this.inputFormatters,
       this.onTap});
 
   final TextEditingController? controller;

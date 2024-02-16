@@ -7,8 +7,7 @@ import '../components/menu_tile.dart';
 import '../models/student.dart';
 import '../models/faculty.dart';
 
-final homeProvider =
-    StateNotifierProvider<UserProvider, HomeState>((ref) => UserProvider(ref));
+final homeProvider = StateNotifierProvider<UserProvider, HomeState>((ref) => UserProvider(ref));
 
 class HomeState {
   final bool toggleSearch;
@@ -44,6 +43,7 @@ class UserProvider extends StateNotifier<HomeState> {
             menuTiles: [],
           ),
         );
+
   get searchController => state.searchController;
 
   get toggleSearch => state.toggleSearch;
@@ -87,10 +87,7 @@ class UserProvider extends StateNotifier<HomeState> {
       ),
       MenuTile(
         title: 'Broadcast',
-        onTap: () {
-          // Navigate to the broadcast page
-          context.push('/user_home/broadcast');
-        },
+        onTap: () => context.push('/user_home/broadcast'),
         icon: Icons.announcement,
         primaryColor: Colors.greenAccent.shade100,
         secondaryColor: Colors.greenAccent.shade200,
@@ -98,17 +95,14 @@ class UserProvider extends StateNotifier<HomeState> {
       MenuTile(
         title: "Chat\nRoom",
         onTap: () => context.push('/user_home/chat_room'),
-        primaryColor: Colors.blueAccent.shade100,
-        secondaryColor: Colors.blueAccent.shade200,
+        primaryColor: Colors.redAccent.shade100,
+        secondaryColor: Colors.redAccent.shade200,
         icon: Icons.search,
       ),
     ];
     String query = state.searchController.text;
     state = state.copyWith(
-        menuTiles: menuTiles
-            .where((element) =>
-                element.title.toLowerCase().contains(query.toLowerCase()))
-            .toList());
+        menuTiles: menuTiles.where((element) => element.title.toLowerCase().contains(query.toLowerCase())).toList());
   }
 
   void toggleSearchBar() {
