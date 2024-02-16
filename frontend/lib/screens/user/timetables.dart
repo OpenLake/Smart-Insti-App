@@ -1,38 +1,60 @@
+import 'package:animated_toggle_switch/animated_toggle_switch.dart';
 import 'package:auto_orientation/auto_orientation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
+import 'package:smart_insti_app/constants/constants.dart';
+import 'package:smart_insti_app/provider/timetable_provider.dart';
 
-class Timetables extends StatelessWidget {
-  const Timetables({super.key});
+import '../../provider/auth_provider.dart';
+
+class Timetables extends ConsumerWidget {
+  Timetables({super.key});
+
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<TooltipState> _toolTipKey = GlobalKey<TooltipState>();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
+      }
+    });
+
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
         appBar: AppBar(
           title: const Text('Time Tables'),
         ),
-        floatingActionButton: FloatingActionButton(
-          onPressed: () {
-            showDialog(
-              context: context,
-              builder: (_) => AlertDialog(
+        floatingActionButton: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: SizedBox(
+            width: 70,
+            height: 70,
+            child: FloatingActionButton(
+              onPressed: () {
+                ref.read(timetableProvider.notifier).clearControllers();
+                showDialog(
+                  context: context,
+                  builder: (_) => AlertDialog(
                     content: SizedBox(
                       width: 400,
                       height: 305,
                       child: Form(
                         key: _formKey,
-                  child: Column(
-                    children: [
+                        child: Column(
+                          children: [
                             const Text(
-                        'Add Time Table',
-                        style: TextStyle(fontSize: 28),
-                      ),
+                              'Add Time Table',
+                              style: TextStyle(fontSize: 28),
+                            ),
                             const SizedBox(height: 20),
                             MaterialTextFormField(
                               hintText: "Timetable name",
@@ -40,10 +62,10 @@ class Timetables extends StatelessWidget {
                               validator: (value) => Validators.nameValidator(value),
                             ),
                             const SizedBox(height: 20),
-                      Row(
+                            Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          SizedBox(
+                              children: [
+                                SizedBox(
                                   width: 70,
                                   child: MaterialTextFormField(
                                     controller: ref.read(timetableProvider).rowsController,
@@ -113,14 +135,14 @@ class Timetables extends StatelessWidget {
                                             color: Colors.white,
                                           ),
                                   ),
-                          ),
-                        ],
-                      ),
-                    ],
+                                ),
+                              ],
+                            ),
+                          ],
                         ),
-                  ),
-                ),
-                actions: [
+                      ),
+                    ),
+                    actions: [
                       Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
@@ -133,7 +155,7 @@ class Timetables extends StatelessWidget {
                             backgroundColor: Colors.red.shade100,
                             splashColor: Colors.red.shade700,
                           ),
-                  BorderlessButton(
+                          BorderlessButton(
                             onPressed: () {
                               if (_formKey.currentState!.validate()) {
                                 if (ref.read(timetableProvider).columnsController.text == '') {
@@ -145,19 +167,19 @@ class Timetables extends StatelessWidget {
                                 }
                               }
                             },
-                    label: const Text('Add'),
-                    backgroundColor: Colors.green.shade100,
-                    splashColor: Colors.green.shade700,
-                  ),
-                ],
+                            label: const Text('Add'),
+                            backgroundColor: Colors.green.shade100,
+                            splashColor: Colors.green.shade700,
+                          ),
+                        ],
                       )
                     ],
                     actionsAlignment: MainAxisAlignment.spaceBetween,
-              ),
-            );
-          },
-          child: const Icon(Icons.add),
-        ),
+                  ),
+                );
+              },
+              child: const Icon(Icons.add),
+            ),
           ),
         ),
         body: Consumer(
@@ -172,7 +194,7 @@ class Timetables extends StatelessWidget {
             } else {
               return ListView.builder(
                 itemCount: ref.watch(timetableProvider).timetables.length,
-          itemBuilder: (context, index) {
+                itemBuilder: (context, index) {
                   return Container(
                     margin: const EdgeInsets.all(10),
                     child: ListTile(
@@ -182,7 +204,7 @@ class Timetables extends StatelessWidget {
                       onTap: () {
                         ref.read(timetableProvider.notifier).initTileControllersAndTime(timetable : ref.read(timetableProvider).timetables[index]);
                         context.push('/user_home/timetables/editor');
-              },
+                      },
                       trailing: IconButton(
                         icon: const Icon(Icons.delete),
                         iconSize: 21,
@@ -195,7 +217,7 @@ class Timetables extends StatelessWidget {
                       ),
 
                     ),
-            );
+                  );
                 },
               );
             }
