@@ -32,6 +32,7 @@ class Assets {
   static const String componentsSnackbar = 'lib/components/snackbar.dart';
   static const String componentsSuggestionTextField = 'lib/components/suggestion_text_field.dart';
   static const String componentsTextDivider = 'lib/components/text_divider.dart';
+  static const String componentsTimetableButton = 'lib/components/timetable_button.dart';
   static const String componentsYearPicker = 'lib/components/year_picker.dart';
   static const String constantsConstants = 'lib/constants/constants.dart';
   static const String constantsDummyEntries = 'lib/constants/dummy_entries.dart';
@@ -90,4 +91,5 @@ class Assets {
   static const String userTimetableEditor = 'lib/screens/user/timetable_editor.dart';
   static const String userTimetables = 'lib/screens/user/timetables.dart';
   static const String userUserHome = 'lib/screens/user/user_home.dart';
+
 }
