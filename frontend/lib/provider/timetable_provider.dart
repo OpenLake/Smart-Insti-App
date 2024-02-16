@@ -119,9 +119,47 @@ class TimetableProvider extends StateNotifier<TimetableState> {
     }
   }
 
-  void addTimetable() {
-    final Timetable timetable =
-        Timetable(id: '1', name: state.timetableNameController.text, rows: 5, columns: 5, timetable: []);
+  initTileControllersAndTime({Timetable? timetable}) {
+    if (timetable != null) {
+      state.rowsController.text = timetable.rows.toString();
+      state.columnsController.text = timetable.columns.toString();
+      state = state.copyWith(
+        //2d matrix of text controllers
+        tileControllers: List.generate(
+          timetable.columns,
+          (i) => List.generate(
+            timetable.rows,
+            (j) => TextEditingController(),
+          ),
+        ),
+        includeSaturday: timetable.rows == 6 ? true : false,
+        timeRanges: timetable.timeRanges,
+        tilesDisabled: true,
+      );
+
+      for (int i = 0; i < timetable.columns; i++) {
+        for (int j = 0; j < timetable.rows; j++) {
+          state.tileControllers[i][j].text = timetable.timetable[i][j];
+        }
+      }
+    } else {
+      state = state.copyWith(
+        //2d matrix of text controllers
+        tileControllers: List.generate(
+          int.parse(state.columnsController.text),
+          (i) => List.generate(
+            int.parse(state.rowsController.text),
+            (j) => TextEditingController(),
+          ),
+        ),
+        timeRanges: List.generate(
+          int.parse(state.columnsController.text),
+          (index) => (const TimeOfDay(hour: 0, minute: 0), const TimeOfDay(hour: 0, minute: 0)),
+        ),
+        tilesDisabled: false,
+      );
+    }
+  }
     state = state.copyWith(
       timetableList: [...state.timetableList, timetable],
       timetableNameController: TextEditingController(),
