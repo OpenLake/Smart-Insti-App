@@ -6,20 +6,24 @@ import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 
-class TimetableEditor extends ConsumerWidget {
+class TimetableEditor extends ConsumerStatefulWidget {
   const TimetableEditor({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<TimetableEditor> createState() => _TimetableEditorState();
+}
+
+class _TimetableEditorState extends ConsumerState<TimetableEditor> {
+  @override
+  Widget build(BuildContext context) {
     double width = MediaQuery.of(context).size.width;
     double height = MediaQuery.of(context).size.height;
-
-    AutoOrientation.landscapeAutoMode();
-    return PopScope(
-      onPopInvoked: (value) {
-        AutoOrientation.portraitUpMode();
-        context.go('/user_home/timetables');
-      },
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      SystemChrome.setPreferredOrientations([
+        DeviceOrientation.landscapeRight,
+        DeviceOrientation.landscapeLeft,
+      ]);
+    });
       child: Scaffold(
         floatingActionButton: SizedBox(
           width: 35,
@@ -66,5 +70,14 @@ class TimetableEditor extends ConsumerWidget {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+      DeviceOrientation.portraitDown,
+    ]);
+    super.dispose();
   }
 }
