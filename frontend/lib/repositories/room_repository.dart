@@ -27,12 +27,25 @@ class RoomRepository {
     }
   }
 
-  Future<void> reserveRoom(String roomId, String occupantId) async {
+  Future<bool> reserveRoom(String roomId, String occupantId, String userName) async {
     try {
-      final response = await _client.put('/room/$roomId', data: {'occupantId': occupantId});
+      final response = await _client.put('/room/$roomId', data: {'occupantName' : userName ,'occupantId': occupantId, 'vacant': false });
       Logger().i(response.data);
+      return true;
     } catch (e) {
       Logger().e(e);
+      return false;
+    }
+  }
+
+  Future<bool> vacateRoom(String roomId) async {
+    try {
+      final response = await _client.put('/room/$roomId', data: {'occupantId': null, 'vacant': true });
+      Logger().i(response.data);
+      return true;
+    } catch (e) {
+      Logger().e(e);
+      return false;
     }
   }
 
