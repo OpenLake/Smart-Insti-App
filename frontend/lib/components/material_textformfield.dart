@@ -11,7 +11,8 @@ class MaterialTextFormField extends StatelessWidget {
       this.contentPadding,
       this.hintColor,
       this.enabled,
-      this.controllerLessValue});
+      this.controllerLessValue,
+      this.onTap});
 
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -22,6 +23,7 @@ class MaterialTextFormField extends StatelessWidget {
   final EdgeInsets? contentPadding;
   final bool? enabled;
   final String? controllerLessValue;
+  final Function? onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -30,12 +32,14 @@ class MaterialTextFormField extends StatelessWidget {
       substituteController.text = controllerLessValue!;
     }
     return TextFormField(
+      onTap: () => onTap != null ? onTap!() : null,
       enabled: enabled ?? true,
       controller: controller ?? substituteController,
       maxLines: 1,
       onChanged: (value) => onChanged != null ? onChanged!(value) : null,
       validator: (value) => validator != null ? validator!(value) : null,
-      onFieldSubmitted: (value) => onSubmitted != null ? onSubmitted!(value) : null,
+      onFieldSubmitted: (value) =>
+          onSubmitted != null ? onSubmitted!(value) : null,
       cursorColor: Colors.teal.shade900,
       style: TextStyle(
         color: Colors.teal.shade900,

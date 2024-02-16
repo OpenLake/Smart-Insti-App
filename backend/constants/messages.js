@@ -28,3 +28,6 @@ export const tokenVerificationFailed =
   "Token verification failed, authorization denied.";
 export const invalidUserType = "Invalid user type";
 export const tokenUpdateError = "Error updating token";
+export const badRequest = "Bad request";
+export const notFound = "Not found";
+export const deleted = "Deleted";

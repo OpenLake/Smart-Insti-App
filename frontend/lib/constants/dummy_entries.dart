@@ -3,6 +3,7 @@ import '../models/course.dart';
 import '../models/faculty.dart';
 import '../models/lost_and_found_item.dart';
 import '../models/mess_menu.dart';
+import '../models/message.dart';
 import '../models/room.dart';
 import '../models/skills.dart';
 import '../models/student.dart';
@@ -1235,4 +1236,65 @@ class DummyAchievements {
     ),
   ];
 // You can use the dummyEntries list as needed in your application
+}
+
+class DummyMessages {
+  static List<Message> messages = [
+    Message(
+      sender: "Alice",
+      content: "Hello there!",
+      timestamp: DateTime.now(),
+    ),
+    Message(
+      sender: "Bob",
+      content: "Hi Alice!",
+      timestamp: DateTime.now().add(Duration(minutes: 5)),
+    ),
+    Message(
+      sender: "Alice",
+      content: "How are you?",
+      timestamp: DateTime.now().add(Duration(minutes: 10)),
+    ),
+    Message(
+      sender: "Bob",
+      content: "I'm doing well, thanks!",
+      timestamp: DateTime.now().add(Duration(minutes: 15)),
+    ),
+    // Add more messages as needed
+    Message(
+      sender: "Alice",
+      content: "What's your plan for the day?",
+      timestamp: DateTime.now().add(Duration(minutes: 20)),
+    ),
+    Message(
+      sender: "Bob",
+      content: "Just working on some projects.",
+      timestamp: DateTime.now().add(Duration(minutes: 25)),
+    ),
+    Message(
+      sender: "Alice",
+      content: "Sounds good!",
+      timestamp: DateTime.now().add(Duration(minutes: 30)),
+    ),
+    Message(
+      sender: "Bob",
+      content: "How about you?",
+      timestamp: DateTime.now().add(Duration(minutes: 35)),
+    ),
+    Message(
+      sender: "Alice",
+      content: "I have some errands to run.",
+      timestamp: DateTime.now().add(Duration(minutes: 40)),
+    ),
+    Message(
+      sender: "Bob",
+      content: "Have a great day!",
+      timestamp: DateTime.now().add(Duration(minutes: 45)),
+    ),
+    Message(
+      sender: "Alice",
+      content: "You too!",
+      timestamp: DateTime.now().add(Duration(minutes: 50)),
+    ),
+  ];
 }
