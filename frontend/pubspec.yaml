@@ -59,6 +59,7 @@ dependencies:
   image_cropper: ^5.0.1
   url_launcher: ^6.2.4
   flutter_dotenv: ^5.1.0
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
