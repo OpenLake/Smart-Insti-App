@@ -16,6 +16,8 @@ import roomResource from "./resources/rooms/roomResource.js";
 import lostAndFoundListResource from "./resources/lostAndFound/lostAndFoundListResource.js";
 import studentListResource from "./resources/student/studentListResource.js";
 import facultyListResource from "./resources/faculty/facultyListResource.js";
+import timetableListResource from "./resources/timetable/timetableListResource.js";
+import timetableResource from "./resources/timetable/timetableResource.js";
 import messageResource from './resources/chatroom/messageListResource.js'
 
 const PORT = `${process.env.PORT || 3000}`;
@@ -34,6 +36,9 @@ app.use("/student", studentResource);
 app.use("/students", studentListResource);
 app.use("/faculty", facultyResource);
 app.use("/faculties", facultyListResource);
+app.use("/timetable", timetableResource);
+app.use("/timetables", timetableListResource);
+
 app.use("/admin-auth", adminAuthResource);
 app.use("/general-auth", generalAuthResource);
 app.use("/otp", otpResource);
