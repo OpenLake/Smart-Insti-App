@@ -50,6 +50,8 @@ dependencies:
   slide_switcher: ^1.1.2
   awesome_snackbar_content: ^0.1.1
   animated_toggle_switch: ^0.8.0
+  syncfusion_flutter_sliders: ^24.2.3
+  fl_chart: ^0.66.1
   dio: ^5.4.0
   animated_text_kit: ^4.2.2
   image_picker: ^1.0.7

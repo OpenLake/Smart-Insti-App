@@ -16,11 +16,13 @@ import '../screens/admin/view_courses.dart';
 import '../screens/admin/view_faculty.dart';
 import '../screens/admin/view_menu.dart';
 import '../screens/auth/admin_login.dart';
+import '../screens/user/chat_room.dart';
 import '../screens/user/room_vacancy.dart';
 import '../screens/user/timetables.dart';
+import '../screens/user/student_profile.dart';
 import '../screens/user/user_home.dart';
 import '../screens/user/faculty_profile.dart';
-import '../screens/user/student_profile.dart';
+import '../screens/user/broadcast.dart';
 
 final GoRouter routes = GoRouter(
   initialLocation: '/',
@@ -114,6 +116,14 @@ final GoRouter routes = GoRouter(
               pageBuilder: (context, state) => const MaterialPage(child: TimetableEditor()),
             ),
           ],
+        ),
+        GoRoute(
+          path: 'broadcast',
+          pageBuilder: (context, state) => MaterialPage(child: BroadcastPage()),
+        ),
+        GoRoute(
+          path: 'chat_room',
+          pageBuilder: (context, state) => MaterialPage(child: ChatRoom()),
         ),
       ],
     ),

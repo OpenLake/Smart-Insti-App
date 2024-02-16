@@ -3,6 +3,7 @@ import '../models/course.dart';
 import '../models/faculty.dart';
 import '../models/lost_and_found_item.dart';
 import '../models/mess_menu.dart';
+import '../models/message.dart';
 import '../models/room.dart';
 import '../models/skills.dart';
 import '../models/student.dart';
@@ -15,11 +16,13 @@ class DummyStudents {
       email: 'john.doe@example.com',
       rollNumber: '89890',
       about: 'I am a computer science student.',
-      profilePicURI: '',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
       branch: 'Computer Science',
       graduationYear: 2023,
-      skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      skills: [DummySkills.skills[1], DummySkills.skills[2]],
+      achievements: Dummyachievements.achievements.sublist(0, 5),
+      roles: ['Core Member', 'Coordinator'],
     ),
     Student(
       id: '2',
@@ -31,7 +34,38 @@ class DummyStudents {
       branch: 'Mechanical Engineering',
       roles: ['Student,Class Representative'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
+    ),
+    Student(
+      id: '3',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      rollNumber: 'R001',
+      about: 'I am a computer science student.',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
+      branch: 'Computer Science',
+      graduationYear: 2023,
+      skills: [DummySkills.skills[1], DummySkills.skills[2]],
+      achievements: [
+        Dummyachievements.achievements[1],
+        Dummyachievements.achievements[2]
+      ],
+      roles: ['Core Member', 'Coordinator'],
+    ),
+    Student(
+      id: '4',
+      name: 'John Doe',
+      email: 'john.doe@example.com',
+      rollNumber: 'R001',
+      about: 'I am a computer science student.',
+      profilePicURI:
+          'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
+      branch: 'Computer Science',
+      graduationYear: 2023,
+      skills: [DummySkills.skills[1], DummySkills.skills[2]],
+      roles: ['Core Member', 'Coordinator'],
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '3',
@@ -43,7 +77,7 @@ class DummyStudents {
       branch: 'Electrical Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '4',
@@ -55,7 +89,7 @@ class DummyStudents {
       branch: 'Civil Engineering',
       roles: ['Student,Class Representative'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '5',
@@ -67,7 +101,7 @@ class DummyStudents {
       branch: 'Chemical Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '6',
@@ -79,7 +113,7 @@ class DummyStudents {
       branch: 'Biotechnology',
       roles: ['Student,Class Representative'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '7',
@@ -91,7 +125,7 @@ class DummyStudents {
       branch: 'Aerospace Engineering',
       roles: ['Student,Teaching Assistant'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '8',
@@ -103,7 +137,7 @@ class DummyStudents {
       branch: 'Information Technology',
       roles: ['Student,Teaching Assistant'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '9',
@@ -115,7 +149,7 @@ class DummyStudents {
       branch: 'Mechatronics',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '10',
@@ -127,7 +161,7 @@ class DummyStudents {
       branch: 'Robotics Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '11',
@@ -139,7 +173,7 @@ class DummyStudents {
       branch: 'Industrial Engineering',
       roles: ['Student,Teaching Assistant'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '12',
@@ -151,7 +185,7 @@ class DummyStudents {
       branch: 'Computer Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '13',
@@ -163,7 +197,7 @@ class DummyStudents {
       branch: 'Software Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '14',
@@ -175,7 +209,7 @@ class DummyStudents {
       branch: 'Environmental Engineering',
       roles: ['Student'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '15',
@@ -187,7 +221,7 @@ class DummyStudents {
       branch: 'Petrolesum Engineer]ing',
       roles: ['Student,Class Representative'],
       skills: DummySkills.skills.sublist(0, 5),
-      achievements: DummyAchievements.achievements.sublist(0, 5),
+      achievements: Dummyachievements.achievements.sublist(0, 5),
     ),
     Student(
       id: '16',
@@ -249,6 +283,61 @@ class DummyStudents {
       skills: DummySkills.skills.sublist(0, 5),
       achievements: DummyAchievements.achievements.sublist(0, 5),
     ),
+  ];
+}
+
+class Dummyachievements {
+  static List<Achievement> achievements = [
+    Achievement(
+        id: '1',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '2',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '3',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '4',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '5',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '6',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '7',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '8',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '9',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon'),
+    Achievement(
+        id: '10',
+        name: 'Hackathon Winner',
+        date: DateTime(2023, 02, 01),
+        description: 'First place in XYZ Hackathon')
   ];
 }
 
@@ -434,7 +523,11 @@ class DummyFaculties {
       id: '2',
       name: 'Prof. Johnson',
       email: 'johnson@example.com',
-      courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]],
+      courses: [
+        DummyCourses.courses[1],
+        DummyCourses.courses[6],
+        DummyCourses.courses[11]
+      ],
       cabinNumber: 'C-102',
       department: 'Mechanical Engineering',
     ),
@@ -442,7 +535,11 @@ class DummyFaculties {
       id: '3',
       name: 'Dr. Brown',
       email: 'brown@example.com',
-      courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]],
+      courses: [
+        DummyCourses.courses[2],
+        DummyCourses.courses[7],
+        DummyCourses.courses[12]
+      ],
       cabinNumber: 'C-103',
       department: 'Electrical Engineering',
     ),
@@ -450,119 +547,187 @@ class DummyFaculties {
         id: '4',
         name: 'Prof. Davis',
         email: 'davis@example.com',
-        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]],
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ],
         cabinNumber: 'C-104',
         department: 'Civil Engineering'),
     Faculty(
         id: '5',
         name: 'Dr. Wilson',
         email: 'wilson@example.com',
-        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]],
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ],
         cabinNumber: 'C-105',
         department: 'Chemical Engineering'),
     Faculty(
         id: '6',
         name: 'Prof. Miller',
         email: 'miller@example.com',
-        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]],
+        courses: [
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10]
+        ],
         cabinNumber: 'C-106',
         department: 'Biotechnology'),
     Faculty(
         id: '7',
         name: 'Dr. Turner',
         email: 'turner@example.com',
-        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]],
+        courses: [
+          DummyCourses.courses[1],
+          DummyCourses.courses[6],
+          DummyCourses.courses[11]
+        ],
         cabinNumber: 'C-107',
         department: 'Aerospace Engineering'),
     Faculty(
         id: '8',
         name: 'Prof. Clark',
         email: 'clark@example.com',
-        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]],
+        courses: [
+          DummyCourses.courses[2],
+          DummyCourses.courses[7],
+          DummyCourses.courses[12]
+        ],
         cabinNumber: 'C-108',
         department: 'Information Technology'),
     Faculty(
         id: '9',
         name: 'Dr. Harris',
         email: 'harris@example.com',
-        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]],
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ],
         cabinNumber: 'C-109',
         department: 'Mechatronics'),
     Faculty(
         id: '10',
         name: 'Prof. Turner',
         email: 'turner@example.com',
-        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]],
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ],
         cabinNumber: 'C-110',
         department: 'Robotics Engineering'),
     Faculty(
         id: '11',
         name: 'Dr. White',
         email: 'white@example.com',
-        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]],
+        courses: [
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10]
+        ],
         cabinNumber: 'D-101',
         department: 'Industrial Engineering'),
     Faculty(
         id: '12',
         name: 'Prof. Allen',
         email: 'allen@example.com',
-        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]],
+        courses: [
+          DummyCourses.courses[1],
+          DummyCourses.courses[6],
+          DummyCourses.courses[11]
+        ],
         cabinNumber: 'D-102',
         department: 'Computer Engineering'),
     Faculty(
         id: '13',
         name: 'Dr. Young',
         email: 'young@example.com',
-        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]],
+        courses: [
+          DummyCourses.courses[2],
+          DummyCourses.courses[7],
+          DummyCourses.courses[12]
+        ],
         cabinNumber: 'D-103',
         department: 'Software Engineering'),
     Faculty(
         id: '14',
         name: 'Prof. Walker',
         email: 'walker@example.com',
-        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]],
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ],
         cabinNumber: 'D-104',
         department: 'Environmental Engineering'),
     Faculty(
         id: '15',
         name: 'Dr. Lee',
         email: 'lee@example.com',
-        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]],
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ],
         cabinNumber: 'D-105',
         department: 'Petrolesum[ Engineer]ing'),
     Faculty(
         id: '16',
         name: 'Prof. Hall',
         email: 'hall@example.com',
-        courses: [DummyCourses.courses[0], DummyCourses.courses[5], DummyCourses.courses[10]],
+        courses: [
+          DummyCourses.courses[0],
+          DummyCourses.courses[5],
+          DummyCourses.courses[10]
+        ],
         cabinNumber: 'D-106',
         department: 'Nuclear Engineering'),
     Faculty(
         id: '17',
         name: 'Dr. Miller',
         email: 'miller@example.com',
-        courses: [DummyCourses.courses[1], DummyCourses.courses[6], DummyCourses.courses[11]],
+        courses: [
+          DummyCourses.courses[1],
+          DummyCourses.courses[6],
+          DummyCourses.courses[11]
+        ],
         cabinNumber: 'D-107',
         department: 'Biomedical Engineering'),
     Faculty(
         id: '18',
         name: 'Prof. Baker',
         email: 'baker@example.com',
-        courses: [DummyCourses.courses[2], DummyCourses.courses[7], DummyCourses.courses[12]],
+        courses: [
+          DummyCourses.courses[2],
+          DummyCourses.courses[7],
+          DummyCourses.courses[12]
+        ],
         cabinNumber: 'D-108',
         department: 'Chemical Engineering'),
     Faculty(
         id: '19',
         name: 'Dr. Turner',
         email: 'turner@example.com',
-        courses: [DummyCourses.courses[3], DummyCourses.courses[8], DummyCourses.courses[13]],
+        courses: [
+          DummyCourses.courses[3],
+          DummyCourses.courses[8],
+          DummyCourses.courses[13]
+        ],
         cabinNumber: 'D-109',
         department: 'Electronics Engineering'),
     Faculty(
         id: '20',
         name: 'Prof. Smith',
         email: 'smith@example.com',
-        courses: [DummyCourses.courses[4], DummyCourses.courses[9], DummyCourses.courses[14]],
+        courses: [
+          DummyCourses.courses[4],
+          DummyCourses.courses[9],
+          DummyCourses.courses[14]
+        ],
         cabinNumber: 'D-110',
         department: 'Computer Science'),
   ];
@@ -834,7 +999,11 @@ class DummyRooms {
     Room(id: '16', name: 'Outdoor Sports Arena', vacant: true),
     Room(id: '17', name: 'Medical Clinic', vacant: false, occupantId: 'S004'),
     Room(id: '18', name: 'Music Room', vacant: true),
-    Room(id: '19', name: 'Student Council Office', vacant: false, occupantId: 'T005'),
+    Room(
+        id: '19',
+        name: 'Student Council Office',
+        vacant: false,
+        occupantId: 'T005'),
     Room(id: '20', name: 'Virtual Reality Lab', vacant: true),
   ];
 }
@@ -1011,13 +1180,15 @@ class DummyAchievements {
       id: '12',
       name: 'Training and Development',
       date: DateTime(2022, 4, 22),
-      description: 'Contributed significantly to employee training and development.',
+      description:
+          'Contributed significantly to employee training and development.',
     ),
     Achievement(
       id: '13',
       name: 'Quality Assurance Recognition',
       date: DateTime(2023, 2, 14),
-      description: 'Acknowledged for ensuring high-quality standards in projects.',
+      description:
+          'Acknowledged for ensuring high-quality standards in projects.',
     ),
     Achievement(
       id: '14',
@@ -1053,14 +1224,77 @@ class DummyAchievements {
       id: '19',
       name: 'Health and Wellness Initiative',
       date: DateTime(2023, 9, 10),
-      description: 'Led initiatives to promote health and wellness in the workplace.',
+      description:
+          'Led initiatives to promote health and wellness in the workplace.',
     ),
     Achievement(
       id: '20',
       name: 'Public Speaking Achievement',
       date: DateTime(2022, 1, 30),
-      description: 'Received acclaim for public speaking skills at a conference.',
+      description:
+          'Received acclaim for public speaking skills at a conference.',
     ),
   ];
 // You can use the dummyEntries list as needed in your application
+}
+
+class DummyMessages {
+  static List<Message> messages = [
+    Message(
+      sender: "Alice",
+      content: "Hello there!",
+      timestamp: DateTime.now(),
+    ),
+    Message(
+      sender: "Bob",
+      content: "Hi Alice!",
+      timestamp: DateTime.now().add(Duration(minutes: 5)),
+    ),
+    Message(
+      sender: "Alice",
+      content: "How are you?",
+      timestamp: DateTime.now().add(Duration(minutes: 10)),
+    ),
+    Message(
+      sender: "Bob",
+      content: "I'm doing well, thanks!",
+      timestamp: DateTime.now().add(Duration(minutes: 15)),
+    ),
+    // Add more messages as needed
+    Message(
+      sender: "Alice",
+      content: "What's your plan for the day?",
+      timestamp: DateTime.now().add(Duration(minutes: 20)),
+    ),
+    Message(
+      sender: "Bob",
+      content: "Just working on some projects.",
+      timestamp: DateTime.now().add(Duration(minutes: 25)),
+    ),
+    Message(
+      sender: "Alice",
+      content: "Sounds good!",
+      timestamp: DateTime.now().add(Duration(minutes: 30)),
+    ),
+    Message(
+      sender: "Bob",
+      content: "How about you?",
+      timestamp: DateTime.now().add(Duration(minutes: 35)),
+    ),
+    Message(
+      sender: "Alice",
+      content: "I have some errands to run.",
+      timestamp: DateTime.now().add(Duration(minutes: 40)),
+    ),
+    Message(
+      sender: "Bob",
+      content: "Have a great day!",
+      timestamp: DateTime.now().add(Duration(minutes: 45)),
+    ),
+    Message(
+      sender: "Alice",
+      content: "You too!",
+      timestamp: DateTime.now().add(Duration(minutes: 50)),
+    ),
+  ];
 }

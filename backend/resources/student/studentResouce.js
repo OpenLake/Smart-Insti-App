@@ -30,11 +30,10 @@ studentRouter.put("/:id", async (req, res) => {
       studentId,
       studentData,
       { new: true }
-    )
-      .populate("skills")
-      .populate("achievements");
+    );
     res.json(updatedStudent);
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: messages.internalServerError });
   }
 });
@@ -43,9 +42,9 @@ studentRouter.delete("/:id", async (req, res) => {
   const studentId = req.params.id;
 
   try {
-    const deletedStudent = await Student.findByIdAndDelete(studentId)
-      .populate("skills")
-      .populate("achievements");
+    const deletedStudent = await Student.findByIdAndDelete(studentId);
+      // .populate("skills")
+      // .populate("achievements");
     res.json(deletedStudent);
   } catch (error) {
     res.status(500).json({ message: messages.internalServerError });
