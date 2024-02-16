@@ -107,7 +107,7 @@ final GoRouter routes = GoRouter(
         ),
         GoRoute(
           path: 'timetables',
-          pageBuilder: (context, state) => const MaterialPage(child: Timetables()),
+          pageBuilder: (context, state) => MaterialPage(child: Timetables()),
           routes: [
             GoRoute(
               path: 'editor',
