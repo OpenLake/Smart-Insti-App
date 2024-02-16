@@ -11,13 +11,16 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:url_launcher/url_launcher_string.dart';
 import 'dart:io';
 import '../constants/constants.dart';
+import '../models/admin.dart';
+import '../models/faculty.dart';
+import '../models/student.dart';
+import 'auth_provider.dart';
 
 final lostAndFoundProvider =
     StateNotifierProvider<LostAndFoundStateNotifier, LostAndFoundState>((ref) => LostAndFoundStateNotifier(ref));
 
 class LostAndFoundState {
   final List<LostAndFoundItem> lostAndFoundItemList;
-  final List<File> lostAndFoundImageList;
   final TextEditingController itemNameController;
   final TextEditingController itemDescriptionController;
   final TextEditingController lastSeenLocationController;
@@ -29,7 +32,6 @@ class LostAndFoundState {
 
   LostAndFoundState({
     required this.lostAndFoundItemList,
-    required this.lostAndFoundImageList,
     required this.itemNameController,
     required this.itemDescriptionController,
     required this.lastSeenLocationController,
@@ -54,7 +56,6 @@ class LostAndFoundState {
   }) {
     return LostAndFoundState(
       lostAndFoundItemList: lostAndFoundItemList ?? this.lostAndFoundItemList,
-      lostAndFoundImageList: lostAndFoundImageList ?? this.lostAndFoundImageList,
       itemNameController: itemNameController ?? this.itemNameController,
       itemDescriptionController: itemDescriptionController ?? this.itemDescriptionController,
       lastSeenLocationController: lastSeenLocationController ?? this.lastSeenLocationController,
@@ -69,11 +70,11 @@ class LostAndFoundState {
 
 class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
   LostAndFoundStateNotifier(Ref ref)
-      : _api = ref.read(lostAndFoundRepositoryProvider),
+      : _authState = ref.read(authProvider),
+        _api = ref.read(lostAndFoundRepositoryProvider),
         super(
           LostAndFoundState(
-            lostAndFoundItemList: DummyLostAndFound.lostAndFoundItems,
-            lostAndFoundImageList: [],
+            lostAndFoundItemList: [],
             itemNameController: TextEditingController(),
             itemDescriptionController: TextEditingController(),
             lastSeenLocationController: TextEditingController(),
@@ -88,21 +89,39 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
   }
 
   final LostAndFoundRepository _api;
-
+  final AuthState _authState;
   final Logger _logger = Logger();
 
-  void addItem() {
+  Future<void> addItem() async {
+
+    String userId;
+
+    if (_authState.currentUserRole == 'student') {
+      userId = (_authState.currentUser as Student).id;
+    } else if (_authState.currentUserRole == 'faculty') {
+      userId = (_authState.currentUser as Faculty).id;
+    } else if (_authState.currentUserRole == 'admin') {
+      userId = (_authState.currentUser as Admin).id;
+    } else {
+      return;
+    }
+
     final LostAndFoundItem item = LostAndFoundItem(
       name: state.itemNameController.text,
       lastSeenLocation: state.lastSeenLocationController.text,
       imagePath: state.selectedImage?.path,
       description: state.itemDescriptionController.text,
       isLost: state.listingStatus == LostAndFoundConstants.lostState,
+      listerId: userId,
       contactNumber: state.contactNumberController.text,
     );
     state = state.copyWith(loadingState: LoadingState.progress);
-    _api.addLostAndFoundItem(item);
-    loadItems();
+    if(await _api.addLostAndFoundItem(item)){
+      loadItems();
+    }
+    else{
+      state = state.copyWith(loadingState: LoadingState.error);
+    }
   }
 
   launchCaller(String number) async {
@@ -177,5 +196,15 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
 
   Image imageFromBase64String(String base64String) {
     return Image.memory(base64Decode(base64String));
+  }
+
+  Future<void> deleteItem(String id) async {
+    state = state.copyWith(loadingState: LoadingState.progress);
+    if(await _api.deleteLostAndFoundItem(id)){
+        loadItems();
+    }
+    else{
+      state = state.copyWith(loadingState: LoadingState.error);
+    }
   }
 }
