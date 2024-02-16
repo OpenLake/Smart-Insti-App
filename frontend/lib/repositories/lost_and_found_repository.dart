@@ -17,6 +17,8 @@ class LostAndFoundRepository {
     ),
   );
 
+  final Logger _logger = Logger();
+
   Future<List<LostAndFoundItem>> lostAndFoundItems() async {
     try {
       final response = await _client.get('/lost-and-found');
@@ -31,26 +33,42 @@ class LostAndFoundRepository {
     }
   }
 
-  Future<void> addLostAndFoundItem(LostAndFoundItem item) async {
+  Future<bool> deleteLostAndFoundItem(String id) async {
     try {
-      String? fileName = item.imagePath?.split('/').last;
-      FormData formData = FormData.fromMap({
-        "name": item.name,
-        "lastSeenLocation": item.lastSeenLocation,
-        "description": item.description,
-        "contactNumber": item.contactNumber,
-        "isLost": item.isLost,
-        "image": item.imagePath != null
-            ? await MultipartFile.fromFile(
-                item.imagePath!,
-                filename: fileName,
-              )
-            : null,
-      });
-      final response = await _client.post('/lost-and-found', data: formData);
-      Logger().w(response.data);
+      final response = await _client.delete('/lost-and-found-item/$id');
+      Logger().i(response.data);
+      return true;
     } catch (e) {
       Logger().e(e);
+      return false;
+    }
+  }
+
+  Future<bool> addLostAndFoundItem(LostAndFoundItem item) async {
+    try {
+      String? fileName = item.imagePath?.split('/').last;
+      FormData formData = FormData.fromMap(
+        {
+          "name": item.name,
+          "lastSeenLocation": item.lastSeenLocation,
+          "description": item.description,
+          "contactNumber": item.contactNumber,
+          "isLost": item.isLost,
+          "listerId": item.listerId,
+          "image": item.imagePath != null
+              ? await MultipartFile.fromFile(
+                  item.imagePath!,
+                  filename: fileName,
+                )
+              : null,
+        },
+      );
+      final response = await _client.post('/lost-and-found', data: formData);
+      Logger().i(response.data);
+      return true;
+    } catch (e) {
+      Logger().e(e);
+      return false;
     }
   }
 }
