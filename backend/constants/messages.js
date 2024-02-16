@@ -31,3 +31,8 @@ export const tokenUpdateError = "Error updating token";
 export const badRequest = "Bad request";
 export const notFound = "Not found";
 export const deleted = "Deleted";
+
+// Lost and Found
+export const itemNotFound = "Item not found";
+export const itemAdded = "Item added successfully";
+export const itemDeleted = "Item deleted successfully";
