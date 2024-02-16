@@ -160,10 +160,161 @@ class TimetableProvider extends StateNotifier<TimetableState> {
       );
     }
   }
+
+  Widget buildTimetableTiles(BuildContext context) {
+    final timeTable = Consumer(
+      builder: (_, ref, __) => Row(
+        children: [
+          Column(
+            children: [
+              TimetableButton(
+                child: const Text(''),
+                onPressed: () {},
+              ),
+              TimetableButton(
+                child: const Text('Monday'),
+                onPressed: () {},
+              ),
+              TimetableButton(
+                child: const Text('Tuesday'),
+                onPressed: () {},
+              ),
+              TimetableButton(
+                child: const Text('Wednesday'),
+                onPressed: () {},
+              ),
+              TimetableButton(
+                child: const Text('Thursday'),
+                onPressed: () {},
+              ),
+              TimetableButton(
+                child: const Text('Friday'),
+                onPressed: () {},
+              ),
+              if (state.includeSaturday)
+                TimetableButton(
+                  child: const Text('Saturday'),
+                  onPressed: () {},
+                ),
+            ],
+          ),
+          for (int i = 0; i < int.parse(state.columnsController.text); i++)
+            Column(
+              children: [
+                TimetableButton(
+                  onPressed: ref.read(timetableProvider).tilesDisabled
+                      ? () {}
+                      : () {
+                          showDialog(
+                            context: context,
+                            builder: (context) => AlertDialog(
+                              title: const Text('Edit Time Range'),
+                              content: Container(
+                                width: 300,
+                                height: 100,
+                                color: Colors.transparent,
+                                child: Consumer(
+                                  builder: (_, ref, __) => Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                    children: [
+                                      BorderlessButton(
+                                        backgroundColor: Colors.green.shade100,
+                                        onPressed: () async {
+                                          final TimeOfDay? time = await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.now(),
+                                            initialEntryMode: TimePickerEntryMode.dial,
+                                          );
+                                          if (time != null) {
+                                            state = state.copyWith(
+                                              timeRanges: [
+                                                ...state.timeRanges.sublist(0, i),
+                                                (time, state.timeRanges[i].$2),
+                                                ...state.timeRanges.sublist(i + 1),
+                                              ],
+                                            );
+                                          }
+                                        },
+                                        splashColor: Colors.green.shade700,
+                                        label: Text(
+                                            '${ref.watch(timetableProvider).timeRanges[i].$1.hour}:${ref.watch(timetableProvider).timeRanges[i].$1.minute}'),
+                                      ),
+                                      BorderlessButton(
+                                        backgroundColor: Colors.red.shade100,
+                                        onPressed: () async {
+                                          final TimeOfDay? time = await showTimePicker(
+                                            context: context,
+                                            initialTime: TimeOfDay.now(),
+                                            initialEntryMode: TimePickerEntryMode.dial,
+                                          );
+                                          if (time != null) {
     state = state.copyWith(
-      timetableList: [...state.timetableList, timetable],
-      timetableNameController: TextEditingController(),
+                                              timeRanges: [
+                                                ...state.timeRanges.sublist(0, i),
+                                                (state.timeRanges[i].$1, time),
+                                                ...state.timeRanges.sublist(i + 1),
+                                              ],
+                                            );
+                                          }
+                                        },
+                                        splashColor: Colors.red.shade700,
+                                        label: Text(
+                                            '${ref.watch(timetableProvider).timeRanges[i].$2.hour}:${ref.watch(timetableProvider).timeRanges[i].$2.minute}'),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ),
+                          );
+                        },
+                  child: AutoSizeText(
+                    '${ref.watch(timetableProvider).timeRanges[i].$1.hour}:${ref.watch(timetableProvider).timeRanges[i].$1.minute} - ${ref.watch(timetableProvider).timeRanges[i].$2.hour}:${ref.watch(timetableProvider).timeRanges[i].$2.minute}',
+                    maxLines: 1,
+                    minFontSize: 12,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                for (int j = 0; j < int.parse(state.rowsController.text); j++)
+                  TimetableButton(
+                    onPressed: ref.read(timetableProvider).tilesDisabled
+                        ? () {}
+                        : () {
+                            showDialog(
+                              context: context,
+                              builder: (context) => AlertDialog(
+                                scrollable: true,
+                                title: const Text('Edit Subject'),
+                                content: Container(
+                                  width: 300,
+                                  color: Colors.transparent,
+                                  child: IntrinsicHeight(
+                                    child: MaterialTextFormField(
+                                      controller: state.tileControllers[i][j],
+                                      hintText: 'Enter Subject',
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            );
+                          },
+                    child: AutoSizeText(
+                      state.tileControllers[i][j].text,
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3,
+                      minFontSize: 12,
+                    ),
+                  ),
+              ],
+            ),
+        ],
+      ),
     );
+
+    return FittedBox(
+      child: timeTable,
+    );
+  }
   }
 
   void deleteTimetable(Timetable timetable) {
