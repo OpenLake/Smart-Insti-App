@@ -351,6 +351,12 @@ class TimetableProvider extends StateNotifier<TimetableState> {
     }
   }
 
+  Future<void> deleteTimetable(Timetable timetable) async {
+    if (await _api.deleteTimetableById(timetable.id!)) {
+      loadTimetables();
+    }
+  }
+
     state = state.copyWith(
       timetableList: state.timetableList.where((t) => t.id != timetable.id).toList(),
     );
