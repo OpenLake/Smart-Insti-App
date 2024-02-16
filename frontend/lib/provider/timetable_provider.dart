@@ -321,7 +321,36 @@ class TimetableProvider extends StateNotifier<TimetableState> {
     state = state.copyWith(includeSaturday: !state.includeSaturday);
   }
 
-  void deleteTimetable(Timetable timetable) {
+  Future<void> addTimetable() async {
+    String userId;
+
+    if (_authState.currentUserRole == 'student') {
+      userId = (_authState.currentUser as Student).id;
+    } else if (_authState.currentUserRole == 'faculty') {
+      userId = (_authState.currentUser as Faculty).id;
+    } else {
+      userId = (_authState.currentUser as Admin).id;
+    }
+
+    final Timetable timetable = Timetable(
+      creatorId: userId,
+      name: state.timetableNameController.text,
+      rows: int.parse(state.rowsController.text),
+      columns: int.parse(state.columnsController.text),
+      timeRanges: state.timeRanges,
+      timetable: List.generate(
+        int.parse(state.columnsController.text),
+        (i) => List.generate(
+          int.parse(state.rowsController.text),
+          (j) => state.tileControllers[i][j].text,
+        ),
+      ),
+    );
+    if (await _api.createTimetable(timetable)) {
+      loadTimetables();
+    }
+  }
+
     state = state.copyWith(
       timetableList: state.timetableList.where((t) => t.id != timetable.id).toList(),
     );
