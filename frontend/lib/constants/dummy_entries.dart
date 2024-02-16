@@ -1015,6 +1015,7 @@ class DummyLostAndFound {
       description: 'Black Dell laptop with a sticker on the back',
       lastSeenLocation: 'Library',
       contactNumber: '+91 1234567890',
+      listerId: 'S001',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -1022,6 +1023,7 @@ class DummyLostAndFound {
       description: 'White iPhone 12 with a black case',
       lastSeenLocation: 'Cafeteria',
       contactNumber: '+91 9876543210',
+      listerId: 'S002',
       isLost: true,
     ),
     LostAndFoundItem(
@@ -1029,6 +1031,7 @@ class DummyLostAndFound {
       description: 'Blue steel water bottle with a dent on the bottom',
       lastSeenLocation: 'Gymnasium',
       contactNumber: '+91 4567890123',
+      listerId: 'S003',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -1036,6 +1039,7 @@ class DummyLostAndFound {
       description: 'Red and black backpack with a broken zipper',
       lastSeenLocation: 'Auditorium',
       contactNumber: '+91 7890123456',
+      listerId: 'S004',
       isLost: true,
     ),
     LostAndFoundItem(
@@ -1043,6 +1047,7 @@ class DummyLostAndFound {
       description: 'Silver wristwatch with a black leather strap',
       lastSeenLocation: 'Classroom 101',
       contactNumber: '+91 2345678901',
+      listerId: 'S005',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -1050,6 +1055,7 @@ class DummyLostAndFound {
       description: 'Green and white striped umbrella with a broken handle',
       lastSeenLocation: 'Student Lounge',
       contactNumber: '+91 8901234567',
+      listerId: 'S006',
       isLost: true,
     ),
     LostAndFoundItem(
@@ -1057,6 +1063,7 @@ class DummyLostAndFound {
       description: 'Black aviator sunglasses with a scratch on the left lens',
       lastSeenLocation: 'Cafeteria',
       contactNumber: '+91 3456789012',
+      listerId: 'S007',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -1064,6 +1071,7 @@ class DummyLostAndFound {
       description: 'Brown leather wallet with a broken zipper',
       lastSeenLocation: 'Library',
       contactNumber: '+91 9012345678',
+      listerId: 'S008',
       isLost: true,
     ),
     LostAndFoundItem(
@@ -1071,6 +1079,7 @@ class DummyLostAndFound {
       description: 'Black over-ear headphones with a missing ear cushion',
       lastSeenLocation: 'Auditorium',
       contactNumber: '+91 6789012345',
+      listerId: 'S009',
       isLost: false,
     ),
     LostAndFoundItem(
@@ -1078,6 +1087,7 @@ class DummyLostAndFound {
       description: 'Blue denim jacket with a tear on the left sleeve',
       lastSeenLocation: 'Gymnasium',
       contactNumber: '+91 5678901234',
+      listerId: 'S010',
       isLost: true,
     ),
   ];
