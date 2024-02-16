@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import '../models/timtable.dart';
 
@@ -17,23 +18,25 @@ class TimetableRepository {
   );
 
   final Logger _logger = Logger();
+  final _secureStorage = const FlutterSecureStorage();
 
-  Future<List<Timetable>> getTimetables(String token) async {
-    _client.options.headers['authorization'] = token;
+  Future<bool> createTimetable(Timetable timetable) async {
+    _client.options.headers['authorization'] = await _secureStorage.read(key: 'token') ?? '';
     try {
-      final response = await _client.get('/timetable');
-      return (response.data as List).map((e) => Timetable.fromJson(e)).toList();
+      final response = await _client.post('/timetable', data: timetable.toJson());
+      _logger.i(response.data);
+      return true;
     } catch (e) {
       _logger.e(e);
-      return [];
+      return false;
     }
   }
 
-  Future<Timetable?> getTimetableById(String id, String token) async {
-    _client.options.headers['authorization'] = token;
+  Future<List<Timetable>?> getTimetablesByCreatorId(String creatorId) async {
+    _client.options.headers['authorization'] = await _secureStorage.read(key: 'token') ?? '';
     try {
-      final response = await _client.get('/timetable/$id');
-      return Timetable.fromJson(response.data);
+      final response = await _client.get('/timetables/$creatorId');
+      return (response.data as List).map((e) => Timetable.fromJson(e)).toList();
     } catch (e) {
       _logger.e(e);
       return null;
