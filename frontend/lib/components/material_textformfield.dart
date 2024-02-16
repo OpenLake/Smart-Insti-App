@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class MaterialTextFormField extends StatelessWidget {
   const MaterialTextFormField(
@@ -13,9 +14,11 @@ class MaterialTextFormField extends StatelessWidget {
       this.enabled,
       this.controllerLessValue,
       this.onTap,
-      this.textAlign,
       this.maxLength,
-      this.maxLines});
+      this.maxLines,
+      this.textAlign,
+      this.inputFormatters,
+      this.onTap});
 
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -26,6 +29,8 @@ class MaterialTextFormField extends StatelessWidget {
   final EdgeInsets? contentPadding;
   final bool? enabled;
   final String? controllerLessValue;
+  final TextAlign? textAlign;
+  final List<TextInputFormatter>? inputFormatters;
   final Function? onTap;
   final TextAlign? textAlign;
   final int? maxLength;
@@ -44,6 +49,7 @@ class MaterialTextFormField extends StatelessWidget {
       textAlign: textAlign ?? TextAlign.start,
       maxLines: maxLines ?? 1,
       maxLength: maxLength,
+      inputFormatters: inputFormatters,
       onChanged: (value) => onChanged != null ? onChanged!(value) : null,
       validator: (value) => validator != null ? validator!(value) : null,
       onFieldSubmitted: (value) => onSubmitted != null ? onSubmitted!(value) : null,

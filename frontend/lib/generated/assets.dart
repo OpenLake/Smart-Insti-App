@@ -32,6 +32,7 @@ class Assets {
   static const String componentsSnackbar = 'lib/components/snackbar.dart';
   static const String componentsSuggestionTextField = 'lib/components/suggestion_text_field.dart';
   static const String componentsTextDivider = 'lib/components/text_divider.dart';
+  static const String componentsTimetableButton = 'lib/components/timetable_button.dart';
   static const String componentsYearPicker = 'lib/components/year_picker.dart';
   static const String constantsConstants = 'lib/constants/constants.dart';
   static const String constantsDummyEntries = 'lib/constants/dummy_entries.dart';
@@ -59,6 +60,7 @@ class Assets {
   static const String modelsRoom = 'lib/models/room.dart';
   static const String modelsSkills = 'lib/models/skills.dart';
   static const String modelsStudent = 'lib/models/student.dart';
+  static const String modelsTimtable = 'lib/models/timtable.dart';
   static const String modelsUser = 'lib/models/user.dart';
   static const String providerAdminProvider = 'lib/provider/admin_provider.dart';
   static const String providerAuthProvider = 'lib/provider/auth_provider.dart';
@@ -70,6 +72,7 @@ class Assets {
   static const String providerOtpProvider = 'lib/provider/otp_provider.dart';
   static const String providerRoomProvider = 'lib/provider/room_provider.dart';
   static const String providerStudentProvider = 'lib/provider/student_provider.dart';
+  static const String providerTimetableProvider = 'lib/provider/timetable_provider.dart';
   static const String repositoriesAchievementRepository = 'lib/repositories/achievement_repository.dart';
   static const String repositoriesAdminRepository = 'lib/repositories/admin_repository.dart';
   static const String repositoriesCourseRepository = 'lib/repositories/course_repository.dart';
@@ -78,12 +81,15 @@ class Assets {
   static const String repositoriesRoomRepository = 'lib/repositories/room_repository.dart';
   static const String repositoriesSkillRepository = 'lib/repositories/skill_repository.dart';
   static const String repositoriesStudentRepository = 'lib/repositories/student_repository.dart';
+  static const String repositoriesTimetableRepository = 'lib/repositories/timetable_repository.dart';
   static const String routesRoutes = 'lib/routes/routes.dart';
   static const String screensLoadingPage = 'lib/screens/loading_page.dart';
   static const String userFacultyProfile = 'lib/screens/user/faculty_profile.dart';
   static const String userLostAndFound = 'lib/screens/user/lost_and_found.dart';
   static const String userRoomVacancy = 'lib/screens/user/room_vacancy.dart';
   static const String userStudentProfile = 'lib/screens/user/student_profile.dart';
+  static const String userTimetableEditor = 'lib/screens/user/timetable_editor.dart';
+  static const String userTimetables = 'lib/screens/user/timetables.dart';
   static const String userUserHome = 'lib/screens/user/user_home.dart';
 
 }

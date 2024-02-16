@@ -49,7 +49,6 @@ dependencies:
   grouped_list: ^5.1.2
   slide_switcher: ^1.1.2
   awesome_snackbar_content: ^0.1.1
-  delightful_toast: ^1.1.0
   animated_toggle_switch: ^0.8.0
   syncfusion_flutter_sliders: ^24.2.3
   fl_chart: ^0.66.1
