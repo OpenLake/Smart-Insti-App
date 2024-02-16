@@ -6,14 +6,21 @@ const router = Router();
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    const { occupantId } = req.body;
+    const { occupantName, occupantId, vacant } = req.body;
     const room = await Room.findById(id);
     if (!room) {
       return res.status(404).json({ error: "Room not found" });
     }
 
-    room.vacant = false;
-    room.occupantId = occupantId || room.occupantId;
+    if (vacant) {
+      room.vacant = true;
+      room.occupantId = null;
+      room.occupantName = null;
+    } else {
+      room.vacant = false;
+      room.occupantId = occupantId;
+      room.occupantName = occupantName;
+    }
 
     await room.save();
 
