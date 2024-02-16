@@ -4,7 +4,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/routes/routes.dart';
-import 'package:smart_insti_app/screens/user/timetable_editor.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
