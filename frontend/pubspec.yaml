@@ -49,7 +49,6 @@ dependencies:
   grouped_list: ^5.1.2
   slide_switcher: ^1.1.2
   awesome_snackbar_content: ^0.1.1
-  delightful_toast: ^1.1.0
   animated_toggle_switch: ^0.8.0
   dio: ^5.4.0
   animated_text_kit: ^4.2.2
@@ -58,6 +57,7 @@ dependencies:
   url_launcher: ^6.2.4
   flutter_dotenv: ^5.1.0
   auto_orientation: ^2.3.1
+  auto_size_text: ^3.0.0
 
 dev_dependencies:
   flutter_test:
