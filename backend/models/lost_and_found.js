@@ -19,6 +19,10 @@ const lostAndFoundItemSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  listerId: {
+    type: String,
+    required: true,
+  },
   isLost: {
     type: Boolean,
     required: true,
