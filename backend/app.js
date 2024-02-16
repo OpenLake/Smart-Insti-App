@@ -16,7 +16,8 @@ import roomResource from "./resources/rooms/roomResource.js";
 import lostAndFoundListResource from "./resources/lostAndFound/lostAndFoundListResource.js";
 import studentListResource from "./resources/student/studentListResource.js";
 import facultyListResource from "./resources/faculty/facultyListResource.js";
-import messageResource from './resources/chatroom/messageListResource.js'
+import messageResource from "./resources/chatroom/messageListResource.js";
+import lostAndFoundResource from "./resources/lostAndFound/lostAndFoundResource.js";
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
@@ -41,7 +42,8 @@ app.use("/", testResource);
 app.use("/rooms", roomListResource);
 app.use("/room", roomResource);
 app.use("/lost-and-found", lostAndFoundListResource);
-app.use("/messages",messageResource);
+app.use("/lost-and-found-item", lostAndFoundResource);
+app.use("/messages", messageResource);
 
 app.get("/protected", tokenRequired, (req, res) => {
   res.json({ message: "Access granted" });
