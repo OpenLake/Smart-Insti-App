@@ -20,7 +20,6 @@ import messageResource from "./resources/chatroom/messageListResource.js";
 import lostAndFoundResource from "./resources/lostAndFound/lostAndFoundResource.js";
 import timetableListResource from "./resources/timetable/timetableListResource.js";
 import timetableResource from "./resources/timetable/timetableResource.js";
-import messageResource from './resources/chatroom/messageListResource.js'
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();

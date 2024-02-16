@@ -1,12 +1,9 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
-import 'package:auto_orientation/auto_orientation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
-import 'package:smart_insti_app/services/auth/auth_service.dart';
 
 class LoadingPage extends ConsumerWidget {
   const LoadingPage({super.key});

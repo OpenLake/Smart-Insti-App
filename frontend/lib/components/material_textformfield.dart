@@ -17,8 +17,7 @@ class MaterialTextFormField extends StatelessWidget {
       this.maxLength,
       this.maxLines,
       this.textAlign,
-      this.inputFormatters,
-      this.onTap});
+      this.inputFormatters,});
 
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -32,7 +31,6 @@ class MaterialTextFormField extends StatelessWidget {
   final TextAlign? textAlign;
   final List<TextInputFormatter>? inputFormatters;
   final Function? onTap;
-  final TextAlign? textAlign;
   final int? maxLength;
   final int? maxLines;
 
