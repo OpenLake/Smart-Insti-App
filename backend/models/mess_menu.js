@@ -1,24 +1,20 @@
-const mongoose = require('mongoose');
+import mongoose from "mongoose";
 
 const messMenuSchema = new mongoose.Schema({
-    id: {
-        type: String,
-        required: true
+  kitchenName: {
+    type: String,
+    required: true,
+  },
+  messMenu: {
+    type: Map,
+    of: {
+      type: Map,
+      of: [String],
     },
-    kitchenName: {
-        type: String,
-        required: true
-    },
-    messMenu: {
-        type: Map,
-        of: {
-            type: Map,
-            of: [String]
-        },
-        required: true
-    }
+    required: true,
+  },
 });
 
-const MessMenu = mongoose.model('MessMenu', messMenuSchema);
+const MessMenu = mongoose.model("MessMenu", messMenuSchema);
 
-module.exports = MessMenu;
+export default MessMenu;
