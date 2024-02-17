@@ -10,9 +10,7 @@ import '../../constants/constants.dart';
 import '../../provider/auth_provider.dart';
 
 class ViewMessMenu extends ConsumerWidget {
-  ViewMessMenu({super.key});
-
-  final ScrollController _scrollController = ScrollController();
+  const ViewMessMenu({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -29,7 +27,6 @@ class ViewMessMenu extends ConsumerWidget {
           title: const Text('Mess Menu'),
         ),
         body: SingleChildScrollView(
-          controller: _scrollController,
           child: Consumer(
             builder: (_, ref, __) {
               if (ref.watch(menuProvider).loadingState == LoadingState.progress) {
@@ -45,12 +42,8 @@ class ViewMessMenu extends ConsumerWidget {
                       child: ChoiceSelector(
                         onChanged: (value) {
                           ref.read(menuProvider.notifier).setSelectViewMenu(value);
-                          _scrollController.animateTo(_scrollController.position.maxScrollExtent + 30,
-                              duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
                         },
-                        value: ref.read(menuProvider).messMenus.keys.isNotEmpty
-                            ? ref.read(menuProvider).messMenus.keys.first
-                            : null,
+                        value: ref.read(menuProvider).selectedViewMenu,
                         items: [
                           for (String i in ref.read(menuProvider).messMenus.keys)
                             DropdownMenuItem<String>(
@@ -136,6 +129,8 @@ class ViewMessMenu extends ConsumerWidget {
                                                     border: Border.all(color: Colors.transparent, width: 0),
                                                   ),
                                                   child: MaterialTextFormField(
+                                                    enabled: ref.watch(authProvider).currentUserRole ==
+                                                        AuthConstants.adminAuthLabel.toLowerCase(),
                                                     contentPadding:
                                                         const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                                                     controller: controllers[index],
@@ -190,6 +185,7 @@ class ViewMessMenu extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 20),
                       child: Row(
                         children: [
+                          const SizedBox(height: 30),
                           GestureDetector(
                             onTap: () => ref.read(menuProvider.notifier).deleteMenu(),
                             child: Container(
@@ -221,7 +217,7 @@ class ViewMessMenu extends ConsumerWidget {
                               ),
                             ),
                           ),
-                          Spacer(),
+                          const Spacer(),
                           ElevatedButton(
                             onPressed: () => ref.read(menuProvider.notifier).updateMenu(),
                             style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
