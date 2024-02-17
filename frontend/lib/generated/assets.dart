@@ -58,7 +58,7 @@ class Assets {
   static const String modelsCourse = 'lib/models/course.dart';
   static const String modelsFaculty = 'lib/models/faculty.dart';
   static const String modelsLostAndFoundItem = 'lib/models/lost_and_found_item.dart';
-  static const String modelsMessMenu = 'lib/models/mess_menu.dart';
+  static const String modelsMessMenu = 'lib/models/user_mess_menu.dart';
   static const String modelsMessage = 'lib/models/message.dart';
   static const String modelsRoom = 'lib/models/room.dart';
   static const String modelsSkills = 'lib/models/skills.dart';
@@ -100,6 +100,7 @@ class Assets {
   static const String userEditProfile = 'lib/screens/user/edit_profile.dart';
   static const String userFacultyProfile = 'lib/screens/user/faculty_profile.dart';
   static const String userLostAndFound = 'lib/screens/user/lost_and_found.dart';
+  static const String userMessMenu = 'lib/screens/user/user_mess_menu.dart';
   static const String userRoomVacancy = 'lib/screens/user/room_vacancy.dart';
   static const String userStudentProfile = 'lib/screens/user/student_profile.dart';
   static const String userTimetableEditor = 'lib/screens/user/timetable_editor.dart';
