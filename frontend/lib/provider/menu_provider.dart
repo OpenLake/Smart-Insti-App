@@ -311,6 +311,9 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
 
   void addMenuItem() {
     String item = state.itemNameController.text;
+    if (item == '') {
+      return;
+    }
     String weekday = getWeekDay(state.selectedWeekdayIndex);
     String mealType = getMealType(state.selectedMealTypeIndex);
 
