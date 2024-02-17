@@ -8,6 +8,7 @@ import 'package:smart_insti_app/screens/admin/view_students.dart';
 import 'package:smart_insti_app/screens/auth/login_general.dart';
 import 'package:smart_insti_app/screens/loading_page.dart';
 import 'package:smart_insti_app/screens/user/lost_and_found.dart';
+import 'package:smart_insti_app/screens/user/user_mess_menu.dart';
 import 'package:smart_insti_app/screens/user/timetable_editor.dart';
 import '../screens/admin/add_faculty.dart';
 import '../screens/admin/add_menu.dart';
@@ -125,6 +126,7 @@ final GoRouter routes = GoRouter(
           path: 'chat_room',
           pageBuilder: (context, state) => MaterialPage(child: ChatRoom()),
         ),
+        GoRoute(path: 'mess_menu', pageBuilder: (context, state) => MaterialPage(child: UserMessMenu()) ),
       ],
     ),
   ],
