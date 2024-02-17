@@ -5,10 +5,11 @@ import 'package:logger/logger.dart';
 import 'package:smart_insti_app/components/rounded_chip.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'package:smart_insti_app/models/mess_menu.dart';
+import 'package:smart_insti_app/repositories/mess_menu_repository.dart';
 import '../constants/constants.dart';
 import 'dart:io';
 
-final menuProvider = StateNotifierProvider<MenuStateNotifier, MenuState>((ref) => MenuStateNotifier());
+final menuProvider = StateNotifierProvider<MenuStateNotifier, MenuState>((ref) => MenuStateNotifier(ref));
 
 class MenuState {
   final TextEditingController kitchenNameController;
@@ -19,6 +20,7 @@ class MenuState {
   final MessMenu currentMenu;
   final int selectedWeekdayIndex;
   final int selectedMealTypeIndex;
+  final LoadingState loadingState;
 
   MenuState({
     required this.kitchenNameController,
@@ -29,6 +31,7 @@ class MenuState {
     required this.currentMenu,
     required this.selectedWeekdayIndex,
     required this.selectedMealTypeIndex,
+    required this.loadingState,
   });
 
   MenuState copyWith({
@@ -40,6 +43,7 @@ class MenuState {
     MessMenu? currentMenu,
     int? selectedWeekdayIndex,
     int? selectedMealTypeIndex,
+    LoadingState? loadingState,
   }) {
     return MenuState(
       kitchenNameController: kitchenNameController ?? this.kitchenNameController,
@@ -50,19 +54,22 @@ class MenuState {
       currentMenu: currentMenu ?? this.currentMenu,
       selectedWeekdayIndex: selectedWeekdayIndex ?? this.selectedWeekdayIndex,
       selectedMealTypeIndex: selectedMealTypeIndex ?? this.selectedMealTypeIndex,
+      loadingState: loadingState ?? this.loadingState,
     );
   }
 }
 
 class MenuStateNotifier extends StateNotifier<MenuState> {
-  MenuStateNotifier()
-      : super(MenuState(
+  MenuStateNotifier(Ref ref)
+      : _messMenuRepository = ref.read(messMenuRepositoryProvider),
+        super(MenuState(
           kitchenNameController: TextEditingController(),
           itemNameController: TextEditingController(),
           selectedViewMenu: DummyMenus.messMenus.keys.isNotEmpty ? DummyMenus.messMenus.keys.first : null,
           items: [],
           messMenus: DummyMenus.messMenus,
           currentMenu: MessMenu(
+            kitchenName: "",
             messMenu: <String, Map<String, List<String>>>{
               'Sunday': <String, List<String>>{
                 'Breakfast': <String>[],
@@ -110,9 +117,13 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
           ),
           selectedWeekdayIndex: 0,
           selectedMealTypeIndex: 0,
-        ));
+          loadingState: LoadingState.idle,
+        )) {
+    loadMenus();
+  }
 
   final Logger _logger = Logger();
+  final MessMenuRepository _messMenuRepository;
 
   String getWeekDay(int index) => MessMenuConstants.weekdaysShortToLong[MessMenuConstants.weekdays[index].data]!;
 
@@ -138,18 +149,10 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
     }
   }
 
-  void initMenuView() {
-    final selectedViewMenu = DummyMenus.messMenus.keys.isNotEmpty ? DummyMenus.messMenus.keys.first : null;
-
-    state = state.copyWith(
-      selectedMealTypeIndex: 0,
-      selectedWeekdayIndex: 0,
-      selectedViewMenu: selectedViewMenu,
-    );
-  }
-
   void setSelectViewMenu(String? value) {
-    state = state.copyWith(selectedViewMenu: value);
+    if (value != null) {
+      state = state.copyWith(selectedViewMenu: value, currentMenu: state.messMenus[value!]!);
+    }
   }
 
   void selectWeekday(int index) {
@@ -160,10 +163,12 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
     state = state.copyWith(selectedMealTypeIndex: index);
   }
 
-  void clear() {
+  void clearControllers() {
+    state.kitchenNameController.clear();
     state = state.copyWith(
       items: [],
       currentMenu: MessMenu(
+        kitchenName: state.kitchenNameController.text,
         messMenu: <String, Map<String, List<String>>>{
           'Sunday': <String, List<String>>{
             'Breakfast': <String>[],
@@ -212,31 +217,102 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
     );
   }
 
-  void addMenu() {
-    String kitchenName = state.kitchenNameController.text;
-    if (kitchenName.isEmpty) {
-      _logger.e("Kitchen name is empty");
-      return;
+  void loadMenus() async {
+    state = state.copyWith(loadingState: LoadingState.progress);
+    final messMenus = await _messMenuRepository.getMessMenu();
+
+    Map<String, MessMenu> menuDictionary = {};
+    for (var menu in messMenus) {
+      menuDictionary[menu.kitchenName] = menu;
     }
-    _logger.i("Adding $kitchenName to messMenus");
-
-    Map<String, MessMenu> menuList = state.messMenus;
-    menuList[kitchenName] = state.currentMenu;
-
-    state.kitchenNameController.clear();
+    final selectedViewMenu = menuDictionary.keys.isNotEmpty ? menuDictionary.keys.first : null;
 
     state = state.copyWith(
-      currentMenu: MessMenu(messMenu: {...MessMenuConstants.emptyMenu}),
-      messMenus: menuList,
-      items: [],
+      selectedMealTypeIndex: 0,
+      selectedWeekdayIndex: 0,
+      selectedViewMenu: selectedViewMenu,
+      currentMenu: selectedViewMenu != null
+          ? menuDictionary[selectedViewMenu]
+          : MessMenu(kitchenName: '', messMenu: <String, Map<String, List<String>>>{
+        'Sunday': <String, List<String>>{
+          'Breakfast': <String>[],
+          'Lunch': <String>[],
+          'Snacks': <String>[],
+          'Dinner': <String>[],
+        },
+        'Monday': <String, List<String>>{
+          'Breakfast': <String>[],
+          'Lunch': <String>[],
+          'Snacks': <String>[],
+          'Dinner': <String>[],
+        },
+        'Tuesday': <String, List<String>>{
+          'Breakfast': <String>[],
+          'Lunch': <String>[],
+          'Snacks': <String>[],
+          'Dinner': <String>[],
+        },
+        'Wednesday': <String, List<String>>{
+          'Breakfast': <String>[],
+          'Lunch': <String>[],
+          'Snacks': <String>[],
+          'Dinner': <String>[],
+        },
+        'Thursday': <String, List<String>>{
+          'Breakfast': <String>[],
+          'Lunch': <String>[],
+          'Snacks': <String>[],
+          'Dinner': <String>[],
+        },
+        'Friday': <String, List<String>>{
+          'Breakfast': <String>[],
+          'Lunch': <String>[],
+          'Snacks': <String>[],
+          'Dinner': <String>[],
+        },
+        'Saturday': <String, List<String>>{
+          'Breakfast': <String>[],
+          'Lunch': <String>[],
+          'Snacks': <String>[],
+          'Dinner': <String>[],
+        },
+      }),
     );
+    state = state.copyWith(messMenus: menuDictionary, loadingState: LoadingState.success);
+  }
+
+  void resetMenu() {
+    if (state.selectedViewMenu != null) {
+      state = state.copyWith(currentMenu: state.messMenus[state.selectedViewMenu!]!);
+    }
+  }
+
+  Future<void> addMenu() async {
+    String kitchenName = state.kitchenNameController.text;
+    if (await _messMenuRepository
+        .addMessMenu(MessMenu(kitchenName: kitchenName, messMenu: state.currentMenu.messMenu!))) {
+      loadMenus();
+    }
+  }
+
+  void updateMenu() async {
+    String kitchenName = state.currentMenu.kitchenName;
+    if (await _messMenuRepository.updateMessMenu(state.messMenus[state.selectedViewMenu!]!.id!,
+        MessMenu(kitchenName: kitchenName, messMenu: state.currentMenu.messMenu!))) {
+      loadMenus();
+    }
+  }
+
+  void deleteMenu() async {
+    if (await _messMenuRepository.deleteMessMenu(state.messMenus[state.selectedViewMenu!]!.id!)) {
+      loadMenus();
+    }
   }
 
   void addMenuItem() {
     String item = state.itemNameController.text;
     String weekday = getWeekDay(state.selectedWeekdayIndex);
     String mealType = getMealType(state.selectedMealTypeIndex);
-    _logger.i("Adding $item to $weekday $getMealType");
 
     MessMenu menu = state.currentMenu;
     menu.messMenu![weekday]![mealType]!.add(item);
