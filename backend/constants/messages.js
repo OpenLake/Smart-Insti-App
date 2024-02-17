@@ -41,3 +41,8 @@ export const itemDeleted = "Item deleted successfully";
 export const roomNotFound = "Room not found";
 export const roomUpdated = "Room updated successfully";
 export const roomCreated = "Room created successfully";
+
+// Mess Menu
+export const messMenuNotFound = "Mess Menu not found";
+export const messMenuAdded = "Mess Menu added successfully";
+export const messMenuUpdated = "Mess Menu updated successfully";
