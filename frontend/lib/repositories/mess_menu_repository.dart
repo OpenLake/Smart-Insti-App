@@ -38,4 +38,25 @@ class MessMenuRepository{
     }
   }
 
+  Future<bool> updateMessMenu(String menuId, MessMenu messMenu) async {
+    try {
+      final response = await _client.put('/mess-menu/$menuId', data: messMenu.toJson());
+      _logger.i(response.data);
+      return true;
+    } catch (e) {
+      _logger.e(e);
+      return false;
+    }
+  }
+
+  Future<bool> deleteMessMenu(String id) async {
+    try {
+      final response = await _client.delete('/mess-menu/$id');
+      _logger.i(response.data);
+      return true;
+    } catch (e) {
+      _logger.e(e);
+      return false;
+    }
+  }
 }
