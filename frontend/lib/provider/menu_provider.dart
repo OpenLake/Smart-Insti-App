@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/components/rounded_chip.dart';
-import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'package:smart_insti_app/models/mess_menu.dart';
 import 'package:smart_insti_app/repositories/mess_menu_repository.dart';
 import '../constants/constants.dart';
@@ -65,9 +64,9 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
         super(MenuState(
           kitchenNameController: TextEditingController(),
           itemNameController: TextEditingController(),
-          selectedViewMenu: DummyMenus.messMenus.keys.isNotEmpty ? DummyMenus.messMenus.keys.first : null,
+          selectedViewMenu: null,
           items: [],
-          messMenus: DummyMenus.messMenus,
+          messMenus: {},
           currentMenu: MessMenu(
             kitchenName: "",
             messMenu: <String, Map<String, List<String>>>{
@@ -225,7 +224,8 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
     for (var menu in messMenus) {
       menuDictionary[menu.kitchenName] = menu;
     }
-    final selectedViewMenu = menuDictionary.keys.isNotEmpty ? menuDictionary.keys.first : null;
+    const selectedViewMenu = null;
+    state.kitchenNameController.clear();
 
     state = state.copyWith(
       selectedMealTypeIndex: 0,
