@@ -7,8 +7,12 @@ import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'package:smart_insti_app/components/menu_tile.dart';
 import 'package:smart_insti_app/models/room.dart';
+import 'package:smart_insti_app/provider/auth_provider.dart';
 import 'dart:io';
 import '../constants/constants.dart';
+import '../models/admin.dart';
+import '../models/faculty.dart';
+import '../models/student.dart';
 import '../repositories/room_repository.dart';
 
 final roomProvider = StateNotifierProvider<RoomProvider, RoomState>((ref) => RoomProvider(ref));
@@ -46,7 +50,8 @@ class RoomState {
 
 class RoomProvider extends StateNotifier<RoomState> {
   RoomProvider(Ref ref)
-      : _api = ref.read(roomRepositoryProvider),
+      : _authState = ref.read(authProvider),
+        _api = ref.read(roomRepositoryProvider),
         super(
           RoomState(
             roomList: DummyRooms.rooms,
@@ -61,6 +66,7 @@ class RoomProvider extends StateNotifier<RoomState> {
 
   final RoomRepository _api;
   final Logger _logger = Logger();
+  final AuthState _authState;
 
   void pickSpreadsheet() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -95,20 +101,45 @@ class RoomProvider extends StateNotifier<RoomState> {
   }
 
   Future<void> loadRooms() async {
-    state = state.copyWith(loadingState: LoadingState.progress);
     final rooms = await _api.getRooms();
+    //   _api.getOccupants();
     final newState = state.copyWith(roomList: rooms, loadingState: LoadingState.success);
     state = newState;
   }
 
   Future<void> reserveRoom(Room room) async {
-    state = state.copyWith(
-      loadingState: LoadingState.progress,
-    );
+    String userId;
+    String userName;
 
-    await _api.reserveRoom(room.id!, '12345');
+    if (_authState.currentUserRole == 'student') {
+      userId = (_authState.currentUser as Student).id;
+      userName = (_authState.currentUser as Student).name;
+    } else if (_authState.currentUserRole == 'faculty') {
+      userId = (_authState.currentUser as Faculty).id;
+      userName = (_authState.currentUser as Faculty).name;
+    } else if (_authState.currentUserRole == 'admin') {
+      userId = (_authState.currentUser as Admin).id;
+      userName = (_authState.currentUser as Admin).name;
+    } else {
+      return;
+    }
 
-    await loadRooms();
+    state = state.copyWith(loadingState: LoadingState.progress);
+    if (await _api.reserveRoom(room.id!, userId, userName)) {
+      loadRooms();
+    } else {
+      state = state.copyWith(loadingState: LoadingState.error);
+    }
+  }
+
+  Future<void> vacateRoom(Room room) async {
+    state = state.copyWith(loadingState: LoadingState.progress);
+
+    if (await _api.vacateRoom(room.id!)) {
+      loadRooms();
+    } else {
+      state = state.copyWith(loadingState: LoadingState.error);
+    }
   }
 
   void buildRoomTiles(BuildContext context) async {

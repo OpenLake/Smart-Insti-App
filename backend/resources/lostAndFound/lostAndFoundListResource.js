@@ -2,6 +2,7 @@ import { Router } from "express";
 import LostAndFoundItem from "../../models/lost_and_found.js";
 import fs from "fs/promises";
 import uploader from "../../middlewares/multerConfig.js";
+import * as messages from "../../constants/messages.js";
 
 const router = Router();
 
@@ -13,7 +14,7 @@ router.get("/", async (req, res) => {
 
     // Create an empty array to store items with images
     const itemsWithImages = [];
-``
+
     // Iterate through each item
     for (const item of items) {
       // Check if imagePath is null
@@ -32,6 +33,7 @@ router.get("/", async (req, res) => {
         imagePath: imagePathBase64, // Set imagePath to null if null in the database
         description: item.description,
         contactNumber: item.contactNumber,
+        listerId: item.listerId,
         isLost: item.isLost,
       };
 
@@ -39,36 +41,38 @@ router.get("/", async (req, res) => {
       itemsWithImages.push(itemWithImage);
     }
 
-    console.log("Retrieved items:", itemsWithImages.length);
-
     // Send the response with the items
     res.json(itemsWithImages);
   } catch (error) {
     // Handle errors
-    console.error("Error:", error);
-    res.status(500).send("Error retrieving items");
+    res.status(500).json({ message: messages.internalServerError });
   }
 });
 
 // POST method
 router.post("/", uploader.single("image"), async (req, res) => {
-  // Access the uploaded file using req.file
-  const file = req.file;
+  try {
+    // Access the uploaded file using req.file
+    const file = req.file;
 
-  // Construct the LostAndFoundItem object with data from the request
-  const newItem = new LostAndFoundItem({
-    name: req.body.name,
-    lastSeenLocation: req.body.lastSeenLocation,
-    imagePath: file ? file.path : null,
-    description: req.body.description,
-    contactNumber: req.body.contactNumber,
-    isLost: req.body.isLost,
-  });
+    // Construct the LostAndFoundItem object with data from the request
+    const newItem = new LostAndFoundItem({
+      name: req.body.name,
+      lastSeenLocation: req.body.lastSeenLocation,
+      imagePath: file ? file.path : null,
+      description: req.body.description,
+      contactNumber: req.body.contactNumber,
+      listerId: req.body.listerId,
+      isLost: req.body.isLost,
+    });
 
-  // Save the new item to the database
-  await newItem.save();
+    // Save the new item to the database
+    await newItem.save();
 
-  res.send("Added new item");
+    res.json({ message: messages.itemAdded });
+  } catch (error) {
+    res.status(500).json({ message: messages.internalServerError });
+  }
 });
 
 export default router;

@@ -13,9 +13,11 @@ class MaterialTextFormField extends StatelessWidget {
       this.hintColor,
       this.enabled,
       this.controllerLessValue,
+      this.onTap,
+      this.maxLength,
+      this.maxLines,
       this.textAlign,
-      this.inputFormatters,
-      this.onTap});
+      this.inputFormatters,});
 
   final TextEditingController? controller;
   final String? Function(String?)? validator;
@@ -29,6 +31,8 @@ class MaterialTextFormField extends StatelessWidget {
   final TextAlign? textAlign;
   final List<TextInputFormatter>? inputFormatters;
   final Function? onTap;
+  final int? maxLength;
+  final int? maxLines;
 
   @override
   Widget build(BuildContext context) {
@@ -40,13 +44,13 @@ class MaterialTextFormField extends StatelessWidget {
       onTap: () => onTap != null ? onTap!() : null,
       enabled: enabled ?? true,
       controller: controller ?? substituteController,
-      maxLines: 1,
-      inputFormatters: inputFormatters,
       textAlign: textAlign ?? TextAlign.start,
+      maxLines: maxLines ?? 1,
+      maxLength: maxLength,
+      inputFormatters: inputFormatters,
       onChanged: (value) => onChanged != null ? onChanged!(value) : null,
       validator: (value) => validator != null ? validator!(value) : null,
-      onFieldSubmitted: (value) =>
-          onSubmitted != null ? onSubmitted!(value) : null,
+      onFieldSubmitted: (value) => onSubmitted != null ? onSubmitted!(value) : null,
       cursorColor: Colors.teal.shade900,
       style: TextStyle(
         color: Colors.teal.shade900,

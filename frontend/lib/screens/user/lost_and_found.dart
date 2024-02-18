@@ -1,13 +1,18 @@
 import 'package:animated_toggle_switch/animated_toggle_switch.dart';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:logger/logger.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/lost_and_found_provider.dart';
 import '../../components/image_tile.dart';
 import '../../constants/constants.dart';
+import '../../models/admin.dart';
+import '../../models/faculty.dart';
+import '../../models/student.dart';
 import '../../provider/auth_provider.dart';
 
 class LostAndFound extends ConsumerWidget {
@@ -189,7 +194,7 @@ class LostAndFound extends ConsumerWidget {
                                 label: const Text('Cancel'),
                               ),
                               const Spacer(),
-                              ElevatedButton(
+                              BorderlessButton(
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
                                     ref.read(lostAndFoundProvider.notifier).addItem();
@@ -197,7 +202,9 @@ class LostAndFound extends ConsumerWidget {
                                     context.pop();
                                   }
                                 },
-                                child: const Text('Add'),
+                                label: const Text('Add'),
+                                backgroundColor: Colors.blueAccent.shade100.withOpacity(0.5),
+                                splashColor: Colors.blue.shade700,
                               ),
                             ],
                           ),
@@ -256,51 +263,170 @@ class LostAndFound extends ConsumerWidget {
                             context: context,
                             builder: (_) => Dialog(
                               child: Padding(
-                                padding: const EdgeInsets.all(15.0),
-                                child: Column(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      "Item name : ${item.name}",
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 20),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      "Item description : \n${item.description}",
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Text(
-                                      "Last seen at : ${item.lastSeenLocation}",
-                                      textAlign: TextAlign.center,
-                                      style: const TextStyle(fontSize: 16),
-                                    ),
-                                    const SizedBox(height: 20),
-                                    Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: [
-                                        Text(
-                                          item.contactNumber,
-                                          style: const TextStyle(fontSize: 16),
+                                padding: const EdgeInsets.only(left: 35, right: 35, top: 20, bottom: 20),
+                                child: SingleChildScrollView(
+                                  child: Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      const Text("Item Name", style: TextStyle(fontSize: 20)),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          color: Colors.tealAccent.withOpacity(0.4),
                                         ),
-                                        const SizedBox(width: 10),
-                                        IconButton(
-                                            onPressed: () => ref
-                                                .read(lostAndFoundProvider.notifier)
-                                                .launchCaller(item.contactNumber),
-                                            icon: const Icon(Icons.call, color: Colors.green)),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 20),
-                                    BorderlessButton(
-                                      onPressed: () => context.pop(),
-                                      backgroundColor: Colors.redAccent.shade100.withOpacity(0.5),
-                                      splashColor: Colors.red.shade700,
-                                      label: const Text('Close'),
-                                    ),
-                                  ],
+                                        width: double.infinity,
+                                        child: AutoSizeText(
+                                          item.name,
+                                          style: TextStyle(fontSize: 15, color: Colors.teal.shade900),
+                                          maxLines: 5,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const Text("Item Description", style: TextStyle(fontSize: 20)),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          color: Colors.tealAccent.withOpacity(0.4),
+                                        ),
+                                        width: double.infinity,
+                                        child: AutoSizeText(
+                                          item.description,
+                                          style: TextStyle(fontSize: 15, color: Colors.teal.shade900),
+                                          maxLines: 5,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const Text("Last seen at", style: TextStyle(fontSize: 20)),
+                                      const SizedBox(height: 10),
+                                      Container(
+                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                        decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(15),
+                                          color: Colors.tealAccent.withOpacity(0.4),
+                                        ),
+                                        width: double.infinity,
+                                        child: AutoSizeText(
+                                          item.lastSeenLocation,
+                                          style: TextStyle(fontSize: 15, color: Colors.teal.shade900),
+                                          maxLines: 5,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      ),
+                                      const SizedBox(height: 20),
+                                      const Text("Contact", style: TextStyle(fontSize: 20)),
+                                      const SizedBox(height: 10),
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          Container(
+                                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(15),
+                                              color: Colors.tealAccent.withOpacity(0.4),
+                                            ),
+                                            width: 185,
+                                            child: AutoSizeText(
+                                              item.contactNumber,
+                                              style: TextStyle(fontSize: 15, color: Colors.teal.shade900),
+                                              maxLines: 5,
+                                              overflow: TextOverflow.ellipsis,
+                                            ),
+                                          ),
+                                          const SizedBox(width: 10),
+                                          Container(
+                                            width: 65,
+                                            height: 65,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(15),
+                                              color: Colors.orangeAccent.withOpacity(0.5),
+                                            ),
+                                            child: GestureDetector(
+                                              onTap: () => ref
+                                                  .read(lostAndFoundProvider.notifier)
+                                                  .launchCaller(item.contactNumber),
+                                              child: const Icon(
+                                                Icons.call,
+                                                color: Colors.orange,
+                                              ),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                      const SizedBox(height: 30),
+                                      Consumer(
+                                        builder: (_, ref, __) {
+                                          String userId;
+                                          final authState = ref.watch(authProvider);
+                                          if (ref.read(authProvider).currentUserRole == 'student') {
+                                            userId = (authState.currentUser as Student).id;
+                                          } else if (authState.currentUserRole == 'faculty') {
+                                            userId = (authState.currentUser as Faculty).id;
+                                          } else if (authState.currentUserRole == 'admin') {
+                                            userId = (authState.currentUser as Admin).id;
+                                          } else {
+                                            return const SizedBox.shrink();
+                                          }
+
+                                          if (userId == item.listerId) {
+                                            return Row(
+                                              mainAxisAlignment: MainAxisAlignment.spaceAround,
+                                              children: [
+                                                SizedBox(
+                                                  height: 55,
+                                                  width: 100,
+                                                  child: BorderlessButton(
+                                                    onPressed: () => context.pop(),
+                                                    backgroundColor: Colors.blueAccent.shade100.withOpacity(0.5),
+                                                    splashColor: Colors.blue.shade700,
+                                                    label: const Text('Close'),
+                                                  ),
+                                                ),
+                                                Container(
+                                                  width: 55,
+                                                  height: 55,
+                                                  decoration: BoxDecoration(
+                                                    borderRadius: BorderRadius.circular(10),
+                                                    color: Colors.redAccent.withOpacity(0.5),
+                                                  ),
+                                                  child: GestureDetector(
+                                                    onTap: () {
+                                                        ref.read(lostAndFoundProvider.notifier).deleteItem(item.id!);
+                                                        context.pop();
+                                                        },
+                                                    child: const Icon(
+                                                      Icons.delete,
+                                                      color: Colors.red,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            );
+                                          } else {
+                                            return Center(
+                                              child: SizedBox(
+                                                height: 55,
+                                                width: 100,
+                                                child: BorderlessButton(
+                                                  onPressed: () => context.pop(),
+                                                  backgroundColor: Colors.blueAccent.shade100.withOpacity(0.5),
+                                                  splashColor: Colors.blue.shade700,
+                                                  label: const Text('Close'),
+                                                ),
+                                              ),
+                                            );
+                                          }
+                                        },
+                                      ),
+                                    ],
+                                  ),
                                 ),
                               ),
                             ),
@@ -309,7 +435,10 @@ class LostAndFound extends ConsumerWidget {
                     ],
                   )
                 : const Center(
-                    child: Text("No Listings"),
+                    child: Text(
+                      'No lost items :)',
+                      style: TextStyle(fontSize: 30, color: Colors.black38),
+                    ),
                   ))
             : const Center(child: CircularProgressIndicator()),
       ),
