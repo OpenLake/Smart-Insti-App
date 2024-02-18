@@ -20,6 +20,8 @@ import messageResource from "./resources/chatroom/messageListResource.js";
 import lostAndFoundResource from "./resources/lostAndFound/lostAndFoundResource.js";
 import timetableListResource from "./resources/timetable/timetableListResource.js";
 import timetableResource from "./resources/timetable/timetableResource.js";
+import messMenuListResource from "./resources/messMenu/messMenuListResource.js";
+import messMenuResource from "./resources/messMenu/messMenuResource.js";
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
@@ -39,6 +41,8 @@ app.use("/faculty", facultyResource);
 app.use("/faculties", facultyListResource);
 app.use("/timetable", timetableResource);
 app.use("/timetables", timetableListResource);
+app.use("/mess-menu", messMenuResource);
+app.use("/mess-menus", messMenuListResource);
 
 app.use("/admin-auth", adminAuthResource);
 app.use("/general-auth", generalAuthResource);

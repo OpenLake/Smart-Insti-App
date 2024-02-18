@@ -99,6 +99,13 @@ class UserProvider extends StateNotifier<HomeState> {
         secondaryColor: Colors.redAccent.shade200,
         icon: Icons.search,
       ),
+      MenuTile(
+        title: "Mess\nMenu",
+        onTap: () => context.push('/user_home/mess_menu'),
+        primaryColor: Colors.purpleAccent.shade100,
+        secondaryColor: Colors.purpleAccent.shade200,
+        icon: Icons.restaurant,
+      ),
     ];
     String query = state.searchController.text;
     state = state.copyWith(

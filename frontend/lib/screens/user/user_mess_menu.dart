@@ -1,22 +1,22 @@
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 import 'package:smart_insti_app/components/choice_selector.dart';
-import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/models/mess_menu.dart';
 import 'package:smart_insti_app/provider/menu_provider.dart';
 import '../../constants/constants.dart';
 import '../../provider/auth_provider.dart';
 
-class ViewMessMenu extends ConsumerWidget {
-  const ViewMessMenu({super.key});
+class UserMessMenu extends ConsumerWidget {
+  const UserMessMenu({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
       }
     });
 
@@ -122,21 +122,18 @@ class ViewMessMenu extends ConsumerWidget {
                                               selectedMenu?.messMenu?[weekDay]?[mealType]?[index] ?? '';
                                           return length != 0
                                               ? Container(
-                                                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+                                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.white,
                                                     borderRadius: BorderRadius.circular(15),
-                                                    border: Border.all(color: Colors.transparent, width: 0),
+                                                    color: Colors.tealAccent.withOpacity(0.4),
                                                   ),
-                                                  child: MaterialTextFormField(
-                                                    enabled: ref.watch(authProvider).currentUserRole ==
-                                                        AuthConstants.adminAuthLabel.toLowerCase(),
-                                                    contentPadding:
-                                                        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                                    controller: controllers[index],
-                                                    hintText: 'Item ${index + 1}',
-                                                    onChanged: (value) =>
-                                                        selectedMenu?.messMenu?[weekDay]?[mealType]?[index] = value,
+                                                  width: double.infinity,
+                                                  child: AutoSizeText(
+                                                    controllers[index].text,
+                                                    style: TextStyle(fontSize: 15, color: Colors.teal.shade900),
+                                                    maxLines: 5,
+                                                    overflow: TextOverflow.ellipsis,
                                                   ),
                                                 )
                                               : const Expanded(
@@ -176,52 +173,6 @@ class ViewMessMenu extends ConsumerWidget {
                               containerColor: Colors.tealAccent.shade100,
                               children: MessMenuConstants.weekdays,
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    const SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: Row(
-                        children: [
-                          const SizedBox(height: 30),
-                          GestureDetector(
-                            onTap: () => ref.read(menuProvider.notifier).deleteMenu(),
-                            child: Container(
-                              width: 55,
-                              height: 55,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.redAccent.withOpacity(0.5),
-                              ),
-                              child: const Icon(
-                                Icons.delete,
-                                color: Colors.red,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(width: 20),
-                          GestureDetector(
-                            onTap: () => ref.read(menuProvider.notifier).resetMenu(),
-                            child: Container(
-                              width: 55,
-                              height: 55,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(10),
-                                color: Colors.greenAccent.withOpacity(0.5),
-                              ),
-                              child: const Icon(
-                                Icons.refresh,
-                                color: Colors.green,
-                              ),
-                            ),
-                          ),
-                          const Spacer(),
-                          ElevatedButton(
-                            onPressed: () => ref.read(menuProvider.notifier).updateMenu(),
-                            style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
-                            child: const Text("Update Menu"),
                           ),
                         ],
                       ),
