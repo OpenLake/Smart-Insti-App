@@ -27,20 +27,7 @@ class FacultyProfile extends ConsumerWidget {
           Text('Name: ${currentFaculty.name}', style: TextStyle(fontSize: 16)),
           Text('Email: ${currentFaculty.email}', style: TextStyle(fontSize: 16)),
           Text('Department: ${currentFaculty.department}', style: TextStyle(fontSize: 16)),
-          Text('Cabin Number: ${currentFaculty.cabinNumber}', style: TextStyle(fontSize: 16)),
-          ...currentFaculty.courses!.map((course) {
-            return Column(
-              children: <Widget>[
-                Text('Course Code: ${course.courseCode}', style: TextStyle(fontSize: 16)),
-                Text('Course Name: ${course.courseName}', style: TextStyle(fontSize: 16)),
-                Text('Credits: ${course.credits}', style: TextStyle(fontSize: 16)),
-                ...course.branches.map((branch) {
-                  return Text('Branch: $branch', style: TextStyle(fontSize: 16));
-                }).toList(),
-                Text('Primary Room: ${course.primaryRoom}', style: TextStyle(fontSize: 16)),
-              ],
-            );
-          }),
+          Text('Cabin Number: ${currentFaculty.cabin}', style: TextStyle(fontSize: 16)),
         ],
       ),
     ));
