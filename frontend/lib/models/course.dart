@@ -1,20 +1,18 @@
 class Course {
-  final String id;
+  final String? id;
   final String courseCode;
   final String courseName;
   final int credits;
-  final List<String> branches;
-  final String primaryRoom;
-  final String professorId;
+  final List<String>? branches;
+  final String? primaryRoom;
 
   Course({
-    required this.id,
-    required this.courseCode,
+    this.id,
     required this.courseName,
+    required this.courseCode,
     required this.credits,
-    required this.branches,
-    required this.primaryRoom,
-    required this.professorId,
+    this.branches,
+    this.primaryRoom,
   });
 
   factory Course.fromJson(Map<String, dynamic> json) {
@@ -26,19 +24,16 @@ class Course {
       branches:
           (json['branches'] as List).map((item) => item as String).toList(),
       primaryRoom: json['primaryRoom'],
-      professorId: json['professorId'],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
       'courseCode': courseCode,
       'name': courseName,
       'credits': credits,
       'branches': branches,
       'primaryRoom': primaryRoom,
-      'professorId': professorId,
     };
   }
 }
