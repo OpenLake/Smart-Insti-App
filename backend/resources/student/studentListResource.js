@@ -6,9 +6,7 @@ const studentListResource = express.Router();
 
 studentListResource.get("/", async (req, res) => {
   try {
-    const students = await Student.find()
-      // .populate("skills")
-      // .populate("achievements");
+    const students = await Student.find();
     res.json(students);
   } catch (err) {
     res.status(500).json({ message: messages.internalServerError });
@@ -17,12 +15,12 @@ studentListResource.get("/", async (req, res) => {
 
 studentListResource.post("/", async (req, res) => {
   const { email } = req.body;
-  let existingUser = await Student.findOne({ email })
-    // .populate("skills")
-    // .populate("achievements");
+  let existingUser = await Student.findOne({ email });
   try {
     if (!existingUser) {
-      const newUser = new Student({ email });
+      const newUser = new Student({
+        ...req.body,
+      });
       await newUser.save();
       res.send({ message: messages.userCreated, user: newUser });
     } else {
