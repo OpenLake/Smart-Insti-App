@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:logger/logger.dart';
-import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'package:smart_insti_app/models/lost_and_found_item.dart';
 import 'package:smart_insti_app/repositories/lost_and_found_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -70,8 +69,7 @@ class LostAndFoundState {
 
 class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
   LostAndFoundStateNotifier(Ref ref)
-      : _authState = ref.read(authProvider),
-        _api = ref.read(lostAndFoundRepositoryProvider),
+      : _api = ref.read(lostAndFoundRepositoryProvider),
         super(
           LostAndFoundState(
             lostAndFoundItemList: [],
@@ -89,19 +87,17 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
   }
 
   final LostAndFoundRepository _api;
-  final AuthState _authState;
   final Logger _logger = Logger();
 
-  Future<void> addItem() async {
-
+  Future<void> addItem(AuthState authState) async {
     String userId;
 
-    if (_authState.currentUserRole == 'student') {
-      userId = (_authState.currentUser as Student).id;
-    } else if (_authState.currentUserRole == 'faculty') {
-      userId = (_authState.currentUser as Faculty).id;
-    } else if (_authState.currentUserRole == 'admin') {
-      userId = (_authState.currentUser as Admin).id;
+    if (authState.currentUserRole == 'student') {
+      userId = (authState.currentUser as Student).id!;
+    } else if (authState.currentUserRole == 'faculty') {
+      userId = (authState.currentUser as Faculty).id!;
+    } else if (authState.currentUserRole == 'admin') {
+      userId = (authState.currentUser as Admin).id;
     } else {
       return;
     }
