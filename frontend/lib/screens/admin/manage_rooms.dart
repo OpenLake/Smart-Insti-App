@@ -7,8 +7,10 @@ import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/collapsing_app_bar.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/room_provider.dart';
+import '../../components/menu_tile.dart';
 import '../../components/text_divider.dart';
 import '../../constants/constants.dart';
+import '../../models/room.dart';
 import '../../provider/auth_provider.dart';
 
 class ManageRooms extends ConsumerWidget {
@@ -17,7 +19,6 @@ class ManageRooms extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(roomProvider.notifier).buildRoomTiles(context);
       if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
         ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
       }
@@ -70,7 +71,6 @@ class ManageRooms extends ConsumerWidget {
                               onPressed: () {
                                 Logger().i("Adding room");
                                 ref.read(roomProvider.notifier).addRoom();
-                                ref.read(roomProvider.notifier).buildRoomTiles(context);
                                 context.pop();
                               },
                               splashColor: Colors.blueAccent,
@@ -144,11 +144,9 @@ class ManageRooms extends ConsumerWidget {
                         controller: ref.read(roomProvider).searchRoomController,
                         hintText: 'Enter room name',
                         onChanged: (value) {
-                          ref.watch(roomProvider.notifier).buildRoomTiles(context);
+                          ref.read(roomProvider.notifier).rebuildPage();
                         },
-                        onSubmitted: (value) {
-                          ref.watch(roomProvider.notifier).buildRoomTiles(context);
-                        },
+                        onSubmitted: (value) {},
                         padding: MaterialStateProperty.all(const EdgeInsets.only(left: 15)),
                         shadowColor: MaterialStateProperty.all(Colors.transparent),
                       ),
@@ -162,10 +160,94 @@ class ManageRooms extends ConsumerWidget {
             color: Colors.white,
             child: Consumer(
               builder: (_, ref, ___) {
+                final roomTiles = <MenuTile>[];
+                final String query = ref.read(roomProvider).searchRoomController.text;
+                for (Room room in ref.watch(roomProvider).roomList) {
+                  roomTiles.add(
+                    MenuTile(
+                      title: room.name,
+                      onTap: () => showDialog(
+                        context: context,
+                        builder: (_) => Dialog(
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(20),
+                              color: Colors.white,
+                            ),
+                            padding: const EdgeInsets.all(20),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Text("${room.name} : ${room.vacant ? 'Vacant' : 'Occupied'}",
+                                    style: const TextStyle(fontSize: 20)),
+                                const SizedBox(height: 20),
+
+                                /// TODO : Add code to edit room
+
+                                const SizedBox(height: 20),
+                                BorderlessButton(
+                                  onPressed: () {
+                                    ref.read(roomProvider.notifier).removeRoom(room);
+                                    context.pop();
+                                  },
+                                  label: const Text("Remove"),
+                                  backgroundColor: Colors.red.shade100,
+                                  splashColor: Colors.redAccent,
+                                ),
+                                const SizedBox(height: 10),
+                                room.vacant
+                                    ? BorderlessButton(
+                                        onPressed: () {
+                                          ref.read(roomProvider.notifier).reserveRoom(ref.read(authProvider), room);
+                                          context.pop();
+                                        },
+                                        label: const Text('Reserve'),
+                                        backgroundColor: Colors.blue.shade100,
+                                        splashColor: Colors.blueAccent,
+                                      )
+                                    : BorderlessButton(
+                                        onPressed: () {
+                                          ref.read(roomProvider.notifier).vacateRoom(room);
+                                          context.pop();
+                                        },
+                                        label: const Text('Vacate'),
+                                        backgroundColor: Colors.green.shade100,
+                                        splashColor: Colors.greenAccent.shade700,
+                                      ),
+                                const SizedBox(height: 10),
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      body: [
+                        const SizedBox(height: 5),
+                        Text(
+                          room.vacant ? 'Vacant' : 'Occupied',
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(fontSize: 14),
+                        ),
+                        const SizedBox(height: 10),
+                        room.vacant
+                            ? Container()
+                            : Text(
+                                "by : ${room.occupantName}",
+                                textAlign: TextAlign.center,
+                                maxLines: 1,
+                                style: const TextStyle(overflow: TextOverflow.ellipsis),
+                              ),
+                      ],
+                      icon: Icons.add,
+                      primaryColor: room.vacant ? Colors.greenAccent.shade100 : Colors.redAccent.shade100,
+                      secondaryColor: room.vacant ? Colors.greenAccent.shade200 : Colors.redAccent.shade200,
+                    ),
+                  );
+                }
                 return GridView.count(
                   padding: const EdgeInsets.all(10),
                   crossAxisCount: 2,
-                  children: ref.watch(roomProvider).roomTiles,
+                  children:
+                      roomTiles.where((element) => element.title.toLowerCase().contains(query.toLowerCase())).toList(),
                 );
               },
             ),
