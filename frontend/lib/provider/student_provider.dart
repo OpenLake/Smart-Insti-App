@@ -8,9 +8,9 @@ import '../../models/student.dart';
 import 'dart:io';
 import '../models/achievement.dart';
 import '../models/skills.dart';
+import '../repositories/student_repository.dart';
 
-final studentProvider = StateNotifierProvider<StudentProvider, StudentState>(
-    (ref) => StudentProvider());
+final studentProvider = StateNotifierProvider<StudentProvider, StudentState>((ref) => StudentProvider(ref));
 
 class StudentState {
   final List<Student> students;
@@ -20,10 +20,12 @@ class StudentState {
   final TextEditingController studentRollNoController;
   final TextEditingController searchStudentController;
   final String branch;
-  final String? role;
+  final List<int> roles;
+  final List<DropdownMenuItem<String>> selectableRoles;
+  final List<DropdownMenuItem<String>> selectableBranches;
+  final int graduationYear;
   final String? profilePicURI;
   final String? about;
-  final int? graduationYear;
   final List<Skill>? skills;
   final List<Achievement>? achievements;
 
@@ -35,11 +37,13 @@ class StudentState {
     required this.studentRollNoController,
     required this.searchStudentController,
     required this.branch,
-    required this.role,
+    required this.roles,
+    required this.selectableRoles,
+    required this.selectableBranches,
+    required this.graduationYear,
     this.profilePicURI,
     this.about,
     this.achievements,
-    this.graduationYear,
     this.skills,
   });
 
@@ -51,7 +55,10 @@ class StudentState {
     TextEditingController? studentRollNoController,
     TextEditingController? searchStudentController,
     String? branch,
-    String? role,
+    List<int>? roles,
+    List<DropdownMenuItem<String>>? selectableRoles,
+    List<DropdownMenuItem<String>>? selectableBranches,
+    int? graduationYear,
     String? about,
     String? profilePicURI,
     List<Skill>? skills,
@@ -60,49 +67,27 @@ class StudentState {
     return StudentState(
       students: students ?? this.students,
       filteredStudents: filteredStudents ?? this.filteredStudents,
-      studentNameController:
-          studentNameController ?? this.studentNameController,
-      studentEmailController:
-          studentEmailController ?? this.studentEmailController,
-      studentRollNoController:
-          studentRollNoController ?? this.studentRollNoController,
-      searchStudentController:
-          searchStudentController ?? this.searchStudentController,
+      studentNameController: studentNameController ?? this.studentNameController,
+      studentEmailController: studentEmailController ?? this.studentEmailController,
+      studentRollNoController: studentRollNoController ?? this.studentRollNoController,
+      searchStudentController: searchStudentController ?? this.searchStudentController,
       branch: branch ?? this.branch,
-      role: role ?? this.role,
       profilePicURI: profilePicURI ?? this.profilePicURI,
       about: about ?? this.about,
       graduationYear: graduationYear ?? this.graduationYear,
       skills: skills ?? this.skills,
       achievements: achievements ?? this.achievements,
+      roles: roles ?? this.roles,
+      selectableRoles: selectableRoles ?? this.selectableRoles,
+      selectableBranches: selectableBranches ?? this.selectableBranches,
     );
-  }
-
-  Student getStudentById(String studentId) {
-    try {
-      return students.firstWhere((student) => student.id == studentId);
-    } catch (e) {
-      return Student(
-        id: '1',
-        name: 'John Doe',
-        email: 'john.doe@example.com',
-        rollNumber: 'R001',
-        about: 'I am a computer science student.',
-        profilePicURI:
-            'https://cdn4.sharechat.com/img_907710_35cec5f5_1681916904360_sc.jpg?tenant=sc&referrer=pwa-sharechat-service&f=360_sc.jpg',
-        branch: 'Computer Science',
-        graduationYear: 2023,
-        skills: [DummySkills.skills[1], DummySkills.skills[2]],
-        achievements: Dummyachievements.achievements.sublist(0, 5),
-        roles: ['Core Member', 'Coordinator'],
-      );
-    }
   }
 }
 
 class StudentProvider extends StateNotifier<StudentState> {
-  StudentProvider()
-      : super(StudentState(
+  StudentProvider(Ref ref)
+      : _api = ref.read(studentRepositoryProvider),
+        super(StudentState(
           students: DummyStudents.students,
           filteredStudents: [],
           studentNameController: TextEditingController(),
@@ -110,10 +95,16 @@ class StudentProvider extends StateNotifier<StudentState> {
           studentRollNoController: TextEditingController(),
           searchStudentController: TextEditingController(),
           branch: Branches.branchList[0].value!,
-          role: StudentRoles.studentRoleList[0].value!,
-        ));
+          roles: [],
+          selectableRoles: StudentRoles.studentRoleList,
+          selectableBranches: Branches.branchList,
+          graduationYear: DateTime.now().year,
+        )) {
+    loadStudents();
+  }
 
   final Logger _logger = Logger();
+  final StudentRepository _api;
 
   void pickSpreadsheet() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -135,13 +126,11 @@ class StudentProvider extends StateNotifier<StudentState> {
     }
   }
 
-  get studentNameController => state.studentNameController;
-
-  get studentEmailController => state.studentEmailController;
-
-  get studentRollNoController => state.studentRollNoController;
-
-  get searchStudentController => state.searchStudentController;
+  void loadStudents() async {
+    final students = await _api.getStudents();
+    final newState = state.copyWith(students: students, filteredStudents: students);
+    state = newState;
+  }
 
   void searchStudents() {
     String query = state.searchStudentController.text;
