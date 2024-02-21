@@ -70,8 +70,7 @@ class TimetableState {
 
 class TimetableProvider extends StateNotifier<TimetableState> {
   TimetableProvider(Ref ref)
-      : _authState = ref.read(authProvider),
-        _api = ref.read(timetableRepositoryProvider),
+      : _api = ref.read(timetableRepositoryProvider),
         super(
           TimetableState(
             timetables: [],
@@ -86,29 +85,28 @@ class TimetableProvider extends StateNotifier<TimetableState> {
             tilesDisabled: false,
           ),
         ) {
-    loadTimetables();
+    AuthState authState = ref.read(authProvider);
+    String userId;
+
+    if (authState.currentUserRole == 'student') {
+      userId = (authState.currentUser as Student).id!;
+    } else if (authState.currentUserRole == 'faculty') {
+      userId = (authState.currentUser as Faculty).id!;
+    } else if (authState.currentUserRole == 'admin') {
+      userId = (authState.currentUser as Admin).id;
+    } else {
+      return;
+    }
+    loadTimetables(userId);
   }
 
   final TimetableRepository _api;
-  final AuthState _authState;
   final Logger _logger = Logger();
 
-  void loadTimetables() async {
+  void loadTimetables(String id) async {
     state = state.copyWith(loadingState: LoadingState.progress);
     try {
-      String userId;
-
-      if (_authState.currentUserRole == 'student') {
-        userId = (_authState.currentUser as Student).id;
-      } else if (_authState.currentUserRole == 'faculty') {
-        userId = (_authState.currentUser as Faculty).id;
-      } else if (_authState.currentUserRole == 'admin') {
-        userId = (_authState.currentUser as Admin).id;
-      } else {
-        return;
-      }
-
-      final List<Timetable> timetables = await _api.getTimetablesByCreatorId(userId) ?? [];
+      final List<Timetable> timetables = await _api.getTimetablesByCreatorId(id) ?? [];
       state = state.copyWith(
         timetables: timetables,
         loadingState: LoadingState.success,
@@ -321,15 +319,15 @@ class TimetableProvider extends StateNotifier<TimetableState> {
     state = state.copyWith(includeSaturday: !state.includeSaturday);
   }
 
-  Future<void> addTimetable() async {
+  Future<void> addTimetable(AuthState authState) async {
     String userId;
 
-    if (_authState.currentUserRole == 'student') {
-      userId = (_authState.currentUser as Student).id;
-    } else if (_authState.currentUserRole == 'faculty') {
-      userId = (_authState.currentUser as Faculty).id;
+    if (authState.currentUserRole == 'student') {
+      userId = (authState.currentUser as Student).id!;
+    } else if (authState.currentUserRole == 'faculty') {
+      userId = (authState.currentUser as Faculty).id!;
     } else {
-      userId = (_authState.currentUser as Admin).id;
+      userId = (authState.currentUser as Admin).id;
     }
 
     final Timetable timetable = Timetable(
@@ -347,13 +345,22 @@ class TimetableProvider extends StateNotifier<TimetableState> {
       ),
     );
     if (await _api.createTimetable(timetable)) {
-      loadTimetables();
+      loadTimetables(userId);
     }
   }
 
-  Future<void> deleteTimetable(Timetable timetable) async {
+  Future<void> deleteTimetable(AuthState authState, Timetable timetable) async {
     if (await _api.deleteTimetableById(timetable.id!)) {
-      loadTimetables();
+      String userId;
+
+      if (authState.currentUserRole == 'student') {
+        userId = (authState.currentUser as Student).id!;
+      } else if (authState.currentUserRole == 'faculty') {
+        userId = (authState.currentUser as Faculty).id!;
+      } else {
+        userId = (authState.currentUser as Admin).id;
+      }
+      loadTimetables(userId);
     }
   }
 
