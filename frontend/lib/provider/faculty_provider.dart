@@ -2,22 +2,21 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:smart_insti_app/provider/courses_provider.dart';
+import 'package:smart_insti_app/repositories/faculty_repository.dart';
 import 'dart:io';
-import '../models/course.dart';
 import '../models/faculty.dart';
 
-final facultyProvider =
-    StateNotifierProvider<FacultyStateNotifier, FacultyState>(
-        (ref) => FacultyStateNotifier());
+final facultyProvider = StateNotifierProvider<FacultyStateNotifier, FacultyState>((ref) => FacultyStateNotifier(ref));
 
 class FacultyState {
   final List<Faculty> faculties;
   final List<Faculty> filteredFaculties;
-  final List<Course> selectedCourses;
+  final List<int> selectedCourses;
   final TextEditingController facultyNameController;
   final TextEditingController facultyEmailController;
   final TextEditingController facultyDepartmentController;
-  final TextEditingController facultyCabinNumberController;
+  final TextEditingController facultyCabinController;
   final TextEditingController searchFacultyController;
 
   FacultyState({
@@ -28,57 +27,52 @@ class FacultyState {
     required this.facultyEmailController,
     required this.searchFacultyController,
     required this.facultyDepartmentController,
-    required this.facultyCabinNumberController,
+    required this.facultyCabinController,
   });
 
   FacultyState copyWith({
     List<Faculty>? faculties,
     List<Faculty>? filteredFaculties,
-    List<Course>? selectedCourses,
+    List<int>? selectedCourses,
     TextEditingController? facultyNameController,
     TextEditingController? facultyEmailController,
     TextEditingController? searchFacultyController,
     TextEditingController? facultyDepartmentController,
-    TextEditingController? facultyCabinNumberController,
+    TextEditingController? facultyCabinController,
   }) {
     return FacultyState(
       faculties: faculties ?? this.faculties,
       filteredFaculties: filteredFaculties ?? this.filteredFaculties,
       selectedCourses: selectedCourses ?? this.selectedCourses,
-      facultyNameController:
-          facultyNameController ?? this.facultyNameController,
-      facultyEmailController:
-          facultyEmailController ?? this.facultyEmailController,
-      facultyCabinNumberController:
-          facultyCabinNumberController ?? this.facultyCabinNumberController,
-      facultyDepartmentController:
-          facultyDepartmentController ?? this.facultyDepartmentController,
-      searchFacultyController:
-          searchFacultyController ?? this.searchFacultyController,
+      facultyNameController: facultyNameController ?? this.facultyNameController,
+      facultyEmailController: facultyEmailController ?? this.facultyEmailController,
+      facultyCabinController: facultyCabinController ?? this.facultyCabinController,
+      facultyDepartmentController: facultyDepartmentController ?? this.facultyDepartmentController,
+      searchFacultyController: searchFacultyController ?? this.searchFacultyController,
     );
   }
 }
 
 class FacultyStateNotifier extends StateNotifier<FacultyState> {
-  FacultyStateNotifier()
-      : super(FacultyState(
+  FacultyStateNotifier(Ref ref)
+      : _coursesState = ref.read(coursesProvider.notifier),
+        _api = ref.read(facultyRepositoryProvider),
+        super(FacultyState(
           faculties: [],
           filteredFaculties: [],
           selectedCourses: [],
           facultyNameController: TextEditingController(),
           facultyEmailController: TextEditingController(),
-          facultyCabinNumberController: TextEditingController(),
+          facultyCabinController: TextEditingController(),
           facultyDepartmentController: TextEditingController(),
           searchFacultyController: TextEditingController(),
-        ));
+        )) {
+    loadFaculties();
+  }
 
   final Logger _logger = Logger();
-
-  get facultyNameController => state.facultyNameController;
-
-  get facultyEmailController => state.facultyEmailController;
-
-  get searchFacultyController => state.searchFacultyController;
+  final FacultyRepository _api;
+  final CoursesNotifier _coursesState;
 
   void loadFaculties() async {
     final faculties = await _api.getFaculties();
@@ -125,7 +119,7 @@ class FacultyStateNotifier extends StateNotifier<FacultyState> {
     }
   }
 
-  void updateSelectedCourses(List<Course> courses) {
+  void updateSelectedCourses(List<int> courses) {
     state = state.copyWith(
       selectedCourses: courses,
     );
@@ -135,10 +129,8 @@ class FacultyStateNotifier extends StateNotifier<FacultyState> {
     String query = state.searchFacultyController.text;
     _logger.i("Searching for faculty: $query");
     state = state.copyWith(
-      filteredFaculties: state.faculties
-          .where((faculty) =>
-              faculty.name.toLowerCase().contains(query.toLowerCase()))
-          .toList(),
+      filteredFaculties:
+          state.faculties.where((faculty) => faculty.name.toLowerCase().contains(query.toLowerCase())).toList(),
     );
   }
 
