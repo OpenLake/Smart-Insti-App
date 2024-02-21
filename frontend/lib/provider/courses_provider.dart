@@ -123,6 +123,7 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
       ),
     )) {
       clearControllers();
+      loadCourses();
     }
   }
 
