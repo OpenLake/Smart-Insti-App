@@ -44,6 +44,7 @@ class UserMessMenu extends ConsumerWidget {
                           ref.read(menuProvider.notifier).setSelectViewMenu(value);
                         },
                         value: ref.read(menuProvider).selectedViewMenu,
+                        addItemEnabled: false,
                         items: [
                           for (String i in ref.read(menuProvider).messMenus.keys)
                             DropdownMenuItem<String>(

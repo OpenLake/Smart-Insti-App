@@ -22,6 +22,8 @@ import timetableListResource from "./resources/timetable/timetableListResource.j
 import timetableResource from "./resources/timetable/timetableResource.js";
 import messMenuListResource from "./resources/messMenu/messMenuListResource.js";
 import messMenuResource from "./resources/messMenu/messMenuResource.js";
+import courseListResource from "./resources/course/courseListResource.js";
+import courseResource from "./resources/course/courseResource.js";
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
@@ -39,6 +41,9 @@ app.use("/student", studentResource);
 app.use("/students", studentListResource);
 app.use("/faculty", facultyResource);
 app.use("/faculties", facultyListResource);
+app.use("/courses", courseListResource);
+app.use("/course", courseResource);
+
 app.use("/timetable", timetableResource);
 app.use("/timetables", timetableListResource);
 app.use("/mess-menu", messMenuResource);

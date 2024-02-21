@@ -25,7 +25,21 @@ router.put("/:id", async (req, res) => {
 
     await room.save();
 
-    res.json({ message: messages.roomUpdated, room });
+    res.json({ message: messages.roomUpdated });
+  } catch (error) {
+    res.status(500).json({ message: messages.internalServerError });
+  }
+});
+
+// DELETE method
+router.delete("/:id", async (req, res) => {
+  try {
+    const { id } = req.params;
+    const room = await Room.findByIdAndDelete(id);
+    if (!room) {
+      return res.status(404).json({ message: messages.roomNotFound });
+    }
+    res.json({ message: messages.roomDeleted });
   } catch (error) {
     res.status(500).json({ message: messages.internalServerError });
   }

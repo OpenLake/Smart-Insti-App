@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
+import 'package:smart_insti_app/components/multiple_choice_selector.dart';
+import 'package:smart_insti_app/provider/room_provider.dart';
 import '../../components/choice_selector.dart';
 import '../../components/text_divider.dart';
 import '../../constants/constants.dart';
@@ -16,10 +19,8 @@ class AddCourses extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider.notifier).tokenCheckProgress !=
-          LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(
-            context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
       }
     });
     final course = ref.watch(coursesProvider);
@@ -54,12 +55,8 @@ class AddCourses extends ConsumerWidget {
                       ),
                       const SizedBox(width: 30),
                       ElevatedButton(
-                        onPressed: () => ref
-                            .read(coursesProvider.notifier)
-                            .pickSpreadsheet(),
-                        style: ButtonStyle(
-                            minimumSize:
-                                MaterialStateProperty.all(const Size(200, 60))),
+                        onPressed: () => ref.read(coursesProvider.notifier).pickSpreadsheet(),
+                        style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
                     ],
@@ -92,19 +89,45 @@ class AddCourses extends ConsumerWidget {
                         const SizedBox(height: 30),
                         MaterialTextFormField(
                           controller: course.courseCodeController,
-                          validator: (value) =>
-                              Validators.courseCodeValidator(value),
+                          validator: (value) => Validators.courseCodeValidator(value),
                           hintText: "Enter course code",
                           hintColor: Colors.teal.shade900.withOpacity(0.5),
                         ),
                         const SizedBox(height: 30),
-                        ChoiceSelector(
-                          onChanged: (value) => ref
-                              .read(coursesProvider.notifier)
-                              .updateBranch(value),
-                          value: course.branches[0],
-                          items: Branches.branchList,
-                          hint: "Select Branch",
+                        MaterialTextFormField(
+                          hintText: "Credits",
+                          hintColor: Colors.teal.shade900.withOpacity(0.5),
+                          inputFormatters: [
+                            FilteringTextInputFormatter.allow(RegExp(r'[0-9]')),
+                          ],
+                          controller: course.courseCreditController,
+                        ),
+                        const SizedBox(height: 30),
+                        Consumer(
+                          builder: (_, ref, __) => ChoiceSelector(
+                            hint: "Primary room",
+                            onChanged: (value) => ref.read(coursesProvider.notifier).updatePrimaryRoom(value),
+                            value: ref.read(coursesProvider).primaryRoom,
+                            items: ref
+                                .watch(roomProvider)
+                                .roomList
+                                .map(
+                                  (room) => DropdownMenuItem(
+                                    value: room.name,
+                                    child: Text(room.name),
+                                  ),
+                                )
+                                .toList(),
+                            addItemEnabled: false,
+                          ),
+                        ),
+                        const SizedBox(height: 30),
+                        MultipleChoiceSelector(
+                          hint: "Choose course branches",
+                          onChanged: (value) => ref.read(coursesProvider.notifier).updateBranch(value),
+                          items: ref.read(coursesProvider).selectableBranches,
+                          addSelectableItem: (value) => ref.read(coursesProvider.notifier).addSelectableBranch(value),
+                          selectedItems: ref.read(coursesProvider).branches,
                         ),
                         const SizedBox(height: 30),
                         Align(
@@ -118,9 +141,7 @@ class AddCourses extends ConsumerWidget {
                                 );
                               }
                             },
-                            style: ButtonStyle(
-                                minimumSize: MaterialStateProperty.all(
-                                    const Size(200, 60))),
+                            style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
                             child: const Text("Add Course"),
                           ),
                         ),

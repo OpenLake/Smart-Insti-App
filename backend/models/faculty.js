@@ -1,27 +1,28 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 
 const facultySchema = new mongoose.Schema({
-    name: {
-        type: String,
-        default: 'Smart Insti User'
+  name: {
+    type: String,
+    required: true,
+  },
+  email: {
+    type: String,
+    required: true,
+    unique: true,
+  },
+  cabinNumber: {
+    type: String,
+  },
+  department: {
+    type: String,
+  },
+  courses: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Course",
     },
-    email: {
-        type: String,
-        required: true,
-        unique: true
-    },
-    cabinNumber: {
-        type: String,
-    },
-    department: {
-        type: String,
-    },
-    courses: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Course'
-    }],
-    
+  ],
 });
 
-const Faculty = mongoose.model('Faculty', facultySchema);
+const Faculty = mongoose.model("Faculty", facultySchema);
 export default Faculty;

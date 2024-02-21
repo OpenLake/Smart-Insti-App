@@ -1,10 +1,7 @@
 import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
-import 'package:smart_insti_app/components/borderless_button.dart';
-import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'package:smart_insti_app/components/menu_tile.dart';
 import 'package:smart_insti_app/models/room.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
@@ -50,11 +47,10 @@ class RoomState {
 
 class RoomProvider extends StateNotifier<RoomState> {
   RoomProvider(Ref ref)
-      : _authState = ref.read(authProvider),
-        _api = ref.read(roomRepositoryProvider),
+      : _api = ref.read(roomRepositoryProvider),
         super(
           RoomState(
-            roomList: DummyRooms.rooms,
+            roomList: [],
             roomTiles: [],
             searchRoomController: TextEditingController(),
             roomNameController: TextEditingController(),
@@ -66,7 +62,6 @@ class RoomProvider extends StateNotifier<RoomState> {
 
   final RoomRepository _api;
   final Logger _logger = Logger();
-  final AuthState _authState;
 
   void pickSpreadsheet() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -88,42 +83,37 @@ class RoomProvider extends StateNotifier<RoomState> {
     }
   }
 
-  void addRoom() {
-    final newState = state.copyWith(
-      roomList: [
-        Room(name: state.roomNameController.text),
-        ...state.roomList,
-      ],
-      roomNameController: TextEditingController(),
-    );
-    state = newState;
-    _logger.i("Added room: ${state.roomNameController.text}");
+  void rebuildPage() => state = state.copyWith();
+
+  Future<void> addRoom() async {
+    if (await _api.addRoom(Room(name: state.roomNameController.text, vacant: true))) {
+      loadRooms();
+      state.roomNameController.clear();
+    }
   }
 
   Future<void> loadRooms() async {
     final rooms = await _api.getRooms();
-    //   _api.getOccupants();
     final newState = state.copyWith(roomList: rooms, loadingState: LoadingState.success);
     state = newState;
   }
 
-  Future<void> reserveRoom(Room room) async {
+  Future<void> reserveRoom(AuthState authState, Room room) async {
     String userId;
     String userName;
 
-    if (_authState.currentUserRole == 'student') {
-      userId = (_authState.currentUser as Student).id;
-      userName = (_authState.currentUser as Student).name;
-    } else if (_authState.currentUserRole == 'faculty') {
-      userId = (_authState.currentUser as Faculty).id;
-      userName = (_authState.currentUser as Faculty).name;
-    } else if (_authState.currentUserRole == 'admin') {
-      userId = (_authState.currentUser as Admin).id;
-      userName = (_authState.currentUser as Admin).name;
+    if (authState.currentUserRole == 'student') {
+      userId = (authState.currentUser as Student).id!;
+      userName = (authState.currentUser as Student).name;
+    } else if (authState.currentUserRole == 'faculty') {
+      userId = (authState.currentUser as Faculty).id!;
+      userName = (authState.currentUser as Faculty).name;
+    } else if (authState.currentUserRole == 'admin') {
+      userId = (authState.currentUser as Admin).id;
+      userName = (authState.currentUser as Admin).name;
     } else {
       return;
     }
-
     state = state.copyWith(loadingState: LoadingState.progress);
     if (await _api.reserveRoom(room.id!, userId, userName)) {
       loadRooms();
@@ -142,66 +132,9 @@ class RoomProvider extends StateNotifier<RoomState> {
     }
   }
 
-  void buildRoomTiles(BuildContext context) async {
-    final roomTiles = <MenuTile>[];
-    for (Room room in state.roomList) {
-      roomTiles.add(
-        MenuTile(
-          title: room.name,
-          onTap: () => showDialog(
-            context: context,
-            builder: (_) => Dialog(
-              child: Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(20),
-                  color: Colors.white,
-                ),
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(room.name),
-                    const SizedBox(height: 20),
-
-                    /// TODO : Add code to edit room
-
-                    const Text("Room editing will be added in future"),
-                    const SizedBox(height: 20),
-                    BorderlessButton(
-                      onPressed: () {
-                        removeRoom(room);
-                        buildRoomTiles(context);
-                        context.pop();
-                      },
-                      label: const Text("Remove"),
-                      backgroundColor: Colors.red.shade100,
-                      splashColor: Colors.redAccent,
-                    )
-                  ],
-                ),
-              ),
-            ),
-          ),
-          icon: Icons.add,
-          primaryColor: Colors.grey.shade200,
-          secondaryColor: Colors.grey.shade300,
-        ),
-      );
+  Future<void> removeRoom(Room room) async {
+    if (await _api.removeRoom(room.id!)) {
+      loadRooms();
     }
-    String query = state.searchRoomController.text;
-    state = state.copyWith(
-      roomTiles: roomTiles.where((element) => element.title.toLowerCase().contains(query.toLowerCase())).toList(),
-    );
-    _logger.i("Built room tiles : ${roomTiles.length}");
-  }
-
-  void removeRoom(Room room) {
-    final newState = state.copyWith(
-      roomList: [
-        ...state.roomList.where((element) => element.name != room.name),
-      ],
-    );
-    state = newState;
-    _logger.i("Removed room: ${room.name}");
   }
 }
