@@ -147,12 +147,14 @@ class StudentProvider extends StateNotifier<StudentState> {
     String query = state.searchStudentController.text;
     _logger.i("Searching for student: $query");
     final newState = state.copyWith(
-      filteredStudents: state.students
-          .where((student) =>
-              student.name.toLowerCase().contains(query.toLowerCase()))
-          .toList(),
+      filteredStudents:
+          state.students.where((student) => student.name.toLowerCase().contains(query.toLowerCase())).toList(),
     );
     state = newState;
+  }
+
+  void updateRoles(List<int> rolesIndex) {
+    state = state.copyWith(roles: rolesIndex);
   }
 
   void updateBranch(String value) {
@@ -160,8 +162,13 @@ class StudentProvider extends StateNotifier<StudentState> {
     state = newState;
   }
 
-  void updateRole(String value) {
-    final newState = state.copyWith(role: value);
+  void updateRole(List<int> rolesIndex) {
+    _logger.i("Updating roles: $rolesIndex");
+    state = state.copyWith(roles: rolesIndex);
+  }
+
+  void updateGraduationYear(DateTime time) {
+    final newState = state.copyWith(graduationYear: time.year);
     state = newState;
   }
 
@@ -180,36 +187,64 @@ class StudentProvider extends StateNotifier<StudentState> {
     state = newState;
   }
 
-  void addStudent() {
+  void addSelectableRole(String item) {
+    _logger.i("Adding item: $item");
     final newState = state.copyWith(
-      students: [
-        Student(
-          id: (state.students.length + 1).toString(),
-          name: state.studentNameController.text,
-          email: state.studentEmailController.text,
-          rollNumber: state.studentRollNoController.text,
-          branch: state.branch,
+      selectableRoles: [
+        ...state.selectableRoles,
+        DropdownMenuItem<String>(
+          value: item,
+          child: Text(item),
         ),
-        ...state.students,
       ],
-      studentNameController: TextEditingController(),
-      studentEmailController: TextEditingController(),
-      studentRollNoController: TextEditingController(),
-      branch: Branches.branchList[0].value!,
-      role: StudentRoles.studentRoleList[0].value!,
     );
     state = newState;
   }
 
-  void removeStudent(Student student) {
-    final newStudents = state.students.where((s) => s != student).toList();
-    final newFilteredStudents =
-        state.filteredStudents.where((s) => s != student).toList();
+  void addSelectableBranch(String item) {
+    _logger.i("Adding item: $item");
     final newState = state.copyWith(
-      students: newStudents,
-      filteredStudents: newFilteredStudents,
+      selectableBranches: [
+        ...state.selectableBranches,
+        DropdownMenuItem<String>(
+          value: item,
+          child: Text(item),
+        ),
+      ],
     );
     state = newState;
-    _logger.i("Removed student: ${student.name}");
+  }
+
+  Future<void> addStudent() async {
+    final newStudent = Student(
+      name: state.studentNameController.text,
+      email: state.studentEmailController.text,
+      rollNumber: state.studentRollNoController.text,
+      branch: state.branch,
+      graduationYear: state.graduationYear,
+      roles: state.roles.map((index) => StudentRoles.studentRoleList[index].value!).toList(),
+    );
+    if (await _api.addStudent(newStudent)) {
+      clearControllers();
+      loadStudents();
+    }
+  }
+
+  Future<void> removeStudent(Student student) async {
+    if (await _api.deleteStudent(student.id!)) {
+      loadStudents();
+    }
+  }
+
+  void clearControllers() {
+    state.studentNameController.clear();
+    state.studentEmailController.clear();
+    state.studentRollNoController.clear();
+    final newState = state.copyWith(
+      branch: Branches.branchList[0].value!,
+      graduationYear: DateTime.now().year,
+      roles: [],
+    );
+    state = newState;
   }
 }
