@@ -4,6 +4,7 @@ import * as messages from "../../constants/messages.js";
 import transporter from "../../config/emailTransporter.js";
 import { getMailOptions } from "../../config/mailOptions.js";
 import Student from "../../models/student.js";
+import Faculty from "../../models/faculty.js";
 import OTP from "../../models/otp.js";
 
 const otpRouter = express.Router();
