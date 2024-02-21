@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:logger/logger.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 import 'package:smart_insti_app/components/choice_selector.dart';

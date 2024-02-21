@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/faculty.dart';
 
 final facultyRepositoryProvider = Provider<FacultyRepository>((ref) => FacultyRepository());
