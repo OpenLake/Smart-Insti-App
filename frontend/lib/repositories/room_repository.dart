@@ -2,7 +2,6 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
-import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/room.dart';
 
 final roomRepositoryProvider = Provider<RoomRepository>((_) => RoomRepository());
@@ -23,13 +22,15 @@ class RoomRepository {
       }
       return rooms;
     } catch (e) {
-      return DummyRooms.rooms;
+      Logger().e(e);
+      return [];
     }
   }
 
   Future<bool> reserveRoom(String roomId, String occupantId, String userName) async {
     try {
-      final response = await _client.put('/room/$roomId', data: {'occupantName' : userName ,'occupantId': occupantId, 'vacant': false });
+      final response = await _client
+          .put('/room/$roomId', data: {'occupantName': userName, 'occupantId': occupantId, 'vacant': false});
       Logger().i(response.data);
       return true;
     } catch (e) {
@@ -40,7 +41,7 @@ class RoomRepository {
 
   Future<bool> vacateRoom(String roomId) async {
     try {
-      final response = await _client.put('/room/$roomId', data: {'occupantId': null, 'vacant': true });
+      final response = await _client.put('/room/$roomId', data: {'occupantId': null, 'vacant': true});
       Logger().i(response.data);
       return true;
     } catch (e) {
@@ -49,12 +50,25 @@ class RoomRepository {
     }
   }
 
-  void addRoom(Room room) async {
+  Future<bool> addRoom(Room room) async {
     try {
       final response = await _client.post('/rooms', data: room.toJson());
       Logger().i(response.data);
+      return true;
     } catch (e) {
       Logger().e(e);
+      return false;
+    }
+  }
+
+  Future<bool> removeRoom(String roomId) async {
+    try {
+      final response = await _client.delete('/room/$roomId');
+      Logger().i(response.data);
+      return true;
+    } catch (e) {
+      Logger().e(e);
+      return false;
     }
   }
 }
