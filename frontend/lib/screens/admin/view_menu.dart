@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:logger/logger.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 import 'package:smart_insti_app/components/choice_selector.dart';
@@ -40,16 +41,18 @@ class ViewMessMenu extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: ChoiceSelector(
+                        addItemEnabled: false,
                         onChanged: (value) {
                           ref.read(menuProvider.notifier).setSelectViewMenu(value);
                         },
                         value: ref.read(menuProvider).selectedViewMenu,
                         items: [
-                          for (String i in ref.read(menuProvider).messMenus.keys)
-                            DropdownMenuItem<String>(
-                              value: i,
-                              child: Text(i),
-                            ),
+                          if (ref.read(menuProvider).messMenus.isNotEmpty)
+                            for (String i in ref.read(menuProvider).messMenus.keys)
+                              DropdownMenuItem<String>(
+                                value: i,
+                                child: Text(i),
+                              ),
                         ],
                         hint: 'Select Kitchen',
                       ),
