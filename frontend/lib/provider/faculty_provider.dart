@@ -80,9 +80,14 @@ class FacultyStateNotifier extends StateNotifier<FacultyState> {
 
   get searchFacultyController => state.searchFacultyController;
 
-  get facultyCabinNumberController => state.facultyCabinNumberController;
-
-  get facultyDepartmentController => state.facultyDepartmentController;
+  void loadFaculties() async {
+    final faculties = await _api.getFaculties();
+    _coursesState.loadCourses();
+    state = state.copyWith(
+      faculties: faculties,
+      filteredFaculties: faculties,
+    );
+  }
 
   void pickSpreadsheet() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
