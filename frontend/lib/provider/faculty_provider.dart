@@ -109,24 +109,20 @@ class FacultyStateNotifier extends StateNotifier<FacultyState> {
     }
   }
 
-  void addFaculty() {
-    Faculty faculty = Faculty(
-      id: (state.faculties.length + 1).toString(),
-      name: state.facultyNameController.text,
-      email: state.facultyEmailController.text,
-      courses: state.selectedCourses,
-      cabinNumber: state.facultyCabinNumberController.text,
-      department: state.facultyDepartmentController.text,
-    );
-    state = state.copyWith(
-      faculties: [faculty, ...state.faculties],
-      selectedCourses: [],
-      facultyNameController: TextEditingController(),
-      facultyEmailController: TextEditingController(),
-      facultyCabinNumberController: TextEditingController(),
-      facultyDepartmentController: TextEditingController(),
-    );
-    _logger.i("Added faculty: ${faculty.name}");
+  Future<void> addFaculty() async {
+    _logger.i(_coursesState.state.courses.length);
+    if (await _api.addFaculty(
+      Faculty(
+        name: state.facultyNameController.text,
+        email: state.facultyEmailController.text,
+        department: state.facultyDepartmentController.text,
+        cabin: state.facultyCabinController.text,
+        courses: state.selectedCourses.map((courseIndex) => _coursesState.state.courses[courseIndex].id!).toList(),
+      ),
+    )) {
+      clearControllers();
+      loadFaculties();
+    }
   }
 
   void updateSelectedCourses(List<Course> courses) {
@@ -146,11 +142,20 @@ class FacultyStateNotifier extends StateNotifier<FacultyState> {
     );
   }
 
-  void removeFaculty(Faculty faculty) {
+  Future<void> removeFaculty(Faculty faculty) async {
+    if (await _api.deleteFaculty(faculty.id!)) {
+      loadFaculties();
+    }
+  }
+
+  void clearControllers() {
+    state.facultyNameController.clear();
+    state.facultyEmailController.clear();
+    state.facultyCabinController.clear();
+    state.facultyDepartmentController.clear();
+    state.searchFacultyController.clear();
     state = state.copyWith(
-      faculties: state.faculties..remove(faculty),
-      filteredFaculties: state.filteredFaculties..remove(faculty),
+      selectedCourses: [],
     );
-    _logger.i("Removed faculty: ${faculty.name}");
   }
 }
