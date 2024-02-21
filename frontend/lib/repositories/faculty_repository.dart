@@ -5,8 +5,7 @@ import 'package:logger/logger.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/faculty.dart';
 
-final facultyRepositoryProvider =
-    Provider<FacultyRepository>((ref) => FacultyRepository());
+final facultyRepositoryProvider = Provider<FacultyRepository>((ref) => FacultyRepository());
 
 class FacultyRepository {
   final _client = Dio(
@@ -36,40 +35,43 @@ class FacultyRepository {
       final response = await _client.get('/faculties');
       return (response.data as List).map((e) => Faculty.fromJson(e)).toList();
     } catch (e) {
-      return DummyFaculties.faculties;
+      _logger.e(e);
+      return [];
     }
   }
 
-  Future<Faculty> addFaculty(String email) async {
+  Future<bool> addFaculty(Faculty faculty) async {
     try {
+      _logger.i(faculty.toJson());
       final response = await _client.post(
         '/faculties',
-        data: {
-          'email': email,
-        },
+        data: faculty.toJson(),
       );
-
-      return Faculty.fromJson(response.data['user']);
+      _logger.i(response.data);
+      return true;
     } catch (e) {
-      return DummyFaculties.faculties[0];
+      _logger.e(e);
+      return false;
     }
   }
 
   Future<Faculty> updateFaculty(Faculty faculty) async {
     try {
-      final response =
-          await _client.put('/faculties/${faculty.id}', data: faculty.toJson());
+      final response = await _client.put('/faculties/${faculty.id}', data: faculty.toJson());
       return Faculty.fromJson(response.data['user']);
     } catch (e) {
-      return DummyFaculties.faculties[0];
+      _logger.e(e);
+      return faculty;
     }
   }
 
-  Future<void> deleteFaculty(String id) async {
+  Future<bool> deleteFaculty(String id) async {
     try {
-      await _client.delete('/faculties/$id');
+      await _client.delete('/faculty/$id');
+      return true;
     } catch (e) {
-      return;
+      _logger.e(e);
+      return false;
     }
   }
 }
