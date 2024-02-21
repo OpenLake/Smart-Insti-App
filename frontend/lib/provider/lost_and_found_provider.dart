@@ -130,7 +130,7 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
   }
 
   void updateListingStatus(String status) {
-    state = state.copyWith(listingStatus: status);
+    state = state.copyWith(listingStatus: status, selectedImage: state.selectedImage);
   }
 
   void clearControllers() {
