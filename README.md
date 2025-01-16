@@ -1,17 +1,55 @@
 # Smart-Insti-App 📱🏫
-This app aims to solve the day-to-day problems that students and faculty face in IIT Bhilai and aims to consolidate a lot of useful applications into single app. This could include features like Time Table, Classroom Vacancy, Lost and Found, Chatrooms on various topics like Internet Issues. It could also have a broadcast feature which would be very useful in emergency situations.
 
-## Techstack 👩‍💻
-Flutter, Firebase
+**Smart-Insti-App** is designed to address the everyday challenges faced by students and faculty at IIT Bhilai. This all-in-one solution consolidates various essential applications into a single, user-friendly app. Key features include Timetable management, Classroom Vacancy, Lost & Found, Chatrooms for topics such as Internet Issues, and a Broadcast feature for emergencies.
+
+## Tech Stack 👩‍💻
+
+- **Frontend**: Flutter 
+- **Backend**: Node.js 
+- **Database**: MongoDB
 
 ## Maintainers ☀️
- |[@Ananya](https://github.com/Ananyaiitbhilai)|[@chaitanyabisht](https://github.com/chaitanyabisht) |[@Maanas Talwar](https://github.com/maanas-talwar)| [@Satvik Vemuganti](https://github.com/VickyMerzOwn)|
-|------|-------|---------|--------|
 
-## Other details 📑
-This project is in its first iteration hence have to be started from scratch. A basic experience in app development is preferred. 
+| [@Sai Surya Talla](https://github.com/SAISURYAtalla) |
+| ---------------------------------------------------- |
+
+## Project Status 📑
+
+The project is in its final phase and aims to be fully scalable and deployed for IIT Bhilai. Experience with app deployment and backend scalability is highly preferred.
+
+### Features Implemented 🚀
+
+- Room Vacancy 🏫
+- Lost & Found 🔍
+- Timetables 📅
+- Broadcast 📢
+- Chat Room 💬
+- Mess Menu 🍽️
+- Custom Profile 👤
+
+## How to Run 🛠️
+
+### Prerequisites:
+
+Ensure you have Flutter and Node.js installed on your local system.
+
+- **Flutter Installation**: Follow the [Flutter Installation Guide](https://flutter.dev/docs/get-started/install)
+- **Node.js Installation**: Follow the [Node.js Installation Guide](https://nodejs.org/en/download/)
+
+### Frontend:
+
+1. Navigate to the `frontend/` directory.
+2. Run the following commands:
+   ```bash
+   flutter pub get
+   flutter run
+
+### Backend:
+
+1. Navigate to the `backend/` directory.
+2. Run the following commands:
+   ```bash
+   npm start
 
 ## Contribution Guidelines ✨
-Please go through the Wiki. Even a small contribution helps. All forms of contributions including documentation changes are highly welcomed and valued.
-- [How to create a PR?](https://github.com/OpenLake/Not-a-Mess/wiki/How-to-create-a-PR%3F)
-- [PR Format Guidelines](https://github.com/OpenLake/Not-a-Mess/wiki/PR-Format-Guidelines)
+Join the discord server of [FOSS Overflow](https://discord.gg/bUkG3br637) to stay updated and submit an application to get selected for contribution.
