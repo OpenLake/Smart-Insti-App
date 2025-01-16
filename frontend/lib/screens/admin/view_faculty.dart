@@ -31,9 +31,7 @@ class ViewFaculty extends ConsumerWidget {
               child: SizedBox(
                 width: 390,
                 child: SearchBar(
-                  controller: ref
-                      .read(facultyProvider.notifier)
-                      .searchFacultyController,
+                  controller: ref.read(facultyProvider).searchFacultyController,
                   hintText: 'Enter faculty name',
                   onChanged: (value) {
                     ref.read(facultyProvider.notifier).searchFaculties();
@@ -66,22 +64,18 @@ class ViewFaculty extends ConsumerWidget {
             }
             return ListView.builder(
                 itemBuilder: (_, index) {
-                  List<Faculty> faculties =
-                      ref.read(facultyProvider).filteredFaculties;
+                  List<Faculty> faculties = ref.read(facultyProvider).filteredFaculties;
                   return Container(
-                    margin: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 10),
+                    margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                     child: ListTile(
                       tileColor: Colors.grey.shade200,
                       selectedTileColor: Colors.red,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(15),
                       ),
-                      contentPadding: const EdgeInsets.symmetric(
-                          horizontal: 20, vertical: 10),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                       title: Text('Faculty : ${faculties[index].name}'),
-                      subtitle:
-                          Text('Faculty Email : ${faculties[index].email}'),
+                      subtitle: Text('Faculty Email : ${faculties[index].email}'),
                       trailing: SizedBox(
                         width: 100,
                         child: Row(
@@ -93,17 +87,14 @@ class ViewFaculty extends ConsumerWidget {
                                 context: context,
                                 builder: (_) => const AlertDialog(
                                   title: Text('Edit Faculty'),
-                                  content: Text(
-                                      "Faculty editing will be added in future"),
+                                  content: Text("Faculty editing will be added in future"),
                                 ),
                               ),
                             ),
                             IconButton(
                               iconSize: 20,
                               icon: const Icon(Icons.delete),
-                              onPressed: () => ref
-                                  .read(facultyProvider.notifier)
-                                  .removeFaculty(faculties[index]),
+                              onPressed: () => ref.read(facultyProvider.notifier).removeFaculty(faculties[index]),
                             ),
                           ],
                         ),

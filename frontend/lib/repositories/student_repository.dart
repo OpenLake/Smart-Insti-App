@@ -31,24 +31,25 @@ class StudentRepository {
     }
   }
 
-  Future<Student> addStudent(String email) async {
+  Future<bool> addStudent(Student student) async {
     try {
+      _logger.i(student.toJson());
       final response = await _client.post(
         '/students',
-        data: {
-          'email': email,
-        },
+        data: student.toJson(),
       );
-
-      return Student.fromJson(response.data['user']);
+      _logger.i(response.data);
+      return true;
     } catch (e) {
-      return DummyStudents.students[0];
+      _logger.e(e);
+      return false;
     }
   }
 
   Future<List<Student>> getStudents() async {
     try {
       final response = await _client.get('/students');
+      _logger.i(response.data);
       return (response.data as List).map((e) => Student.fromJson(e)).toList();
     } catch (e) {
       return DummyStudents.students;
@@ -65,11 +66,13 @@ class StudentRepository {
     }
   }
 
-  Future<void> deleteStudent(String id) async {
+  Future<bool> deleteStudent(String id) async {
     try {
-      await _client.delete('/students/$id');
+      await _client.delete('/student/$id');
+      return true;
     } catch (e) {
-      return;
+      _logger.e(e);
+      return false;
     }
   }
 }

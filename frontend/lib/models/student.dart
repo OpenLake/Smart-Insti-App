@@ -2,7 +2,7 @@ import 'package:smart_insti_app/models/achievement.dart';
 import 'package:smart_insti_app/models/skills.dart';
 
 class Student {
-  final String id;
+  final String? id;
   final String name;
   final String email;
   final String rollNumber;
@@ -15,7 +15,7 @@ class Student {
   final List<String>? roles;
 
   Student({
-    required this.id,
+    this.id,
     required this.name,
     required this.email,
     required this.rollNumber,
@@ -31,7 +31,7 @@ class Student {
   factory Student.fromJson(Map<String, dynamic> json) {
     return Student(
       id: json['_id'],
-      name: json['name'] ?? 'Smart Insti User',
+      name: json['name'],
       email: json['email'],
       rollNumber: json['rollNumber'],
       about: json['about'],
@@ -52,7 +52,6 @@ class Student {
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
       'name': name,
       'email': email,
       'rollNumber': rollNumber,

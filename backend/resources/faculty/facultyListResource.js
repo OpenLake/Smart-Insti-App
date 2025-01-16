@@ -6,7 +6,7 @@ const facultyListResource = express.Router();
 
 facultyListResource.get("/", async (req, res) => {
   try {
-    const faculties = await Faculty.find()
+    const faculties = await Faculty.find();
     res.json(faculties);
   } catch (err) {
     res.status(500).json({ message: messages.internalServerError });
@@ -14,11 +14,10 @@ facultyListResource.get("/", async (req, res) => {
 });
 
 facultyListResource.post("/", async (req, res) => {
-  const { email } = req.body;
-  let existingUser = await Faculty.findOne({ email });
+  let existingUser = await Faculty.findOne({ email: req.body.email });
   try {
     if (!existingUser) {
-      const newUser = new Faculty({ email });
+      const newUser = new Faculty({ ...req.body });
       await newUser.save();
       res.send({ message: messages.userCreated, user: newUser });
     } else {

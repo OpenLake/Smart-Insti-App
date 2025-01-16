@@ -1,13 +1,11 @@
 import express from "express";
 import dotenv from "dotenv";
-import { MongoClient } from "mongodb";
 import * as messages from "../../constants/messages.js";
 import transporter from "../../config/emailTransporter.js";
-import {
-  getMailOptions,
-  dbName,
-  otpCollectionName,
-} from "../../config/mailOptions.js";
+import { getMailOptions } from "../../config/mailOptions.js";
+import Student from "../../models/student.js";
+import Faculty from "../../models/faculty.js";
+import OTP from "../../models/otp.js";
 
 const otpRouter = express.Router();
 dotenv.config();
@@ -17,12 +15,6 @@ function generateOTP() {
   return Math.floor(1000 + Math.random() * 9000).toString();
 }
 
-// Connection URI for your MongoDB database
-const uri = process.env.MONGODB_URI;
-
-// Create a new MongoClient
-const client = new MongoClient(uri);
-
 otpRouter.post("/send-otp", async (req, res) => {
   const { email, loginForRole } = req.body;
 
@@ -30,23 +22,19 @@ otpRouter.post("/send-otp", async (req, res) => {
     return res.status(412).json({ error: messages.emailIsRequired });
   }
 
-  const studentCollectionName = "students";
-  const facultyCollectionName = "faculties";
-
-  // Check if the email exists in the database by loginForRole which can be wither student or faculty
   try {
-    await client.connect();
-    const database = client.db(dbName);
-    const collection = database.collection(
-      loginForRole === "student" ? studentCollectionName : facultyCollectionName
-    );
-    const result = await collection.findOne({ email });
+    let result = null;
+    if (loginForRole === "student") {
+      result = await Student.findOne({ email });
+    } else {
+      result = await Faculty.findOne({ email });
+    }
 
     if (!result) {
       return res.status(400).json({ message: messages.userNotFound });
     }
-  } finally {
-    await client.close();
+  } catch (err) {
+    return res.status(500).json({ message: messages.internalServerError });
   }
   // Generate OTP
   const otp = generateOTP();
@@ -66,16 +54,13 @@ otpRouter.post("/send-otp", async (req, res) => {
 
   // Connect to the MongoDB server
   try {
-    await client.connect();
-    const database = client.db(dbName);
-    const collection = database.collection(otpCollectionName);
-    await collection.deleteMany({
+    await OTP.deleteMany({
       email: email,
     });
     const createdAt = new Date();
-    await collection.insertOne({ email, otp, createdAt });
-  } finally {
-    await client.close();
+    await OTP.create({ email, otp, createdAt });
+  } catch (err) {
+    return res.status(500).json({ message: messages.internalServerError });
   }
 });
 
@@ -87,11 +72,7 @@ otpRouter.post("/verify-otp", async (req, res) => {
   }
 
   try {
-    await client.connect();
-
-    const database = client.db(dbName);
-    const otpCollection = database.collection(otpCollectionName);
-    const result = await otpCollection.findOne({ email });
+    const result = await OTP.findOne({ email });
 
     if (!result || !result.otp) {
       return res.status(400).json({ message: messages.otpExpired });
@@ -99,16 +80,13 @@ otpRouter.post("/verify-otp", async (req, res) => {
 
     const storedOTP = result.otp;
 
-    // Compare the provided OTP with the stored OTP
     if (otp === storedOTP) {
-      await otpCollection.deleteOne({ email });
+      await OTP.deleteOne({ email });
       return res.status(200).json({ message: messages.otpVerfied });
     }
     res.status(401).json({ message: messages.incorrectOTP });
   } catch (err) {
     res.status(500).json({ message: messages.internalServerError });
-  } finally {
-    await client.close();
   }
 });
 

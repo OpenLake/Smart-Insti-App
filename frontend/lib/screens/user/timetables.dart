@@ -207,7 +207,9 @@ class Timetables extends ConsumerWidget {
                         icon: const Icon(Icons.delete),
                         iconSize: 21,
                         onPressed: () async {
-                          await ref.read(timetableProvider.notifier).deleteTimetable(ref.read(timetableProvider).timetables[index]);
+                          await ref
+                              .read(timetableProvider.notifier)
+                              .deleteTimetable(ref.read(authProvider), ref.read(timetableProvider).timetables[index]);
                         },
                       ),
                       shape: RoundedRectangleBorder(
