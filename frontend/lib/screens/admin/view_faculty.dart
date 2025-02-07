@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_scaled_box.dart';
+import "package:responsive_framework/src/responsive_scaled_box.dart";
 import 'package:smart_insti_app/provider/faculty_provider.dart';
 
 import '../../constants/constants.dart';
@@ -15,8 +15,10 @@ class ViewFaculty extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(facultyProvider.notifier).searchFaculties();
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+          LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.adminAuthLabel.toLowerCase());
       }
     });
 
