@@ -50,6 +50,11 @@ dependencies:
   dio: ^5.8.0+1
   flutter_dotenv: ^5.2.1
   flutter_secure_storage: ^9.2.4
+  responsive_framework: ^1.5.1
+  slide_switcher: ^1.1.2
+  animated_text_kit: ^4.2.3
+  animated_toggle_switch: ^0.8.4
+  fl_chart: ^0.70.2
 
 dev_dependencies:
   flutter_test:
