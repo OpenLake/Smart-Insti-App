@@ -1,26 +1,36 @@
 import mongoose from "mongoose";
+import bcrypt from "bcrypt";
 
-const adminSchema = new mongoose.Schema({
-  name: {
-    required: true,
-    type: String,
-  },
-  email: {
-    required: true,
-    type: String,
-    validate: {
-      validator: (value) => {
-        const re =
-          /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-        return value.match(re);
+const adminSchema = new mongoose.Schema(
+  {
+    name: { type: String, required: true, trim: true },
+    email: {
+      type: String,
+      required: true,
+      unique: true, // Prevents duplicate admin accounts
+      trim: true,
+      lowercase: true,
+      validate: {
+        validator: (value) => /^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(value), // Improved email regex
+        message: "Please enter a valid email address",
       },
-      message: "Please enter a valid email address",
     },
+    password: { type: String, required: true, minlength: 6 },
   },
-  password: {
-    required: true,
-    type: String,
-  },
+  { timestamps: true } // Adds createdAt & updatedAt automatically
+);
+
+/**
+ * Hash password before saving
+ */
+adminSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
+  try {
+    this.password = await bcrypt.hash(this.password, 10); // Hash password with salt rounds = 10
+    next();
+  } catch (error) {
+    next(error);
+  }
 });
 
 const Admin = mongoose.model("Admin", adminSchema);
