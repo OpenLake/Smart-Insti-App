@@ -18,7 +18,7 @@ const loginLimiter = rateLimit({
   message: { msg: "Too many login attempts. Try again later." },
 });
 
-// Sign-Up Route
+// Sign-Up Route (working)
 adminAuthRouter.post("/register", async (req, res) => {
   try {
     const { email, password, name } = req.body;
@@ -51,10 +51,12 @@ adminAuthRouter.post("/register", async (req, res) => {
         .json({ status: false, message: messages.userAlreadyExists });
     }
 
-    const hashedPassword = await bcryptjs.hash(password, 10);
-    const admin = await Admin.create({ email, name, password: hashedPassword });
+    // const hashedPassword = await bcryptjs.hash(password, 10);
+    const admin = await Admin.create({ email, name, password: password });
 
-    res.status(201).json({ status: true, message: messages.userCreated });
+    res
+      .status(201)
+      .json({ status: true, message: messages.userCreated, data: admin });
   } catch (error) {
     console.error("Error registering admin:", error);
     res
@@ -63,7 +65,7 @@ adminAuthRouter.post("/register", async (req, res) => {
   }
 });
 
-// Sign-In Route
+// Sign-In Route (working)
 adminAuthRouter.post("/login", loginLimiter, async (req, res) => {
   try {
     const { email, password } = req.body;
