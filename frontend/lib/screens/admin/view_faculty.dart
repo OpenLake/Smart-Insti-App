@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_scaled_box.dart';
+import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/provider/faculty_provider.dart';
 
 import '../../constants/constants.dart';
