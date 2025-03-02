@@ -1,48 +1,47 @@
-// Auth Connection
+// Authentication Messages
 export const userAlreadyExists = "User with this email already exists!";
 export const userNotFound = "User with this email does not exist!";
 export const incorrectPassword = "Incorrect password.";
 export const internalServerError =
-  "Internal Server Error. Please try again later.";
-export const userCreated = "User created successfully";
+  "Internal server error, please try again later.";
+export const userCreated = "User created successfully.";
 
-//Database Connection
-export const databaseConnected = "Database connected successfully";
-export const databaseDisconnected = "Database disconnected";
-export const databaseConnectionError =
-  "Error while connecting with the database";
+// Database Connection Messages
+export const databaseConnected = "Database connected successfully.";
+export const databaseDisconnected = "Database disconnected.";
+export const databaseConnectionError = "Error connecting to the database.";
 
-// OTP
-export const emailIsRequired = "Email is required";
-export const failedToSendOTPEmail = "Failed to send OTP to to email";
-export const emailAndOTPRequired = "Email and OTP are required";
-export const incorrectOTP = "Incorrect OTP";
-export const otpVerfied = "OTP verified successfully";
-export const otpSent = "OTP sent successfully";
-export const otpExpired = "Otp expired";
+// OTP Messages
+export const emailIsRequired = "Email is required.";
+export const failedToSendOTPEmail = "Failed to send OTP to email.";
+export const emailAndOTPRequired = "Email and OTP are required.";
+export const incorrectOTP = "Incorrect OTP.";
+export const otpVerified = "OTP verified successfully.";
+export const otpSent = "OTP sent successfully.";
+export const otpExpired = "OTP expired.";
 
-// Auth Middleware
-export const noAuthToken = "No auth token, access denied";
-export const invalidAuthToken = "Invalid token";
+// Authentication Middleware Messages
+export const noAuthToken = "No authentication token, access denied.";
+export const invalidAuthToken = "Invalid authentication token.";
 export const tokenVerificationFailed =
   "Token verification failed, authorization denied.";
-export const invalidUserType = "Invalid user type";
-export const tokenUpdateError = "Error updating token";
-export const badRequest = "Bad request";
-export const notFound = "Not found";
-export const deleted = "Deleted";
+export const invalidUserType = "Invalid user type.";
+export const tokenUpdateError = "Error updating token.";
+export const badRequest = "Bad request.";
+export const notFound = "Not found.";
+export const deleted = "Deleted successfully.";
 
-// Lost and Found
-export const itemNotFound = "Item not found";
-export const itemAdded = "Item added successfully";
-export const itemDeleted = "Item deleted successfully";
+// Lost & Found Messages
+export const itemNotFound = "Item not found.";
+export const itemAdded = "Item added successfully.";
+export const itemDeleted = "Item deleted successfully.";
 
-// Rooom Vacancy
-export const roomNotFound = "Room not found";
-export const roomUpdated = "Room updated successfully";
-export const roomCreated = "Room created successfully";
+// Room Vacancy Messages
+export const roomNotFound = "Room not found.";
+export const roomUpdated = "Room updated successfully.";
+export const roomCreated = "Room created successfully.";
 
-// Mess Menu
-export const messMenuNotFound = "Mess Menu not found";
-export const messMenuAdded = "Mess Menu added successfully";
-export const messMenuUpdated = "Mess Menu updated successfully";
+// Mess Menu Messages
+export const messMenuNotFound = "Mess menu not found.";
+export const messMenuAdded = "Mess menu added successfully.";
+export const messMenuUpdated = "Mess menu updated successfully.";
