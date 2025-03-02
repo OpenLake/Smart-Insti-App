@@ -9,6 +9,7 @@ dotenv.config();
 
 const generalAuthRouter = express.Router();
 
+// not working
 generalAuthRouter.post("/login", async (req, res) => {
   try {
     const { email, loginForRole } = req.body;

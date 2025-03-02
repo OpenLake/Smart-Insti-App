@@ -29,6 +29,7 @@ async function connectDB() {
   return client.db(dbName);
 }
 
+//not working
 otpRouter.post("/send-otp", async (req, res) => {
   const { email, loginForRole } = req.body;
 
@@ -83,6 +84,7 @@ otpRouter.post("/send-otp", async (req, res) => {
   }
 });
 
+//not working
 otpRouter.post("/verify-otp", async (req, res) => {
   const { email, otp } = req.body;
 
