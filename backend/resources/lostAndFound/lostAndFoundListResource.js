@@ -59,7 +59,7 @@ router.post("/", uploader.single("image"), async (req, res) => {
     const newItem = new LostAndFoundItem({
       name: req.body.name,
       lastSeenLocation: req.body.lastSeenLocation,
-      imagePath: file ? file.path : null,
+      imagePath: req.file ? file.path : null,
       description: req.body.description,
       contactNumber: req.body.contactNumber,
       listerId: req.body.listerId,

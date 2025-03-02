@@ -1,18 +1,16 @@
-import 'package:smart_insti_app/models/course.dart';
-
 class Faculty {
-  final String id;
+  final String? id;
   final String name;
   final String email;
-  final String? cabinNumber;
+  final String? cabin;
   final String? department;
-  final List<Course>? courses;
+  final List<String>? courses;
 
   Faculty({
-    required this.id,
+    this.id,
     required this.name,
     required this.email,
-    this.cabinNumber,
+    this.cabin,
     this.department,
     this.courses,
   });
@@ -22,26 +20,19 @@ class Faculty {
       id: json['_id'],
       name: json['name'] ?? 'Smart Insti User',
       email: json['email'],
-      cabinNumber: json['cabinNumber'],
+      cabin: json['cabin'],
       department: json['department'],
-      courses: json['courses'] != null
-          ? (json['courses'] as List)
-              .map((item) => Course.fromJson(item))
-              .toList()
-          : [],
+      courses: json['courses'] != null ? (json['courses'] as List).map((course) => course.toString()).toList() : [],
     );
   }
 
   Map<String, dynamic> toJson() {
     return {
-      '_id': id,
       'name': name,
       'email': email,
-      'cabinNumber': cabinNumber,
+      'cabin': cabin,
       'department': department,
-      'courses': courses != null
-          ? courses!.map((course) => course.toJson()).toList()
-          : [],
+      'courses': courses != null ? courses!.toList() : [],
     };
   }
 }

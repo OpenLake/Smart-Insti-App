@@ -1,41 +1,44 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const studentSchema = new mongoose.Schema({
-    name: {
-        type: String,
-        default: 'Smart Insti User'
+  name: {
+    type: String,
+  },
+  email: {
+    type: String,
+    required: true,
+  },
+  rollNumber: {
+    type: String,
+  },
+  about: {
+    type: String,
+  },
+  profilePicURI: {
+    type: String,
+  },
+  branch: {
+    type: String,
+  },
+  graduationYear: {
+    type: Number,
+  },
+  skills: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Skill",
     },
-    email: {
-        type: String,
-        required: true
+  ],
+  achievements: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Achievement",
     },
-    rollNumber: {
-        type: String,
-    },
-    about: {
-        type: String,
-    },
-    profilePicURI: {
-        type: String,
-    },
-    branch: {
-        type: String,
-    },
-    graduationYear: {
-        type: Number,
-    },
-    skills: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Skill'
-    }],
-    achievements: [{
-        type: mongoose.Schema.Types.ObjectId,
-        ref: 'Achievement'
-    }],
-    roles: {
-        type: [String],
-    }
+  ],
+  roles: {
+    type: [String],
+  },
 });
 
-const Student = mongoose.model('Student', studentSchema);
+const Student = mongoose.model("Student", studentSchema);
 
 export default Student;

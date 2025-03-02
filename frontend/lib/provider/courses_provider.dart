@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:file_picker/file_picker.dart';
 import 'package:logger/logger.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:smart_insti_app/repositories/course_repository.dart';
 import 'dart:io';
 import '../constants/constants.dart';
 import '../models/course.dart';
 
-final coursesProvider = StateNotifierProvider<CoursesNotifier, CoursesState>(
-    (ref) => CoursesNotifier());
+final coursesProvider = StateNotifierProvider<CoursesNotifier, CoursesState>((ref) => CoursesNotifier(ref));
 
 class CoursesState {
   final List<Course> courses;
@@ -16,7 +16,9 @@ class CoursesState {
   final TextEditingController courseNameController;
   final TextEditingController courseCreditController;
   final TextEditingController searchCourseController;
-  final List<String> branches;
+  final List<int> branches;
+  final String? primaryRoom;
+  final List<DropdownMenuItem<String>> selectableBranches;
 
   CoursesState({
     required this.courses,
@@ -26,55 +28,61 @@ class CoursesState {
     required this.courseCreditController,
     required this.searchCourseController,
     required this.branches,
+    required this.primaryRoom,
+    required this.selectableBranches,
   });
 
   CoursesState copyWith({
     List<Course>? courses,
     List<Course>? filteredCourses,
-    List<String>? branches,
+    List<int>? branches,
     TextEditingController? courseCodeController,
     TextEditingController? courseNameController,
     TextEditingController? courseCreditController,
     TextEditingController? searchCourseController,
+    String? primaryRoom,
+    List<DropdownMenuItem<String>>? selectableBranches,
   }) {
     return CoursesState(
       courses: courses ?? this.courses,
       filteredCourses: filteredCourses ?? this.filteredCourses,
       courseCodeController: courseCodeController ?? this.courseCodeController,
       courseNameController: courseNameController ?? this.courseNameController,
-      courseCreditController:
-          courseCreditController ?? this.courseCreditController,
-      searchCourseController:
-          searchCourseController ?? this.searchCourseController,
+      courseCreditController: courseCreditController ?? this.courseCreditController,
+      searchCourseController: searchCourseController ?? this.searchCourseController,
       branches: branches ?? this.branches,
+      primaryRoom: primaryRoom ?? this.primaryRoom,
+      selectableBranches: selectableBranches ?? this.selectableBranches,
     );
   }
 }
 
 class CoursesNotifier extends StateNotifier<CoursesState> {
-  CoursesNotifier() : super(_initialState());
-
-  static CoursesState _initialState() {
-    return CoursesState(
-      courses: [],
-      filteredCourses: [],
-      courseCodeController: TextEditingController(),
-      courseNameController: TextEditingController(),
-      courseCreditController: TextEditingController(),
-      searchCourseController: TextEditingController(),
-      branches: Branches.branchList.map((branch) => branch.value!).toList(),
-    );
+  CoursesNotifier(Ref ref)
+      : _api = ref.read(courseRepositoryProvider),
+        super(
+          CoursesState(
+            courses: [],
+            filteredCourses: [],
+            courseCodeController: TextEditingController(),
+            courseNameController: TextEditingController(),
+            courseCreditController: TextEditingController(),
+            searchCourseController: TextEditingController(),
+            branches: [],
+            primaryRoom: null,
+            selectableBranches: Branches.branchList,
+          ),
+        ) {
+    loadCourses();
   }
 
-  get courseNameController => state.courseNameController;
-
-  get courseCodeController => state.courseCodeController;
-
-  get courseCreditController => state.courseCreditController;
-
-  get searchCourseController => state.searchCourseController;
-
   final Logger _logger = Logger();
+  final CourseRepository _api;
+
+  void loadCourses() async {
+    final courses = await _api.getCourses();
+    state = state.copyWith(courses: courses, filteredCourses: courses);
+  }
 
   void pickSpreadsheet() async {
     FilePickerResult? result = await FilePicker.platform.pickFiles();
@@ -100,45 +108,58 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
     String query = state.searchCourseController.text;
     _logger.i("Searching for courses with query $query");
     state = state.copyWith(
-        filteredCourses: state.courses
-            .where((course) =>
-                course.courseName.toLowerCase().contains(query.toLowerCase()))
-            .toList());
+        filteredCourses:
+            state.courses.where((course) => course.courseName.toLowerCase().contains(query.toLowerCase())).toList());
   }
 
-  void removeCourse(Course course) {
-    _logger.i("Removing course ${course.courseCode}");
-    state = state.copyWith(
-      courses: state.courses..remove(course),
-      filteredCourses: state.filteredCourses..remove(course),
-    );
+  Future<void> addCourse() async {
+    if (await _api.addCourse(
+      Course(
+        courseCode: state.courseCodeController.text,
+        courseName: state.courseNameController.text,
+        credits: int.parse(state.courseCreditController.text),
+        branches: state.branches.map((index) => Branches.branchList[index].value!).toList(),
+        primaryRoom: state.primaryRoom,
+      ),
+    )) {
+      clearControllers();
+      loadCourses();
+    }
   }
 
-  void addCourse() {
-    _logger.i("Adding course ${state.courseCodeController.text}");
-    final newCourse = Course(
-      id: (state.courses.length + 1).toString(),
-      courseCode: state.courseCodeController.text,
-      courseName: state.courseNameController.text,
-      branches: state.branches,
-      credits: state.courseCreditController.text.isEmpty
-          ? 0
-          : int.parse(state.courseCreditController.text),
-      primaryRoom: '',
-      professorId: '',
-    );
+  void addSelectableBranch(String branch) {
     state = state.copyWith(
-      courses: [
-        newCourse,
-        ...state.courses,
+      selectableBranches: [
+        ...state.selectableBranches,
+        DropdownMenuItem<String>(
+          value: branch,
+          child: Text(branch),
+        ),
       ],
-      courseCodeController: TextEditingController(),
-      courseNameController: TextEditingController(),
-      branches: Branches.branchList.map((branch) => branch.value!).toList(),
     );
   }
 
-  void updateBranch(List<String> newBranches) {
+  void updateBranch(List<int> newBranches) {
     state = state.copyWith(branches: newBranches);
+  }
+
+  void updatePrimaryRoom(String room) {
+    state = state.copyWith(primaryRoom: room);
+  }
+
+  Future<void> removeCourse(Course course) async {
+    if (await _api.deleteCourse(course)) {
+      loadCourses();
+    }
+  }
+
+  void clearControllers() {
+    state.courseCodeController.clear();
+    state.courseNameController.clear();
+    state.courseCreditController.clear();
+    state = state.copyWith(
+      branches: [],
+      primaryRoom: null,
+    );
   }
 }

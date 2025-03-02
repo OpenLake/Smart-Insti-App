@@ -69,7 +69,9 @@ class RoomVacancy extends ConsumerWidget {
                                                 const Spacer(),
                                                 BorderlessButton(
                                                   onPressed: () {
-                                                    ref.read(roomProvider.notifier).reserveRoom(room);
+                                                    ref
+                                                        .read(roomProvider.notifier)
+                                                        .reserveRoom(ref.read(authProvider), room);
                                                     context.pop();
                                                   },
                                                   label: const Text('Reserve'),
@@ -83,9 +85,9 @@ class RoomVacancy extends ConsumerWidget {
                                                 String userId;
                                                 final authState = ref.watch(authProvider);
                                                 if (authState.currentUserRole == 'student') {
-                                                  userId = (authState.currentUser as Student).id;
+                                                  userId = (authState.currentUser as Student).id!;
                                                 } else if (authState.currentUserRole == 'faculty') {
-                                                  userId = (authState.currentUser as Faculty).id;
+                                                  userId = (authState.currentUser as Faculty).id!;
                                                 } else if (authState.currentUserRole == 'admin') {
                                                   userId = (authState.currentUser as Admin).id;
                                                 } else {

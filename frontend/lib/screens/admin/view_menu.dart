@@ -40,16 +40,18 @@ class ViewMessMenu extends ConsumerWidget {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: ChoiceSelector(
+                        addItemEnabled: false,
                         onChanged: (value) {
                           ref.read(menuProvider.notifier).setSelectViewMenu(value);
                         },
                         value: ref.read(menuProvider).selectedViewMenu,
                         items: [
-                          for (String i in ref.read(menuProvider).messMenus.keys)
-                            DropdownMenuItem<String>(
-                              value: i,
-                              child: Text(i),
-                            ),
+                          if (ref.read(menuProvider).messMenus.isNotEmpty)
+                            for (String i in ref.read(menuProvider).messMenus.keys)
+                              DropdownMenuItem<String>(
+                                value: i,
+                                child: Text(i),
+                              ),
                         ],
                         hint: 'Select Kitchen',
                       ),

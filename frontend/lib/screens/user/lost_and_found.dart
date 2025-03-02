@@ -3,9 +3,9 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:logger/logger.dart';
 import 'package:responsive_framework/responsive_framework.dart';
 import 'package:smart_insti_app/components/borderless_button.dart';
+import 'package:smart_insti_app/components/material_container.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/lost_and_found_provider.dart';
 import '../../components/image_tile.dart';
@@ -197,7 +197,7 @@ class LostAndFound extends ConsumerWidget {
                               BorderlessButton(
                                 onPressed: () {
                                   if (_formKey.currentState!.validate()) {
-                                    ref.read(lostAndFoundProvider.notifier).addItem();
+                                    ref.read(lostAndFoundProvider.notifier).addItem(ref.read(authProvider));
                                     ref.read(lostAndFoundProvider.notifier).clearControllers();
                                     context.pop();
                                   }
@@ -271,13 +271,7 @@ class LostAndFound extends ConsumerWidget {
                                     children: [
                                       const Text("Item Name", style: TextStyle(fontSize: 20)),
                                       const SizedBox(height: 10),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
-                                          color: Colors.tealAccent.withOpacity(0.4),
-                                        ),
-                                        width: double.infinity,
+                                      MaterialContainer(
                                         child: AutoSizeText(
                                           item.name,
                                           style: TextStyle(fontSize: 15, color: Colors.teal.shade900),
@@ -288,13 +282,7 @@ class LostAndFound extends ConsumerWidget {
                                       const SizedBox(height: 20),
                                       const Text("Item Description", style: TextStyle(fontSize: 20)),
                                       const SizedBox(height: 10),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
-                                          color: Colors.tealAccent.withOpacity(0.4),
-                                        ),
-                                        width: double.infinity,
+                                      MaterialContainer(
                                         child: AutoSizeText(
                                           item.description,
                                           style: TextStyle(fontSize: 15, color: Colors.teal.shade900),
@@ -305,13 +293,7 @@ class LostAndFound extends ConsumerWidget {
                                       const SizedBox(height: 20),
                                       const Text("Last seen at", style: TextStyle(fontSize: 20)),
                                       const SizedBox(height: 10),
-                                      Container(
-                                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(15),
-                                          color: Colors.tealAccent.withOpacity(0.4),
-                                        ),
-                                        width: double.infinity,
+                                      MaterialContainer(
                                         child: AutoSizeText(
                                           item.lastSeenLocation,
                                           style: TextStyle(fontSize: 15, color: Colors.teal.shade900),
@@ -326,12 +308,7 @@ class LostAndFound extends ConsumerWidget {
                                         mainAxisAlignment: MainAxisAlignment.start,
                                         mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Container(
-                                            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                            decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(15),
-                                              color: Colors.tealAccent.withOpacity(0.4),
-                                            ),
+                                          MaterialContainer(
                                             width: 185,
                                             child: AutoSizeText(
                                               item.contactNumber,
@@ -366,9 +343,9 @@ class LostAndFound extends ConsumerWidget {
                                           String userId;
                                           final authState = ref.watch(authProvider);
                                           if (ref.read(authProvider).currentUserRole == 'student') {
-                                            userId = (authState.currentUser as Student).id;
+                                            userId = (authState.currentUser as Student).id!;
                                           } else if (authState.currentUserRole == 'faculty') {
-                                            userId = (authState.currentUser as Faculty).id;
+                                            userId = (authState.currentUser as Faculty).id!;
                                           } else if (authState.currentUserRole == 'admin') {
                                             userId = (authState.currentUser as Admin).id;
                                           } else {
@@ -398,9 +375,9 @@ class LostAndFound extends ConsumerWidget {
                                                   ),
                                                   child: GestureDetector(
                                                     onTap: () {
-                                                        ref.read(lostAndFoundProvider.notifier).deleteItem(item.id!);
-                                                        context.pop();
-                                                        },
+                                                      ref.read(lostAndFoundProvider.notifier).deleteItem(item.id!);
+                                                      context.pop();
+                                                    },
                                                     child: const Icon(
                                                       Icons.delete,
                                                       color: Colors.red,

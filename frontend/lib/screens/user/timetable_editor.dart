@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:responsive_framework/responsive_framework.dart';
+import 'package:smart_insti_app/provider/auth_provider.dart';
 import 'package:smart_insti_app/provider/timetable_provider.dart';
 
 class TimetableEditor extends ConsumerStatefulWidget {
@@ -33,11 +34,11 @@ class _TimetableEditorState extends ConsumerState<TimetableEditor> {
             child: FittedBox(
               child: FloatingActionButton(
                 onPressed: () async {
-                  await ref.read(timetableProvider.notifier).addTimetable();
-                  if (context.mounted) {
-                    context.pop();
-                  }
-                },
+                  await ref.read(timetableProvider.notifier).addTimetable(ref.read(authProvider));
+                if (context.mounted) {
+                  context.pop();
+                }
+              },
                 child: const Icon(Icons.add),
               ),
             ),

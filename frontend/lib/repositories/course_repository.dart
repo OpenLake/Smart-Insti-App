@@ -1,7 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:smart_insti_app/constants/dummy_entries.dart';
+import 'package:logger/logger.dart';
 import '../models/course.dart';
 
 final courseRepositoryProvider =
@@ -14,21 +14,29 @@ class CourseRepository {
     ),
   );
 
-  Future<List<dynamic>> getCourses() async {
+  final Logger _logger = Logger();
+
+  Future<List<Course>> getCourses() async {
     try {
       final response = await _client.get('/courses');
-      return response.data.map((e) => Course.fromJson(e)).toList();
+      List<Course> courses = [];
+      for (var course in response.data) {
+        courses.add(Course.fromJson(course));
+      }
+      return courses;
     } catch (e) {
-      return DummyCourses.courses;
+      return [];
     }
   }
 
-  Future<Course> addCourse(Course course) async {
+  Future<bool> addCourse(Course course) async {
     try {
       final response = await _client.post('/courses', data: course.toJson());
-      return Course.fromJson(response.data);
+      _logger.i(response.data);
+      return true;
     } catch (e) {
-      return course;
+      _logger.e(e);
+      return false;
     }
   }
 
@@ -42,12 +50,14 @@ class CourseRepository {
     }
   }
 
-  Future<Course> deleteCourse(Course course) async {
+  Future<bool> deleteCourse(Course course) async {
     try {
-      final response = await _client.delete('/courses/${course.id}');
-      return Course.fromJson(response.data);
+      final response = await _client.delete('/course/${course.id}');
+      _logger.i(response.data);
+      return true;
     } catch (e) {
-      return course;
+      _logger.e(e);
+      return false;
     }
   }
 

@@ -137,6 +137,9 @@ class AuthProvider extends StateNotifier<AuthState> {
             duration: const Duration(seconds: 2),
           ),
         );
+        if (response.statusCode != 200) {
+          throw Exception("OTP verification failed");
+        }
       }
     } catch (e) {
       _logger.e(e);
