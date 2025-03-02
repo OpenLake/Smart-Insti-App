@@ -5,15 +5,21 @@ import Faculty from "../../models/faculty.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
-const generalAuthRouter = express.Router();
 dotenv.config();
+
+const generalAuthRouter = express.Router();
 
 generalAuthRouter.post("/login", async (req, res) => {
   try {
     const { email, loginForRole } = req.body;
 
-    let userCollection;
+    if (!email || !loginForRole) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Email and role are required." });
+    }
 
+    let userCollection;
     switch (loginForRole) {
       case "student":
         userCollection = Student;
@@ -22,21 +28,39 @@ generalAuthRouter.post("/login", async (req, res) => {
         userCollection = Faculty;
         break;
       default:
-        return res.status(400).send({ error: messages.invalidUserType });
+        return res
+          .status(400)
+          .json({ status: false, message: messages.invalidUserType });
     }
 
-    const user = await userCollection.findOne({ email });
-    const token = jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET);
+    const user = await userCollection.findOne({ email }).lean();
+    if (!user) {
+      return res
+        .status(401)
+        .json({ status: false, message: "Invalid credentials." });
+    }
 
-    res.send({
-      token: token,
-      _id: user._id,
-      name: user.name,
-      email: user.email,
-      role: loginForRole,
+    const token = jwt.sign({ id: user._id }, process.env.ACCESS_TOKEN_SECRET, {
+      expiresIn: "7d",
+      algorithm: "HS256",
     });
-  } catch (e) {
-    res.status(500).json({ error: messages.internalServerError });
+
+    res.status(200).json({
+      status: true,
+      message: "Login successful.",
+      data: {
+        token,
+        _id: user._id,
+        name: user.name,
+        email: user.email,
+        role: loginForRole,
+      },
+    });
+  } catch (error) {
+    console.error("Login error:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
   }
 });
 
