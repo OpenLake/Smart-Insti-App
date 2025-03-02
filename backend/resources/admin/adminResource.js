@@ -5,7 +5,7 @@ import mongoose from "mongoose";
 
 const adminResource = Router();
 
-// GET admin by ID
+// GET admin by ID (working)
 adminResource.get("/:id", tokenRequired, async (req, res) => {
   try {
     const { id } = req.params;
