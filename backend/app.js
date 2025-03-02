@@ -56,7 +56,7 @@ app.use("/lost-and-found-item", lostAndFoundResource);
 app.use("/messages", messageResource);
 app.use("/course", courseResource);
 
-app.get("/protected", tokenRequiredg, (req, res) => {
+app.get("/protected", tokenRequired, (req, res) => {
   res.json({ message: "Access granted" });
 });
 export default app;

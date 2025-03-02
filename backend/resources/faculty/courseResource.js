@@ -10,6 +10,7 @@ const courseRouter = express.Router();
  * @route GET /courses
  * @desc Fetch all courses
  */
+//working
 courseRouter.get("/courses", async (req, res) => {
   try {
     const courses = await Course.find({}).lean();
@@ -26,6 +27,7 @@ courseRouter.get("/courses", async (req, res) => {
  * @route GET /courses/:id
  * @desc Fetch a single course by ID
  */
+//working
 courseRouter.get(
   "/courses/:id",
   [param("id").isMongoId().withMessage("Invalid course ID")],
@@ -56,6 +58,7 @@ courseRouter.get(
  * @route POST /courses
  * @desc Create a new course
  */
+//working
 courseRouter.post(
   "/courses",
   [body("name").notEmpty().withMessage("Course name is required")],
@@ -85,6 +88,7 @@ courseRouter.post(
  * @route PUT /courses/:id
  * @desc Update a course by ID
  */
+//working
 courseRouter.put(
   "/courses/:id",
   [param("id").isMongoId().withMessage("Invalid course ID")],
@@ -123,6 +127,7 @@ courseRouter.put(
  * @route DELETE /courses/:id
  * @desc Delete a course by ID
  */
+//working
 courseRouter.delete(
   "/courses/:id",
   [param("id").isMongoId().withMessage("Invalid course ID")],
