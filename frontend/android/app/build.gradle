@@ -4,7 +4,6 @@ plugins {
     id "dev.flutter.flutter-gradle-plugin"
 }
 
-
 def localProperties = new Properties()
 def localPropertiesFile = rootProject.file('local.properties')
 if (localPropertiesFile.exists()) {
@@ -25,15 +24,16 @@ if (flutterVersionName == null) {
 
 android {
     namespace "com.openlake.smartinstiapp"
-    compileSdkVersion 34
-    ndkVersion flutter.ndkVersion
+    compileSdkVersion 35
+    ndkVersion "27.0.12077973"
+
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_17
-        targetCompatibility JavaVersion.VERSION_17
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
     }
 
     kotlinOptions {
-        jvmTarget = "17"
+        jvmTarget = '1.8'
     }
 
     sourceSets {
@@ -65,6 +65,3 @@ flutter {
 }
 
 dependencies {}
-
-
-
