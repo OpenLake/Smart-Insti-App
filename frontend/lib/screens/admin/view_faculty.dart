@@ -15,10 +15,8 @@ class ViewFaculty extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(facultyProvider.notifier).searchFaculties();
-      if (ref.read(authProvider.notifier).tokenCheckProgress !=
-          LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(
-            context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
       }
     });
 

@@ -21,8 +21,7 @@ class LoadingPage extends ConsumerWidget {
                 context.go('/admin');
               });
               return Container();
-            } else if (snapshot.data == 'student' ||
-                snapshot.data == 'faculty') {
+            } else if (snapshot.data == 'student' || snapshot.data == 'faculty') {
               WidgetsBinding.instance.addPostFrameCallback((_) {
                 context.go('/user_home');
               });
@@ -37,15 +36,12 @@ class LoadingPage extends ConsumerWidget {
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Text('Smart Insti App',
-                        style: TextStyle(fontSize: 45, fontFamily: 'Jost')),
+                    const Text('Smart Insti App', style: TextStyle(fontSize: 45, fontFamily: 'Jost')),
                     Padding(
                       padding: const EdgeInsets.only(left: 184.0),
                       child: Row(
                         children: [
-                          const Text('Loading',
-                              style:
-                                  TextStyle(fontSize: 30, fontFamily: 'Jost')),
+                          const Text('Loading', style: TextStyle(fontSize: 30, fontFamily: 'Jost')),
                           AnimatedTextKit(
                             isRepeatingAnimation: true,
                             repeatForever: true,
@@ -53,8 +49,7 @@ class LoadingPage extends ConsumerWidget {
                               TyperAnimatedText(
                                 '...',
                                 speed: const Duration(milliseconds: 100),
-                                textStyle: const TextStyle(
-                                    fontSize: 30, fontFamily: 'Jost'),
+                                textStyle: const TextStyle(fontSize: 30, fontFamily: 'Jost'),
                               ),
                             ],
                           )
