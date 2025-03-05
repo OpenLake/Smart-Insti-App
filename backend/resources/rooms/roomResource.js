@@ -1,33 +1,41 @@
 import { Router } from "express";
 import Room from "../../models/room.js";
 import * as messages from "../../constants/messages.js";
+
 const router = Router();
 
-// PUT method
+/**
+ * @route PUT /rooms/:id
+ * @desc Update room details (assign/release occupant)
+ */
+//working
 router.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { occupantName, occupantId, vacant } = req.body;
-    const room = await Room.findById(id);
-    if (!room) {
-      return res.status(404).json({ message: messages.roomNotFound });
+
+    const updatedRoom = await Room.findByIdAndUpdate(
+      id,
+      vacant
+        ? { vacant: true, occupantId: null, occupantName: null }
+        : { vacant: false, occupantId, occupantName },
+      { new: true }
+    );
+
+    if (!updatedRoom) {
+      return res
+        .status(404)
+        .json({ status: false, message: messages.roomNotFound });
     }
 
-    if (vacant) {
-      room.vacant = true;
-      room.occupantId = null;
-      room.occupantName = null;
-    } else {
-      room.vacant = false;
-      room.occupantId = occupantId;
-      room.occupantName = occupantName;
-    }
-
-    await room.save();
-
-    res.json({ message: messages.roomUpdated, room });
+    res
+      .status(200)
+      .json({ status: true, message: messages.roomUpdated, data: updatedRoom });
   } catch (error) {
-    res.status(500).json({ message: messages.internalServerError });
+    console.error("Error updating room:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
   }
 });
 

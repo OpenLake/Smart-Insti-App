@@ -1,53 +1,96 @@
-import Student from "../../models/student.js";
 import express from "express";
+import Student from "../../models/student.js";
 import * as messages from "../../constants/messages.js";
 import tokenRequired from "../../middlewares/tokenRequired.js";
 
 const studentRouter = express.Router();
 
+/**
+ * @route GET /students/:id
+ * @desc Get a student by ID (with authentication)
+ */
 studentRouter.get("/:id", tokenRequired, async (req, res) => {
-  const studentId = req.params.id;
-
   try {
-    const student = await Student.findById(studentId);
+    const student = await Student.findById(req.params.id)
+      .populate("skills")
+      .populate("achievements");
 
     if (!student) {
-      return res.status(404).json({ message: messages.userNotFound });
+      return res
+        .status(404)
+        .json({ status: false, message: messages.userNotFound });
     }
 
-    res.json(student);
-  } catch (err) {
-    res.status(500).json({ message: messages.internalServerError });
+    res
+      .status(200)
+      .json({ status: true, message: "Student found", data: student });
+  } catch (error) {
+    console.error("Error fetching student:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
   }
 });
 
-studentRouter.put("/:id", async (req, res) => {
-  const studentId = req.params.id;
-  const studentData = req.body;
-
+/**
+ * @route PUT /students/:id
+ * @desc Update student details (requires authentication)
+ */
+studentRouter.put("/:id", tokenRequired, async (req, res) => {
   try {
     const updatedStudent = await Student.findByIdAndUpdate(
-      studentId,
-      studentData,
+      req.params.id,
+      req.body,
       { new: true }
-    );
-    res.json(updatedStudent);
+    )
+      .populate("skills")
+      .populate("achievements");
+
+    if (!updatedStudent) {
+      return res
+        .status(404)
+        .json({ status: false, message: messages.userNotFound });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: messages.userUpdated,
+      data: updatedStudent,
+    });
   } catch (error) {
-    console.log(error);
-    res.status(500).json({ message: messages.internalServerError });
+    console.error("Error updating student:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
   }
 });
 
-studentRouter.delete("/:id", async (req, res) => {
-  const studentId = req.params.id;
-
+/**
+ * @route DELETE /students/:id
+ * @desc Delete a student by ID (requires authentication)
+ */
+studentRouter.delete("/:id", tokenRequired, async (req, res) => {
   try {
-    const deletedStudent = await Student.findByIdAndDelete(studentId);
-      // .populate("skills")
-      // .populate("achievements");
-    res.json(deletedStudent);
+    const deletedStudent = await Student.findByIdAndDelete(req.params.id)
+      .populate("skills")
+      .populate("achievements");
+
+    if (!deletedStudent) {
+      return res
+        .status(404)
+        .json({ status: false, message: messages.userNotFound });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: messages.userDeleted,
+      data: deletedStudent,
+    });
   } catch (error) {
-    res.status(500).json({ message: messages.internalServerError });
+    console.error("Error deleting student:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
   }
 });
 

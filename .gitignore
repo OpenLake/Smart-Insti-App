@@ -5,6 +5,7 @@ backend/.DS_Store
 node_modules/
 backend/.env
 backend/.idea
+test.py
 
 
 ## Frontend ignored file (Root level)

@@ -1,37 +1,53 @@
 import { Router } from "express";
 import Room from "../../models/room.js";
 import * as messages from "../../constants/messages.js";
+
 const router = Router();
 
-// GET method
+/**
+ * @route GET /rooms
+ * @desc Retrieve all rooms
+ */
+//working
 router.get("/", async (req, res) => {
-  // Your code here
-  const rooms = await Room.find({});
-  res.send(rooms);
+  try {
+    const rooms = await Room.find({});
+    res
+      .status(200)
+      .json({ status: true, message: messages.success, data: rooms });
+  } catch (error) {
+    console.error("Error fetching rooms:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
+  }
 });
 
-// POST method
+/**
+ * @route POST /rooms
+ * @desc Create a new room
+ */
+//working
 router.post("/", async (req, res) => {
   try {
-    // Extract data from request body
-    const { name, vacant, occupantId, occupantName } = req.body;
-
-    // Create a new room instance
-    const newRoom = new Room({
+    const {
       name,
-      vacant: vacant || true, // Set default value if not provided
-      occupantId: occupantId || null, // Set default value if not provided
-      occupantName: occupantName || null, // Set default value if not provided
-    });
+      vacant = true,
+      occupantId = null,
+      occupantName = null,
+    } = req.body;
 
-    // Save the new room to the database
+    const newRoom = new Room({ name, vacant, occupantId, occupantName });
     await newRoom.save();
 
-    // Respond with success message
-    res.status(201).json({ message: messages.roomCreated, room: newRoom });
+    res
+      .status(201)
+      .json({ status: true, message: messages.roomCreated, data: newRoom });
   } catch (error) {
-    // Handle errors
-    res.status(500).json({ message: messages.internalServerError });
+    console.error("Error creating room:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
   }
 });
 
