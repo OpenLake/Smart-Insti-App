@@ -4,35 +4,73 @@ import MessMenu from "../../models/mess_menu.js";
 
 const messMenuRouter = express.Router();
 
-// PUT method
+/**
+ * @route PUT /mess-menu/:id
+ * @desc Update an existing mess menu
+ */
+//working
 messMenuRouter.put("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { messMenu } = req.body;
-    const currentMenu = await MessMenu.findById(id);
 
-    if (!currentMenu) {
-      return res.status(404).json({ message: messages.messMenuNotFound });
+    if (!messMenu) {
+      return res
+        .status(400)
+        .json({ status: false, message: messages.invalidData });
     }
 
-    currentMenu.messMenu = messMenu;
-    await currentMenu.save();
+    const updatedMenu = await MessMenu.findByIdAndUpdate(
+      id,
+      { messMenu },
+      { new: true }
+    );
 
-    res.json({ message: messages.messMenuUpdated });
+    if (!updatedMenu) {
+      return res
+        .status(404)
+        .json({ status: false, message: messages.messMenuNotFound });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: messages.messMenuUpdated,
+      data: updatedMenu,
+    });
   } catch (error) {
-    res.status(500).json({ message: messages.internalServerError });
+    console.error("Error updating mess menu:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
   }
 });
 
-//DELETE method
+/**
+ * @route DELETE /mess-menu/:id
+ * @desc Delete a mess menu by ID
+ */
+//working
 messMenuRouter.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
-    await MessMenu.findByIdAndDelete(id);
+    const deletedMenu = await MessMenu.findByIdAndDelete(id);
 
-    res.json({ message: messages.deleted });
+    if (!deletedMenu) {
+      return res
+        .status(404)
+        .json({ status: false, message: messages.messMenuNotFound });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: "Mess menu successfully deleted",
+      data: deletedMenu,
+    }); // 204 No Content (successful deletion)
   } catch (error) {
-    res.status(500).json({ message: messages.internalServerError });
+    console.error("Error deleting mess menu:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
   }
 });
 

@@ -44,7 +44,8 @@ class GeneralLogin extends ConsumerWidget {
                         ],
                       ),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 20),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 30, vertical: 20),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
@@ -55,21 +56,27 @@ class GeneralLogin extends ConsumerWidget {
                                   alignment: Alignment.centerLeft,
                                   child: Consumer(
                                     builder: (_, ref, __) => Text(
-                                      ref.watch(authProvider).switchAuthLabel == AuthConstants.studentAuthLabel
+                                      ref.watch(authProvider).switchAuthLabel ==
+                                              AuthConstants.studentAuthLabel
                                           ? 'Student Login'
                                           : 'Faculty Login',
-                                      style: const TextStyle(fontSize: 30, fontFamily: 'Jost'),
+                                      style: const TextStyle(
+                                          fontSize: 30, fontFamily: 'Jost'),
                                     ),
                                   ),
                                 ),
                                 const Spacer(),
                                 Consumer(
-                                  builder: (_, ref, __) => !ref.watch(authProvider).emailSent
+                                  builder: (_, ref, __) => !ref
+                                          .watch(authProvider)
+                                          .emailSent
                                       ? Hero(
                                           tag: 'admin_page',
                                           child: BorderlessButton(
-                                            onPressed: () => context.push('/login/admin_login'),
-                                            backgroundColor: Colors.tealAccent.withOpacity(0.5),
+                                            onPressed: () => context
+                                                .push('/login/admin_login'),
+                                            backgroundColor: Colors.tealAccent
+                                                .withOpacity(0.5),
                                             label: const Text('Admin'),
                                             splashColor: Colors.teal.shade700,
                                           ),
@@ -84,8 +91,10 @@ class GeneralLogin extends ConsumerWidget {
                                 key: _emailFormKey,
                                 child: MaterialTextFormField(
                                   hintText: "Email",
-                                  validator: (value) => Validators.emailValidator(value),
-                                  controller: ref.watch(authProvider).emailController,
+                                  validator: (value) =>
+                                      Validators.emailValidator(value),
+                                  controller:
+                                      ref.watch(authProvider).emailController,
                                   enabled: !ref.watch(authProvider).emailSent,
                                 ),
                               ),
@@ -98,40 +107,69 @@ class GeneralLogin extends ConsumerWidget {
                                         children: [
                                           const SizedBox(height: 20),
                                           Row(
-                                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
                                             children: [
                                               MaterialOTPBox(
-                                                controller: ref.watch(authProvider).otpDigitControllers[0],
-                                                focusNode: ref.watch(authProvider).otpFocusNodes[0],
+                                                controller: ref
+                                                    .watch(authProvider)
+                                                    .otpDigitControllers[0],
+                                                focusNode: ref
+                                                    .watch(authProvider)
+                                                    .otpFocusNodes[0],
                                                 hintText: 'O',
                                               ),
                                               MaterialOTPBox(
-                                                controller: ref.watch(authProvider).otpDigitControllers[1],
-                                                focusNode: ref.watch(authProvider).otpFocusNodes[1],
+                                                controller: ref
+                                                    .watch(authProvider)
+                                                    .otpDigitControllers[1],
+                                                focusNode: ref
+                                                    .watch(authProvider)
+                                                    .otpFocusNodes[1],
                                                 hintText: 'T',
                                                 onChanged: (value) {
-                                                  if (value != null && value.isEmpty) {
-                                                    ref.watch(authProvider).otpFocusNodes[0].requestFocus();
+                                                  if (value != null &&
+                                                      value.isEmpty) {
+                                                    ref
+                                                        .watch(authProvider)
+                                                        .otpFocusNodes[0]
+                                                        .requestFocus();
                                                   }
                                                 },
                                               ),
                                               MaterialOTPBox(
-                                                controller: ref.watch(authProvider).otpDigitControllers[2],
-                                                focusNode: ref.watch(authProvider).otpFocusNodes[2],
+                                                controller: ref
+                                                    .watch(authProvider)
+                                                    .otpDigitControllers[2],
+                                                focusNode: ref
+                                                    .watch(authProvider)
+                                                    .otpFocusNodes[2],
                                                 hintText: 'P',
                                                 onChanged: (value) {
-                                                  if (value != null && value.isEmpty) {
-                                                    ref.watch(authProvider).otpFocusNodes[1].requestFocus();
+                                                  if (value != null &&
+                                                      value.isEmpty) {
+                                                    ref
+                                                        .watch(authProvider)
+                                                        .otpFocusNodes[1]
+                                                        .requestFocus();
                                                   }
                                                 },
                                               ),
                                               MaterialOTPBox(
-                                                controller: ref.watch(authProvider).otpDigitControllers[3],
-                                                focusNode: ref.watch(authProvider).otpFocusNodes[3],
+                                                controller: ref
+                                                    .watch(authProvider)
+                                                    .otpDigitControllers[3],
+                                                focusNode: ref
+                                                    .watch(authProvider)
+                                                    .otpFocusNodes[3],
                                                 hintText: ':)',
                                                 onChanged: (value) {
-                                                  if (value != null && value.isEmpty) {
-                                                    ref.watch(authProvider).otpFocusNodes[2].requestFocus();
+                                                  if (value != null &&
+                                                      value.isEmpty) {
+                                                    ref
+                                                        .watch(authProvider)
+                                                        .otpFocusNodes[2]
+                                                        .requestFocus();
                                                   }
                                                 },
                                               )
@@ -146,29 +184,42 @@ class GeneralLogin extends ConsumerWidget {
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Consumer(
-                                builder: (_, ref, __) => !ref.watch(authProvider).emailSent
+                                builder: (_, ref, __) => !ref
+                                        .watch(authProvider)
+                                        .emailSent
                                     ? AnimatedToggleSwitch.dual(
                                         height: 45,
                                         spacing: 40,
-                                        current: ref.watch(authProvider).switchAuthLabel,
+                                        current: ref
+                                            .watch(authProvider)
+                                            .switchAuthLabel,
                                         first: AuthConstants.studentAuthLabel,
                                         second: AuthConstants.facultyAuthLabel,
-                                        onChanged: ref.watch(authProvider).emailSendingState == LoadingState.progress
+                                        onChanged: ref
+                                                    .watch(authProvider)
+                                                    .emailSendingState ==
+                                                LoadingState.progress
                                             ? (value) {}
-                                            : (value) => ref.read(authProvider.notifier).toggleAuthSwitch(),
+                                            : (value) => ref
+                                                .read(authProvider.notifier)
+                                                .toggleAuthSwitch(),
                                         textBuilder: (value) => Text(value),
-                                        styleBuilder: (value) => value == AuthConstants.studentAuthLabel
+                                        styleBuilder: (value) => value ==
+                                                AuthConstants.studentAuthLabel
                                             ? ToggleStyle(
                                                 indicatorColor: Colors.blue,
-                                                backgroundColor: Colors.blue.shade100,
+                                                backgroundColor:
+                                                    Colors.blue.shade100,
                                                 borderColor: Colors.transparent,
                                               )
                                             : ToggleStyle(
                                                 indicatorColor: Colors.green,
-                                                backgroundColor: Colors.green.shade100,
+                                                backgroundColor:
+                                                    Colors.green.shade100,
                                                 borderColor: Colors.transparent,
                                               ),
-                                        iconBuilder: (value) => value == AuthConstants.studentAuthLabel
+                                        iconBuilder: (value) => value ==
+                                                AuthConstants.studentAuthLabel
                                             ? const Icon(
                                                 Icons.book_outlined,
                                                 color: Colors.white,
@@ -185,42 +236,67 @@ class GeneralLogin extends ConsumerWidget {
                             Row(
                               children: [
                                 Consumer(
-                                  builder: (_, ref, __) => ref.watch(authProvider).emailSent
+                                  builder: (_, ref, __) => ref
+                                          .watch(authProvider)
+                                          .emailSent
                                       ? Row(
                                           children: [
                                             SizedBox(
                                               height: 45,
                                               child: BorderlessButton(
-                                                onPressed:
-                                                    ref.watch(authProvider).emailSendingState == LoadingState.progress
-                                                        ? () {}
-                                                        : () async => ref.read(authProvider.notifier).sendOtp(context),
-                                                backgroundColor: Colors.lightBlueAccent.withOpacity(0.5),
+                                                onPressed: ref
+                                                            .watch(authProvider)
+                                                            .emailSendingState ==
+                                                        LoadingState.progress
+                                                    ? () {}
+                                                    : () async => ref
+                                                        .read(authProvider
+                                                            .notifier)
+                                                        .sendOtp(context),
+                                                backgroundColor: Colors
+                                                    .lightBlueAccent
+                                                    .withOpacity(0.5),
                                                 label: Row(
-                                                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                                  mainAxisAlignment:
+                                                      MainAxisAlignment
+                                                          .spaceBetween,
                                                   children: [
                                                     const Text('Resend'),
                                                     Consumer(
                                                       builder: (_, ref, __) {
-                                                        return ref.watch(authProvider).emailSendingState ==
-                                                                LoadingState.progress
+                                                        return ref
+                                                                    .watch(
+                                                                        authProvider)
+                                                                    .emailSendingState ==
+                                                                LoadingState
+                                                                    .progress
                                                             ? Padding(
-                                                                padding: const EdgeInsets.only(left: 15),
+                                                                padding:
+                                                                    const EdgeInsets
+                                                                        .only(
+                                                                        left:
+                                                                            15),
                                                                 child: SizedBox(
                                                                   height: 20,
                                                                   width: 20,
-                                                                  child: CircularProgressIndicator(
-                                                                    strokeWidth: 2,
-                                                                    color: Colors.blue.shade700,
+                                                                  child:
+                                                                      CircularProgressIndicator(
+                                                                    strokeWidth:
+                                                                        2,
+                                                                    color: Colors
+                                                                        .blue
+                                                                        .shade700,
                                                                   ),
                                                                 ),
                                                               )
-                                                            : const SizedBox.shrink();
+                                                            : const SizedBox
+                                                                .shrink();
                                                       },
                                                     )
                                                   ],
                                                 ),
-                                                splashColor: Colors.blue.shade700,
+                                                splashColor:
+                                                    Colors.blue.shade700,
                                               ),
                                             ),
                                             const SizedBox(width: 15),
@@ -228,16 +304,29 @@ class GeneralLogin extends ConsumerWidget {
                                               width: 45,
                                               height: 45,
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10),
-                                                color: Colors.tealAccent.withOpacity(0.5),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
+                                                color: Colors.tealAccent
+                                                    .withOpacity(0.5),
                                               ),
                                               child: GestureDetector(
-                                                onTap: (ref.watch(authProvider).emailSendingState ==
-                                                            LoadingState.progress ||
-                                                        ref.watch(authProvider).loginProgressState ==
-                                                            LoadingState.progress)
+                                                onTap: (ref
+                                                                .watch(
+                                                                    authProvider)
+                                                                .emailSendingState ==
+                                                            LoadingState
+                                                                .progress ||
+                                                        ref
+                                                                .watch(
+                                                                    authProvider)
+                                                                .loginProgressState ==
+                                                            LoadingState
+                                                                .progress)
                                                     ? () {}
-                                                    : () => ref.read(authProvider.notifier).clearControllers(),
+                                                    : () => ref
+                                                        .read(authProvider
+                                                            .notifier)
+                                                        .clearControllers(),
                                                 child: const Icon(
                                                   Icons.refresh,
                                                   color: Colors.teal,
@@ -255,35 +344,55 @@ class GeneralLogin extends ConsumerWidget {
                                       return SizedBox(
                                         height: 45,
                                         child: BorderlessButton(
-                                          onPressed: (ref.watch(authProvider).emailSendingState ==
+                                          onPressed: (ref
+                                                          .watch(authProvider)
+                                                          .emailSendingState ==
                                                       LoadingState.progress ||
-                                                  ref.watch(authProvider).loginProgressState == LoadingState.progress)
+                                                  ref
+                                                          .watch(authProvider)
+                                                          .loginProgressState ==
+                                                      LoadingState.progress)
                                               ? () {}
                                               : () async {
                                                   if (await ref
-                                                          .read(authProvider.notifier)
-                                                          .verifyOTPAndLogin(context) &&
+                                                          .read(authProvider
+                                                              .notifier)
+                                                          .verifyOTPAndLogin(
+                                                              context) &&
                                                       context.mounted) {
-                                                    ref.read(authProvider.notifier).clearControllers();
+                                                    ref
+                                                        .read(authProvider
+                                                            .notifier)
+                                                        .clearControllers();
                                                     context.go('/');
                                                   }
                                                 },
-                                          backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+                                          backgroundColor: Colors.orangeAccent
+                                              .withOpacity(0.5),
                                           label: Row(
                                             children: [
                                               const Text('Submit'),
                                               Consumer(
                                                 builder: (_, ref, __) {
-                                                  return ref.watch(authProvider).loginProgressState ==
+                                                  return ref
+                                                              .watch(
+                                                                  authProvider)
+                                                              .loginProgressState ==
                                                           LoadingState.progress
                                                       ? Padding(
-                                                          padding: const EdgeInsets.only(left: 15),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 15),
                                                           child: SizedBox(
                                                             height: 20,
                                                             width: 20,
-                                                            child: CircularProgressIndicator(
+                                                            child:
+                                                                CircularProgressIndicator(
                                                               strokeWidth: 2,
-                                                              color: Colors.orange.shade700,
+                                                              color: Colors
+                                                                  .orange
+                                                                  .shade700,
                                                             ),
                                                           ),
                                                         )
@@ -299,29 +408,47 @@ class GeneralLogin extends ConsumerWidget {
                                       return SizedBox(
                                         height: 45,
                                         child: BorderlessButton(
-                                          onPressed: ref.watch(authProvider).emailSendingState == LoadingState.progress
+                                          onPressed: ref
+                                                      .watch(authProvider)
+                                                      .emailSendingState ==
+                                                  LoadingState.progress
                                               ? () {}
                                               : () async {
-                                                  if (_emailFormKey.currentState!.validate()) {
-                                                    ref.read(authProvider.notifier).sendOtp(context);
+                                                  if (_emailFormKey
+                                                      .currentState!
+                                                      .validate()) {
+                                                    ref
+                                                        .read(authProvider
+                                                            .notifier)
+                                                        .sendOtp(context);
                                                   }
                                                 },
-                                          backgroundColor: Colors.orangeAccent.withOpacity(0.5),
+                                          backgroundColor: Colors.orangeAccent
+                                              .withOpacity(0.5),
                                           label: Row(
                                             children: [
                                               const Text('Login'),
                                               Consumer(
                                                 builder: (_, ref, __) {
-                                                  return ref.watch(authProvider).emailSendingState ==
+                                                  return ref
+                                                              .watch(
+                                                                  authProvider)
+                                                              .emailSendingState ==
                                                           LoadingState.progress
                                                       ? Padding(
-                                                          padding: const EdgeInsets.only(left: 15),
+                                                          padding:
+                                                              const EdgeInsets
+                                                                  .only(
+                                                                  left: 15),
                                                           child: SizedBox(
                                                             height: 20,
                                                             width: 20,
-                                                            child: CircularProgressIndicator(
+                                                            child:
+                                                                CircularProgressIndicator(
                                                               strokeWidth: 2,
-                                                              color: Colors.orange.shade700,
+                                                              color: Colors
+                                                                  .orange
+                                                                  .shade700,
                                                             ),
                                                           ),
                                                         )
@@ -349,7 +476,8 @@ class GeneralLogin extends ConsumerWidget {
             Align(
               alignment: Alignment.topLeft,
               child: Container(
-                margin: const EdgeInsets.symmetric(vertical: 80, horizontal: 35),
+                margin:
+                    const EdgeInsets.symmetric(vertical: 80, horizontal: 35),
                 decoration: BoxDecoration(
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(30),

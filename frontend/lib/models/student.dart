@@ -39,14 +39,18 @@ class Student {
       branch: json['branch'],
       graduationYear: json['graduationYear'],
       skills: json['skills'] != null
-          ? (json['skills'] as List<dynamic>).map((item) => Skill.fromJson(item as Map<String, dynamic>)).toList()
+          ? (json['skills'] as List<dynamic>)
+              .map((item) => Skill.fromJson(item as Map<String, dynamic>))
+              .toList()
           : [],
       achievements: json['achievements'] != null
           ? (json['achievements'] as List<dynamic>)
               .map((item) => Achievement.fromJson(item as Map<String, dynamic>))
               .toList()
           : null,
-      roles: json['roles'] != null ? (json['roles'] as List?)?.map((item) => item as String).toList() : [],
+      roles: json['roles'] != null
+          ? (json['roles'] as List?)?.map((item) => item as String).toList()
+          : [],
     );
   }
 
@@ -60,8 +64,11 @@ class Student {
       'profilePicURI': profilePicURI,
       'branch': branch,
       'graduationYear': graduationYear,
-      'skills': skills != null ? skills!.map((skill) => skill.toJson()).toList() : [],
-      'achievements': achievements != null ? achievements!.map((achievement) => achievement.toJson()).toList() : [],
+      'skills':
+          skills != null ? skills!.map((skill) => skill.toJson()).toList() : [],
+      'achievements': achievements != null
+          ? achievements!.map((achievement) => achievement.toJson()).toList()
+          : [],
       'roles': roles,
     };
   }
