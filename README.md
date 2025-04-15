@@ -108,17 +108,9 @@ frontend/
    npm install
    ```
 
-3. Create a `.env` file based on `.env.example` with your configurations:
-   ```
-   PORT=3000
-   MONGODB_URI=mongodb://localhost:27017/smart-insti
-   JWT_SECRET=your_jwt_secret
-   EMAIL_SERVICE=gmail
-   EMAIL_USER=your_email@gmail.com
-   EMAIL_PASSWORD=your_app_password
-   ```
-
-4. Start the server:
+3. Create a `.env` file based on `.env.example` with your configurations.
+4. 
+5. Start the server:
    ```bash
    npm start
    ```
@@ -134,53 +126,12 @@ frontend/
    flutter pub get
    ```
 
-3. Create an `.env` file in the assets directory with your API URL:
-   ```
-   API_URL=http://your-backend-url:3000
-   ```
+3. Create an `.env` file.
 
 4. Run the application:
    ```bash
    flutter run
    ```
-
-## Deployment
-
-### Backend Deployment
-The backend can be deployed to any Node.js hosting service such as:
-- Heroku
-- AWS Elastic Beanstalk
-- Digital Ocean
-- Railway
-
-Remember to set the environment variables in your hosting dashboard.
-
-### Mobile App Deployment
-To generate an APK for Android:
-```bash
-flutter build apk
-```
-
-For iOS, generate an IPA file:
-```bash
-flutter build ipa
-```
-
-## CI/CD Pipeline
-
-The project includes a GitHub Actions workflow for continuous integration:
-```
-.github/workflows/flutter_build_apk.yml
-```
-
-This workflow automatically builds the Android APK when changes are pushed to the main branch.
-
-## Authentication Flow
-
-1. Users login through the general login screen or admin-specific login screen
-2. OTP verification provides an additional layer of security
-3. JWT tokens are issued upon successful authentication
-4. Token-based authorization controls access to protected resources
 
 ## Contributing
 
@@ -189,25 +140,3 @@ This workflow automatically builds the Android APK when changes are pushed to th
 3. Commit your changes (`git commit -m 'Add awesome feature'`)
 4. Push to the branch (`git push origin feature/awesome-feature`)
 5. Open a Pull Request
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
-
-## Acknowledgements
-
-- [Flutter](https://flutter.dev/)
-- [Node.js](https://nodejs.org/)
-- [MongoDB](https://www.mongodb.com/)
-- [Express.js](https://expressjs.com/)
-
-## Contact
-
-For any inquiries or support, please contact the project maintainers:
-- Project Lead: [Your Name](mailto:your-email@example.com)
-- Backend Development: [Developer Name](mailto:backend-developer@example.com)
-- Frontend Development: [Developer Name](mailto:frontend-developer@example.com)
-
----
-
-Developed with ❤️ by the Smart Insti App Team
