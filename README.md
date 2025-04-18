@@ -1,6 +1,10 @@
 # Smart Insti App
 
-![Login Page](![image](https://github.com/user-attachments/assets/58e50bb2-435f-412d-8290-7388f88fa2e9)) ![Home Page](![image](https://github.com/user-attachments/assets/b3b7c95b-e32a-44c0-9a6a-17d52eacdc5f)) ![Admin Page](![image](https://github.com/user-attachments/assets/74e65916-5bdd-4514-98c4-4d0b87efc91f))
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/58e50bb2-435f-412d-8290-7388f88fa2e9" alt="Login Page" width="200"/>
+  <img src="https://github.com/user-attachments/assets/b3b7c95b-e32a-44c0-9a6a-17d52eacdc5f" alt="Home Page" width="200"/>
+  <img src="https://github.com/user-attachments/assets/74e65916-5bdd-4514-98c4-4d0b87efc91f" alt="Admin Page" width="200"/>
+</p>
 
 ## Overview
 
