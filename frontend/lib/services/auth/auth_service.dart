@@ -21,15 +21,17 @@ class AuthService {
   final Logger _logger = Logger();
 
   Future<void> saveCredentials(Map response) async {
-    Map<String, String> credentials = {};
     try {
-      credentials = {
-        'token': response['token'],
-        '_id': response['_id'],
-        'name': response['name'],
-        'email': response['email'],
-        'role': response['role'],
+      final data = response['data'] ?? {};
+      print(data);
+      final credentials = {
+        'token': data['token'] ?? '',
+        '_id': data['_id'] ?? '',
+        'name': data['name'] ?? '',
+        'email': data['email'] ?? '',
+        'role': data['role'] ?? '',
       };
+
       await _secureStorage.write(key: 'token', value: credentials['token']);
       await _secureStorage.write(key: '_id', value: credentials['_id']);
       await _secureStorage.write(key: 'name', value: credentials['name']);
@@ -104,9 +106,10 @@ class AuthService {
         },
       );
       _logger.i(response.data);
+      print("Verify OTP raw data: ${response.data}");
       return (
         statusCode: response.statusCode!,
-        message: response.data['message'] as String
+        message: response.data['message']?.toString() ?? '',
       );
     } catch (e) {
       _logger.e(e);

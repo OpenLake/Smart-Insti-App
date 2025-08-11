@@ -2,35 +2,33 @@ import express from "express";
 import Student from "../../models/student.js";
 import * as messages from "../../constants/messages.js";
 import tokenRequired from "../../middlewares/tokenRequired.js";
-
 const studentRouter = express.Router();
+import mongoose from "mongoose";
 
 /**
  * @route GET /students/:id
  * @desc Get a student by ID (with authentication)
  */
-studentRouter.get("/:id", tokenRequired, async (req, res) => {
-  try {
-    const student = await Student.findById(req.params.id)
-      .populate("skills")
-      .populate("achievements");
+ studentRouter.get("/:id", tokenRequired, async (req, res) => {
+   try {
+     if (!mongoose.Types.ObjectId.isValid(req.params.id)) {
+       return res.status(400).json({ status: false, message: "Invalid student ID" });
+     }
 
-    if (!student) {
-      return res
-        .status(404)
-        .json({ status: false, message: messages.userNotFound });
-    }
+     const student = await Student.findById(req.params.id)
+       .populate("skills")
+       .populate("achievements");
 
-    res
-      .status(200)
-      .json({ status: true, message: "Student found", data: student });
-  } catch (error) {
-    console.error("Error fetching student:", error);
-    res
-      .status(500)
-      .json({ status: false, message: messages.internalServerError });
-  }
-});
+     if (!student) {
+       return res.status(404).json({ status: false, message: "Student not found" });
+     }
+
+     res.status(200).json({ status: true, message: "Student found", data: student });
+   } catch (error) {
+     console.error("Error fetching student:", error);
+     res.status(500).json({ status: false, message: "Internal Server Error" });
+   }
+ });
 
 /**
  * @route PUT /students/:id

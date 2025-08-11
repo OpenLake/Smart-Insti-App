@@ -23,6 +23,9 @@ import timetableResource from "./resources/timetable/timetableResource.js";
 import messMenuListResource from "./resources/messMenu/messMenuListResource.js";
 import messMenuResource from "./resources/messMenu/messMenuResource.js";
 import courseResource from "./resources/faculty/courseResource.js";
+import "./models/student.js";
+import "./models/skill.js";
+import "./models/achievement.js";
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
