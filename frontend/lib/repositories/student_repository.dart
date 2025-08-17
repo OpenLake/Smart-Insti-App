@@ -21,7 +21,7 @@ class StudentRepository {
   final Logger _logger = Logger();
 
   Future<Student?> getStudentById(String id, String token) async {
-    _client.options.headers['authorization'] = token;
+    _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response = await _client.get('/student/$id');
       return Student.fromJson(response.data);
