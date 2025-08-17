@@ -15,7 +15,7 @@ const lostAndFoundItemSchema = new mongoose.Schema(
     listerId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
-      required: true,
+      required: false,
       index: true, // Faster queries on lost items per user
     },
     isLost: { type: Boolean, required: true },

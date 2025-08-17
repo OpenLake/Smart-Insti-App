@@ -26,20 +26,14 @@ router.get("/", async (req, res) => {
             console.error("Error reading image file:", err);
           }
         }
-
-        return {
-          ...item,
-          imagePath: imagePathBase64,
-        };
+        return { ...item, imagePath: imagePathBase64 };
       })
     );
 
     res.status(200).json({ status: true, data: itemsWithImages });
   } catch (error) {
     console.error("Error fetching items:", error);
-    res
-      .status(500)
-      .json({ status: false, message: messages.internalServerError });
+    res.status(500).json({ status: false, message: messages.internalServerError });
   }
 });
 
@@ -52,42 +46,56 @@ router.post(
   uploader.single("image"),
   [
     body("name").notEmpty().withMessage("Item name is required"),
-    body("lastSeenLocation")
-      .notEmpty()
-      .withMessage("Last seen location is required"),
+    body("lastSeenLocation").notEmpty().withMessage("Last seen location is required"),
     body("contactNumber").notEmpty().withMessage("Contact number is required"),
-    body("listerId").notEmpty().withMessage("Lister ID is required"),
-    body("isLost").isBoolean().withMessage("isLost must be a boolean"),
+    body("isLost").notEmpty().withMessage("isLost is required"),
   ],
   async (req, res) => {
+    console.log("🔹 Incoming body:", req.body);
+    console.log("🔹 Incoming file:", req.file);
+
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
       return res.status(400).json({ status: false, errors: errors.array() });
     }
 
     try {
+      const isLost =
+        req.body.isLost === true ||
+        req.body.isLost === "true" ||
+        req.body.isLost === 1 ||
+        req.body.isLost === "1";
+
       const file = req.file;
 
-      const newItem = new LostAndFoundItem({
+      // only add listerId if provided
+      const newItemData = {
         name: req.body.name,
         lastSeenLocation: req.body.lastSeenLocation,
-        imagePath: file?.path || null,
+        imagePath: file ? file.path : null,
         description: req.body.description || "",
         contactNumber: req.body.contactNumber,
-        listerId: req.body.listerId,
-        isLost: req.body.isLost,
-      });
+        isLost,
+      };
+      if (req.body.listerId) {
+        newItemData.listerId = req.body.listerId;
+      }
 
+      const newItem = new LostAndFoundItem(newItemData);
       await newItem.save();
 
-      res
-        .status(201)
-        .json({ status: true, message: messages.itemAdded, data: newItem });
+      return res.status(201).json({
+        status: true,
+        message: messages.itemAdded,
+        data: newItem,
+      });
     } catch (error) {
       console.error("Error adding item:", error);
-      res
-        .status(500)
-        .json({ status: false, message: messages.internalServerError });
+      return res.status(500).json({
+        status: false,
+        message: messages.internalServerError,
+        error: error.message,
+      });
     }
   }
 );

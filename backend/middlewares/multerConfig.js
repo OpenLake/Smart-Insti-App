@@ -41,6 +41,7 @@ const storage = multer.diskStorage({
  * File Filter for Allowed MIME Types
  */
 const fileFilter = (req, file, cb) => {
+    console.log("Uploaded file:", file.originalname, "MIME:", file.mimetype);
   if (allowedMimeTypes.includes(file.mimetype)) {
     cb(null, true);
   } else {
