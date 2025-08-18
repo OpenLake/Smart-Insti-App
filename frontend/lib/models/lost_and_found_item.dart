@@ -4,10 +4,10 @@ class LostAndFoundItem {
   String? id;
   String name;
   String lastSeenLocation;
-  String? imagePath;
+  String? imagePath;   // can be null
   String description;
   String contactNumber;
-  String listerId;
+  String? listerId;    // can be null
   bool isLost;
 
   LostAndFoundItem({
@@ -17,20 +17,20 @@ class LostAndFoundItem {
     this.imagePath,
     required this.description,
     required this.contactNumber,
-    required this.listerId,
+    this.listerId,
     required this.isLost,
   });
 
   factory LostAndFoundItem.fromJson(Map<String, dynamic> json) {
     return LostAndFoundItem(
       id: json['_id'],
-      name: json['name'],
-      lastSeenLocation: json['lastSeenLocation'],
+      name: json['name'] ?? '',
+      lastSeenLocation: json['lastSeenLocation'] ?? '',
       imagePath: json['imagePath'],
-      description: json['description'],
-      contactNumber: json['contactNumber'],
-      listerId: json['listerId'],
-      isLost: json['isLost'],
+      description: json['description'] ?? '',
+      contactNumber: json['contactNumber'] ?? '',
+      listerId: json['listerId'], // nullable
+      isLost: json['isLost'] == true || json['isLost'] == "true" || json['isLost'] == 1,
     );
   }
 
@@ -40,7 +40,7 @@ class LostAndFoundItem {
       'lastSeenLocation': lastSeenLocation,
       'imagePath': imagePath,
       'description': description,
-      'contact': contactNumber,
+      'contactNumber': contactNumber, // ✅ fixed key
       'listerId': listerId,
       'isLost': isLost,
     };
