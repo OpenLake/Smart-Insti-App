@@ -2,6 +2,9 @@
   "name": "server",
   "version": "0.0.0",
   "private": true,
+  "engines": {
+    "node": ">=18.0.0 <23.0.0"
+  },
   "license": "MIT",
   "description": "Backend server for the smart Insti App",
   "scripts": {
@@ -10,9 +13,7 @@
   },
   "type": "module",
   "dependencies": {
-    "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
-    "body-parser": "^1.20.2",
     "cookie-parser": "~1.4.4",
     "cors": "^2.8.5",
     "debug": "^4.3.4",
@@ -26,9 +27,10 @@
     "morgan": "~1.9.1",
     "multer": "^1.4.5-lts.1",
     "nodemailer": "^6.9.8",
-    "nodemon": "^3.0.3",
     "pug": "^3.0.3",
-    "xoauth2": "^1.2.0",
-    "yarn": "^1.22.21"
+    "xoauth2": "^1.2.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.3"
   }
 }
