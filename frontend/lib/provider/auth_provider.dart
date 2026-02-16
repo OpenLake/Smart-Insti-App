@@ -8,9 +8,11 @@ import 'package:smart_insti_app/models/student.dart';
 import 'package:smart_insti_app/repositories/admin_repository.dart';
 import 'package:smart_insti_app/repositories/faculty_repository.dart';
 import 'package:smart_insti_app/repositories/student_repository.dart';
+import 'package:smart_insti_app/repositories/alumni_repository.dart';
 import 'package:smart_insti_app/services/auth/auth_service.dart';
 
 import '../models/faculty.dart';
+import '../models/alumni.dart';
 
 final authProvider =
     StateNotifierProvider<AuthProvider, AuthState>((ref) => AuthProvider(ref));
@@ -18,6 +20,7 @@ final authProvider =
 class AuthState {
   final Object? currentUser;
   final String? currentUserRole;
+  final String? token;
   final TextEditingController emailController;
   final TextEditingController passwordController;
   final List<TextEditingController> otpDigitControllers;
@@ -31,6 +34,7 @@ class AuthState {
   AuthState({
     this.currentUser,
     this.currentUserRole,
+    this.token,
     required this.emailController,
     required this.passwordController,
     required this.otpDigitControllers,
@@ -45,6 +49,7 @@ class AuthState {
   AuthState copyWith({
     Object? currentUser,
     String? currentUserRole,
+    String? token,
     TextEditingController? emailController,
     TextEditingController? passwordController,
     List<TextEditingController>? otpDigitControllers,
@@ -58,6 +63,7 @@ class AuthState {
     return AuthState(
       currentUser: currentUser,
       currentUserRole: currentUserRole,
+      token: token ?? this.token,
       emailController: emailController ?? this.emailController,
       passwordController: passwordController ?? this.passwordController,
       otpDigitControllers: otpDigitControllers ?? this.otpDigitControllers,
@@ -76,6 +82,7 @@ class AuthProvider extends StateNotifier<AuthState> {
       : _facultyRepository = ref.read(facultyRepositoryProvider),
         _studentRepository = ref.read(studentRepositoryProvider),
         _adminRepository = ref.read(adminRepositoryProvider),
+        _alumniRepository = ref.read(alumniRepositoryProvider),
         _authService = ref.read(authServiceProvider),
         super(
           AuthState(
@@ -96,6 +103,7 @@ class AuthProvider extends StateNotifier<AuthState> {
   final AdminRepository _adminRepository;
   final StudentRepository _studentRepository;
   final FacultyRepository _facultyRepository;
+  final AlumniRepository _alumniRepository;
   LoadingState tokenCheckProgress = LoadingState.idle;
   final _logger = Logger();
 
@@ -173,8 +181,9 @@ class AuthProvider extends StateNotifier<AuthState> {
           if (admin == null) {
             throw Exception("Admin is null");
           }
-          state = state.copyWith(currentUser: admin, currentUserRole: 'admin');
+          state = state.copyWith(currentUser: admin, currentUserRole: 'admin', token: credentials['token']);
         } catch (e) {
+          print("Error in getCurrentUser (admin): $e");
           await _authService.clearCredentials();
           clearCurrentUser();
         }
@@ -187,7 +196,7 @@ class AuthProvider extends StateNotifier<AuthState> {
             throw Exception("Student is null");
           }
           state =
-              state.copyWith(currentUser: student, currentUserRole: 'student');
+              state.copyWith(currentUser: student, currentUserRole: 'student', token: credentials['token']);
         } catch (e) {
           await _authService.clearCredentials();
           clearCurrentUser();
@@ -201,7 +210,21 @@ class AuthProvider extends StateNotifier<AuthState> {
             throw Exception("Faculty is null");
           }
           state =
-              state.copyWith(currentUser: faculty, currentUserRole: 'faculty');
+              state.copyWith(currentUser: faculty, currentUserRole: 'faculty', token: credentials['token']);
+        } catch (e) {
+          await _authService.clearCredentials();
+          clearCurrentUser();
+        }
+        break;
+      case 'alumni':
+        try {
+          Alumni? alumni = await _alumniRepository.getAlumniById(
+              credentials['_id']!, credentials['token']!);
+          if (alumni == null) {
+            throw Exception("Alumni is null");
+          }
+          state =
+              state.copyWith(currentUser: alumni, currentUserRole: 'alumni', token: credentials['token']);
         } catch (e) {
           await _authService.clearCredentials();
           clearCurrentUser();
@@ -229,7 +252,9 @@ class AuthProvider extends StateNotifier<AuthState> {
         !(state.currentUserRole ==
                 AuthConstants.facultyAuthLabel.toLowerCase() ||
             state.currentUserRole ==
-                AuthConstants.studentAuthLabel.toLowerCase())) {
+                AuthConstants.studentAuthLabel.toLowerCase() ||
+            state.currentUserRole ==
+                AuthConstants.alumniAuthLabel.toLowerCase())) {
       isInvalidRole = true;
     }
 
@@ -251,7 +276,7 @@ class AuthProvider extends StateNotifier<AuthState> {
   }
 
   void clearCurrentUser() {
-    state = state.copyWith(currentUser: null, currentUserRole: null);
+    state = state.copyWith(currentUser: null, currentUserRole: null, token: null);
   }
 
   Future<bool> loginAdmin() async {
@@ -286,10 +311,16 @@ class AuthProvider extends StateNotifier<AuthState> {
   }
 
   void toggleAuthSwitch() {
+    String nextLabel;
+    if (state.switchAuthLabel == AuthConstants.studentAuthLabel) {
+      nextLabel = AuthConstants.facultyAuthLabel;
+    } else if (state.switchAuthLabel == AuthConstants.facultyAuthLabel) {
+      nextLabel = AuthConstants.alumniAuthLabel;
+    } else {
+      nextLabel = AuthConstants.studentAuthLabel;
+    }
     state = state.copyWith(
-      switchAuthLabel: state.switchAuthLabel == AuthConstants.studentAuthLabel
-          ? AuthConstants.facultyAuthLabel
-          : AuthConstants.studentAuthLabel,
+      switchAuthLabel: nextLabel,
     );
   }
 

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
+import 'package:smart_insti_app/screens/main_scaffold.dart';
 import 'package:smart_insti_app/screens/admin/add_courses.dart';
 import 'package:smart_insti_app/screens/admin/add_students.dart';
 import 'package:smart_insti_app/screens/admin/admin_home.dart';
@@ -10,6 +11,10 @@ import 'package:smart_insti_app/screens/loading_page.dart';
 import 'package:smart_insti_app/screens/user/lost_and_found.dart';
 import 'package:smart_insti_app/screens/user/user_mess_menu.dart';
 import 'package:smart_insti_app/screens/user/timetable_editor.dart';
+import 'package:smart_insti_app/screens/user/events_page.dart';
+import 'package:smart_insti_app/screens/user/news_page.dart';
+import 'package:smart_insti_app/screens/user/complaint_page.dart';
+import 'package:smart_insti_app/screens/user/links_page.dart';
 import '../screens/admin/add_faculty.dart';
 import '../screens/admin/add_menu.dart';
 import '../screens/admin/admin_profile.dart';
@@ -30,7 +35,7 @@ final GoRouter routes = GoRouter(
   routes: [
     GoRoute(
       path: '/',
-      pageBuilder: (context, state) => const MaterialPage(child: LoadingPage()),
+      pageBuilder: (context, state) => const MaterialPage(child: MainScaffold()),
     ),
     GoRoute(
       path: '/login',
@@ -126,7 +131,26 @@ final GoRouter routes = GoRouter(
           path: 'chat_room',
           pageBuilder: (context, state) => MaterialPage(child: ChatRoom()),
         ),
-        GoRoute(path: 'mess_menu', pageBuilder: (context, state) => MaterialPage(child: UserMessMenu()) ),
+        GoRoute(
+          path: 'mess_menu', 
+          pageBuilder: (context, state) => MaterialPage(child: UserMessMenu()) 
+        ),
+        GoRoute(
+          path: 'events',
+          pageBuilder: (context, state) => const MaterialPage(child: EventsPage()),
+        ),
+        GoRoute(
+          path: 'news',
+          pageBuilder: (context, state) => const MaterialPage(child: NewsPage()),
+        ),
+        GoRoute(
+          path: 'complaints',
+          pageBuilder: (context, state) => const MaterialPage(child: ComplaintPage()),
+        ),
+        GoRoute(
+          path: 'links',
+          pageBuilder: (context, state) => const MaterialPage(child: LinksPage()),
+        ),
       ],
     ),
   ],

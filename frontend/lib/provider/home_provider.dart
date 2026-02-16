@@ -106,6 +106,34 @@ class UserProvider extends StateNotifier<HomeState> {
         secondaryColor: Colors.purpleAccent.shade200,
         icon: Icons.restaurant,
       ),
+      MenuTile(
+        title: "Events\n& Calendar",
+        onTap: () => context.push('/user_home/events'),
+        primaryColor: Colors.cyanAccent.shade100,
+        secondaryColor: Colors.cyanAccent.shade200,
+        icon: Icons.calendar_today,
+      ),
+      MenuTile(
+        title: "Feed\n& News",
+        onTap: () => context.push('/user_home/news'),
+        primaryColor: Colors.indigoAccent.shade100,
+        secondaryColor: Colors.indigoAccent.shade200,
+        icon: Icons.article,
+      ),
+      MenuTile(
+        title: "Complaints\nPortal",
+        onTap: () => context.push('/user_home/complaints'),
+        primaryColor: Colors.brown.shade100,
+        secondaryColor: Colors.brown.shade200,
+        icon: Icons.feedback,
+      ),
+      MenuTile(
+        title: "Quick\nLinks",
+        onTap: () => context.push('/user_home/links'),
+        primaryColor: Colors.yellowAccent.shade100,
+        secondaryColor: Colors.yellowAccent.shade700,
+        icon: Icons.link,
+      ),
     ];
     String query = state.searchController.text;
     state = state.copyWith(

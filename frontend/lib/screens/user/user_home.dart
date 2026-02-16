@@ -9,7 +9,10 @@ import 'package:smart_insti_app/provider/home_provider.dart';
 import '../../constants/constants.dart';
 import '../../models/faculty.dart';
 import '../../models/student.dart';
+import 'package:smart_insti_app/models/alumni.dart';
+import '../../models/admin.dart'; // Add Admin import
 import '../../services/auth/auth_service.dart';
+import 'package:google_fonts/google_fonts.dart'; // Add Google Fonts import
 
 class UserHome extends ConsumerWidget {
   const UserHome({super.key});
@@ -20,145 +23,206 @@ class UserHome extends ConsumerWidget {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(homeProvider.notifier).buildMenuTiles(context);
       if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
+         // Only verify if we think we have a session (e.g. not explicitly guest). 
+         // For now, verifyAuthTokenExistence redirects to / if invalid.
+         // We should probably modify verifyAuthTokenExistence or just skip it if we are in "MainScaffold" which handles guests.
+         // Let's rely on AuthState. If token is null, we are guest.
       }
     });
 
     return ResponsiveScaledBox(
       width: 411,
       child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            CollapsingAppBar(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Welcome',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 45,
-                      ),
+        body: Container(
+          decoration: BoxDecoration(
+            gradient: LinearGradient(
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+              colors: [
+                Theme.of(context).colorScheme.surface,
+                Theme.of(context).colorScheme.surface,
+              ],
+            ),
+          ),
+          child: Column(
+            children: [
+              // Header Section
+              Container(
+                width: double.infinity,
+                padding: const EdgeInsets.fromLTRB(20, 60, 20, 30),
+                decoration: BoxDecoration(
+                  color: Theme.of(context).colorScheme.primary,
+                  borderRadius: const BorderRadius.only(
+                    bottomLeft: Radius.circular(32),
+                    bottomRight: Radius.circular(32),
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                      blurRadius: 20,
+                      offset: const Offset(0, 10),
                     ),
-                    Consumer(
-                      builder: (_, ref, __) {
-                        if (ref.read(authProvider).currentUser != null) {
-                          return AnimatedTextKit(
-                            repeatForever: true,
-                            pause: const Duration(milliseconds: 1500),
-                            animatedTexts: [
-                              TyperAnimatedText(
-                                ref.read(authProvider).currentUserRole!.replaceFirst(
-                                    ref.read(authProvider).currentUserRole![0],
-                                    ref.read(authProvider).currentUserRole![0].toUpperCase()),
-                                textStyle: const TextStyle(fontSize: 45, fontFamily: "RobotoFlex"),
-                                speed: const Duration(milliseconds: 300),
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Consumer(builder: (_, ref, __) {
+                          final user = ref.watch(authProvider).currentUser;
+                          final role = ref.watch(authProvider).currentUserRole;
+                          String name = "Guest";
+                          if (user != null) {
+                             if (user is Student) name = user.name.split(' ').first;
+                             else if (user is Faculty) name = user.name.split(' ').first;
+                             else if (user is Admin) name = "Admin";
+                             else if (user is Alumni) name = user.name.split(' ').first;
+                          }
+                          
+                          return Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "Good Morning,",
+                                style: GoogleFonts.outfit(
+                                  color: Colors.white.withOpacity(0.8),
+                                  fontSize: 16,
+                                ),
                               ),
-                              TyperAnimatedText(
-                                ref.read(authProvider).currentUserRole == "student"
-                                    ? (ref.read(authProvider).currentUser as Student).name.split(" ").first
-                                    : (ref.read(authProvider).currentUser as Faculty).name.split(" ").first,
-                                textStyle: const TextStyle(
-                                    fontSize: 45, overflow: TextOverflow.ellipsis),
-                                speed: const Duration(milliseconds: 300),
+                              Text(
+                                name,
+                                style: GoogleFonts.outfit(
+                                  color: Colors.white,
+                                  fontSize: 28,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
                             ],
                           );
-                        } else {
-                          return const SizedBox.shrink();
-                        }
-                      },
-                    )
+                        }),
+                        CircleAvatar(
+                          radius: 24,
+                          backgroundColor: Colors.white.withOpacity(0.2),
+                          child: const Icon(Icons.notifications_outlined, color: Colors.white),
+                        ),
+                      ],
+                    ),
+                    const SizedBox(height: 24),
+                    // Search Bar
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: TextField(
+                        controller: ref.read(homeProvider.notifier).searchController,
+                        onChanged: (value) => ref.read(homeProvider.notifier).buildMenuTiles(context),
+                        decoration: InputDecoration(
+                          hintText: "Search features...",
+                          hintStyle: TextStyle(color: Colors.grey.shade400),
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          focusedBorder: InputBorder.none,
+                          icon: Icon(Icons.search, color: Theme.of(context).colorScheme.primary),
+                        ),
+                      ),
+                    ),
                   ],
                 ),
               ),
-              bottom: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Consumer(
-                  builder: (_, ref, ___) {
-                    if (ref.watch(homeProvider).toggleSearch) {
-                      return SearchBar(
-                        controller: ref.read(homeProvider.notifier).searchController,
-                        onChanged: (value) => ref.read(homeProvider.notifier).buildMenuTiles(context),
-                        leading: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () {
-                            ref.read(homeProvider.notifier).searchController.clear();
-                            ref.read(homeProvider.notifier).toggleSearchBar();
-                            ref.read(homeProvider.notifier).buildMenuTiles(context);
-                          },
+
+              // Body Content
+              Expanded(
+                child: SingleChildScrollView(
+                  padding: const EdgeInsets.all(20),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        "Quick Actions",
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
                         ),
-                        shadowColor: MaterialStateProperty.all(Colors.transparent),
-                      );
-                    } else {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                              iconSize: 30,
-                              onPressed: () => ref.read(homeProvider.notifier).toggleSearchBar(),
-                              icon: const Icon(Icons.search)),
-                          PopupMenuButton(
-                            itemBuilder: (context) {
-                              return [
-                                PopupMenuItem(
-                                  value: "profile",
-                                  child: const Text("User Profile"),
-                                  onTap: () {
-                                    if (ref.read(authProvider).currentUserRole == 'student') {
-                                      context.go('/user_home/student_profile');
-                                    } else if (ref.read(authProvider).currentUserRole == 'faculty') {
-                                      context.go('/user_home/faculty_profile');
-                                    }
-                                  },
-                                ),
-                                PopupMenuItem(
-                                  value: "about",
-                                  child: const Text("About"),
-                                  onTap: () => showAboutDialog(
-                                    context: context,
-                                    children: [
-                                      const Text("Smart Insti App"),
-                                      const Text(
-                                          "This app aims to solve the day-to-day problems that students and faculty face in IIT Bhilai and aims to consolidate a lot of useful applications into single app. This could include features like Time Table, Classroom Vacancy, Lost and Found, Chatrooms on various topics like Internet Issues. It could also have a broadcast feature which would be very useful in emergency situations."),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: "logout",
-                                  child: const Text("Log Out"),
-                                  onTap: () {
-                                    ref.read(authServiceProvider).clearCredentials();
-                                    ref.read(authProvider.notifier).clearCurrentUser();
-                                    context.go('/');
-                                  },
-                                ),
-                              ];
-                            },
-                          ),
-                        ],
-                      );
-                    }
-                  },
+                      ),
+                      const SizedBox(height: 16),
+                      // Grid of Menu Tiles
+                      Consumer(
+                        builder: (_, ref, ___) {
+                          final tiles = ref.watch(homeProvider).menuTiles;
+                          if (tiles.isEmpty) return const Center(child: Text("No features found"));
+                          
+                          // Convert existing tiles (which are likely containers/cards) to a clean grid
+                          // For now, we reuse the provider's list but lay it out differently if possible
+                          // or just wrap them.
+                          // Actually, homeProvider builds specific widgets. Let's use GridView inside the column.
+                          return GridView.count(
+                            shrinkWrap: true,
+                            physics: const NeverScrollableScrollPhysics(),
+                            crossAxisCount: 2,
+                            mainAxisSpacing: 16,
+                            crossAxisSpacing: 16,
+                            childAspectRatio: 1.1,
+                            children: tiles,
+                          );
+                        },
+                      ),
+                      
+                      const SizedBox(height: 24),
+                      Text(
+                        "Recent Updates",
+                        style: GoogleFonts.outfit(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black87,
+                        ),
+                      ),
+                      const SizedBox(height: 16),
+                      // Placeholder for horizontal news scroll (could integrate PostProvider here later)
+                      SizedBox(
+                        height: 140,
+                        child: ListView(
+                          scrollDirection: Axis.horizontal,
+                          children: [
+                             _buildPromoCard(context, "Tech Fest 2024", "Register now!", Colors.purple.shade50),
+                             _buildPromoCard(context, "Exam Schedule", "View timetable", Colors.orange.shade50),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            )
-          ],
-          body: Container(
-              color: Colors.white,
-              child: Consumer(
-                builder: (_, ref, ___) {
-                  return GridView.count(
-                    padding: const EdgeInsets.all(10),
-                    crossAxisCount: 2,
-                    children: ref.watch(homeProvider).menuTiles,
-                  );
-                },
-              )),
+            ],
+          ),
         ),
       ),
     );
   }
+
+  Widget _buildPromoCard(BuildContext context, String title, String subtitle, Color color) {
+    return Container(
+      width: 240,
+      margin: const EdgeInsets.only(right: 16),
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: color,
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(title, style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87)),
+          const SizedBox(height: 8),
+           Text(subtitle, style: GoogleFonts.outfit(fontSize: 14, color: Colors.black54)),
+        ],
+      ),
+    );
+  }
 }
+
