@@ -20,10 +20,9 @@ class AuthService {
   final _secureStorage = const FlutterSecureStorage();
   final Logger _logger = Logger();
 
-  Future<void> saveCredentials(Map response) async {
+   Future<void> saveCredentials(Map response) async {
     try {
-      final data = response['data'] ?? {};
-      print(data);
+      final data = response.containsKey('data') ? response['data'] : response;
       final credentials = {
         'token': data['token'] ?? '',
         '_id': data['_id'] ?? '',

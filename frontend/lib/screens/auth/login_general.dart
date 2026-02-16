@@ -465,6 +465,36 @@ class GeneralLogin extends ConsumerWidget {
                                 ),
                               ],
                             ),
+                            const SizedBox(height: 20),
+                            GestureDetector(
+                              child: Container(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 20, vertical: 10),
+                                decoration: BoxDecoration(
+                                  gradient: LinearGradient(
+                                    colors: [
+                                      Colors.blueAccent.withOpacity(0.1),
+                                      Colors.lightBlueAccent.withOpacity(0.1),
+                                    ],
+                                  ),
+                                  borderRadius: BorderRadius.circular(20),
+                                  border: Border.all(
+                                    color: Colors.blueAccent.withOpacity(0.3),
+                                  ),
+                                ),
+                                child: const Text(
+                                  "Continue as Guest",
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.blueAccent,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              onTap: () {
+                                 context.go('/');
+                              },
+                            ),
                           ],
                         ),
                       ),

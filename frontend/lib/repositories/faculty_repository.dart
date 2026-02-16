@@ -21,10 +21,10 @@ class FacultyRepository {
   final Logger _logger = Logger();
 
   Future<Faculty?> getFacultyById(String id, String token) async {
-    _client.options.headers['authorization'] = token;
+    _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response = await _client.get('/faculty/$id');
-      return Faculty.fromJson(response.data);
+      return Faculty.fromJson(response.data['data']);
     } catch (e) {
       _logger.e(e);
       return null;
@@ -34,7 +34,7 @@ class FacultyRepository {
   Future<List<Faculty>> getFaculties() async {
     try {
       final response = await _client.get('/faculties');
-      return (response.data as List).map((e) => Faculty.fromJson(e)).toList();
+      return (response.data['data'] as List).map((e) => Faculty.fromJson(e)).toList();
     } catch (e) {
       return DummyFaculties.faculties;
     }
@@ -59,7 +59,7 @@ class FacultyRepository {
     try {
       final response =
           await _client.put('/faculties/${faculty.id}', data: faculty.toJson());
-      return Faculty.fromJson(response.data['user']);
+      return Faculty.fromJson(response.data['data']);
     } catch (e) {
       return DummyFaculties.faculties[0];
     }

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 class AppConstants {
   static const String appName = "Smart Insti App";
   static const Color seedColor = Colors.lightBlueAccent;
+  static const String apiBaseUrl = "http://localhost:3000";
 }
 
 enum LoadingState { idle, progress, success, error }
@@ -11,6 +12,7 @@ class AuthConstants {
   static const String facultyAuthLabel = "Faculty";
   static const String studentAuthLabel = "Student";
   static const String adminAuthLabel = "Admin";
+  static const String alumniAuthLabel = "Alumni";
   static const String generalAuthLabel = "General";
 }
 

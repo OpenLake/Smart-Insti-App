@@ -24,7 +24,7 @@ class StudentRepository {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response = await _client.get('/student/$id');
-      return Student.fromJson(response.data);
+      return Student.fromJson(response.data['data']);
     } catch (e) {
       _logger.e(e);
       return null;
@@ -40,7 +40,7 @@ class StudentRepository {
         },
       );
 
-      return Student.fromJson(response.data['user']);
+      return Student.fromJson(response.data['data']);
     } catch (e) {
       return DummyStudents.students[0];
     }
@@ -49,7 +49,7 @@ class StudentRepository {
   Future<List<Student>> getStudents() async {
     try {
       final response = await _client.get('/students');
-      return (response.data as List).map((e) => Student.fromJson(e)).toList();
+      return (response.data['data'] as List).map((e) => Student.fromJson(e)).toList();
     } catch (e) {
       return DummyStudents.students;
     }
@@ -59,7 +59,7 @@ class StudentRepository {
     try {
       final response = await _client.put('/students/${state.student.id}',
           data: state.student.toJson());
-      return Student.fromJson(response.data['user']);
+      return Student.fromJson(response.data['data']);
     } catch (e) {
       return DummyStudents.students[0];
     }

@@ -19,10 +19,10 @@ class AdminRepository {
   final Logger _logger = Logger();
 
   Future<Admin?> getAdminById(String id, String token) async {
-    _client.options.headers['authorization'] = token;
+    _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response = await _client.get('/admin/$id');
-      return Admin.fromJson(response.data);
+      return Admin.fromJson(response.data['data']);
     } catch (e) {
       _logger.e(e);
       return null;
