@@ -2,6 +2,7 @@ import express from "express";
 import * as messages from "../../constants/messages.js";
 import Student from "../../models/student.js";
 import Faculty from "../../models/faculty.js";
+import Alumni from "../../models/alumni.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
 
@@ -138,6 +139,64 @@ generalAuthRouter.post("/register", async (req, res) => {
   }
 });
 
+// alumni registration
+generalAuthRouter.post("/register/alumni", async (req, res) => {
+  try {
+    const { email, name, graduationYear, degree, department, currentOrganization, designation, linkedInProfile } = req.body;
+
+    if (!email) {
+      return res
+        .status(400)
+        .json({ status: false, message: "Email is required." });
+    }
+
+    // Check if alumni already exists
+    let alumni = await Alumni.findOne({ email }).lean();
+    if (alumni) {
+      return res
+        .status(409)
+        .json({ status: false, message: "Alumni already exists." });
+    }
+
+    // Create a new alumni
+    alumni = new Alumni({
+      name: name || "Smart Insti User",
+      email,
+      graduationYear,
+      degree,
+      department,
+      currentOrganization,
+      designation,
+      linkedInProfile,
+    });
+
+    await alumni.save();
+
+    // Generate JWT token
+    const token = jwt.sign(
+      { id: alumni._id },
+      process.env.ACCESS_TOKEN_SECRET,
+      { expiresIn: "7d", algorithm: "HS256" }
+    );
+
+    res.status(201).json({
+      status: true,
+      message: "Alumni registration successful.",
+      data: {
+        token,
+        _id: alumni._id,
+        name: alumni.name,
+        email: alumni.email,
+      },
+    });
+  } catch (error) {
+    console.error("Alumni registration error:", error);
+    res
+      .status(500)
+      .json({ status: false, message: messages.internalServerError });
+  }
+});
+
 //working
 generalAuthRouter.post("/login", async (req, res) => {
   try {
@@ -156,6 +215,9 @@ generalAuthRouter.post("/login", async (req, res) => {
         break;
       case "faculty":
         userCollection = Faculty;
+        break;
+      case "alumni":
+        userCollection = Alumni;
         break;
       default:
         return res
