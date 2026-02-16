@@ -1,6 +1,7 @@
 import express from "express";
 import * as messages from "../../constants/messages.js";
 import MessMenu from "../../models/mess_menu.js";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 
 const messMenuRouter = express.Router();
 
@@ -9,7 +10,7 @@ const messMenuRouter = express.Router();
  * @desc Update an existing mess menu
  */
 //working
-messMenuRouter.put("/:id", async (req, res) => {
+messMenuRouter.put("/:id", tokenRequired, async (req, res) => {
   try {
     const { id } = req.params;
     const { messMenu } = req.body;
@@ -50,7 +51,7 @@ messMenuRouter.put("/:id", async (req, res) => {
  * @desc Delete a mess menu by ID
  */
 //working
-messMenuRouter.delete("/:id", async (req, res) => {
+messMenuRouter.delete("/:id", tokenRequired, async (req, res) => {
   try {
     const { id } = req.params;
     const deletedMenu = await MessMenu.findByIdAndDelete(id);

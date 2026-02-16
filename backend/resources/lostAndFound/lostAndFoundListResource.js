@@ -4,6 +4,7 @@ import fs from "fs/promises";
 import uploader from "../../middlewares/multerConfig.js";
 import * as messages from "../../constants/messages.js";
 import { body, validationResult } from "express-validator";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 
 const router = Router();
 
@@ -43,6 +44,7 @@ router.get("/", async (req, res) => {
  */
 router.post(
   "/",
+  tokenRequired,
   uploader.single("image"),
   [
     body("name").notEmpty().withMessage("Item name is required"),
@@ -51,8 +53,6 @@ router.post(
     body("isLost").notEmpty().withMessage("isLost is required"),
   ],
   async (req, res) => {
-    console.log("🔹 Incoming body:", req.body);
-    console.log("🔹 Incoming file:", req.file);
 
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

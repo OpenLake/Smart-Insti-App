@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import bcrypt from "bcrypt";
+import bcryptjs from "bcryptjs";
 
 const adminSchema = new mongoose.Schema(
   {
@@ -26,7 +26,7 @@ const adminSchema = new mongoose.Schema(
 adminSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next();
   try {
-    this.password = await bcrypt.hash(this.password, 10); // Hash password with salt rounds = 10
+    this.password = await bcryptjs.hash(this.password, 10); // Hash password with salt rounds = 10
     next();
   } catch (error) {
     next(error);

@@ -45,6 +45,7 @@ facultyRouter.get(
 facultyRouter.put(
   "/:id",
   [
+    tokenRequired,
     param("id").isMongoId().withMessage("Invalid faculty ID"),
     body("email").optional().isEmail().withMessage("Invalid email format"),
   ],
@@ -88,7 +89,7 @@ facultyRouter.put(
 //working
 facultyRouter.delete(
   "/:id",
-  [param("id").isMongoId().withMessage("Invalid faculty ID")],
+  [tokenRequired, param("id").isMongoId().withMessage("Invalid faculty ID")],
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()) {

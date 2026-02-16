@@ -2,6 +2,7 @@ import express from "express";
 import * as messages from "../../constants/messages.js";
 import LostAndFoundItem from "../../models/lost_and_found.js";
 import fs from "fs/promises";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 
 const lostAndFoundRouter = express.Router();
 
@@ -9,7 +10,7 @@ const lostAndFoundRouter = express.Router();
  * @route DELETE /lost-and-found/:id
  * @desc Delete a lost and found item by ID
  */
-lostAndFoundRouter.delete("/:id", async (req, res) => {
+lostAndFoundRouter.delete("/:id", tokenRequired, async (req, res) => {
   const itemId = req.params.id;
 
   try {
@@ -30,7 +31,7 @@ lostAndFoundRouter.delete("/:id", async (req, res) => {
       }
     }
 
-    res.status(204).json({ status: true, message: messages.itemDeleted });
+    res.status(200).json({ status: true, message: messages.itemDeleted });
   } catch (err) {
     console.error("Error deleting item:", err);
     res

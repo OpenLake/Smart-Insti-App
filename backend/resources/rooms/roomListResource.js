@@ -1,6 +1,7 @@
 import { Router } from "express";
 import Room from "../../models/room.js";
 import * as messages from "../../constants/messages.js";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 
 const router = Router();
 
@@ -28,7 +29,7 @@ router.get("/", async (req, res) => {
  * @desc Create a new room
  */
 //working
-router.post("/", async (req, res) => {
+router.post("/", tokenRequired, async (req, res) => {
   try {
     const {
       name,

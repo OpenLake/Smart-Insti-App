@@ -1,6 +1,7 @@
 import express from "express";
 import * as messages from "../../constants/messages.js";
 import MessMenu from "../../models/mess_menu.js";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 
 const messMenuListRouter = express.Router();
 
@@ -26,7 +27,7 @@ messMenuListRouter.get("/", async (req, res) => {
  * @desc Add a new mess menu
  */
 //working
-messMenuListRouter.post("/", async (req, res) => {
+messMenuListRouter.post("/", tokenRequired, async (req, res) => {
   try {
     const { kitchenName, messMenu } = req.body;
 

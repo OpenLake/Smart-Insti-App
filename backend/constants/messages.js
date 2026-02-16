@@ -5,6 +5,8 @@ export const incorrectPassword = "Incorrect password.";
 export const internalServerError =
   "Internal server error, please try again later.";
 export const userCreated = "User created successfully.";
+export const userUpdated = "User updated successfully.";
+export const userDeleted = "User deleted successfully.";
 
 // Database Connection Messages
 export const databaseConnected = "Database connected successfully.";
@@ -17,6 +19,7 @@ export const failedToSendOTPEmail = "Failed to send OTP to email.";
 export const emailAndOTPRequired = "Email and OTP are required.";
 export const incorrectOTP = "Incorrect OTP.";
 export const otpVerified = "OTP verified successfully.";
+export const otpVerfied = otpVerified; // Alias for typo in otpResource.js
 export const otpSent = "OTP sent successfully.";
 export const otpExpired = "OTP expired.";
 
@@ -45,3 +48,16 @@ export const roomCreated = "Room created successfully.";
 export const messMenuNotFound = "Mess menu not found.";
 export const messMenuAdded = "Mess menu added successfully.";
 export const messMenuUpdated = "Mess menu updated successfully.";
+
+// Course Messages
+export const courseNotFound = "Course not found.";
+
+// Skill Messages
+export const skillNotFound = "Skill not found.";
+
+// Achievement Messages
+export const achievementNotFound = "Achievement not found.";
+
+// General Messages
+export const success = "Success.";
+export const invalidData = "Invalid data provided.";

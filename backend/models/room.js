@@ -6,7 +6,7 @@ const roomSchema = new mongoose.Schema(
     vacant: { type: Boolean, default: true, index: true }, // Indexing for faster vacant room queries
     occupantId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "User",
+      ref: "Student",
       default: null,
     }, // Reference for data integrity
     occupantName: { type: String, default: null, trim: true },

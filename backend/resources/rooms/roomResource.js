@@ -1,6 +1,7 @@
 import { Router } from "express";
 import Room from "../../models/room.js";
 import * as messages from "../../constants/messages.js";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 
 const router = Router();
 
@@ -9,7 +10,7 @@ const router = Router();
  * @desc Update room details (assign/release occupant)
  */
 //working
-router.put("/:id", async (req, res) => {
+router.put("/:id", tokenRequired, async (req, res) => {
   try {
     const { id } = req.params;
     const { occupantName, occupantId, vacant } = req.body;

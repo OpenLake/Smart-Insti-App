@@ -5,7 +5,6 @@ import jwt from "jsonwebtoken";
 import bcryptjs from "bcryptjs";
 import * as messages from "../../constants/messages.js";
 import rateLimit from "express-rate-limit";
-import mongoose from "mongoose";
 
 dotenv.config();
 
