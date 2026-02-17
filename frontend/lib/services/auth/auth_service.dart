@@ -3,7 +3,6 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
-import 'package:smart_insti_app/constants/constants.dart';
 
 final authServiceProvider = Provider<AuthService>((_) => AuthService());
 
@@ -51,7 +50,6 @@ class AuthService {
         'email': await _secureStorage.read(key: 'email') ?? '',
         'role': await _secureStorage.read(key: 'role') ?? '',
       };
-      await Future.delayed(const Duration(seconds: 2));
       return credentials;
     } catch (e) {
       _logger.e(e);
@@ -105,7 +103,6 @@ class AuthService {
         },
       );
       _logger.i(response.data);
-      print("Verify OTP raw data: ${response.data}");
       return (
         statusCode: response.statusCode!,
         message: response.data['message']?.toString() ?? '',
@@ -141,6 +138,19 @@ class AuthService {
           'email': email,
           'loginForRole': loginForRole,
         },
+      );
+      return response.data;
+    } catch (e) {
+      _logger.e(e);
+      return {};
+    }
+  }
+
+  Future<Map<String, dynamic>> registerStudent(Map<String, dynamic> studentData) async {
+    try {
+      final response = await _client.post(
+        '/general-auth/register',
+        data: studentData,
       );
       return response.data;
     } catch (e) {
