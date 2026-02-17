@@ -109,3 +109,8 @@ frontend/ios/Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Temporary files
+*.txt
+frontend/analysis_output.txt
+docs/
