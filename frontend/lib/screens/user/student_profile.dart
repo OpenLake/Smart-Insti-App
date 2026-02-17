@@ -2,273 +2,288 @@ import 'dart:math';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/models/achievement.dart';
 import 'package:smart_insti_app/models/student.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
 import 'edit_profile.dart';
-import 'package:smart_insti_app/constants/dummy_entries.dart';
 
 class StudentProfile extends ConsumerWidget {
-  const StudentProfile({Key? key}) : super(key: key);
+  const StudentProfile({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final auth = ref.read(authProvider);
-
-    final currentStudent = auth.currentUser as Student?;
-
-    if (currentStudent == null) {
-      return Scaffold(
-        appBar: AppBar(
-          title: const Text('Student Profile'),
-        ),
-        body: Center(
-          child: Text('No student data available'),
-        ),
-      );
-    }
+    final authState = ref.watch(authProvider);
+    final Student currentStudent = authState.currentUser as Student;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Student Profile'),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.edit),
-            onPressed: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(builder: (context) => EditProfileScreen()),
-              );
-            },
+      backgroundColor: Colors.transparent,
+      body: CustomScrollView(
+        slivers: [
+          // 1. Premium Header with SliverAppBar
+          SliverAppBar(
+            expandedHeight: 280,
+            floating: false,
+            pinned: true,
+            stretch: true,
+            backgroundColor: UltimateTheme.primary,
+            flexibleSpace: FlexibleSpaceBar(
+              stretchModes: const [StretchMode.zoomBackground, StretchMode.blurBackground],
+              background: Container(
+                decoration: BoxDecoration(
+                  gradient: UltimateTheme.brandGradient,
+                ),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        const SizedBox(height: 40),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(color: Colors.white, width: 3),
+                            boxShadow: [
+                              BoxShadow(color: Colors.black.withOpacity(0.2), blurRadius: 20),
+                            ],
+                          ),
+                          child: CircleAvatar(
+                            radius: 60,
+                            backgroundColor: Colors.white.withOpacity(0.2),
+                            backgroundImage: currentStudent.profilePicURI != null
+                                ? NetworkImage(currentStudent.profilePicURI!)
+                                : null,
+                            child: currentStudent.profilePicURI == null
+                                ? const Icon(Icons.person_rounded, size: 60, color: Colors.white)
+                                : null,
+                          ),
+                        ).animate().fadeIn().scale(delay: 200.ms),
+                        const SizedBox(height: 16),
+                        Text(
+                          currentStudent.name,
+                          style: GoogleFonts.spaceGrotesk(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 24,
+                            color: Colors.white,
+                          ),
+                        ).animate().fadeIn(delay: 300.ms).slideY(begin: 0.2),
+                        Text(
+                          currentStudent.rollNumber,
+                          style: GoogleFonts.inter(
+                            fontSize: 14,
+                            color: Colors.white70,
+                            fontWeight: FontWeight.w500,
+                            letterSpacing: 1.2,
+                          ),
+                        ).animate().fadeIn(delay: 400.ms),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.edit_note_rounded, color: Colors.white),
+                onPressed: () => Navigator.push(context, MaterialPageRoute(builder: (context) => EditProfileScreen())),
+              ),
+            ],
+          ),
+
+          // 2. Profile Content
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
+                // Academic Info Card
+                _buildSectionCard(
+                  title: "Academic Profile",
+                  icon: Icons.school_rounded,
+                  children: [
+                    _buildInfoRow("Email", currentStudent.email ?? ''),
+                    _buildInfoRow("Branch", currentStudent.branch ?? ''),
+                    _buildInfoRow("Class of", "${currentStudent.graduationYear}"),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Roles & About
+                _buildSectionCard(
+                  title: "About",
+                  icon: Icons.info_outline_rounded,
+                  children: [
+                    Text(
+                      currentStudent.about ?? 'No information provided.',
+                      style: GoogleFonts.inter(color: UltimateTheme.textSub, height: 1.5),
+                    ),
+                    const SizedBox(height: 16),
+                    Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: (currentStudent.roles ?? []).map((role) => Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                        decoration: BoxDecoration(
+                          color: UltimateTheme.primary.withOpacity(0.08),
+                          borderRadius: BorderRadius.circular(12),
+                          border: Border.all(color: UltimateTheme.primary.withOpacity(0.1)),
+                        ),
+                        child: Text(
+                          role.toUpperCase(),
+                          style: GoogleFonts.spaceGrotesk(
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                            color: UltimateTheme.primary,
+                          ),
+                        ),
+                      )).toList(),
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 20),
+
+                // Skills Section
+                if (currentStudent.skills != null && currentStudent.skills!.isNotEmpty) ...[
+                  _buildSectionHeader("Technical Skills"),
+                  const SizedBox(height: 12),
+                  ...currentStudent.skills!.map((skill) => _buildSkillProgress(skill.name ?? '', skill.level.toDouble())),
+                  const SizedBox(height: 20),
+                ],
+
+                // Achievements Section
+                if (currentStudent.achievements != null && currentStudent.achievements!.isNotEmpty) ...[
+                  _buildSectionHeader("Achievements"),
+                  const SizedBox(height: 12),
+                  SizedBox(
+                    height: 160,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: currentStudent.achievements!.length,
+                      itemBuilder: (context, index) => _buildAchievementCard(currentStudent.achievements![index]),
+                    ),
+                  ),
+                ],
+              ]),
+            ),
           ),
         ],
       ),
-      body: SingleChildScrollView(
-        child: Container(
-          color: Colors.lightBlueAccent,
-          child: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                CircleAvatar(
-                  backgroundImage: currentStudent.profilePicURI != null
-                      ? NetworkImage(currentStudent.profilePicURI!)
-                      : const AssetImage('assets/openlake.png')
-                          as ImageProvider<Object>,
-                  radius: 55,
-                  child: currentStudent.profilePicURI == null
-                      ? const Icon(
-                          Icons.person,
-                          size: 55,
-                          color: Colors.grey,
-                        )
-                      : null,
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  currentStudent.name ?? '',
-                  style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontSize: 18,
-                  ),
-                ),
-                const SizedBox(height: 8),
-                Card(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(20.0),
-                  ),
-                  elevation: 5,
-                  child: Container(
-                    constraints: BoxConstraints(
-                      minHeight: MediaQuery.of(context).size.height * 0.6,
-                    ),
-                    child: IntrinsicHeight(
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            buildInfoRow("ID", currentStudent.rollNumber ?? ''),
-                            buildInfoRow("Email", currentStudent.email ?? ''),
-                            buildInfoRow("Branch", currentStudent.branch ?? ''),
-                            buildInfoRow(
-                              "Class of",
-                              "${currentStudent.graduationYear}" ?? '',
-                            ),
-                            const SizedBox(height: 16),
-                            const Text(
-                              'About:',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(currentStudent.about ?? 'No information'),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'Roles: ',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            Text(
-                              '${currentStudent.roles?.join(", ") ?? "No roles"}',
-                            ),
-                            const SizedBox(height: 16),
-                            const Text(
-                              'Skills:',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 5),
-                            if (currentStudent.skills != null)
-                              Column(
-                                children: [
-                                  SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Row(
-                                      children: currentStudent.skills!
-                                          .map(
-                                            (skill) => SizedBox(
-                                              width: 105,
-                                              height: 80,
-                                              child: PieChart(
-                                                PieChartData(
-                                                  sections: [
-                                                    PieChartSectionData(
-                                                      value: skill.level
-                                                          .toDouble(),
-                                                      title: skill.name ?? '',
-                                                      color: getRandomColor(),
-                                                    ),
-                                                    PieChartSectionData(
-                                                      value: (100 - skill.level)
-                                                          .toDouble(),
-                                                      title: '',
-                                                      color: Color.fromARGB(
-                                                          255, 184, 212, 240),
-                                                    ),
-                                                  ],
-                                                  sectionsSpace: 0,
-                                                  centerSpaceRadius: 0,
-                                                  borderData: FlBorderData(
-                                                    show: false,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          )
-                                          .toList(),
-                                    ),
-                                  ),
-                                  const SizedBox(height: 10),
-                                  Slider(
-                                    value: 10,
-                                    onChanged: (double value) {},
-                                    min: 0,
-                                    max: 100,
-                                  ),
-                                ],
-                              ),
-                            const SizedBox(height: 5),
-                            const Text(
-                              'Achievements:',
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            SingleChildScrollView(
-                              scrollDirection: Axis.horizontal,
-                              child: Row(
-                                children: currentStudent.achievements
-                                        ?.map(
-                                          (achievement) => SizedBox(
-                                            width: (MediaQuery.of(context)
-                                                        .size
-                                                        .width -
-                                                    48 -
-                                                    40) /
-                                                2,
-                                            child: buildAchievementCard(
-                                                achievement),
-                                          ),
-                                        )
-                                        .toList() ??
-                                    [],
-                              ),
-                            ),
-                            const SizedBox(height: 10),
-                            Slider(
-                              value: 10,
-                              onChanged: (double value) {},
-                              min: 0,
-                              max: 100,
-                              divisions: 5,
-                              label: 'Achievement Slider',
-                            ),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+    );
+  }
+
+  Widget _buildSectionCard({required String title, required IconData icon, required List<Widget> children}) {
+    return Container(
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: UltimateTheme.primary.withOpacity(0.08)),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              Icon(icon, color: UltimateTheme.primary, size: 20),
+              const SizedBox(width: 12),
+              Text(title, style: GoogleFonts.spaceGrotesk(fontSize: 18, fontWeight: FontWeight.bold, color: UltimateTheme.textMain)),
+            ],
           ),
-        ),
+          const Divider(height: 32),
+          ...children,
+        ],
+      ),
+    ).animate().fadeIn().slideY(begin: 0.1);
+  }
+
+  Widget _buildInfoRow(String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(label, style: GoogleFonts.inter(color: UltimateTheme.textSub, fontWeight: FontWeight.w500)),
+          Text(value, style: GoogleFonts.inter(color: UltimateTheme.textMain, fontWeight: FontWeight.bold)),
+        ],
       ),
     );
   }
 
-  Widget buildInfoRow(String title, String value) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        Text(value),
-      ],
+  Widget _buildSectionHeader(String title) {
+    return Text(
+      title,
+      style: GoogleFonts.spaceGrotesk(fontSize: 20, fontWeight: FontWeight.bold, color: UltimateTheme.textMain),
     );
   }
 
-  Widget buildAchievementCard(Achievement achievement) {
-    return Card(
-      color: Colors.lightBlue,
-      elevation: 3,
-      margin: const EdgeInsets.symmetric(vertical: 8),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              achievement.name ?? '',
-              style: const TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 15,
-              ),
+  Widget _buildSkillProgress(String name, double level) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(name, style: GoogleFonts.inter(fontWeight: FontWeight.w600, color: UltimateTheme.textMain)),
+              Text("${level.toInt()}%", style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, color: UltimateTheme.primary)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          ClipRRect(
+            borderRadius: BorderRadius.circular(4),
+            child: LinearProgressIndicator(
+              value: level / 100,
+              backgroundColor: UltimateTheme.primary.withOpacity(0.1),
+              valueColor: const AlwaysStoppedAnimation<Color>(UltimateTheme.primary),
+              minHeight: 6,
             ),
-            Text(
-              'Date: ${achievement.date}',
-              style: const TextStyle(fontSize: 12),
-            ),
-            Text(
-              achievement.description ?? '',
-              style: const TextStyle(fontSize: 12),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 
-  Color getRandomColor() {
-    return Colors.primaries[Random().nextInt(Colors.primaries.length)];
+  Widget _buildAchievementCard(Achievement achievement) {
+    return Container(
+      width: 240,
+      margin: const EdgeInsets.only(right: 16),
+      padding: const EdgeInsets.all(16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: [UltimateTheme.primary.withOpacity(0.05), Colors.white],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(20),
+        border: Border.all(color: UltimateTheme.primary.withOpacity(0.1)),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          const Icon(Icons.emoji_events_rounded, color: Colors.orangeAccent, size: 28),
+          const Spacer(),
+          Text(
+            achievement.name ?? '',
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, color: UltimateTheme.textMain),
+          ),
+          const SizedBox(height: 4),
+          Text(
+            achievement.description ?? '',
+            maxLines: 2,
+            overflow: TextOverflow.ellipsis,
+            style: GoogleFonts.inter(fontSize: 12, color: UltimateTheme.textSub),
+          ),
+        ],
+      ),
+    );
   }
 }

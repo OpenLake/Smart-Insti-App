@@ -1,7 +1,9 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:responsive_framework/responsive_framework.dart';
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:slide_switcher/slide_switcher.dart';
 import 'package:smart_insti_app/components/choice_selector.dart';
 import 'package:smart_insti_app/models/mess_menu.dart';
@@ -14,176 +16,194 @@ class UserMessMenu extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final menuState = ref.watch(menuProvider);
+    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
         ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
       }
     });
 
-    return ResponsiveScaledBox(
-      width: 411,
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Text('Mess Menu'),
-        ),
-        body: SingleChildScrollView(
-          child: Consumer(
-            builder: (_, ref, __) {
-              if (ref.watch(menuProvider).loadingState == LoadingState.progress) {
-                return const Center(
-                  child: CircularProgressIndicator(),
-                );
-              } else {
-                return Column(
-                  children: [
-                    const SizedBox(height: 30),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: ChoiceSelector(
-                        onChanged: (value) {
-                          ref.read(menuProvider.notifier).setSelectViewMenu(value);
-                        },
-                        value: ref.read(menuProvider).selectedViewMenu,
-                        items: [
-                          for (String i in ref.read(menuProvider).messMenus.keys)
-                            DropdownMenuItem<String>(
-                              value: i,
-                              child: Text(i),
-                            ),
-                        ],
-                        hint: 'Select Kitchen',
-                      ),
+    return Scaffold(
+      backgroundColor: Colors.transparent,
+      body: menuState.loadingState == LoadingState.progress
+          ? const Center(child: CircularProgressIndicator())
+          : CustomScrollView(
+              slivers: [
+                // 1. Kitchen Selector
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                  sliver: SliverToBoxAdapter(
+                    child: ChoiceSelector(
+                      onChanged: (value) => ref.read(menuProvider.notifier).setSelectViewMenu(value),
+                      value: menuState.selectedViewMenu,
+                      items: [
+                        for (String i in menuState.messMenus.keys)
+                          DropdownMenuItem<String>(value: i, child: Text(i)),
+                      ],
+                      hint: 'Select Kitchen',
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
-                      child: SlideSwitcher(
-                        onSelect: (index) => ref.read(menuProvider.notifier).selectMealType(index),
-                        containerHeight: 65,
-                        containerWight: 380,
-                        containerBorderRadius: 20,
-                        slidersColors: [Colors.tealAccent.shade700.withOpacity(0.7)],
-                        containerColor: Colors.tealAccent.shade100,
-                        children: MessMenuConstants.mealTypes,
-                      ),
+                  ),
+                ),
+
+                // 2. Meal Type Selector (Slide Switcher)
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+                  sliver: SliverToBoxAdapter(
+                    child: SlideSwitcher(
+                      onSelect: (index) => ref.read(menuProvider.notifier).selectMealType(index),
+                      containerHeight: 50,
+                      containerWight: double.infinity,
+                      containerBorderRadius: 16,
+                      slidersColors: [UltimateTheme.primary],
+                      containerColor: UltimateTheme.primary.withOpacity(0.08),
+                      children: MessMenuConstants.mealTypes.map((e) => Text(
+                        (e as Text).data!,
+                        style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: (menuState.selectedMealTypeIndex == MessMenuConstants.mealTypes.indexOf(e))
+                              ? Colors.white
+                              : UltimateTheme.textSub,
+                        ),
+                      )).toList(),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Container(
-                            height: 550,
-                            width: 285,
-                            margin: const EdgeInsets.only(right: 15),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.transparent, width: 0),
-                              color: Colors.grey[200],
-                            ),
-                            child: Column(
-                              children: [
-                                Consumer(
-                                  builder: (_, ref, __) {
-                                    final menuState = ref.watch(menuProvider);
-                                    final weekDay =
-                                        ref.watch(menuProvider.notifier).getWeekDay(menuState.selectedWeekdayIndex);
-                                    final mealType =
-                                        ref.watch(menuProvider.notifier).getMealType(menuState.selectedMealTypeIndex);
-                                    return Column(
-                                      children: [
-                                        Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
-                                          alignment: Alignment.topLeft,
-                                          child: Text(
-                                            "$weekDay's $mealType",
-                                            style: const TextStyle(fontSize: 23, fontFamily: "GoogleSanaFlex"),
-                                          ),
-                                        ),
-                                      ],
-                                    );
-                                  },
+                  ),
+                ),
+
+                // 3. Main Content: Day Selector + Meal List
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+                  sliver: SliverToBoxAdapter(
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Meal Items List
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                "${ref.watch(menuProvider.notifier).getWeekDay(menuState.selectedWeekdayIndex)}'s ${ref.watch(menuProvider.notifier).getMealType(menuState.selectedMealTypeIndex)}",
+                                style: GoogleFonts.spaceGrotesk(
+                                  fontSize: 22,
+                                  fontWeight: FontWeight.bold,
+                                  color: UltimateTheme.textMain,
                                 ),
-                                Consumer(
-                                  builder: (context, ref, child) {
-                                    final menuState = ref.watch(menuProvider);
-                                    final weekDay =
-                                        ref.watch(menuProvider.notifier).getWeekDay(menuState.selectedWeekdayIndex);
-                                    final mealType =
-                                        ref.watch(menuProvider.notifier).getMealType(menuState.selectedMealTypeIndex);
-                                    if (menuState.selectedViewMenu != null) {
-                                      MessMenu? selectedMenu = menuState.messMenus[menuState.selectedViewMenu];
-                                      int length = selectedMenu?.messMenu?[weekDay]?[mealType]?.length ?? 0;
-                                      List controllers = List.generate(length, (index) => TextEditingController());
-                                      return ListView.builder(
-                                        shrinkWrap: true,
-                                        itemCount: length,
-                                        itemBuilder: (context, index) {
-                                          controllers[index].text =
-                                              selectedMenu?.messMenu?[weekDay]?[mealType]?[index] ?? '';
-                                          return length != 0
-                                              ? Container(
-                                                  margin: const EdgeInsets.symmetric(vertical: 10, horizontal: 20),
-                                                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
-                                                  decoration: BoxDecoration(
-                                                    borderRadius: BorderRadius.circular(15),
-                                                    color: Colors.tealAccent.withOpacity(0.4),
-                                                  ),
-                                                  width: double.infinity,
-                                                  child: AutoSizeText(
-                                                    controllers[index].text,
-                                                    style: TextStyle(fontSize: 15, color: Colors.teal.shade900),
-                                                    maxLines: 5,
-                                                    overflow: TextOverflow.ellipsis,
-                                                  ),
-                                                )
-                                              : const Expanded(
-                                                  child: Center(
-                                                    child: Text(
-                                                      'No items today',
-                                                      style: TextStyle(fontSize: 20, color: Colors.black38),
-                                                    ),
-                                                  ),
-                                                );
-                                        },
-                                      );
-                                    } else {
-                                      return const Expanded(
-                                        child: Center(
-                                          child: Text(
-                                            'No menu selected',
-                                            style: TextStyle(fontSize: 20, color: Colors.black38),
-                                          ),
-                                        ),
-                                      );
-                                    }
-                                  },
-                                ),
+                              ).animate().fadeIn().slideX(begin: -0.1),
+                              const SizedBox(height: 16),
+                              if (menuState.selectedViewMenu != null) ...[
+                                ..._buildMealItems(menuState),
+                              ] else ...[
+                                _buildEmptyState("No menu selected"),
                               ],
-                            ),
+                            ],
                           ),
-                          Align(
-                            alignment: Alignment.centerRight,
-                            child: SlideSwitcher(
-                              onSelect: (index) => ref.read(menuProvider.notifier).selectWeekday(index),
-                              containerHeight: 550,
-                              containerWight: 70,
-                              containerBorderRadius: 20,
-                              direction: Axis.vertical,
-                              slidersColors: [Colors.tealAccent.shade700.withOpacity(0.7)],
-                              containerColor: Colors.tealAccent.shade100,
-                              children: MessMenuConstants.weekdays,
+                        ),
+                        const SizedBox(width: 16),
+                        // Vertical Day Selector
+                        SlideSwitcher(
+                          onSelect: (index) => ref.read(menuProvider.notifier).selectWeekday(index),
+                          containerHeight: 350,
+                          containerWight: 60,
+                          containerBorderRadius: 16,
+                          direction: Axis.vertical,
+                          slidersColors: [UltimateTheme.accent],
+                          containerColor: UltimateTheme.accent.withOpacity(0.08),
+                          children: MessMenuConstants.weekdays.map((e) => RotatedBox(
+                            quarterTurns: -1,
+                            child: Text(
+                              (e as Text).data!,
+                              style: GoogleFonts.inter(
+                                fontSize: 11,
+                                fontWeight: FontWeight.bold,
+                                color: (menuState.selectedWeekdayIndex == MessMenuConstants.weekdays.indexOf(e))
+                                    ? Colors.white
+                                    : UltimateTheme.textSub,
+                              ),
                             ),
-                          ),
-                        ],
-                      ),
+                          )).toList(),
+                        ),
+                      ],
                     ),
-                    const SizedBox(height: 30),
-                  ],
-                );
-              }
-            },
-          ),
+                  ),
+                ),
+              ],
+            ),
+    );
+  }
+
+  List<Widget> _buildMealItems(menuState) {
+    final String weekDay = MessMenuConstants.weekdaysNames[menuState.selectedWeekdayIndex];
+    final String mealType = MessMenuConstants.mealTypeNames[menuState.selectedMealTypeIndex];
+    MessMenu? selectedMenu = menuState.messMenus[menuState.selectedViewMenu];
+    List<String>? items = selectedMenu?.messMenu?[weekDay]?[mealType];
+
+    if (items == null || items.isEmpty) {
+      return [_buildEmptyState("No items today")];
+    }
+
+    return items.asMap().entries.map((entry) {
+      final index = entry.key;
+      final item = entry.value;
+      return Container(
+        margin: const EdgeInsets.only(bottom: 12),
+        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 18),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(20),
+          border: Border.all(color: UltimateTheme.primary.withOpacity(0.08)),
+          boxShadow: [
+            BoxShadow(
+              color: UltimateTheme.primary.withOpacity(0.02),
+              blurRadius: 8,
+              offset: const Offset(0, 4),
+            ),
+          ],
         ),
+        child: Row(
+          children: [
+            Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                color: UltimateTheme.primary.withOpacity(0.08),
+                shape: BoxShape.circle,
+              ),
+              child: const Icon(Icons.restaurant_rounded, color: UltimateTheme.primary, size: 16),
+            ),
+            const SizedBox(width: 16),
+            Expanded(
+              child: Text(
+                item,
+                style: GoogleFonts.inter(
+                  fontSize: 15,
+                  fontWeight: FontWeight.w600,
+                  color: UltimateTheme.textMain,
+                ),
+              ),
+            ),
+          ],
+        ),
+      ).animate().fadeIn(delay: (index * 50).ms).slideX(begin: 0.1);
+    }).toList();
+  }
+
+  Widget _buildEmptyState(String message) {
+    return Container(
+      height: 200,
+      width: double.infinity,
+      decoration: BoxDecoration(
+        color: UltimateTheme.textSub.withOpacity(0.05),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: UltimateTheme.textSub.withOpacity(0.1), style: BorderStyle.none),
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(Icons.restaurant_menu_rounded, size: 48, color: UltimateTheme.textSub.withOpacity(0.3)),
+          const SizedBox(height: 12),
+          Text(message, style: GoogleFonts.inter(color: UltimateTheme.textSub)),
+        ],
       ),
     );
   }

@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/link_provider.dart';
 import 'package:url_launcher/url_launcher_string.dart';
@@ -37,60 +40,108 @@ class _LinksPageState extends ConsumerState<LinksPage> {
     final currentUserRole = ref.watch(authProvider).currentUserRole;
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Quick Links'),
-      ),
+      backgroundColor: Colors.transparent,
       floatingActionButton: currentUserRole == 'admin' || currentUserRole == 'faculty'
           ? FloatingActionButton(
-              onPressed: () {
-                _showAddLinkDialog(context, ref);
-              },
-              child: const Icon(Icons.add),
-            )
+              onPressed: () => _showAddLinkDialog(context, ref),
+              backgroundColor: UltimateTheme.primary,
+              child: const Icon(Icons.add, color: Colors.white),
+            ).animate().scale(delay: 400.ms, curve: Curves.easeOutBack)
           : null,
       body: linkState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : linkState.links.isEmpty
-              ? const Center(child: Text("No links found"))
-              : GridView.builder(
-                  padding: const EdgeInsets.all(16),
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    childAspectRatio: 1.5,
-                    crossAxisSpacing: 16,
-                    mainAxisSpacing: 16,
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.link_off_rounded, size: 64, color: UltimateTheme.textSub.withOpacity(0.5)),
+                      const SizedBox(height: 16),
+                      Text("No links found", style: GoogleFonts.inter(color: UltimateTheme.textSub)),
+                    ],
                   ),
-                  itemCount: linkState.links.length,
-                  itemBuilder: (context, index) {
-                    final link = linkState.links[index];
-                    return InkWell(
-                      onTap: () => _launchUrl(link.url),
-                      child: Card(
-                        elevation: 4,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-                        color: Colors.white,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            const Icon(Icons.link, size: 40, color: Colors.blue),
-                            const SizedBox(height: 8),
-                            Text(
-                              link.title,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              link.category,
-                              style: const TextStyle(fontSize: 12, color: Colors.grey),
-                            ),
-                          ],
+                )
+              : CustomScrollView(
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+                      sliver: SliverGrid(
+                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
+                          childAspectRatio: 1.1,
+                        ),
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final link = linkState.links[index];
+                            return _buildLinkCard(link, index);
+                          },
+                          childCount: linkState.links.length,
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
     );
+  }
+
+  Widget _buildLinkCard(link, int index) {
+    return InkWell(
+      onTap: () => _launchUrl(link.url),
+      borderRadius: BorderRadius.circular(24),
+      child: Container(
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: UltimateTheme.primary.withOpacity(0.08)),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.02),
+              blurRadius: 10,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Container(
+              padding: const EdgeInsets.all(10),
+              decoration: BoxDecoration(
+                color: UltimateTheme.primary.withOpacity(0.08),
+                borderRadius: BorderRadius.circular(16),
+              ),
+              child: const Icon(Icons.link_rounded, color: UltimateTheme.primary, size: 24),
+            ),
+            const Spacer(),
+            Text(
+              link.title,
+              maxLines: 2,
+              overflow: TextOverflow.ellipsis,
+              style: GoogleFonts.spaceGrotesk(
+                fontWeight: FontWeight.bold,
+                fontSize: 15,
+                color: UltimateTheme.textMain,
+                height: 1.1,
+              ),
+            ),
+            const SizedBox(height: 4),
+            Text(
+              link.category.toUpperCase(),
+              style: GoogleFonts.spaceGrotesk(
+                fontSize: 10,
+                fontWeight: FontWeight.w800,
+                color: UltimateTheme.accent,
+                letterSpacing: 1.1,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ).animate().fadeIn(delay: (index * 50).ms).scale(begin: const Offset(0.9, 0.9), curve: Curves.easeOutQuad);
   }
 
   void _showAddLinkDialog(BuildContext context, WidgetRef ref) {

@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
+import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/provider/timetable_provider.dart';
 
 class TimetableEditor extends ConsumerStatefulWidget {
@@ -23,41 +24,42 @@ class _TimetableEditorState extends ConsumerState<TimetableEditor> {
         DeviceOrientation.landscapeLeft,
       ]);
     });
-    return ResponsiveScaledBox(
-      width: 411,
-      child: Scaffold(
-          resizeToAvoidBottomInset: false,
-          floatingActionButton: SizedBox(
-            width: 30,
-            height: 30,
-            child: FittedBox(
-              child: FloatingActionButton(
-                onPressed: () async {
-                  await ref.read(timetableProvider.notifier).addTimetable();
-                  if (context.mounted) {
-                    context.pop();
-                  }
-                },
-                child: const Icon(Icons.add),
-              ),
-            ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      resizeToAvoidBottomInset: false,
+      floatingActionButton: FloatingActionButton(
+        onPressed: () async {
+          await ref.read(timetableProvider.notifier).addTimetable();
+          if (context.mounted) {
+            context.pop();
+          }
+        },
+        backgroundColor: UltimateTheme.primary,
+        child: const Icon(Icons.save_rounded, color: Colors.white),
+      ).animate().scale(delay: 400.ms, curve: Curves.easeOutBack),
+      body: Container(
+        height: height,
+        width: width,
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: [UltimateTheme.primary.withOpacity(0.05), Colors.white],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
           ),
-          body: SizedBox(
-            height: height,
-            width: width,
-            child: InteractiveViewer(
-              boundaryMargin: const EdgeInsets.all(20),
-              constrained: true,
-              child: Container(
-                width: 90,
-                padding: const EdgeInsets.all(10),
-                child: Consumer(
-                  builder: (_, ref, __) => ref.read(timetableProvider.notifier).buildTimetableTiles(context),
-                ),
-              ),
+        ),
+        child: InteractiveViewer(
+          boundaryMargin: const EdgeInsets.all(40),
+          constrained: false,
+          minScale: 0.5,
+          maxScale: 2.5,
+          child: Padding(
+            padding: const EdgeInsets.all(24),
+            child: Consumer(
+              builder: (_, ref, __) => ref.read(timetableProvider.notifier).buildTimetableTiles(context),
             ),
           ),
         ),
+      ),
     );
   }
 

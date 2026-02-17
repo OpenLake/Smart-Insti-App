@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/complaint_provider.dart';
 import '../../components/borderless_button.dart';
@@ -26,13 +29,13 @@ class _ComplaintPageState extends ConsumerState<ComplaintPage> {
   Color _getStatusColor(String status) {
     switch (status) {
       case 'Resolved':
-        return Colors.green;
+        return UltimateTheme.accent;
       case 'Rejected':
-        return Colors.red;
+        return Colors.redAccent;
       case 'In Progress':
-        return Colors.orange;
+        return UltimateTheme.primary;
       default:
-        return Colors.grey;
+        return UltimateTheme.textSub;
     }
   }
 
@@ -41,92 +44,134 @@ class _ComplaintPageState extends ConsumerState<ComplaintPage> {
     final complaintState = ref.watch(complaintProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Complaints & Feedback'),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _showAddComplaintDialog(context, ref);
-        },
-        child: const Icon(Icons.add),
-      ),
+      backgroundColor: Colors.transparent,
+      floatingActionButton: FloatingActionButton.extended(
+        onPressed: () => _showAddComplaintDialog(context, ref),
+        backgroundColor: UltimateTheme.primary,
+        icon: const Icon(Icons.rate_review_rounded, color: Colors.white),
+        label: Text("New Record", style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, color: Colors.white)),
+      ).animate().scale(delay: 400.ms, curve: Curves.easeOutBack),
       body: complaintState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : complaintState.complaints.isEmpty
-              ? const Center(child: Text("No complaints found"))
-              : ListView.builder(
-                  itemCount: complaintState.complaints.length,
-                  itemBuilder: (context, index) {
-                    final complaint = complaintState.complaints[index];
-                    return Card(
-                      margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      child: Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                Chip(
-                                  label: Text(complaint.category, style: const TextStyle(fontSize: 10)),
-                                  visualDensity: VisualDensity.compact,
-                                ),
-                                Container(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                                  decoration: BoxDecoration(
-                                    color: _getStatusColor(complaint.status).withOpacity(0.2),
-                                    borderRadius: BorderRadius.circular(12),
-                                    border: Border.all(color: _getStatusColor(complaint.status)),
-                                  ),
-                                  child: Text(
-                                    complaint.status,
-                                    style: TextStyle(
-                                      color: _getStatusColor(complaint.status),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              complaint.title,
-                              style: const TextStyle(
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                            const SizedBox(height: 4),
-                            Text(
-                              complaint.description,
-                              style: const TextStyle(fontSize: 14),
-                            ),
-                            const SizedBox(height: 8),
-                            Text(
-                              "By: ${complaint.createdByName ?? 'Unknown'}",
-                              style: const TextStyle(fontSize: 12, color: Colors.grey),
-                            ),
-                            const Divider(),
-                            Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                IconButton(
-                                  icon: const Icon(Icons.thumb_up_alt_outlined),
-                                  onPressed: () {
-                                    ref.read(complaintProvider.notifier).upvoteComplaint(complaint.id);
-                                  },
-                                ),
-                                Text("${complaint.upvotes.length}"),
-                              ],
-                            ),
-                          ],
+              ? Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Icon(Icons.assignment_turned_in_rounded, size: 64, color: UltimateTheme.textSub.withOpacity(0.5)),
+                      const SizedBox(height: 16),
+                      Text("Clear as a bell! No complaints.", style: GoogleFonts.inter(color: UltimateTheme.textSub)),
+                    ],
+                  ),
+                )
+              : CustomScrollView(
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+                      sliver: SliverList(
+                        delegate: SliverChildBuilderDelegate(
+                          (context, index) {
+                            final complaint = complaintState.complaints[index];
+                            return _buildComplaintCard(complaint, index);
+                          },
+                          childCount: complaintState.complaints.length,
                         ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
+    );
+  }
+
+  Widget _buildComplaintCard(Complaint complaint, int index) {
+    final statusColor = _getStatusColor(complaint.status);
+    return Container(
+      margin: const EdgeInsets.only(bottom: 16),
+      padding: const EdgeInsets.all(24),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(28),
+        border: Border.all(color: UltimateTheme.primary.withOpacity(0.08)),
+        boxShadow: [
+          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10)),
+        ],
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: UltimateTheme.primary.withOpacity(0.08),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  complaint.category.toUpperCase(),
+                  style: GoogleFonts.spaceGrotesk(fontSize: 10, fontWeight: FontWeight.bold, color: UltimateTheme.primary),
+                ),
+              ),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                decoration: BoxDecoration(
+                  color: statusColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  complaint.status,
+                  style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: statusColor),
+                ),
+              ),
+            ],
+          ),
+          const SizedBox(height: 16),
+          Text(
+            complaint.title,
+            style: GoogleFonts.spaceGrotesk(fontSize: 18, fontWeight: FontWeight.bold, color: UltimateTheme.textMain),
+          ),
+          const SizedBox(height: 8),
+          Text(
+            complaint.description,
+            style: GoogleFonts.inter(color: UltimateTheme.textSub, height: 1.5, fontSize: 14),
+          ),
+          const SizedBox(height: 20),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("SUBMITTED BY", style: GoogleFonts.spaceGrotesk(fontSize: 9, fontWeight: FontWeight.bold, color: UltimateTheme.textSub, letterSpacing: 1)),
+                  Text(complaint.createdByName ?? 'Anonymous', style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: UltimateTheme.textMain)),
+                ],
+              ),
+              const Spacer(),
+              Container(
+                padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                decoration: BoxDecoration(
+                  color: UltimateTheme.primary.withOpacity(0.05),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Row(
+                  children: [
+                    IconButton(
+                      icon: const Icon(Icons.keyboard_arrow_up_rounded, color: UltimateTheme.primary),
+                      onPressed: () => ref.read(complaintProvider.notifier).upvoteComplaint(complaint.id),
+                      visualDensity: VisualDensity.compact,
+                    ),
+                    Text(
+                      "${complaint.upvotes.length}",
+                      style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, color: UltimateTheme.primary),
+                    ),
+                    const SizedBox(width: 12),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
+      ).animate().fadeIn(delay: (index * 50).ms).slideY(begin: 0.1),
     );
   }
 
@@ -134,31 +179,39 @@ class _ComplaintPageState extends ConsumerState<ComplaintPage> {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('New Complaint'),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
+        contentPadding: const EdgeInsets.fromLTRB(24, 20, 24, 24),
+        title: Text('New Complaint', style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold)),
         content: SingleChildScrollView(
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
               MaterialTextFormField(
                 controller: ref.read(complaintProvider.notifier).titleController,
-                hintText: 'Title',
+                hintText: 'What\'s the issue?',
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
               MaterialTextFormField(
                 controller: ref.read(complaintProvider.notifier).descriptionController,
-                hintText: 'Description',
+                hintText: 'Provide details...',
                 maxLines: 4,
               ),
-              const SizedBox(height: 10),
+              const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: "Other",
                 items: ["Mess", "Hostel Infrastructure", "Academic", "Other"]
-                    .map((e) => DropdownMenuItem(value: e, child: Text(e)))
+                    .map((e) => DropdownMenuItem(value: e, child: Text(e, style: GoogleFonts.inter(fontSize: 14))))
                     .toList(),
                 onChanged: (val) {
                   if (val != null) ref.read(complaintProvider.notifier).updateCategory(val);
                 },
-                decoration: const InputDecoration(labelText: "Category"),
+                decoration: InputDecoration(
+                  labelText: "Category",
+                  labelStyle: GoogleFonts.inter(color: UltimateTheme.textSub),
+                  border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                  filled: true,
+                  fillColor: Colors.white,
+                ),
               ),
             ],
           ),
@@ -167,8 +220,8 @@ class _ComplaintPageState extends ConsumerState<ComplaintPage> {
           BorderlessButton(
             onPressed: () => context.pop(),
             label: const Text('Cancel'),
-            backgroundColor: Colors.red.shade100,
-            splashColor: Colors.red.shade200,
+            backgroundColor: UltimateTheme.textSub.withOpacity(0.05),
+            splashColor: UltimateTheme.textSub,
           ),
           BorderlessButton(
             onPressed: () {
@@ -176,8 +229,8 @@ class _ComplaintPageState extends ConsumerState<ComplaintPage> {
               context.pop();
             },
             label: const Text('Submit'),
-            backgroundColor: Colors.green.shade100,
-            splashColor: Colors.green.shade200,
+            backgroundColor: UltimateTheme.primary.withOpacity(0.1),
+            splashColor: UltimateTheme.primary,
           ),
         ],
       ),
