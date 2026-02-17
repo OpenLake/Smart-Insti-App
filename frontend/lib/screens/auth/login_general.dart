@@ -7,6 +7,7 @@ import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/components/material_otp_box.dart';
 import 'package:smart_insti_app/constants/constants.dart';
+import 'package:smart_insti_app/components/otp_input_row.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
 
 class GeneralLogin extends ConsumerWidget {
@@ -106,74 +107,9 @@ class GeneralLogin extends ConsumerWidget {
                                       child: Column(
                                         children: [
                                           const SizedBox(height: 20),
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.spaceBetween,
-                                            children: [
-                                              MaterialOTPBox(
-                                                controller: ref
-                                                    .watch(authProvider)
-                                                    .otpDigitControllers[0],
-                                                focusNode: ref
-                                                    .watch(authProvider)
-                                                    .otpFocusNodes[0],
-                                                hintText: 'O',
-                                              ),
-                                              MaterialOTPBox(
-                                                controller: ref
-                                                    .watch(authProvider)
-                                                    .otpDigitControllers[1],
-                                                focusNode: ref
-                                                    .watch(authProvider)
-                                                    .otpFocusNodes[1],
-                                                hintText: 'T',
-                                                onChanged: (value) {
-                                                  if (value != null &&
-                                                      value.isEmpty) {
-                                                    ref
-                                                        .watch(authProvider)
-                                                        .otpFocusNodes[0]
-                                                        .requestFocus();
-                                                  }
-                                                },
-                                              ),
-                                              MaterialOTPBox(
-                                                controller: ref
-                                                    .watch(authProvider)
-                                                    .otpDigitControllers[2],
-                                                focusNode: ref
-                                                    .watch(authProvider)
-                                                    .otpFocusNodes[2],
-                                                hintText: 'P',
-                                                onChanged: (value) {
-                                                  if (value != null &&
-                                                      value.isEmpty) {
-                                                    ref
-                                                        .watch(authProvider)
-                                                        .otpFocusNodes[1]
-                                                        .requestFocus();
-                                                  }
-                                                },
-                                              ),
-                                              MaterialOTPBox(
-                                                controller: ref
-                                                    .watch(authProvider)
-                                                    .otpDigitControllers[3],
-                                                focusNode: ref
-                                                    .watch(authProvider)
-                                                    .otpFocusNodes[3],
-                                                hintText: ':)',
-                                                onChanged: (value) {
-                                                  if (value != null &&
-                                                      value.isEmpty) {
-                                                    ref
-                                                        .watch(authProvider)
-                                                        .otpFocusNodes[2]
-                                                        .requestFocus();
-                                                  }
-                                                },
-                                              )
-                                            ],
+                                          OtpInputRow(
+                                            controllers: ref.watch(authProvider).otpDigitControllers,
+                                            focusNodes: ref.watch(authProvider).otpFocusNodes,
                                           ),
                                         ],
                                       ),
@@ -491,9 +427,83 @@ class GeneralLogin extends ConsumerWidget {
                                   ),
                                 ),
                               ),
+
                               onTap: () {
                                  context.go('/');
                               },
+                            ),
+                            const SizedBox(height: 20),
+                            Container(
+                              decoration: BoxDecoration(
+                                color: Colors.purpleAccent.withOpacity(0.1),
+                                borderRadius: BorderRadius.circular(20),
+                                border: Border.all(
+                                  color: Colors.purpleAccent.withOpacity(0.3),
+                                ),
+                              ),
+                              child: Material(
+                                color: Colors.transparent,
+                                child: InkWell(
+                                  borderRadius: BorderRadius.circular(20),
+                                  onTap: (ref.watch(authProvider).loginProgressState ==
+                                          LoadingState.progress)
+                                      ? null
+                                      : () async {
+                                          final success = await ref
+                                              .read(authProvider.notifier)
+                                              .loginDemoStudent();
+                                          if (context.mounted) {
+                                            if (success) {
+                                              ref
+                                                  .read(authProvider.notifier)
+                                                  .clearControllers();
+                                              context.go('/');
+                                            } else {
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(
+                                                const SnackBar(
+                                                  content: Text(
+                                                      'Demo Login Failed. Please try again.'),
+                                                  backgroundColor: Colors.red,
+                                                ),
+                                              );
+                                            }
+                                          }
+                                        },
+                                  child: Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 20, vertical: 10),
+                                    child: Row(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        if (ref
+                                                .watch(authProvider)
+                                                .loginProgressState ==
+                                            LoadingState.progress)
+                                          const Padding(
+                                            padding: EdgeInsets.only(right: 10),
+                                            child: SizedBox(
+                                              height: 16,
+                                              width: 16,
+                                              child: CircularProgressIndicator(
+                                                strokeWidth: 2,
+                                                color: Colors.purple,
+                                              ),
+                                            ),
+                                          ),
+                                        const Text(
+                                          "Demo Student Login",
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.purple,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ),
                           ],
                         ),
