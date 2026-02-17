@@ -1,8 +1,10 @@
 import 'package:animated_text_kit/animated_text_kit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:go_router/go_router.dart';
-import 'package:responsive_framework/responsive_framework.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/components/collapsing_app_bar.dart';
 import 'package:smart_insti_app/provider/admin_provider.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
@@ -15,139 +17,163 @@ class AdminHome extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(adminProvider.notifier).buildMenuTiles(context);
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
-      }
-    });
+    final adminState = ref.watch(adminProvider);
+    final user = ref.watch(authProvider).currentUser;
+    String name = "Administrator";
+    if (user != null && user is Admin) {
+      name = user.name.split(' ').first;
+    }
 
-    return ResponsiveScaledBox(
-      width: 411,
-      child: Scaffold(
-        body: NestedScrollView(
-          headerSliverBuilder: (context, innerBoxIsScrolled) => [
-            CollapsingAppBar(
-              body: Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Welcome',
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 45,
-                        fontFamily: "RobotoFlex",
-                      ),
+    return Scaffold(
+      backgroundColor: Colors.white,
+      body: CustomScrollView(
+        slivers: [
+          // 1. Admin Hero Block
+          SliverToBoxAdapter(
+            child: Container(
+              margin: const EdgeInsets.fromLTRB(20, 20, 20, 0),
+              height: 220,
+              decoration: UltimateTheme.brandCardDecoration,
+              child: Stack(
+                children: [
+                  Positioned(
+                    right: -20,
+                    top: -20,
+                    child: Opacity(
+                      opacity: 0.1,
+                      child: const Icon(Icons.admin_panel_settings_rounded, color: Colors.white, size: 240),
                     ),
-                    Consumer(
-                      builder: (_, ref, __) {
-                        if (ref.read(authProvider).currentUser != null) {
-                          Admin admin = ref.read(authProvider).currentUser as Admin;
-                          return AnimatedTextKit(
-                            repeatForever: true,
-                            pause: const Duration(milliseconds: 1500),
-                            animatedTexts: [
-                              TyperAnimatedText(
-                                'Admin',
-                                textStyle: const TextStyle(fontSize: 45),
-                                speed: const Duration(milliseconds: 300),
-                              ),
-                              TyperAnimatedText(
-                                admin.name,
-                                textStyle: const TextStyle(fontSize: 45, overflow: TextOverflow.ellipsis),
-                                speed: const Duration(milliseconds: 300),
-                              ),
-                            ],
-                          );
-                        } else {
-                          return const Text('Admin', style: TextStyle(fontSize: 45, fontFamily: "Jost"));
-                        }
-                      },
-                    )
-                  ],
-                ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(32.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Text(
+                          "Restricted Access",
+                          style: GoogleFonts.inter(color: Colors.white70, fontSize: 12, fontWeight: FontWeight.bold, letterSpacing: 1),
+                        ),
+                        Text(
+                          "Welcome back,\n$name",
+                          style: GoogleFonts.spaceGrotesk(
+                            color: Colors.white,
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            height: 1.1,
+                          ),
+                        ),
+                        const SizedBox(height: 16),
+                        Row(
+                          children: [
+                            _buildAdminStatBadge("System Active", Icons.check_circle_rounded),
+                            const SizedBox(width: 12),
+                            _buildAdminStatBadge("All Nodes Up", Icons.lan_rounded),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-              bottom: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 10),
-                child: Consumer(
-                  builder: (_, ref, ___) {
-                    if (ref.watch(adminProvider).toggleSearch) {
-                      return SearchBar(
+            ).animate().fadeIn(duration: 600.ms).scale(begin: const Offset(0.95, 0.95)),
+          ),
+
+          // 2. Search & Tools Bar
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      height: 54,
+                      decoration: BoxDecoration(
+                        color: UltimateTheme.primary.withOpacity(0.05),
+                        borderRadius: BorderRadius.circular(16),
+                        border: Border.all(color: UltimateTheme.primary.withOpacity(0.1)),
+                      ),
+                      child: TextField(
                         controller: ref.read(adminProvider).searchController,
                         onChanged: (value) => ref.read(adminProvider.notifier).buildMenuTiles(context),
-                        leading: IconButton(
-                          icon: const Icon(Icons.arrow_back),
-                          onPressed: () {
-                            ref.read(adminProvider).searchController.clear();
-                            ref.read(adminProvider.notifier).toggleSearchBar();
-                            ref.read(adminProvider.notifier).buildMenuTiles(context);
-                          },
+                        decoration: InputDecoration(
+                          hintText: "Search controls...",
+                          hintStyle: GoogleFonts.inter(color: UltimateTheme.textSub, fontSize: 14),
+                          prefixIcon: Icon(Icons.search_rounded, color: UltimateTheme.primary),
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.symmetric(vertical: 16),
                         ),
-                        shadowColor: MaterialStateProperty.all(Colors.transparent),
-                      );
-                    } else {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.end,
-                        children: [
-                          IconButton(
-                              iconSize: 30,
-                              onPressed: () => ref.read(adminProvider.notifier).toggleSearchBar(),
-                              icon: const Icon(Icons.search)),
-                          PopupMenuButton(
-                            itemBuilder: (context) {
-                              return [
-                                PopupMenuItem(
-                                  value: "profile",
-                                  child: const Text("Profile"),
-                                  onTap: () => context.push('/admin/profile'),
-                                ),
-                                PopupMenuItem(
-                                  value: "about",
-                                  child: const Text("About"),
-                                  onTap: () => showAboutDialog(
-                                    context: context,
-                                    children: [
-                                      const Text("Smart Insti App"),
-                                      const Text(
-                                          "This app aims to solve the day-to-day problems that students and faculty face in IIT Bhilai and aims to consolidate a lot of useful applications into single app. This could include features like Time Table, Classroom Vacancy, Lost and Found, Chatrooms on various topics like Internet Issues. It could also have a broadcast feature which would be very useful in emergency situations."),
-                                    ],
-                                  ),
-                                ),
-                                PopupMenuItem(
-                                  value: "logout",
-                                  child: const Text("Log Out"),
-                                  onTap: () {
-                                    ref.read(authServiceProvider).clearCredentials();
-                                    ref.read(authProvider.notifier).clearCurrentUser();
-                                    context.go('/');
-                                  },
-                                ),
-                              ];
-                            },
-                          ),
-                        ],
-                      );
-                    }
-                  },
-                ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 12),
+                  _buildAdminActionIcon(Icons.logout_rounded, () {
+                    ref.read(authServiceProvider).clearCredentials();
+                    ref.read(authProvider.notifier).clearCurrentUser();
+                    context.go('/');
+                  }),
+                ],
               ),
-            )
-          ],
-          body: Container(
-            color: Colors.white,
-            child: Consumer(
-              builder: (_, ref, ___) {
-                return GridView.count(
-                  padding: const EdgeInsets.all(10),
-                  crossAxisCount: 2,
-                  children: ref.watch(adminProvider).menuTiles,
-                );
-              },
             ),
           ),
+
+          // 3. Management Bento Grid
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(20, 24, 20, 100),
+            sliver: SliverGrid(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 2,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1.0,
+              ),
+              delegate: SliverChildBuilderDelegate(
+                (context, index) {
+                  return ref.watch(adminProvider).menuTiles[index];
+                },
+                childCount: ref.watch(adminProvider).menuTiles.length,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdminStatBadge(String label, IconData icon) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.15),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(icon, color: Colors.white, size: 14),
+          const SizedBox(width: 6),
+          Text(
+            label,
+            style: GoogleFonts.inter(color: Colors.white, fontSize: 10, fontWeight: FontWeight.w600),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildAdminActionIcon(IconData icon, VoidCallback onTap) {
+    return InkWell(
+      onTap: onTap,
+      borderRadius: BorderRadius.circular(16),
+      child: Container(
+        height: 54,
+        width: 54,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(16),
+          border: Border.all(color: Colors.black.withOpacity(0.08)),
         ),
+        child: Icon(icon, color: UltimateTheme.textMain, size: 24),
       ),
     );
   }

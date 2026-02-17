@@ -164,6 +164,14 @@ class MessMenuConstants {
     "Fri": "Friday",
     "Sat": "Saturday",
   };
+
+  static final List<String> weekdaysNames = [
+    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+  ];
+
+  static final List<String> mealTypeNames = [
+    "Breakfast", "Lunch", "Snacks", "Dinner"
+  ];
 }
 
 class Validators {
