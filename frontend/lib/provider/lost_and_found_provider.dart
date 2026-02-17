@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:typed_data';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:image_cropper/image_cropper.dart';
@@ -194,8 +195,8 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
     state = state.copyWith(lostAndFoundItemList: items, loadingState: LoadingState.success);
   }
 
-  Image imageFromBase64String(String base64String) {
-    return Image.memory(base64Decode(base64String));
+  Uint8List imageFromBase64String(String base64String) {
+    return base64Decode(base64String);
   }
 
   Future<void> deleteItem(String id) async {

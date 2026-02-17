@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/provider/room_provider.dart';
+import 'package:smart_insti_app/theme/ultimate_theme.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../components/menu_tile.dart';
 import '../models/student.dart';
 import '../models/faculty.dart';
@@ -55,84 +57,83 @@ class UserProvider extends StateNotifier<HomeState> {
   void buildMenuTiles(BuildContext context) {
     List<MenuTile> menuTiles = [
       MenuTile(
-        title: 'Room\nVacancy',
+        title: 'Room Vacancy',
         onTap: () => context.push('/user_home/room_vacancy'),
         body: [
-          const SizedBox(height: 5),
           Consumer(
             builder: (_, ref, __) => Text(
               '${ref.watch(roomProvider).roomList.where((element) => element.vacant).length} Vacant',
               textAlign: TextAlign.center,
-              style: const TextStyle(fontSize: 14),
+              style: GoogleFonts.inter(fontSize: 11, color: UltimateTheme.primary, fontWeight: FontWeight.bold),
             ),
           ),
         ],
-        icon: Icons.add,
-        primaryColor: Colors.pinkAccent.shade100,
-        secondaryColor: Colors.pinkAccent.shade200,
+        icon: Icons.meeting_room_rounded,
+        primaryColor: UltimateTheme.primary,
+        secondaryColor: UltimateTheme.primary.withOpacity(0.2),
       ),
       MenuTile(
-        title: "Lost\n&\nFound",
+        title: "Lost & Found",
         onTap: () => context.push('/user_home/lost_and_found'),
-        primaryColor: Colors.orangeAccent.shade100,
-        secondaryColor: Colors.orangeAccent.shade200,
-        icon: Icons.search,
+        primaryColor: UltimateTheme.accent,
+        secondaryColor: UltimateTheme.accent.withOpacity(0.2),
+        icon: Icons.search_rounded,
       ),
       MenuTile(
         title: "Timetables",
         onTap: () => context.push('/user_home/timetables'),
-        primaryColor: Colors.blueAccent.shade100,
-        secondaryColor: Colors.blueAccent.shade200,
-        icon: Icons.edit,
+        primaryColor: UltimateTheme.navy,
+        secondaryColor: UltimateTheme.navy.withOpacity(0.2),
+        icon: Icons.calendar_view_week_rounded,
       ),
       MenuTile(
         title: 'Broadcast',
         onTap: () => context.push('/user_home/broadcast'),
-        icon: Icons.announcement,
-        primaryColor: Colors.greenAccent.shade100,
-        secondaryColor: Colors.greenAccent.shade200,
+        icon: Icons.campaign_rounded,
+        primaryColor: UltimateTheme.primary,
+        secondaryColor: UltimateTheme.primary.withOpacity(0.2),
       ),
       MenuTile(
-        title: "Chat\nRoom",
+        title: "Chat Room",
         onTap: () => context.push('/user_home/chat_room'),
-        primaryColor: Colors.redAccent.shade100,
-        secondaryColor: Colors.redAccent.shade200,
-        icon: Icons.search,
+        primaryColor: UltimateTheme.accent,
+        secondaryColor: UltimateTheme.accent.withOpacity(0.2),
+        icon: Icons.forum_rounded,
       ),
       MenuTile(
-        title: "Mess\nMenu",
+        title: "Mess Menu",
         onTap: () => context.push('/user_home/mess_menu'),
-        primaryColor: Colors.purpleAccent.shade100,
-        secondaryColor: Colors.purpleAccent.shade200,
-        icon: Icons.restaurant,
+        primaryColor: UltimateTheme.navy,
+        secondaryColor: UltimateTheme.navy.withOpacity(0.2),
+        icon: Icons.restaurant_menu_rounded,
       ),
       MenuTile(
-        title: "Events\n& Calendar",
+        title: "Events",
         onTap: () => context.push('/user_home/events'),
-        primaryColor: Colors.cyanAccent.shade100,
-        secondaryColor: Colors.cyanAccent.shade200,
-        icon: Icons.calendar_today,
+        primaryColor: UltimateTheme.primary,
+        secondaryColor: UltimateTheme.primary.withOpacity(0.2),
+        icon: Icons.event_rounded,
       ),
       MenuTile(
-        title: "Feed\n& News",
+        title: "Buzz & News",
         onTap: () => context.push('/user_home/news'),
-        primaryColor: Colors.indigoAccent.shade100,
-        secondaryColor: Colors.indigoAccent.shade200,
-        icon: Icons.article,
+        primaryColor: UltimateTheme.accent,
+        secondaryColor: UltimateTheme.accent.withOpacity(0.2),
+        icon: Icons.article_rounded,
       ),
       MenuTile(
-        title: "Complaints\nPortal",
+        title: "Complaints",
         onTap: () => context.push('/user_home/complaints'),
-        primaryColor: Colors.brown.shade100,
-        secondaryColor: Colors.brown.shade200,
-        icon: Icons.feedback,
+        primaryColor: UltimateTheme.navy,
+        secondaryColor: UltimateTheme.navy.withOpacity(0.2),
+        icon: Icons.report_problem_rounded,
       ),
       MenuTile(
-        title: "Quick\nLinks",
+        title: "Quick Links",
         onTap: () => context.push('/user_home/links'),
-        primaryColor: Colors.yellowAccent.shade100,
-        secondaryColor: Colors.yellowAccent.shade700,
-        icon: Icons.link,
+        primaryColor: UltimateTheme.primary,
+        secondaryColor: UltimateTheme.primary.withOpacity(0.2),
+        icon: Icons.link_rounded,
       ),
     ];
     String query = state.searchController.text;

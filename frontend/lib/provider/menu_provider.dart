@@ -7,6 +7,8 @@ import 'package:smart_insti_app/models/mess_menu.dart';
 import 'package:smart_insti_app/repositories/mess_menu_repository.dart';
 import '../constants/constants.dart';
 import 'dart:io';
+import 'package:flutter/services.dart' show rootBundle;
+import 'package:smart_insti_app/services/menu_parser.dart';
 
 final menuProvider = StateNotifierProvider<MenuStateNotifier, MenuState>((ref) => MenuStateNotifier(ref));
 
@@ -150,7 +152,7 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
 
   void setSelectViewMenu(String? value) {
     if (value != null) {
-      state = state.copyWith(selectedViewMenu: value, currentMenu: state.messMenus[value!]!);
+      state = state.copyWith(selectedViewMenu: value, currentMenu: state.messMenus[value]!);
     }
   }
 
@@ -218,13 +220,25 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
 
   void loadMenus() async {
     state = state.copyWith(loadingState: LoadingState.progress);
+    
+    // 1. Load from Repository
     final messMenus = await _messMenuRepository.getMessMenu();
-
     Map<String, MessMenu> menuDictionary = {};
     for (var menu in messMenus) {
       menuDictionary[menu.kitchenName] = menu;
     }
-    const selectedViewMenu = null;
+
+    // 2. Load Local Asset (Jan Menu)
+    try {
+      String tsvContent = await rootBundle.loadString('assets/menu_jan.tsv');
+      MessMenu localMenu = MenuParser.parseTsv(tsvContent);
+      localMenu.kitchenName = "Jan Menu (TSV)"; // Distinct name
+      menuDictionary[localMenu.kitchenName] = localMenu;
+    } catch (e) {
+      _logger.e("Failed to load local menu asset: $e");
+    }
+
+    String? selectedViewMenu = menuDictionary.isNotEmpty ? menuDictionary.keys.first : null;
     state.kitchenNameController.clear();
 
     state = state.copyWith(
