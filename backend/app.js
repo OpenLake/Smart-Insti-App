@@ -29,6 +29,21 @@ import eventResource from "./resources/events/eventResource.js";
 import complaintResource from "./resources/complaints/complaintResource.js";
 import linkResource from "./resources/links/linkResource.js";
 import newsResource from "./resources/news/newsResource.js";
+import chatResource from "./resources/chat/chatResource.js";
+import listingResource from "./resources/marketplace/listingResource.js";
+import orderResource from "./resources/marketplace/orderResource.js";
+import announcementResource from "./resources/announcement/announcementResource.js";
+import pollResource from "./resources/polls/pollResource.js";
+import resourceResource from "./resources/study_material/resourceResource.js";
+import clubResource from "./resources/clubs/clubResource.js";
+import attendanceResource from "./resources/attendance/attendanceResource.js";
+import confessionResource from "./resources/confessions/confessionResource.js";
+import notificationResource from "./resources/notifications/notificationResource.js";
+import alumniResource from "./resources/alumni/alumniResource.js";
+import busRouteResource from "./resources/transport/busRouteResource.js";
+import leaderboardResource from "./resources/gamification/leaderboardResource.js";
+import analyticsResource from "./resources/admin/analyticsResource.js";
+import searchResource from "./resources/search/searchResource.js";
 import "./models/student.js";
 import "./models/skill.js";
 import "./models/achievement.js";
@@ -36,6 +51,8 @@ import "./models/event.js";
 import "./models/complaint.js";
 import "./models/link.js";
 import "./models/post.js";
+import "./models/attendance.js";
+import "./models/poll.js";
 
 const PORT = `${process.env.PORT || 3000}`;
 const app = express();
@@ -74,6 +91,27 @@ app.use("/events", eventResource);
 app.use("/complaints", complaintResource);
 app.use("/links", linkResource);
 app.use("/news", newsResource);
+app.use("/chat", chatResource);
+app.use("/marketplace/listings", listingResource);
+app.use("/marketplace/orders", orderResource);
+app.use("/announcements", announcementResource);
+app.use("/polls", pollResource);
+app.use("/resources", resourceResource);
+app.use("/clubs", clubResource);
+app.use("/attendance", attendanceResource);
+app.use("/confessions", confessionResource);
+app.use("/notifications", notificationResource);
+app.use("/alumni", alumniResource);
+app.use("/transport", busRouteResource);
+app.use("/leaderboard", leaderboardResource);
+app.use("/analytics", analyticsResource);
+app.use("/search", searchResource);
+
+
+
+
+
+
 
 app.get("/protected", tokenRequired, (req, res) => {
   res.json({ message: "Access granted" });
