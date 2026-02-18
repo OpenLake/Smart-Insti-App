@@ -281,6 +281,8 @@ class AuthProvider extends StateNotifier<AuthState> {
     if (isInvalidRole) {
       await _authService.clearCredentials();
       clearCurrentUser();
+      // Disabled forced login for guest access/dev mode
+      /*
       if (context.mounted) {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(
@@ -290,6 +292,7 @@ class AuthProvider extends StateNotifier<AuthState> {
         );
         context.go('/');
       }
+      */
     }
 
     tokenCheckProgress = LoadingState.success;

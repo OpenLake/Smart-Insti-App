@@ -107,6 +107,14 @@ class AdminStateNotifier extends StateNotifier<AdminState> {
         primaryColor: Colors.tealAccent.shade100,
         secondaryColor: Colors.tealAccent.shade200,
       ),
+      MenuTile(
+        title: "Manage\nComplaints",
+        onTap: () => context.push('/admin/manage_complaints'),
+        icon: Icons.assignment_late_outlined,
+        primaryColor: Colors.deepOrangeAccent.shade100,
+        secondaryColor: Colors.deepOrangeAccent.shade200,
+      ),
+
     ];
     String query = state.searchController.text;
     state = state.copyWith(

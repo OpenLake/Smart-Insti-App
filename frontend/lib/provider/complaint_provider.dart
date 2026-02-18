@@ -98,6 +98,21 @@ class ComplaintProvider extends StateNotifier<ComplaintState> {
     }
   }
 
+  Future<void> updateStatus(String id, String status, String? note) async {
+    try {
+      final token = _ref.read(authProvider).token;
+      if (token != null) {
+        final success = await _repository.updateStatus(id, status, note, token);
+        if (success) {
+          await loadComplaints();
+        }
+      }
+    } catch (e) {
+      _logger.e(e);
+    }
+  }
+
+
   void updateCategory(String category) {
     selectedCategory = category;
   }
