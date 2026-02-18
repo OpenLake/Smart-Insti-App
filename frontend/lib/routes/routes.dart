@@ -29,6 +29,32 @@ import '../screens/user/student_profile.dart';
 import '../screens/user/user_home.dart';
 import '../screens/user/faculty_profile.dart';
 import '../screens/user/broadcast.dart';
+import '../screens/chat/chat_list_screen.dart';
+import '../screens/chat/private_chat_screen.dart';
+
+// Actually imports are at line 34.
+import '../screens/marketplace/marketplace_screen.dart';
+import '../screens/marketplace/add_listing_screen.dart';
+import '../screens/marketplace/listing_detail.dart';
+import '../screens/marketplace/wishlist_screen.dart';
+import '../screens/admin/admin_complaints.dart';
+import '../screens/attendance/attendance_history_screen.dart';
+import '../screens/attendance/qr_scanner_screen.dart';
+import '../screens/resources/resources_screen.dart';
+import '../screens/resources/add_resource_screen.dart';
+import '../screens/clubs/clubs_directory_screen.dart';
+import '../screens/clubs/club_profile_screen.dart';
+import '../screens/confessions/confession_wall_screen.dart';
+import '../screens/confessions/add_confession_screen.dart';
+import '../screens/polls/polls_screen.dart';
+import '../screens/polls/create_poll_screen.dart';
+import '../screens/alumni/alumni_directory_screen.dart';
+import '../screens/transport/transport_screen.dart';
+import '../screens/settings/settings_screen.dart';
+import '../screens/admin/admin_analytics_screen.dart';
+import '../screens/calendar/calendar_screen.dart';
+import '../screens/gamification/leaderboard_screen.dart';
+
 
 final GoRouter routes = GoRouter(
   initialLocation: '/',
@@ -90,6 +116,10 @@ final GoRouter routes = GoRouter(
         GoRoute(
           path: 'manage_rooms',
           pageBuilder: (context, state) => MaterialPage(child: ManageRooms()),
+        ),
+        GoRoute(
+          path: 'manage_complaints',
+          pageBuilder: (context, state) => const MaterialPage(child: AdminComplaintScreen()),
         )
       ],
     ),
@@ -124,6 +154,34 @@ final GoRouter routes = GoRouter(
           ],
         ),
         GoRoute(
+          path: 'clubs',
+          pageBuilder: (context, state) => const MaterialPage(child: ClubsDirectoryScreen()),
+          routes: [
+            GoRoute(
+              path: 'detail/:id',
+              pageBuilder: (context, state) => MaterialPage(child: ClubProfileScreen(clubId: state.pathParameters['id']!)),
+            ),
+          ]
+        ),
+        GoRoute(
+          path: 'favorites',
+          pageBuilder: (context, state) => const MaterialPage(child: WishlistScreen()),
+        ),
+        GoRoute(
+          path: 'confessions',
+          pageBuilder: (context, state) => const MaterialPage(child: ConfessionWallScreen()),
+          routes: [
+             GoRoute(
+              path: 'add',
+              pageBuilder: (context, state) => const MaterialPage(child: AddConfessionScreen()),
+            ),
+          ]
+        ),
+        GoRoute(
+          path: 'calendar',
+          pageBuilder: (context, state) => const MaterialPage(child: CalendarScreen()),
+        ),
+        GoRoute(
           path: 'broadcast',
           pageBuilder: (context, state) => MaterialPage(child: BroadcastPage()),
         ),
@@ -150,6 +208,48 @@ final GoRouter routes = GoRouter(
         GoRoute(
           path: 'links',
           pageBuilder: (context, state) => const MaterialPage(child: LinksPage()),
+        ),
+        GoRoute(
+          path: 'chat_list',
+          pageBuilder: (context, state) => const MaterialPage(child: ChatListScreen()),
+        ),
+        GoRoute(
+          path: 'marketplace',
+          pageBuilder: (context, state) => const MaterialPage(child: MarketplaceScreen()),
+          routes: [
+            GoRoute(
+              path: 'add',
+              pageBuilder: (context, state) => const MaterialPage(child: AddListingScreen()),
+            ),
+            GoRoute(
+              path: 'detail/:id',
+              pageBuilder: (context, state) => MaterialPage(child: ListingDetailScreen(listingId: state.pathParameters['id']!)),
+            ),
+            GoRoute(
+              path: 'wishlist',
+              pageBuilder: (context, state) => const MaterialPage(child: WishlistScreen()),
+            ),
+          ],
+        ),
+        GoRoute(
+          path: 'alumni',
+          pageBuilder: (context, state) => const MaterialPage(child: AlumniDirectoryScreen()),
+        ),
+        GoRoute(
+          path: 'transport',
+          pageBuilder: (context, state) => const MaterialPage(child: TransportScreen()),
+        ),
+        GoRoute(
+          path: 'leaderboard',
+          pageBuilder: (context, state) => const MaterialPage(child: LeaderboardScreen()),
+        ),
+        GoRoute(
+          path: 'settings',
+          pageBuilder: (context, state) => const MaterialPage(child: SettingsScreen()),
+        ),
+        GoRoute(
+          path: 'analytics',
+          pageBuilder: (context, state) => const MaterialPage(child: AdminAnalyticsScreen()),
         ),
       ],
     ),
