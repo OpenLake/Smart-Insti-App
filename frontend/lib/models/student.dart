@@ -13,6 +13,7 @@ class Student {
   final List<Skill>? skills;
   final List<Achievement>? achievements;
   final List<String>? roles;
+  final List<String> wishlist;
 
   Student({
     required this.id,
@@ -26,6 +27,7 @@ class Student {
     this.skills,
     this.achievements,
     this.roles,
+    this.wishlist = const [],
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
@@ -51,6 +53,9 @@ class Student {
       roles: json['roles'] != null
           ? (json['roles'] as List?)?.map((item) => item as String).toList()
           : [],
+      wishlist: json['wishlist'] != null
+          ? (json['wishlist'] as List?)?.map((item) => item is String ? item : item['_id'].toString()).toList() ?? []
+          : [],
     );
   }
 
@@ -70,6 +75,7 @@ class Student {
           ? achievements!.map((achievement) => achievement.toJson()).toList()
           : [],
       'roles': roles,
+      'wishlist': wishlist,
     };
   }
 }

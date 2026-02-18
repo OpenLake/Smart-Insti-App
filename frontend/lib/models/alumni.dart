@@ -8,6 +8,7 @@ class Alumni {
   final String? currentOrganization;
   final String? designation;
   final String? linkedInProfile;
+  final String? profilePicURI;
 
   Alumni({
     required this.id,
@@ -19,6 +20,7 @@ class Alumni {
     this.currentOrganization,
     this.designation,
     this.linkedInProfile,
+    this.profilePicURI,
   });
 
   factory Alumni.fromJson(Map<String, dynamic> json) {
@@ -32,6 +34,7 @@ class Alumni {
       currentOrganization: json['currentOrganization'],
       designation: json['designation'],
       linkedInProfile: json['linkedInProfile'],
+      profilePicURI: json['profilePicURI'],
     );
   }
 

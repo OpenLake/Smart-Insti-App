@@ -8,7 +8,10 @@ class Complaint {
   final String? createdByName;
   final List<String> upvotes;
   final String? imageURI;
+  final Map<String, dynamic>? resolvedBy;
+  final String? resolutionNote;
   final DateTime createdAt;
+
 
   Complaint({
     required this.id,
@@ -20,7 +23,10 @@ class Complaint {
     this.createdByName,
     required this.upvotes,
     this.imageURI,
+    this.resolvedBy,
+    this.resolutionNote,
     required this.createdAt,
+
   });
 
   factory Complaint.fromJson(Map<String, dynamic> json) {
@@ -34,7 +40,10 @@ class Complaint {
       createdByName: json['createdByName'],
       upvotes: (json['upvotes'] as List).map((e) => e.toString()).toList(),
       imageURI: json['imageURI'],
+      resolvedBy: json['resolvedBy'],
+      resolutionNote: json['resolutionNote'],
       createdAt: DateTime.parse(json['createdAt']),
+
     );
   }
 

@@ -7,6 +7,7 @@ class Faculty {
   final String? cabinNumber;
   final String? department;
   final List<Course>? courses;
+  final String? profilePicURI;
 
   Faculty({
     required this.id,
@@ -15,6 +16,7 @@ class Faculty {
     this.cabinNumber,
     this.department,
     this.courses,
+    this.profilePicURI,
   });
 
   factory Faculty.fromJson(Map<String, dynamic> json) {
@@ -24,6 +26,7 @@ class Faculty {
       email: json['email'],
       cabinNumber: json['cabinNumber'],
       department: json['department'],
+      profilePicURI: json['profilePicURI'],
       courses: json['courses'] != null
           ? (json['courses'] as List)
               .map((item) => Course.fromJson(item))
