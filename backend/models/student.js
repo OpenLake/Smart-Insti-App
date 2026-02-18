@@ -19,10 +19,28 @@ const studentSchema = new mongoose.Schema(
     achievements: [
       { type: mongoose.Schema.Types.ObjectId, ref: "Achievement" },
     ],
+    wishlist: [{ type: mongoose.Schema.Types.ObjectId, ref: "Listing" }],
+    fcmTokens: [{ type: String }],
     roles: { type: [String], default: [] }, // Ensures array structure
+    currentOrganization: { type: String, trim: true }, // For Alumni
+    designation: { type: String, trim: true }, // For Alumni
+    linkedInProfile: { type: String, trim: true }, // For Alumni
+    settings: {
+        privacy: {
+            showEmail: { type: Boolean, default: true },
+            showPhone: { type: Boolean, default: false }, // If phone added later
+            showAchievements: { type: Boolean, default: true }
+        },
+        notifications: {
+            email: { type: Boolean, default: true },
+            push: { type: Boolean, default: true }
+        }
+    }
   },
   { timestamps: true } // Adds createdAt & updatedAt fields
 );
+
+studentSchema.index({ name: "text", branch: "text", rollNumber: "text" });
 
 const Student = mongoose.model("Student", studentSchema);
 export default Student;
