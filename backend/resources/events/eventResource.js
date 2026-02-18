@@ -1,55 +1,72 @@
 import express from "express";
 import Event from "../../models/event.js";
-import tokenRequired from "../../middlewares/tokenRequired.js";
+import isAuthenticated from "../../middlewares/isAuthenticated.js";
+import { ROLES } from "../../utils/roles.js";
 
-const eventResource = express.Router();
+const eventRouter = express.Router();
 
-eventResource.get("/", async (req, res) => {
+// Get Events (Public/Authenticated)
+eventRouter.get("/", async (req, res) => {
   try {
-    const events = await Event.find().sort({ date: 1 });
+    const { start, end, type } = req.query;
+    let query = { isPublic: true };
+
+    if (start && end) {
+      query.startTime = { $gte: new Date(start), $lte: new Date(end) };
+    }
+    
+    if (type) query.type = type;
+
+    const events = await Event.find(query)
+      .populate('organizer', 'name')
+      .sort({ startTime: 1 });
+
     res.status(200).json({ status: true, data: events });
-  } catch (error) {
-    res.status(500).json({ status: false, message: error.message });
+  } catch (err) {
+    res.status(500).json({ status: false, message: err.message });
   }
 });
 
-eventResource.post("/", tokenRequired, async (req, res) => {
+// Create Event (Admin/Faculty/Club Admin)
+eventRouter.post("/", isAuthenticated, async (req, res) => {
   try {
-    const { title, description, date, location, imageURI, organizedBy } = req.body;
-    const newEvent = new Event({
+    const { title, description, startTime, endTime, location, type, organizer } = req.body;
+
+    // TODO: Add refined RBAC here. For now, assuming authenticated users can post if they have a role.
+    // In production, check if user is admin or club head.
+    
+    const newEvent = await Event.create({
       title,
       description,
-      date,
+      startTime,
+      endTime,
       location,
-      imageURI,
-      organizedBy,
-      createdBy: req.user._id,
+      type: type || 'Other',
+      organizer,
+      createdBy: req.user._id
     });
-    await newEvent.save();
+
     res.status(201).json({ status: true, data: newEvent });
-  } catch (error) {
-    res.status(500).json({ status: false, message: error.message });
+  } catch (err) {
+    res.status(500).json({ status: false, message: err.message });
   }
 });
 
-eventResource.put("/:id", tokenRequired, async (req, res) => {
+// Delete Event
+eventRouter.delete("/:id", isAuthenticated, async (req, res) => {
     try {
-        const event = await Event.findByIdAndUpdate(req.params.id, req.body, { new: true });
+        const event = await Event.findById(req.params.id);
         if (!event) return res.status(404).json({ status: false, message: "Event not found" });
-        res.status(200).json({ status: true, data: event });
-    } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
-    }
-});
 
-eventResource.delete("/:id", tokenRequired, async (req, res) => {
-    try {
-        const result = await Event.findByIdAndDelete(req.params.id);
-        if (!result) return res.status(404).json({ status: false, message: "Event not found" });
+        if (event.createdBy.toString() !== req.user._id.toString() && !req.user.roles.includes(ROLES.ADMIN)) {
+            return res.status(403).json({ status: false, message: "Unauthorized" });
+        }
+
+        await Event.findByIdAndDelete(req.params.id);
         res.status(200).json({ status: true, message: "Event deleted" });
-    } catch (error) {
-        res.status(500).json({ status: false, message: error.message });
+    } catch (err) {
+        res.status(500).json({ status: false, message: err.message });
     }
 });
 
-export default eventResource;
+export default eventRouter;
