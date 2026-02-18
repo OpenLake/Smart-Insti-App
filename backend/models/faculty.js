@@ -27,5 +27,7 @@ const facultySchema = new mongoose.Schema(
   { timestamps: true } // Auto adds createdAt & updatedAt
 );
 
+facultySchema.index({ name: "text", department: "text", email: "text" });
+
 const Faculty = mongoose.model("Faculty", facultySchema);
 export default Faculty;
