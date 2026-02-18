@@ -12,6 +12,7 @@ import 'package:smart_insti_app/models/student.dart';
 import 'package:smart_insti_app/models/faculty.dart';
 import 'package:smart_insti_app/models/alumni.dart';
 import 'package:smart_insti_app/models/admin.dart';
+import '../search/search_screen.dart';
 
 class UserHome extends ConsumerStatefulWidget {
   const UserHome({super.key});
@@ -34,15 +35,80 @@ class _UserHomeState extends ConsumerState<UserHome> {
     final homeState = ref.watch(homeProvider);
     final user = ref.watch(authProvider).currentUser;
     String name = "Guest";
+    String email = "";
+    String? profilePicURI;
+
     if (user != null) {
-      if (user is Student) name = user.name.split(' ').first;
-      else if (user is Faculty) name = user.name.split(' ').first;
-      else if (user is Admin) name = "Admin";
-      else if (user is Alumni) name = user.name.split(' ').first;
+      if (user is Student) {
+        name = user.name.split(' ').first;
+        email = user.email;
+        profilePicURI = user.profilePicURI;
+      } else if (user is Faculty) {
+        name = user.name.split(' ').first;
+        email = user.email;
+        profilePicURI = user.profilePicURI;
+      } else if (user is Admin) {
+        name = "Admin";
+        email = user.email;
+      } else if (user is Alumni) {
+        name = user.name.split(' ').first;
+        email = user.email;
+        profilePicURI = user.profilePicURI;
+      }
     }
 
     return Scaffold(
       backgroundColor: Colors.white,
+      drawer: Drawer(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+             UserAccountsDrawerHeader(
+                decoration: const BoxDecoration(color: UltimateTheme.primary),
+                accountName: Text(name, style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+                accountEmail: Text(email, style: GoogleFonts.outfit()),
+                currentAccountPicture: CircleAvatar(
+                    backgroundColor: Colors.white,
+                    backgroundImage: profilePicURI != null ? NetworkImage(profilePicURI) : null,
+                    child: profilePicURI == null ? Text(name[0], style: const TextStyle(fontSize: 24, color: UltimateTheme.primary)) : null,
+                ),
+             ),
+             ListTile(
+                leading: const Icon(Icons.person),
+                title: Text("Profile", style: GoogleFonts.outfit()),
+                onTap: () {
+                    // Navigate to profile
+                },
+             ),
+             ListTile(
+                leading: const Icon(Icons.settings),
+                title: Text("Settings", style: GoogleFonts.outfit()),
+                onTap: () {
+                    Navigator.pop(context);
+                    context.push('/user_home/settings');
+                },
+             ),
+             if (user is Admin)
+               ListTile(
+                  leading: const Icon(Icons.analytics, color: Colors.blue),
+                  title: Text("Analytics", style: GoogleFonts.outfit()),
+                  onTap: () {
+                      Navigator.pop(context);
+                      context.push('/user_home/analytics');
+                  },
+               ),
+             const Divider(),
+             ListTile(
+                leading: const Icon(Icons.logout, color: Colors.red),
+                title: Text("Logout", style: GoogleFonts.outfit(color: Colors.red)),
+                onTap: () async {
+                    await ref.read(authServiceProvider).logout();
+                    if (mounted) context.go('/login');
+                },
+             ),
+          ],
+        ),
+      ),
       body: CustomScrollView(
         slivers: [
           // 1. Welcome Section with Search
@@ -60,6 +126,10 @@ class _UserHomeState extends ConsumerState<UserHome> {
                       color: UltimateTheme.textMain,
                     ),
                   ),
+                  Builder(builder: (context) => IconButton(
+                    icon: const Icon(Icons.menu, color: UltimateTheme.primary),
+                    onPressed: () => Scaffold.of(context).openDrawer(),
+                  )),
                   const SizedBox(height: 16),
                   Container(
                     height: 50,
@@ -69,7 +139,10 @@ class _UserHomeState extends ConsumerState<UserHome> {
                       border: Border.all(color: UltimateTheme.primary.withOpacity(0.1)),
                     ),
                     child: TextField(
-                      controller: ref.read(homeProvider).searchController,
+                      readOnly: true,
+                      onTap: () {
+                          Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
+                      },
                       decoration: InputDecoration(
                         hintText: "What are you looking for?",
                         hintStyle: GoogleFonts.inter(color: UltimateTheme.textSub, fontSize: 14),
@@ -168,8 +241,18 @@ class _UserHomeState extends ConsumerState<UserHome> {
                     {"title": "News", "icon": Icons.article_rounded, "color": UltimateTheme.accent, "route": "/user_home/news"},
                     {"title": "Complaints", "icon": Icons.report_problem_rounded, "color": UltimateTheme.primary, "route": "/user_home/complaints"},
                     {"title": "Lost & Found", "icon": Icons.search_rounded, "color": UltimateTheme.accent, "route": "/user_home/lost_and_found"},
-                    {"title": "Study Groups", "icon": Icons.groups_rounded, "color": UltimateTheme.navy, "route": "/user_home/chat_room"},
+                    {"title": "Study Groups", "icon": Icons.groups_rounded, "color": UltimateTheme.navy, "route": "/user_home/chat_list"},
                     {"title": "Broadcast", "icon": Icons.campaign_rounded, "color": UltimateTheme.primary, "route": "/user_home/broadcast"},
+                    {"title": "Buy & Sell", "icon": Icons.storefront_rounded, "color": UltimateTheme.accent, "route": "/user_home/marketplace"},
+                    {"title": "Resources", "icon": Icons.folder_copy_outlined, "color": Colors.teal, "route": "/user_home/resources"},
+                    {"title": "Clubs", "icon": Icons.groups_outlined, "color": Colors.indigo, "route": "/user_home/clubs"},
+                    {"title": "Polls", "icon": Icons.poll_outlined, "color": Colors.purple, "route": "/user_home/polls"},
+                    {"title": "Confessions", "icon": Icons.favorite_outline, "color": Colors.pinkAccent, "route": "/user_home/confessions"},
+                    {"title": "Calendar", "icon": Icons.calendar_today_outlined, "color": Colors.orange, "route": ""},
+                    {"title": "Attendance", "icon": Icons.qr_code, "color": Colors.green, "route": "/user_home/attendance"},
+                    {"title": "Alumni", "icon": Icons.school, "color": Colors.blue, "route": "/user_home/alumni"},
+                    {"title": "Bus", "icon": Icons.directions_bus, "color": Colors.redAccent, "route": "/user_home/transport"},
+                    {"title": "Leaderboard", "icon": Icons.emoji_events, "color": Colors.amber, "route": "/user_home/leaderboard"},
                   ];
 
                   final item = items[index];
@@ -202,7 +285,7 @@ class _UserHomeState extends ConsumerState<UserHome> {
                     ),
                   );
                 },
-                childCount: 8,
+                childCount: 9,
               ),
             ),
           ),
