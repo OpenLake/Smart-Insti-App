@@ -22,7 +22,7 @@ class UltimateTheme {
         end: Alignment.bottomRight,
       );
 
-  static ThemeData get themeData {
+  static ThemeData get lightThemeData {
     return ThemeData(
       useMaterial3: true,
       colorScheme: ColorScheme.fromSeed(
@@ -35,58 +35,79 @@ class UltimateTheme {
         brightness: Brightness.light,
       ),
       scaffoldBackgroundColor: background,
-      textTheme: GoogleFonts.interTextTheme().copyWith(
-        displayLarge: GoogleFonts.spaceGrotesk(
-          fontSize: 32,
-          fontWeight: FontWeight.bold,
-          color: textMain,
-          letterSpacing: -1.0,
-        ),
-        titleLarge: GoogleFonts.spaceGrotesk(
-          fontSize: 22,
-          fontWeight: FontWeight.bold,
-          color: textMain,
-        ),
-        bodyLarge: GoogleFonts.inter(
-          fontSize: 16,
-          color: textMain,
-        ),
-        bodyMedium: GoogleFonts.inter(
-          fontSize: 14,
-          color: textSub,
-        ),
+      textTheme: _textTheme(textMain, textSub),
+      appBarTheme: _appBarTheme(primary, Colors.white),
+      cardTheme: _cardTheme(surface, false),
+      navigationBarTheme: _navBarTheme(Colors.white, textSub, primary),
+    );
+  }
+
+  static ThemeData get darkThemeData {
+    // Dark Mode Colors
+    const darkBackground = Color(0xFF121212);
+    const darkSurface = Color(0xFF1E1E1E);
+    const darkTextMain = Color(0xFFE0E0E0);
+    const darkTextSub = Color(0xFFA0A0A0);
+
+    return ThemeData(
+      useMaterial3: true,
+      colorScheme: ColorScheme.fromSeed(
+        seedColor: primary,
+        primary: primary, // Keep brand color
+        secondary: accent,
+        tertiary: navy,
+        surface: darkSurface,
+        background: darkBackground,
+        brightness: Brightness.dark,
       ),
-      appBarTheme: AppBarTheme(
-        backgroundColor: primary,
+      scaffoldBackgroundColor: darkBackground,
+      textTheme: _textTheme(darkTextMain, darkTextSub),
+      appBarTheme: _appBarTheme(darkSurface, darkTextMain),
+      cardTheme: _cardTheme(darkSurface, true),
+      navigationBarTheme: _navBarTheme(darkSurface, darkTextSub, primary),
+    );
+  }
+
+  static TextTheme _textTheme(Color mainColor, Color subColor) {
+      return GoogleFonts.interTextTheme().copyWith(
+        displayLarge: GoogleFonts.spaceGrotesk(fontSize: 32, fontWeight: FontWeight.bold, color: mainColor, letterSpacing: -1.0),
+        titleLarge: GoogleFonts.spaceGrotesk(fontSize: 22, fontWeight: FontWeight.bold, color: mainColor),
+        bodyLarge: GoogleFonts.inter(fontSize: 16, color: mainColor),
+        bodyMedium: GoogleFonts.inter(fontSize: 14, color: subColor),
+      );
+  }
+
+  static AppBarTheme _appBarTheme(Color bgColor, Color itemsColor) {
+      return AppBarTheme(
+        backgroundColor: bgColor,
         elevation: 0,
         centerTitle: true,
-        iconTheme: const IconThemeData(color: Colors.white, size: 24),
-        titleTextStyle: GoogleFonts.spaceGrotesk(
-          color: Colors.white,
-          fontSize: 20,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-      cardTheme: CardThemeData(
-        color: surface,
+        iconTheme: IconThemeData(color: itemsColor, size: 24),
+        titleTextStyle: GoogleFonts.spaceGrotesk(color: itemsColor, fontSize: 20, fontWeight: FontWeight.bold),
+      );
+  }
+
+  static CardThemeData _cardTheme(Color color, bool isDark) {
+      return CardThemeData(
+        color: color,
         elevation: 2,
-        shadowColor: primary.withOpacity(0.1),
-        shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(20),
-        ),
+        shadowColor: isDark ? Colors.black.withOpacity(0.3) : primary.withOpacity(0.1),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20)),
         margin: EdgeInsets.zero,
-      ),
-      navigationBarTheme: NavigationBarThemeData(
-        backgroundColor: Colors.white,
-        indicatorColor: primary.withOpacity(0.1),
+      );
+  }
+
+  static NavigationBarThemeData _navBarTheme(Color bgColor, Color unselectedColor, Color selectedColor) {
+      return NavigationBarThemeData(
+        backgroundColor: bgColor,
+        indicatorColor: selectedColor.withOpacity(0.1),
         iconTheme: MaterialStateProperty.resolveWith((states) {
           if (states.contains(MaterialState.selected)) {
-            return const IconThemeData(color: primary, size: 26);
+            return IconThemeData(color: selectedColor, size: 26);
           }
-          return const IconThemeData(color: textSub, size: 24);
+          return IconThemeData(color: unselectedColor, size: 24);
         }),
-      ),
-    );
+      );
   }
 
   static BoxDecoration get bentoDecoration {
@@ -117,4 +138,9 @@ class UltimateTheme {
       ],
     );
   }
+  // Aliases for compatibility
+  static const Color primaryColor = primary;
+  static const Color backgroundColor = background;
+  static const Color surfaceColor = surface;
+  static const Color textColor = textMain;
 }
