@@ -7,23 +7,86 @@ import 'package:logger/logger.dart';
 final authServiceProvider = Provider<AuthService>((_) => AuthService());
 
 class AuthService {
-  final _client = Dio(
-    BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
-      validateStatus: (status) {
-        return status! < 500;
-      },
-    ),
-  );
-
+  late final Dio _client;
   final _secureStorage = const FlutterSecureStorage();
   final Logger _logger = Logger();
+
+  AuthService() {
+    _client = Dio(
+      BaseOptions(
+        baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+        validateStatus: (status) {
+          return status! < 500;
+        },
+      ),
+    );
+
+    _client.interceptors.add(
+      InterceptorsWrapper(
+        onRequest: (options, handler) async {
+          final token = await _secureStorage.read(key: 'token');
+          if (token != null) {
+            options.headers['Authorization'] = 'Bearer $token';
+          }
+          return handler.next(options);
+        },
+        onError: (DioException error, ErrorInterceptorHandler handler) async {
+          if (error.response?.statusCode == 401) {
+            final refreshToken = await _secureStorage.read(key: 'refreshToken');
+            if (refreshToken != null) {
+              try {
+                // Use a separate Dio instance to avoid infinite loops
+                final refreshDio = Dio(BaseOptions(baseUrl: dotenv.env['BACKEND_DOMAIN']!));
+                final response = await refreshDio.post(
+                  '/general-auth/refresh-token',
+                  data: {'refreshToken': refreshToken},
+                );
+
+                if (response.statusCode == 200 && response.data['status'] == true) {
+                  final newAccessToken = response.data['accessToken'];
+                  final newRefreshToken = response.data['refreshToken'];
+                  
+                  await _secureStorage.write(key: 'token', value: newAccessToken);
+                  if (newRefreshToken != null) {
+                    await _secureStorage.write(key: 'refreshToken', value: newRefreshToken);
+                  }
+
+                  // Retry the original request with new token
+                  final opts = error.requestOptions;
+                  opts.headers['Authorization'] = 'Bearer $newAccessToken';
+                  
+                  final clonedRequest = await _client.request(
+                    opts.path,
+                    options: Options(
+                      method: opts.method,
+                      headers: opts.headers,
+                    ),
+                    data: opts.data,
+                    queryParameters: opts.queryParameters,
+                  );
+                  return handler.resolve(clonedRequest);
+                }
+              } catch (e) {
+                // Refresh failed
+                _logger.e("Token refresh failed: $e");
+                await clearCredentials();
+              }
+            }
+          }
+          return handler.next(error);
+        },
+      ),
+    );
+  }
 
    Future<void> saveCredentials(Map response) async {
     try {
       final data = response.containsKey('data') ? response['data'] : response;
+      // Handle both flat and nested responses if needed, but usually it's in 'data'
+      
       final credentials = {
         'token': data['token'] ?? '',
+        'refreshToken': data['refreshToken'] ?? '', // Store refresh token
         '_id': data['_id'] ?? '',
         'name': data['name'] ?? '',
         'email': data['email'] ?? '',
@@ -31,6 +94,7 @@ class AuthService {
       };
 
       await _secureStorage.write(key: 'token', value: credentials['token']);
+      await _secureStorage.write(key: 'refreshToken', value: credentials['refreshToken']);
       await _secureStorage.write(key: '_id', value: credentials['_id']);
       await _secureStorage.write(key: 'name', value: credentials['name']);
       await _secureStorage.write(key: 'email', value: credentials['email']);
@@ -45,6 +109,7 @@ class AuthService {
     try {
       credentials = {
         'token': await _secureStorage.read(key: 'token') ?? '',
+        'refreshToken': await _secureStorage.read(key: 'refreshToken') ?? '',
         '_id': await _secureStorage.read(key: '_id') ?? '',
         'name': await _secureStorage.read(key: 'name') ?? '',
         'email': await _secureStorage.read(key: 'email') ?? '',
@@ -60,6 +125,7 @@ class AuthService {
   Future<bool> clearCredentials() async {
     try {
       await _secureStorage.delete(key: 'token');
+      await _secureStorage.delete(key: 'refreshToken');
       await _secureStorage.delete(key: '_id');
       await _secureStorage.delete(key: 'name');
       await _secureStorage.delete(key: 'email');
@@ -69,6 +135,10 @@ class AuthService {
       _logger.e(e);
       return false;
     }
+  }
+
+  Future<void> logout() async {
+    await clearCredentials();
   }
 
   Future<({int statusCode, String message})> sendOtp(
@@ -88,6 +158,12 @@ class AuthService {
       );
     } catch (e) {
       _logger.e(e);
+      if (e is DioException && e.response != null) {
+        return (
+          statusCode: e.response!.statusCode ?? 500,
+          message: e.response!.data['message']?.toString() ?? 'Error'
+        );
+      }
       return (statusCode: 500, message: 'Internal Server Error');
     }
   }
@@ -109,6 +185,12 @@ class AuthService {
       );
     } catch (e) {
       _logger.e(e);
+      if (e is DioException && e.response != null) {
+        return (
+          statusCode: e.response!.statusCode ?? 500,
+          message: e.response!.data['message']?.toString() ?? 'Error'
+        );
+      }
       return (statusCode: 500, message: 'Internal Server Error');
     }
   }
