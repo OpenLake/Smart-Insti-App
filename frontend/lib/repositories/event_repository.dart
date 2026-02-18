@@ -10,15 +10,13 @@ class EventRepository {
   final Dio _client = Dio(
     BaseOptions(
       baseUrl: AppConstants.apiBaseUrl,
-      validateStatus: (status) {
-        return status! < 500;
-      },
+      validateStatus: (status) => status! < 500,
     ),
   );
   final Logger _logger = Logger();
 
   Future<List<Event>> getEvents(String token) async {
-    _client.options.headers['authorization'] = 'Bearer $token';
+    // _client.options.headers['authorization'] = 'Bearer $token'; 
     try {
       final response = await _client.get('/events');
       if (response.data['status'] == true) {
@@ -33,10 +31,10 @@ class EventRepository {
     }
   }
 
-  Future<bool> addEvent(Event event, String token) async {
-    _client.options.headers['authorization'] = 'Bearer $token';
+  Future<bool> createEvent(Map<String, dynamic> data, String token) async {
+    _client.options.headers['authorization'] = 'Bearer $token'; 
     try {
-      final response = await _client.post('/events', data: event.toJson());
+      final response = await _client.post('/events', data: data);
       return response.data['status'] == true;
     } catch (e) {
       _logger.e(e);
@@ -45,13 +43,13 @@ class EventRepository {
   }
 
   Future<bool> deleteEvent(String id, String token) async {
-    _client.options.headers['authorization'] = 'Bearer $token';
-    try {
-      final response = await _client.delete('/events/$id');
-      return response.data['status'] == true;
-    } catch (e) {
-      _logger.e(e);
-      return false;
-    }
+      _client.options.headers['authorization'] = 'Bearer $token';
+      try {
+          final response = await _client.delete('/events/$id');
+          return response.data['status'] == true;
+      } catch (e) {
+          _logger.e(e);
+          return false;
+      }
   }
 }

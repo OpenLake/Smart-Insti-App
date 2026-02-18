@@ -18,7 +18,7 @@ class ComplaintRepository {
   final Logger _logger = Logger();
 
   Future<List<Complaint>> getComplaints(String token) async {
-    _client.options.headers['authorization'] = 'Bearer $token';
+    _client.options.headers['authorization'] = 'Bearer $token'; // Ensure header case consistency if needed
     try {
       final response = await _client.get('/complaints');
       if (response.data['status'] == true) {
@@ -48,6 +48,20 @@ class ComplaintRepository {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response = await _client.put('/complaints/$id/upvote');
+      return response.data['status'] == true;
+    } catch (e) {
+      _logger.e(e);
+      return false;
+    }
+  }
+
+  Future<bool> updateStatus(String id, String status, String? note, String token) async {
+    _client.options.headers['authorization'] = 'Bearer $token';
+    try {
+      final response = await _client.patch(
+        '/complaints/$id/status',
+        data: {'status': status, 'resolutionNote': note},
+      );
       return response.data['status'] == true;
     } catch (e) {
       _logger.e(e);
