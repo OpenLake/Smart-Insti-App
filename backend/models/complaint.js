@@ -22,6 +22,8 @@ const complaintSchema = new mongoose.Schema(
     createdByName: { type: String }, // Denormalized for easier display
     upvotes: [{ type: mongoose.Schema.Types.ObjectId, ref: "Student" }],
     imageURI: { type: String, trim: true },
+    resolvedBy: { type: mongoose.Schema.Types.ObjectId, ref: "User" },
+    resolutionNote: { type: String },
   },
   { timestamps: true }
 );
