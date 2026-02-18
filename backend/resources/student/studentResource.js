@@ -63,6 +63,42 @@ studentRouter.put("/:id", tokenRequired, async (req, res) => {
   }
 });
 
+
+/**
+ * @route PUT /students/settings
+ * @desc Update student settings (privacy/notifications)
+ */
+studentRouter.put("/settings", tokenRequired, async (req, res) => {
+    try {
+        const { privacy, notifications } = req.body;
+        const userId = req.user.id; // Extract from token
+
+        const updateData = {};
+        if (privacy) updateData["settings.privacy"] = privacy;
+        if (notifications) updateData["settings.notifications"] = notifications;
+
+        const updatedStudent = await Student.findByIdAndUpdate(
+            userId,
+            { $set: updateData },
+            { new: true }
+        ).select("settings name email");
+
+        if (!updatedStudent) {
+            return res.status(404).json({ status: false, message: "User not found" });
+        }
+
+        res.status(200).json({
+            status: true,
+            message: "Settings updated successfully",
+            data: updatedStudent.settings
+        });
+
+    } catch (error) {
+        console.error("Error updating settings:", error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
+});
+
 /**
  * @route DELETE /students/:id
  * @desc Delete a student by ID (requires authentication)
