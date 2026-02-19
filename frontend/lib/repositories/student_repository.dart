@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 import '../models/student.dart';
 
 final studentRepositoryProvider =
@@ -11,7 +12,7 @@ final studentRepositoryProvider =
 class StudentRepository {
   final _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
       validateStatus: (status) {
         return status! < 500;
       },

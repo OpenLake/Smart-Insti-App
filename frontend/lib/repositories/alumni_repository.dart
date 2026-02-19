@@ -2,13 +2,14 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../models/alumni.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final alumniRepositoryProvider = Provider<AlumniRepository>((ref) => AlumniRepository());
 
 class AlumniRepository {
   final Dio _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
       validateStatus: (status) {
         return status! < 500;
       },

@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/models/mess_menu.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final messMenuRepositoryProvider = Provider<MessMenuRepository>((ref) => MessMenuRepository());
 
@@ -10,7 +11,9 @@ class MessMenuRepository{
 
   final _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
+      connectTimeout: const Duration(seconds: 10),
+      receiveTimeout: const Duration(seconds: 10),
     ),
   );
 
@@ -19,7 +22,11 @@ class MessMenuRepository{
  Future<List<MessMenu>> getMessMenu() async {
     try {
       final response = await _client.get('/mess-menus');
-      List<MessMenu> messMenus = (response.data as List).map((e) => MessMenu.fromJson(e)).toList();
+      // Backend returns { status: true, data: [...] }
+      final data = response.data;
+      List<dynamic> list = (data is Map && data.containsKey('data')) ? data['data'] : data;
+      
+      List<MessMenu> messMenus = list.map((e) => MessMenu.fromJson(e)).toList();
       return messMenus;
     } catch (e) {
       _logger.e(e);

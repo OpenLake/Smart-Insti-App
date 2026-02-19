@@ -222,10 +222,16 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
     state = state.copyWith(loadingState: LoadingState.progress);
     
     // 1. Load from Repository
-    final messMenus = await _messMenuRepository.getMessMenu();
     Map<String, MessMenu> menuDictionary = {};
-    for (var menu in messMenus) {
-      menuDictionary[menu.kitchenName] = menu;
+    try {
+      final messMenus = await _messMenuRepository.getMessMenu();
+      for (var menu in messMenus) {
+        menuDictionary[menu.kitchenName] = menu;
+      }
+    } catch (e) {
+      _logger.e("Failed to load menus from repository: $e");
+      state = state.copyWith(loadingState: LoadingState.error);
+      // Continue to try loading local asset even if repo fails
     }
 
     // 2. Load Local Asset (Jan Menu)

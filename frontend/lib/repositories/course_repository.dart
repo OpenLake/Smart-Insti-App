@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/course.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final courseRepositoryProvider =
     Provider<CourseRepository>((_) => CourseRepository());
@@ -10,7 +11,7 @@ final courseRepositoryProvider =
 class CourseRepository {
   final _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
     ),
   );
 

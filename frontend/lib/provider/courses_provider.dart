@@ -62,7 +62,7 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
       courseNameController: TextEditingController(),
       courseCreditController: TextEditingController(),
       searchCourseController: TextEditingController(),
-      branches: Branches.branchList.map((branch) => branch.value!).toList(),
+      branches: Branches.branchList.map((branch) => branch.value.toString()).toList(),
     );
   }
 
@@ -134,7 +134,7 @@ class CoursesNotifier extends StateNotifier<CoursesState> {
       ],
       courseCodeController: TextEditingController(),
       courseNameController: TextEditingController(),
-      branches: Branches.branchList.map((branch) => branch.value!).toList(),
+      branches: Branches.branchList.map((branch) => branch.value.toString()).toList(),
     );
   }
 

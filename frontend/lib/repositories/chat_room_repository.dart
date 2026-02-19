@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import '../constants/dummy_entries.dart';
 import '../models/message.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final chatRoomRepositoryProvider =
     Provider<ChatRoomRepository>((_) => ChatRoomRepository());
@@ -11,7 +12,7 @@ final chatRoomRepositoryProvider =
 class ChatRoomRepository {
   final _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
     ),
   );
 

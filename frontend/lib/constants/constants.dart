@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AppConstants {
   static const String appName = "Smart Insti App";
   static const Color seedColor = Colors.lightBlueAccent;
-  static const String apiBaseUrl = "http://localhost:3000";
+  static String get apiBaseUrl => dotenv.env['API_URL'] ?? "http://localhost:3000";
+  static String get hubApiBaseUrl => dotenv.env['HUB_API_URL'] ?? "https://hub.openlake.in/api/v1";
 }
 
 enum LoadingState { idle, progress, success, error }

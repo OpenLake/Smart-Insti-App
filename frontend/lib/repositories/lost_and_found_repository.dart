@@ -5,13 +5,14 @@ import 'package:logger/logger.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import 'package:smart_insti_app/models/lost_and_found_item.dart';
 import 'package:http_parser/http_parser.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final lostAndFoundRepositoryProvider = Provider<LostAndFoundRepository>((_) => LostAndFoundRepository());
 
 class LostAndFoundRepository {
   final _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
       headers: {
         "Content-Type": "multipart/form-data",
       },

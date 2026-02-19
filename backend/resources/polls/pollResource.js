@@ -106,4 +106,27 @@ pollRouter.post("/:id/vote", isAuthenticated, async (req, res) => {
     }
 });
 
+// Delete a Poll
+pollRouter.delete("/:id", isAuthenticated, async (req, res) => {
+    try {
+        const pollId = req.params.id;
+        const userId = req.user._id;
+
+        const poll = await Poll.findById(pollId);
+        if (!poll) return res.status(404).json({ status: false, message: "Poll not found" });
+
+        // Check ownership
+        if (poll.createdBy.toString() !== userId.toString()) {
+            return res.status(403).json({ status: false, message: "Unauthorized" });
+        }
+
+        await Poll.findByIdAndDelete(pollId);
+        res.status(200).json({ status: true, message: "Poll deleted successfully" });
+
+    } catch (err) {
+        console.error("Error deleting poll:", err);
+        res.status(500).json({ status: false, message: "Internal server error" });
+    }
+});
+
 export default pollRouter;

@@ -2,6 +2,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 import '../models/admin.dart';
 
 final adminRepositoryProvider = Provider<AdminRepository>((_) => AdminRepository());
@@ -9,7 +10,7 @@ final adminRepositoryProvider = Provider<AdminRepository>((_) => AdminRepository
 class AdminRepository {
   final _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
       validateStatus: (status) {
         return status! < 500;
       },

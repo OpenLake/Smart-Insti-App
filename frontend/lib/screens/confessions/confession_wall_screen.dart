@@ -8,26 +8,11 @@ import 'package:smart_insti_app/provider/confession_provider.dart';
 import '../../models/confession.dart';
 import 'dart:math';
 
-class ConfessionWallScreen extends ConsumerStatefulWidget {
+class ConfessionWallScreen extends StatelessWidget {
   const ConfessionWallScreen({super.key});
 
   @override
-  ConsumerState<ConfessionWallScreen> createState() => _ConfessionWallScreenState();
-}
-
-class _ConfessionWallScreenState extends ConsumerState<ConfessionWallScreen> {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(confessionProvider.notifier).loadConfessions();
-    });
-  }
-
-  @override
   Widget build(BuildContext context) {
-    final state = ref.watch(confessionProvider);
-
     return Scaffold(
       backgroundColor: UltimateTheme.backgroundColor,
       appBar: AppBar(
@@ -35,38 +20,87 @@ class _ConfessionWallScreenState extends ConsumerState<ConfessionWallScreen> {
         backgroundColor: UltimateTheme.surfaceColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: UltimateTheme.textColor),
-        actions: [
-            IconButton(
-                icon: const Icon(Icons.refresh, color: UltimateTheme.primaryColor),
-                onPressed: () => ref.read(confessionProvider.notifier).loadConfessions(),
-            )
-        ],
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => context.push('/user_home/confessions/add'),
         backgroundColor: UltimateTheme.primaryColor,
         child: const Icon(Icons.create, color: Colors.white),
       ),
-      body: state.isLoading 
+      body: const ConfessionListWidget(),
+    );
+  }
+}
+
+class ConfessionListWidget extends ConsumerStatefulWidget {
+  const ConfessionListWidget({super.key});
+
+  @override
+  ConsumerState<ConfessionListWidget> createState() => _ConfessionListWidgetState();
+}
+
+class _ConfessionListWidgetState extends ConsumerState<ConfessionListWidget> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      ref.read(confessionProvider.notifier).loadConfessions(refresh: true);
+    });
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    if (_scrollController.position.pixels >= _scrollController.position.maxScrollExtent - 200) {
+      ref.read(confessionProvider.notifier).loadConfessions();
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final state = ref.watch(confessionProvider);
+
+    return state.isLoading 
         ? const Center(child: CircularProgressIndicator())
         : state.confessions.isEmpty 
             ? Center(child: Text("No confessions yet. Be the first!", style: GoogleFonts.caveat(fontSize: 24, color: Colors.grey)))
-            : MasonryGridView.count(
-                padding: const EdgeInsets.all(16),
-                crossAxisCount: 2,
-                mainAxisSpacing: 16,
-                crossAxisSpacing: 16,
-                itemCount: state.confessions.length,
-                itemBuilder: (context, index) {
-                  return _buildConfessionCard(state.confessions[index]);
-                },
-              ),
-    );
+            : RefreshIndicator(
+                onRefresh: () async => ref.read(confessionProvider.notifier).loadConfessions(refresh: true),
+                child: CustomScrollView(
+                  controller: _scrollController,
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.all(16),
+                      sliver: SliverMasonryGrid.count(
+                        crossAxisCount: 2,
+                        mainAxisSpacing: 16,
+                        crossAxisSpacing: 16,
+                        childCount: state.confessions.length,
+                        itemBuilder: (context, index) {
+                          return _buildConfessionCard(state.confessions[index]);
+                        },
+                      ),
+                    ),
+                    if (state.isLoadingMore)
+                      const SliverToBoxAdapter(
+                        child: Padding(
+                          padding: EdgeInsets.all(16.0),
+                          child: Center(child: CircularProgressIndicator()),
+                        ),
+                      ),
+                  ],
+                ),
+              );
   }
 
   Widget _buildConfessionCard(Confession confession) {
     Color cardColor = Color(int.parse(confession.backgroundColor));
-    // Ensure readable text color? Assuming pastels
     Color textColor = Colors.black87;
 
     return Container(

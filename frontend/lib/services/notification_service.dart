@@ -29,18 +29,23 @@ class NotificationService {
   NotificationService(this._ref);
 
   Future<void> initialize() async {
-    // Request permission
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
+    try {
+      // Request permission
+      NotificationSettings settings = await _firebaseMessaging.requestPermission(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
 
-    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
-      _logger.i('User granted permission');
-    } else {
-        _logger.w('User declined or has not accepted permission');
-        return;
+      if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+        _logger.i('User granted permission');
+      } else {
+          _logger.w('User declined or has not accepted permission');
+          return;
+      }
+    } catch (e) {
+      _logger.w("Firebase Messaging initialization failed (likely no config): $e");
+      return;
     }
 
     // Background Handler

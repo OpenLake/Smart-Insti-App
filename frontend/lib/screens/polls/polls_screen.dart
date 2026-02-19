@@ -5,19 +5,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import '../../theme/ultimate_theme.dart';
 import '../../services/poll_service.dart';
+import '../../provider/auth_provider.dart';
 import 'package:intl/intl.dart';
 
 final activePollsProvider = FutureProvider.autoDispose<List<dynamic>>((ref) async {
   return ref.read(pollServiceProvider).getActivePolls();
 });
 
-class PollsScreen extends ConsumerWidget {
+class PollsScreen extends StatelessWidget {
   const PollsScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final pollsAsync = ref.watch(activePollsProvider);
-
+  Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: UltimateTheme.backgroundColor,
       appBar: AppBar(
@@ -26,22 +25,7 @@ class PollsScreen extends ConsumerWidget {
         elevation: 0,
         iconTheme: const IconThemeData(color: UltimateTheme.textColor),
       ),
-      body: pollsAsync.when(
-        data: (polls) {
-            if (polls.isEmpty) {
-                return Center(child: Text("No active polls", style: GoogleFonts.outfit(color: Colors.grey)));
-            }
-            return ListView.builder(
-                padding: const EdgeInsets.all(16),
-                itemCount: polls.length,
-                itemBuilder: (context, index) {
-                    return _PollCard(poll: polls[index]);
-                },
-            );
-        },
-        error: (err, stack) => Center(child: Text("Error: $err")),
-        loading: () => const Center(child: CircularProgressIndicator()),
-      ),
+      body: const PollListWidget(),
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => context.push('/user_home/polls/create'),
         backgroundColor: UltimateTheme.primaryColor,
@@ -49,6 +33,35 @@ class PollsScreen extends ConsumerWidget {
         label: Text("Create Poll", style: GoogleFonts.outfit(color: Colors.white)),
       ),
     );
+  }
+}
+
+class PollListWidget extends ConsumerWidget {
+  const PollListWidget({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pollsAsync = ref.watch(activePollsProvider);
+
+    return pollsAsync.when(
+        data: (polls) {
+            if (polls.isEmpty) {
+                return Center(child: Text("No active polls", style: GoogleFonts.outfit(color: Colors.grey)));
+            }
+            return RefreshIndicator(
+              onRefresh: () async => ref.refresh(activePollsProvider),
+              child: ListView.builder(
+                  padding: const EdgeInsets.all(16),
+                  itemCount: polls.length,
+                  itemBuilder: (context, index) {
+                      return _PollCard(poll: polls[index]);
+                  },
+              ),
+            );
+        },
+        error: (err, stack) => Center(child: Text("Error: $err")),
+        loading: () => const Center(child: CircularProgressIndicator()),
+      );
   }
 }
 
@@ -80,6 +93,9 @@ class _PollCardState extends ConsumerState<_PollCard> {
 
     @override
     Widget build(BuildContext context) {
+        final currentUser = ref.read(authProvider).currentUser;
+        final isCreator = currentUser != null && widget.poll['createdBy']['_id'] == (currentUser as dynamic).id;
+
         final hasVoted = widget.poll['hasVoted'] == true;
         final totalVotes = widget.poll['totalVotes'] as int;
         final options = List<Map<String, dynamic>>.from(widget.poll['options']);
@@ -95,7 +111,19 @@ class _PollCardState extends ConsumerState<_PollCard> {
             child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                    Text(widget.poll['question'], style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold)),
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                            Expanded(child: Text(widget.poll['question'], style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold))),
+                            if (isCreator)
+                                IconButton(
+                                    icon: const Icon(Icons.delete_outline, color: Colors.grey, size: 20),
+                                    onPressed: () => _confirmDelete(),
+                                    padding: EdgeInsets.zero,
+                                    constraints: const BoxConstraints(),
+                                )
+                        ],
+                    ),
                     const SizedBox(height: 8),
                     Text(
                         "Created by ${widget.poll['createdBy']['name']} • Ends ${DateFormat('MMM dd').format(DateTime.parse(widget.poll['expiry']))}",
@@ -125,6 +153,32 @@ class _PollCardState extends ConsumerState<_PollCard> {
                         )
                 ],
             ),
+        );
+    }
+
+    void _confirmDelete() {
+        showDialog(
+            context: context,
+            builder: (ctx) => AlertDialog(
+                title: const Text("Delete Poll"),
+                content: const Text("Are you sure you want to delete this poll?"),
+                actions: [
+                    TextButton(onPressed: () => Navigator.pop(ctx), child: const Text("Cancel")),
+                    TextButton(
+                        onPressed: () async {
+                            Navigator.pop(ctx);
+                            final success = await ref.read(pollServiceProvider).deletePoll(widget.poll['_id']);
+                            if (success) {
+                                ref.refresh(activePollsProvider);
+                                if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Poll deleted")));
+                            } else {
+                                if (mounted) ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Failed to delete poll")));
+                            }
+                        },
+                        child: const Text("Delete", style: TextStyle(color: Colors.red)),
+                    )
+                ],
+            )
         );
     }
 

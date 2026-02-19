@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final authServiceProvider = Provider<AuthService>((_) => AuthService());
 
@@ -14,7 +15,7 @@ class AuthService {
   AuthService() {
     _client = Dio(
       BaseOptions(
-        baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+        baseUrl: AppConstants.apiBaseUrl,
         validateStatus: (status) {
           return status! < 500;
         },
@@ -36,7 +37,7 @@ class AuthService {
             if (refreshToken != null) {
               try {
                 // Use a separate Dio instance to avoid infinite loops
-                final refreshDio = Dio(BaseOptions(baseUrl: dotenv.env['BACKEND_DOMAIN']!));
+                final refreshDio = Dio(BaseOptions(baseUrl: AppConstants.apiBaseUrl));
                 final response = await refreshDio.post(
                   '/general-auth/refresh-token',
                   data: {'refreshToken': refreshToken},

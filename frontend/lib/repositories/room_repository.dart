@@ -4,13 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/room.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final roomRepositoryProvider = Provider<RoomRepository>((_) => RoomRepository());
 
 class RoomRepository {
   final _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
     ),
   );
 

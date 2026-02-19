@@ -4,13 +4,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
 import '../models/timtable.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final timetableRepositoryProvider = Provider<TimetableRepository>((ref) => TimetableRepository());
 
 class TimetableRepository {
   final _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
       validateStatus: (status) {
         return status! < 500;
       },

@@ -9,7 +9,7 @@ final announcementRepositoryProvider = Provider<AnnouncementRepository>((ref) =>
 class AnnouncementRepository {
   final Dio _client = Dio(
     BaseOptions(
-      baseUrl: AppConstants.apiBaseUrl,
+      baseUrl: AppConstants.hubApiBaseUrl,
       validateStatus: (status) {
         return status! < 500;
       },
@@ -24,9 +24,8 @@ class AnnouncementRepository {
       if (type != null && type != 'All') queryParams['type'] = type;
 
       final response = await _client.get('/announcements', queryParameters: queryParams);
-      if (response.data['status'] == true) {
-        final List<dynamic> data = response.data['data'];
-        return data.map((e) => Announcement.fromJson(e)).toList();
+      if (response.statusCode == 200 && response.data is List) {
+        return (response.data as List).map((e) => Announcement.fromJson(e)).toList();
       } else {
         return [];
       }
@@ -56,5 +55,29 @@ class AnnouncementRepository {
       _logger.e(e);
       return false;
     }
+  }
+  Future<Announcement?> getAnnouncementById(String id, String token) async {
+      _client.options.headers['authorization'] = 'Bearer $token';
+      try {
+          final response = await _client.get('/announcements/$id');
+          if (response.statusCode == 200) {
+              return Announcement.fromJson(response.data);
+          }
+          return null;
+      } catch (e) {
+          _logger.e(e);
+          return null;
+      }
+  }
+
+  Future<bool> updateAnnouncement(String id, Announcement announcement, String token) async {
+      _client.options.headers['authorization'] = 'Bearer $token';
+      try {
+          final response = await _client.put('/announcements/$id', data: announcement.toJson());
+          return response.data['status'] == true;
+      } catch (e) {
+          _logger.e(e);
+          return false;
+      }
   }
 }

@@ -10,20 +10,32 @@ final confessionProvider = StateNotifierProvider<ConfessionNotifier, ConfessionS
 
 class ConfessionState {
   final List<Confession> confessions;
-  final bool isLoading;
+  final bool isLoading; // For initial load
+  final bool isLoadingMore; // For pagination
+  final int page;
+  final bool hasMore;
 
   ConfessionState({
     this.confessions = const [],
     this.isLoading = false,
+    this.isLoadingMore = false,
+    this.page = 1,
+    this.hasMore = true,
   });
 
   ConfessionState copyWith({
     List<Confession>? confessions,
     bool? isLoading,
+    bool? isLoadingMore,
+    int? page,
+    bool? hasMore,
   }) {
     return ConfessionState(
       confessions: confessions ?? this.confessions,
       isLoading: isLoading ?? this.isLoading,
+      isLoadingMore: isLoadingMore ?? this.isLoadingMore,
+      page: page ?? this.page,
+      hasMore: hasMore ?? this.hasMore,
     );
   }
 }
@@ -37,14 +49,43 @@ class ConfessionNotifier extends StateNotifier<ConfessionState> {
       : _repository = _ref.read(confessionRepositoryProvider),
         super(ConfessionState());
 
-  Future<void> loadConfessions() async {
-    state = state.copyWith(isLoading: true);
-    final token = _ref.read(authProvider).token;
-    if (token != null) {
-      final confessions = await _repository.getConfessions(token);
-      state = state.copyWith(confessions: confessions, isLoading: false);
-    } else {
-      state = state.copyWith(isLoading: false);
+  Future<void> loadConfessions({bool refresh = false}) async {
+    if (refresh) {
+      state = state.copyWith(isLoading: true, page: 1, hasMore: true, confessions: []);
+    }
+
+    // specific check for already loading or no more data (only if not refreshing)
+    if (!refresh && (state.isLoading || state.isLoadingMore || !state.hasMore)) return;
+
+    if (!refresh) {
+      state = state.copyWith(isLoadingMore: true);
+    }
+    
+    try {
+        final token = _ref.read(authProvider).token;
+        if (token != null) {
+          final newConfessions = await _repository.getConfessions(token, page: state.page);
+          
+          if (refresh) {
+             state = state.copyWith(
+               confessions: newConfessions, 
+               isLoading: false, 
+               page: state.page + 1,
+               hasMore: newConfessions.isNotEmpty
+             );
+          } else {
+             state = state.copyWith(
+               confessions: [...state.confessions, ...newConfessions],
+               isLoadingMore: false,
+               page: state.page + 1,
+               hasMore: newConfessions.isNotEmpty
+             );
+          }
+        } else {
+          state = state.copyWith(isLoading: false, isLoadingMore: false);
+        }
+    } catch (e) {
+        state = state.copyWith(isLoading: false, isLoadingMore: false);
     }
   }
 
@@ -53,7 +94,7 @@ class ConfessionNotifier extends StateNotifier<ConfessionState> {
     if (token != null) {
       final success = await _repository.createConfession(content, backgroundColor, token);
       if (success) {
-        loadConfessions();
+        loadConfessions(refresh: true);
         return true;
       }
     }
@@ -63,9 +104,25 @@ class ConfessionNotifier extends StateNotifier<ConfessionState> {
   Future<void> likeConfession(String id) async {
       final token = _ref.read(authProvider).token;
       if (token != null) {
-          // Optimistic update? For now just reload
           await _repository.likeConfession(id, token);
-          loadConfessions();
+          // ideally separate like state update without full reload
+          // for simplicity just reloading current view logic or better, optimistic update in state
+          final updatedConfessions = state.confessions.map((c) {
+             if (c.id == id) {
+                final isLiked = !c.isLiked;
+                final count = isLiked ? c.likeCount + 1 : c.likeCount - 1;
+                return Confession(
+                    id: c.id, 
+                    content: c.content, 
+                    backgroundColor: c.backgroundColor, 
+                    createdAt: c.createdAt, 
+                    isLiked: isLiked, 
+                    likeCount: count
+                );
+             }
+             return c;
+          }).toList();
+          state = state.copyWith(confessions: updatedConfessions);
       }
   }
 
@@ -73,7 +130,6 @@ class ConfessionNotifier extends StateNotifier<ConfessionState> {
       final token = _ref.read(authProvider).token;
       if (token != null) {
           await _repository.reportConfession(id, token);
-          // Don't need to reload, maybe show a snackbar in UI
       }
   }
 }

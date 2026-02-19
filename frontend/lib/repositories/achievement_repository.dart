@@ -3,6 +3,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/dummy_entries.dart';
 import '../models/achievement.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final achievementRepositoryProvider =
     Provider<AchievementRepository>((_) => AchievementRepository());
@@ -10,7 +11,7 @@ final achievementRepositoryProvider =
 class AchievementRepository {
   final _client = Dio(
     BaseOptions(
-      baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+      baseUrl: AppConstants.apiBaseUrl,
     ),
   );
 

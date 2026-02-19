@@ -50,21 +50,123 @@ class _LinksPageState extends ConsumerState<LinksPage> {
           : null,
       body: linkState.isLoading
           ? const Center(child: CircularProgressIndicator())
-          : linkState.links.isEmpty
-              ? Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Icon(Icons.link_off_rounded, size: 64, color: UltimateTheme.textSub.withOpacity(0.5)),
-                      const SizedBox(height: 16),
-                      Text("No links found", style: GoogleFonts.inter(color: UltimateTheme.textSub)),
-                    ],
+          : CustomScrollView(
+              slivers: [
+                // 1. Emergency Application Header & Grid
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 20, 20, 10),
+                    child: Text(
+                      "Emergency Contacts",
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.redAccent,
+                      ),
+                    ),
                   ),
-                )
-              : CustomScrollView(
-                  slivers: [
-                    SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(20, 0, 20, 10),
+                  sliver: SliverGrid(
+                    gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      crossAxisSpacing: 12,
+                      mainAxisSpacing: 12,
+                      childAspectRatio: 2.5,
+                    ),
+                    delegate: SliverChildBuilderDelegate(
+                      (context, index) {
+                         final contact = _emergencyContacts[index];
+                         return _buildEmergencyCard(contact);
+                      },
+                      childCount: _emergencyContacts.length,
+                    ),
+                  ),
+                ),
+
+                // 2. Hostel Administration Header & List
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Text(
+                      "Hostel Administration",
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: UltimateTheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final contact = _hostelContacts[index];
+                      return _buildContactTile(contact);
+                    },
+                    childCount: _hostelContacts.length,
+                  ),
+                ),
+
+                // 3. Mess Administration Header & List
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Text(
+                      "Mess Administration",
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: UltimateTheme.primary,
+                      ),
+                    ),
+                  ),
+                ),
+                SliverList(
+                  delegate: SliverChildBuilderDelegate(
+                    (context, index) {
+                      final contact = _messContacts[index];
+                      return _buildContactTile(contact);
+                    },
+                    childCount: _messContacts.length,
+                  ),
+                ),
+
+                // 4. Important Links Header
+                SliverToBoxAdapter(
+                  child: Padding(
+                    padding: const EdgeInsets.fromLTRB(20, 10, 20, 10),
+                    child: Text(
+                      "Important Links",
+                      style: GoogleFonts.spaceGrotesk(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: UltimateTheme.textMain,
+                      ),
+                    ),
+                  ),
+                ),
+                
+                // 5. Existing Links Grid
+                linkState.links.isEmpty 
+                ? SliverToBoxAdapter(
+                    child: Center(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 40),
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.link_off_rounded, size: 64, color: UltimateTheme.textSub.withOpacity(0.5)),
+                            const SizedBox(height: 16),
+                            Text("No links found", style: GoogleFonts.inter(color: UltimateTheme.textSub)),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                : SliverPadding(
+                      padding: const EdgeInsets.fromLTRB(20, 0, 20, 100),
                       sliver: SliverGrid(
                         gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 2,
@@ -81,9 +183,92 @@ class _LinksPageState extends ConsumerState<LinksPage> {
                         ),
                       ),
                     ),
-                  ],
-                ),
+              ],
+            ),
     );
+  }
+
+  final List<Map<String, String>> _emergencyContacts = [
+    {"title": "Ambulance", "number": "07647068419"},
+    {"title": "Health Center", "number": "07882991612"},
+    {"title": "Health Center (Alt)", "number": "09424283691"},
+    {"title": "Security (Main Gate)", "number": "+91-1234567890"}, // Keep if no update
+    {"title": "Anti-Ragging", "number": "1800-180-5522"}, 
+    {"title": "Women Helpline", "number": "1091"},
+  ];
+
+  final List<Map<String, String>> _hostelContacts = [
+    {"title": "Kanhar Warden", "subtitle": "Dr. Vinod Reddy", "email": "warden_kanhar@iitbhilai.ac.in"},
+    {"title": "Kanhar Office", "subtitle": "Mr. Yashavant Kumar", "email": "hostel_kanhar@iitbhilai.ac.in"},
+    {"title": "Gopad Warden", "subtitle": "Dr. Yagnesh Shadangi", "email": "warden_gopad@iitbhilai.ac.in"},
+    {"title": "Gopad Office", "subtitle": "Mr. Mahesh P Koli", "email": "hostel_gopad@iitbhilai.ac.in"},
+    {"title": "Indravati Warden", "subtitle": "Dr. Swati Yadav", "email": "warden_indravati@iitbhilai.ac.in"},
+    {"title": "Indravati Office", "subtitle": "Mrs. Aanchal Lal", "email": "hostel_indravati@iitbhilai.ac.in"},
+    {"title": "Shivnath Warden", "subtitle": "Dr. Raghavender Medishetty", "email": "warden_shivnath@iitbhilai.ac.in"},
+    {"title": "Shivnath Office", "subtitle": "Mr. Piyush Shukla", "email": "hostel_shivnath@iitbhilai.ac.in"},
+  ];
+
+  final List<Map<String, String>> _messContacts = [
+    {"title": "Mess FIC", "subtitle": "Dr. Ganapathy", "email": "messblock@iitbhilai.ac.in"},
+    {"title": "Mess Staff", "subtitle": "Mr. Mahesh Koli", "email": "maheshpk@iitbhilai.ac.in"},
+    {"title": "Mess Committee", "subtitle": "General", "email": "messcoordinator@iitbhilai.ac.in"},
+  ];
+
+  Widget _buildContactTile(Map<String, String> contact) {
+    return ListTile(
+      title: Text(contact['title']!, style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+      subtitle: Text(contact['subtitle']!, style: GoogleFonts.outfit(fontSize: 12)),
+      trailing: IconButton(
+        icon: const Icon(Icons.email_outlined, color: UltimateTheme.primary),
+        onPressed: () => _launchUrl("mailto:${contact['email']}"),
+      ),
+    );
+  }
+
+  Widget _buildEmergencyCard(Map<String, String> contact) {
+    return InkWell(
+      onTap: () => _launchUrl("tel:${contact['number']}"),
+      borderRadius: BorderRadius.circular(12),
+      child: Container(
+        padding: const EdgeInsets.symmetric(horizontal: 16),
+        decoration: BoxDecoration(
+          color: Colors.red.shade50,
+          borderRadius: BorderRadius.circular(12),
+          border: Border.all(color: Colors.red.shade100),
+        ),
+        child: Row(
+          children: [
+            const Icon(Icons.phone_in_talk_rounded, color: Colors.red, size: 20),
+            const SizedBox(width: 12),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    contact['title']!,
+                    maxLines: 1,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.inter(
+                      fontWeight: FontWeight.bold,
+                      fontSize: 12,
+                      color: Colors.red.shade900,
+                    ),
+                  ),
+                  Text(
+                    contact['number']!,
+                    style: GoogleFonts.inter(
+                      fontSize: 10,
+                      color: Colors.red.shade700,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
+    ).animate().fadeIn().scale();
   }
 
   Widget _buildLinkCard(link, int index) {

@@ -78,4 +78,16 @@ class PollService {
       return {'status': false, 'message': e.toString()};
     }
   }
+
+  Future<bool> deletePoll(String pollId) async {
+    try {
+      final token = _ref.read(authProvider).token;
+      _client.options.headers['authorization'] = 'Bearer $token';
+
+      final response = await _client.delete('/polls/$pollId');
+      return response.data['status'] == true;
+    } catch (e) {
+      return false;
+    }
+  }
 }

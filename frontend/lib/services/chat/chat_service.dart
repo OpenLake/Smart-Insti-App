@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
 import 'package:logger/logger.dart';
+import 'package:smart_insti_app/constants/constants.dart';
 
 final chatServiceProvider = Provider<ChatService>((_) => ChatService());
 
@@ -20,7 +21,7 @@ class ChatService {
   ChatService() {
     _client = Dio(
       BaseOptions(
-        baseUrl: dotenv.env['BACKEND_DOMAIN']!,
+        baseUrl: AppConstants.apiBaseUrl,
         validateStatus: (status) => status! < 500,
       ),
     );
@@ -41,7 +42,7 @@ class ChatService {
     final token = await _secureStorage.read(key: 'token');
     if (token == null) return;
 
-    _socket = IO.io(dotenv.env['BACKEND_DOMAIN']!, IO.OptionBuilder()
+    _socket = IO.io(AppConstants.apiBaseUrl, IO.OptionBuilder()
       .setTransports(['websocket'])
       .setAuth({'token': token})
       .enableForceNew()

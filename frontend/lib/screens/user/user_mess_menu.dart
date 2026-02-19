@@ -18,11 +18,12 @@ class UserMessMenu extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final menuState = ref.watch(menuProvider);
     
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
-      }
-    });
+    // Auth check removed for Guest Access
+    // WidgetsBinding.instance.addPostFrameCallback((_) {
+    //   if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
+    //     ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
+    //   }
+    // });
 
     return Scaffold(
       backgroundColor: Colors.transparent,
@@ -66,7 +67,7 @@ class UserMessMenu extends ConsumerWidget {
                               ? Colors.white
                               : UltimateTheme.textSub,
                         ),
-                      )).toList(),
+                      )).toList().cast<Widget>(),
                     ),
                   ),
                 ),
@@ -122,7 +123,7 @@ class UserMessMenu extends ConsumerWidget {
                                     : UltimateTheme.textSub,
                               ),
                             ),
-                          )).toList(),
+                          )).toList().cast<Widget>(),
                         ),
                       ],
                     ),
