@@ -12,6 +12,8 @@ import 'package:smart_insti_app/models/student.dart';
 import 'package:smart_insti_app/models/faculty.dart';
 import 'package:smart_insti_app/models/alumni.dart';
 import 'package:smart_insti_app/models/admin.dart';
+import 'package:smart_insti_app/models/event.dart'; // Added import
+import 'package:smart_insti_app/provider/event_provider.dart'; // Added import
 import '../search/search_screen.dart';
 
 class UserHome extends ConsumerStatefulWidget {
@@ -27,12 +29,14 @@ class _UserHomeState extends ConsumerState<UserHome> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(homeProvider.notifier).buildMenuTiles(context);
+      ref.read(eventProvider.notifier).loadEvents(); // Load events
     });
   }
 
   @override
   Widget build(BuildContext context) {
     final homeState = ref.watch(homeProvider);
+    final eventState = ref.watch(eventProvider); // Watch event provider
     final user = ref.watch(authProvider).currentUser;
     String name = "Guest";
     String email = "";
@@ -58,57 +62,7 @@ class _UserHomeState extends ConsumerState<UserHome> {
     }
 
     return Scaffold(
-      backgroundColor: Colors.white,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-             UserAccountsDrawerHeader(
-                decoration: const BoxDecoration(color: UltimateTheme.primary),
-                accountName: Text(name, style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-                accountEmail: Text(email, style: GoogleFonts.outfit()),
-                currentAccountPicture: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: profilePicURI != null ? NetworkImage(profilePicURI) : null,
-                    child: profilePicURI == null ? Text(name[0], style: const TextStyle(fontSize: 24, color: UltimateTheme.primary)) : null,
-                ),
-             ),
-             ListTile(
-                leading: const Icon(Icons.person),
-                title: Text("Profile", style: GoogleFonts.outfit()),
-                onTap: () {
-                    // Navigate to profile
-                },
-             ),
-             ListTile(
-                leading: const Icon(Icons.settings),
-                title: Text("Settings", style: GoogleFonts.outfit()),
-                onTap: () {
-                    Navigator.pop(context);
-                    context.push('/user_home/settings');
-                },
-             ),
-             if (user is Admin)
-               ListTile(
-                  leading: const Icon(Icons.analytics, color: Colors.blue),
-                  title: Text("Analytics", style: GoogleFonts.outfit()),
-                  onTap: () {
-                      Navigator.pop(context);
-                      context.push('/user_home/analytics');
-                  },
-               ),
-             const Divider(),
-             ListTile(
-                leading: const Icon(Icons.logout, color: Colors.red),
-                title: Text("Logout", style: GoogleFonts.outfit(color: Colors.red)),
-                onTap: () async {
-                    await ref.read(authServiceProvider).logout();
-                    if (mounted) context.go('/login');
-                },
-             ),
-          ],
-        ),
-      ),
+      backgroundColor: Colors.transparent,
       body: CustomScrollView(
         slivers: [
           // 1. Welcome Section with Search
@@ -126,11 +80,6 @@ class _UserHomeState extends ConsumerState<UserHome> {
                       color: UltimateTheme.textMain,
                     ),
                   ),
-                  Builder(builder: (context) => IconButton(
-                    icon: const Icon(Icons.menu, color: UltimateTheme.primary),
-                    onPressed: () => Scaffold.of(context).openDrawer(),
-                  )),
-                  const SizedBox(height: 16),
                   Container(
                     height: 50,
                     decoration: BoxDecoration(
@@ -238,6 +187,7 @@ class _UserHomeState extends ConsumerState<UserHome> {
                     {"title": "Mess", "icon": Icons.restaurant_menu_rounded, "color": UltimateTheme.primary, "route": "/user_home/mess_menu"},
                     {"title": "Rooms", "icon": Icons.meeting_room_rounded, "color": UltimateTheme.accent, "route": "/user_home/room_vacancy"},
                     {"title": "Emergency", "icon": Icons.health_and_safety_rounded, "color": UltimateTheme.navy, "route": "/user_home/links"},
+                    {"title": "Events", "icon": Icons.event_rounded, "color": Colors.orange, "route": "/user_home/events"},
                     {"title": "News", "icon": Icons.article_rounded, "color": UltimateTheme.accent, "route": "/user_home/news"},
                     {"title": "Complaints", "icon": Icons.report_problem_rounded, "color": UltimateTheme.primary, "route": "/user_home/complaints"},
                     {"title": "Lost & Found", "icon": Icons.search_rounded, "color": UltimateTheme.accent, "route": "/user_home/lost_and_found"},
@@ -305,14 +255,19 @@ class _UserHomeState extends ConsumerState<UserHome> {
                     style: GoogleFonts.spaceGrotesk(fontSize: 20, fontWeight: FontWeight.bold, color: UltimateTheme.textMain),
                   ),
                   const SizedBox(height: 16),
-                  SizedBox(
-                    height: 180,
-                    child: ListView.builder(
-                      scrollDirection: Axis.horizontal,
-                      itemCount: 3,
-                      itemBuilder: (context, index) => _buildFeaturedEventCard(index),
+                  if (eventState.isLoading)
+                    const Center(child: CircularProgressIndicator())
+                  else if (eventState.events.isEmpty)
+                    Center(child: Text("No upcoming events", style: GoogleFonts.inter(color: UltimateTheme.textSub)))
+                  else
+                    SizedBox(
+                      height: 180,
+                      child: ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: eventState.events.length, // Use real count
+                        itemBuilder: (context, index) => _buildFeaturedEventCard(eventState.events[index]), // Pass event
+                      ),
                     ),
-                  ),
                 ],
               ),
             ),
@@ -368,48 +323,65 @@ class _UserHomeState extends ConsumerState<UserHome> {
     );
   }
 
-  Widget _buildFeaturedEventCard(int index) {
-    final titles = ["Tech Summit", "Music Fest", "Alumni Meet"];
-    final images = ["💻", "🎸", "🎓"];
-    
-    return Container(
-      width: 140,
-      margin: const EdgeInsets.only(right: 16),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: Colors.black.withOpacity(0.05)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Expanded(
-            child: Container(
-              width: double.infinity,
-              decoration: BoxDecoration(
-                color: UltimateTheme.primary.withOpacity(0.05),
-                borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+  Widget _buildFeaturedEventCard(Event event) {
+    // Determine icon/emoji based on event type or title (simple mapping)
+    String emoji = "📅";
+    if (event.type.toLowerCase().contains('gala') || event.title.toLowerCase().contains('party')) {
+      emoji = "🎉";
+    } else if (event.type.toLowerCase().contains('workshop') || event.title.toLowerCase().contains('workshop')) {
+      emoji = "🛠️";
+    } else if (event.type.toLowerCase().contains('hackathon')) {
+      emoji = "💻";
+    } else if (event.category.toLowerCase() == 'sports') {
+      emoji = "🏆";
+    } else if (event.category.toLowerCase() == 'cultural') {
+      emoji = "🎭";
+    }
+
+    return GestureDetector(
+      onTap: () => context.push('/user_home/events'), // Navigate to events page on tap
+      child: Container(
+        width: 140,
+        margin: const EdgeInsets.only(right: 16),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(color: Colors.black.withOpacity(0.05)),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Expanded(
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: UltimateTheme.primary.withOpacity(0.05),
+                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
+                ),
+                child: Center(child: Text(emoji, style: const TextStyle(fontSize: 40))),
               ),
-              child: Center(child: Text(images[index], style: const TextStyle(fontSize: 40))),
             ),
-          ),
-          Padding(
-            padding: const EdgeInsets.all(12.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  titles[index],
-                  style: GoogleFonts.spaceGrotesk(fontSize: 14, fontWeight: FontWeight.bold),
-                ),
-                Text(
-                  "Feb ${15 + index}",
-                  style: GoogleFonts.inter(fontSize: 11, color: UltimateTheme.textSub),
-                ),
-              ],
+            Padding(
+              padding: const EdgeInsets.all(12.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    event.title,
+                    maxLines: 2,
+                    overflow: TextOverflow.ellipsis,
+                    style: GoogleFonts.spaceGrotesk(fontSize: 14, fontWeight: FontWeight.bold),
+                  ),
+                  const SizedBox(height: 4),
+                  Text(
+                    DateFormat('MMM dd').format(event.startTime),
+                    style: GoogleFonts.inter(fontSize: 11, color: UltimateTheme.textSub),
+                  ),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
