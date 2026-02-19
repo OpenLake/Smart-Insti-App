@@ -66,12 +66,8 @@ class EventNotifier extends StateNotifier<EventState> {
   Future<void> loadEvents() async {
     state = state.copyWith(isLoading: true);
     final token = _ref.read(authProvider).token;
-    if (token != null) {
-      final events = await _repository.getEvents(token);
-      state = state.copyWith(events: events, isLoading: false);
-    } else {
-      state = state.copyWith(isLoading: false);
-    }
+    final events = await _repository.getEvents(token ?? '');
+    state = state.copyWith(events: events, isLoading: false);
   }
 
   Future<bool> createEvent(Map<String, dynamic> data) async {

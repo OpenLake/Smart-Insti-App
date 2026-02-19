@@ -104,7 +104,7 @@ class _EventsPageState extends ConsumerState<EventsPage> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      DateFormat('MMM').format(event.date).toUpperCase(),
+                      DateFormat('MMM').format(event.startTime).toUpperCase(),
                       style: GoogleFonts.spaceGrotesk(
                         fontWeight: FontWeight.w800,
                         color: UltimateTheme.primary,
@@ -113,7 +113,7 @@ class _EventsPageState extends ConsumerState<EventsPage> {
                       ),
                     ),
                     Text(
-                      DateFormat('dd').format(event.date),
+                      DateFormat('dd').format(event.startTime),
                       style: GoogleFonts.spaceGrotesk(
                         fontSize: 28,
                         fontWeight: FontWeight.bold,

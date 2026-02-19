@@ -9,7 +9,7 @@ final eventRepositoryProvider = Provider<EventRepository>((ref) => EventReposito
 class EventRepository {
   final Dio _client = Dio(
     BaseOptions(
-      baseUrl: AppConstants.apiBaseUrl,
+      baseUrl: AppConstants.hubApiBaseUrl,
       validateStatus: (status) => status! < 500,
     ),
   );
@@ -19,9 +19,8 @@ class EventRepository {
     // _client.options.headers['authorization'] = 'Bearer $token'; 
     try {
       final response = await _client.get('/events');
-      if (response.data['status'] == true) {
-        final List<dynamic> data = response.data['data'];
-        return data.map((e) => Event.fromJson(e)).toList();
+      if (response.statusCode == 200 && response.data is List) {
+        return (response.data as List).map((e) => Event.fromJson(e)).toList();
       } else {
         return [];
       }
@@ -46,6 +45,45 @@ class EventRepository {
       _client.options.headers['authorization'] = 'Bearer $token';
       try {
           final response = await _client.delete('/events/$id');
+          return response.data['status'] == true;
+      } catch (e) {
+          _logger.e(e);
+          return false;
+      }
+  }
+  Future<List<Event>> getLatestEvents(String token) async {
+    // _client.options.headers['authorization'] = 'Bearer $token'; 
+    try {
+      final response = await _client.get('/events/latest');
+      if (response.statusCode == 200 && response.data is List) {
+        return (response.data as List).map((e) => Event.fromJson(e)).toList();
+      } else {
+        return [];
+      }
+    } catch (e) {
+      _logger.e(e);
+      return [];
+    }
+  }
+
+  Future<Event?> getEventById(String id, String token) async {
+      // _client.options.headers['authorization'] = 'Bearer $token';
+      try {
+          final response = await _client.get('/events/$id');
+          if (response.statusCode == 200) {
+              return Event.fromJson(response.data);
+          }
+          return null;
+      } catch (e) {
+          _logger.e(e);
+          return null;
+      }
+  }
+
+  Future<bool> registerForEvent(String id, String token) async {
+      _client.options.headers['authorization'] = 'Bearer $token';
+      try {
+          final response = await _client.post('/events/$id/register');
           return response.data['status'] == true;
       } catch (e) {
           _logger.e(e);
