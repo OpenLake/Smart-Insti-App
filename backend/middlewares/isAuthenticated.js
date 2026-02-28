@@ -1,8 +1,13 @@
-import jwt from "jsonwebtoken";
+import { createClient } from "@supabase/supabase-js";
 import dotenv from "dotenv";
 import User from "../models/user.js";
 
 dotenv.config();
+
+const supabase = createClient(
+  process.env.SUPABASE_URL,
+  process.env.SUPABASE_ANON_KEY
+);
 
 const isAuthenticated = async (req, res, next) => {
   try {
@@ -14,26 +19,41 @@ const isAuthenticated = async (req, res, next) => {
 
     const token = authHeader.split(" ")[1];
     
-    // Verify Access Token
-    const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
+    // Verify Token with Supabase
+    const { data: { user }, error } = await supabase.auth.getUser(token);
 
-    // Attach user to request
-    req.user = await User.findById(decoded.id);
-
-    if (!req.user) {
-      return res.status(401).json({ message: "User belonging to this token no longer exists." });
+    if (error || !user) {
+      return res.status(401).json({ message: "Invalid or expired token", error: error?.message });
     }
 
-    // Optional: Check if user changed password after token was issued (iat check)
-    // Optional: Check onboarding status
-    // if (!req.user.isVerified) ...
+    // Identify the user and link Supabase ID if not already linked
+    let localUser = await User.findOne({ 
+      $or: [
+        { supabaseId: user.id },
+        { email: user.email }
+      ]
+    });
 
+    if (localUser && !localUser.supabaseId) {
+        localUser.supabaseId = user.id;
+        await localUser.save();
+    }
+
+    if (!localUser) {
+        // Create a basic User record to start with
+        localUser = await User.create({
+            name: user.user_metadata?.name || 'Smart Insti User',
+            email: user.email,
+            supabaseId: user.id,
+            roles: [user.user_metadata?.role || 'student'],
+            profilePicURI: user.user_metadata?.avatar_url || ''
+        });
+    }
+
+    req.user = localUser;
     next();
   } catch (error) {
-    if (error.name === 'TokenExpiredError') {
-       return res.status(401).json({ message: "Token expired" });
-    }
-    return res.status(401).json({ message: "Invalid token" });
+    return res.status(401).json({ message: "Authentication failed", error: error.message });
   }
 };
 
