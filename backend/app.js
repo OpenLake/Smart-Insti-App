@@ -44,6 +44,8 @@ import busRouteResource from "./resources/transport/busRouteResource.js";
 import leaderboardResource from "./resources/gamification/leaderboardResource.js";
 import analyticsResource from "./resources/admin/analyticsResource.js";
 import searchResource from "./resources/search/searchResource.js";
+import authCallbackResource from "./resources/auth/authCallbackResource.js";
+import internalResource from "./resources/internal/internalResource.js";
 import "./models/student.js";
 import "./models/skill.js";
 import "./models/achievement.js";
@@ -78,6 +80,7 @@ app.use("/mess-menus", messMenuListResource);
 app.use("/admin-auth", adminAuthResource);
 app.use("/general-auth", generalAuthResource);
 app.use("/otp", otpResource);
+app.use("/auth", authCallbackResource);
 app.use("/", testResource);
 app.use("/rooms", roomListResource);
 app.use("/room", roomResource);
@@ -106,6 +109,7 @@ app.use("/transport", busRouteResource);
 app.use("/leaderboard", leaderboardResource);
 app.use("/analytics", analyticsResource);
 app.use("/search", searchResource);
+app.use("/api/v1/internal", internalResource);
 
 
 
