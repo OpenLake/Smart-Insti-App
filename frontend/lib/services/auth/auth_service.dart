@@ -1,244 +1,151 @@
-import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:logger/logger.dart';
-import 'package:smart_insti_app/constants/constants.dart';
 
 final authServiceProvider = Provider<AuthService>((_) => AuthService());
 
 class AuthService {
-  late final Dio _client;
-  final _secureStorage = const FlutterSecureStorage();
+  final SupabaseClient _supabase = Supabase.instance.client;
   final Logger _logger = Logger();
 
-  AuthService() {
-    _client = Dio(
-      BaseOptions(
-        baseUrl: AppConstants.apiBaseUrl,
-        validateStatus: (status) {
-          return status! < 500;
-        },
-      ),
-    );
+  AuthService();
 
-    _client.interceptors.add(
-      InterceptorsWrapper(
-        onRequest: (options, handler) async {
-          final token = await _secureStorage.read(key: 'token');
-          if (token != null) {
-            options.headers['Authorization'] = 'Bearer $token';
-          }
-          return handler.next(options);
-        },
-        onError: (DioException error, ErrorInterceptorHandler handler) async {
-          if (error.response?.statusCode == 401) {
-            final refreshToken = await _secureStorage.read(key: 'refreshToken');
-            if (refreshToken != null) {
-              try {
-                // Use a separate Dio instance to avoid infinite loops
-                final refreshDio = Dio(BaseOptions(baseUrl: AppConstants.apiBaseUrl));
-                final response = await refreshDio.post(
-                  '/general-auth/refresh-token',
-                  data: {'refreshToken': refreshToken},
-                );
+  User? get currentUser => _supabase.auth.currentUser;
+  Session? get currentSession => _supabase.auth.currentSession;
+  Stream<AuthState> get authStateChanges => _supabase.auth.onAuthStateChange;
 
-                if (response.statusCode == 200 && response.data['status'] == true) {
-                  final newAccessToken = response.data['accessToken'];
-                  final newRefreshToken = response.data['refreshToken'];
-                  
-                  await _secureStorage.write(key: 'token', value: newAccessToken);
-                  if (newRefreshToken != null) {
-                    await _secureStorage.write(key: 'refreshToken', value: newRefreshToken);
-                  }
-
-                  // Retry the original request with new token
-                  final opts = error.requestOptions;
-                  opts.headers['Authorization'] = 'Bearer $newAccessToken';
-                  
-                  final clonedRequest = await _client.request(
-                    opts.path,
-                    options: Options(
-                      method: opts.method,
-                      headers: opts.headers,
-                    ),
-                    data: opts.data,
-                    queryParameters: opts.queryParameters,
-                  );
-                  return handler.resolve(clonedRequest);
-                }
-              } catch (e) {
-                // Refresh failed
-                _logger.e("Token refresh failed: $e");
-                await clearCredentials();
-              }
-            }
-          }
-          return handler.next(error);
-        },
-      ),
-    );
-  }
-
-   Future<void> saveCredentials(Map response) async {
+  Future<AuthResponse> signInWithPassword(String email, String password) async {
     try {
-      final data = response.containsKey('data') ? response['data'] : response;
-      // Handle both flat and nested responses if needed, but usually it's in 'data'
-      
-      final credentials = {
-        'token': data['token'] ?? '',
-        'refreshToken': data['refreshToken'] ?? '', // Store refresh token
-        '_id': data['_id'] ?? '',
-        'name': data['name'] ?? '',
-        'email': data['email'] ?? '',
-        'role': data['role'] ?? '',
-      };
-
-      await _secureStorage.write(key: 'token', value: credentials['token']);
-      await _secureStorage.write(key: 'refreshToken', value: credentials['refreshToken']);
-      await _secureStorage.write(key: '_id', value: credentials['_id']);
-      await _secureStorage.write(key: 'name', value: credentials['name']);
-      await _secureStorage.write(key: 'email', value: credentials['email']);
-      await _secureStorage.write(key: 'role', value: credentials['role']);
+      return await _supabase.auth.signInWithPassword(
+        email: email,
+        password: password,
+      );
     } catch (e) {
-      _logger.e(e);
+      _logger.e("SignIn error: $e");
+      rethrow;
     }
   }
 
-  Future<Map<String, String>> checkCredentials() async {
-    Map<String, String> credentials = {};
+  Future<bool> signInWithGoogle() async {
     try {
-      credentials = {
-        'token': await _secureStorage.read(key: 'token') ?? '',
-        'refreshToken': await _secureStorage.read(key: 'refreshToken') ?? '',
-        '_id': await _secureStorage.read(key: '_id') ?? '',
-        'name': await _secureStorage.read(key: 'name') ?? '',
-        'email': await _secureStorage.read(key: 'email') ?? '',
-        'role': await _secureStorage.read(key: 'role') ?? '',
-      };
-      return credentials;
+      final success = await _supabase.auth.signInWithOAuth(
+        OAuthProvider.google,
+        redirectTo: 'io.supabase.smartinstiapp://login-callback',
+      );
+      return success;
     } catch (e) {
-      _logger.e(e);
-      return credentials;
+      _logger.e("Google SignIn error: $e");
+      rethrow;
     }
   }
 
-  Future<bool> clearCredentials() async {
+  Future<AuthResponse> signUpWithPassword({
+    required String email,
+    required String password,
+    required Map<String, dynamic> metadata,
+  }) async {
     try {
-      await _secureStorage.delete(key: 'token');
-      await _secureStorage.delete(key: 'refreshToken');
-      await _secureStorage.delete(key: '_id');
-      await _secureStorage.delete(key: 'name');
-      await _secureStorage.delete(key: 'email');
-      await _secureStorage.delete(key: 'role');
-      return true;
+      return await _supabase.auth.signUp(
+        email: email,
+        password: password,
+        data: metadata,
+      );
     } catch (e) {
-      _logger.e(e);
-      return false;
+      _logger.e("SignUp error: $e");
+      rethrow;
+    }
+  }
+
+  Future<void> signOut() async {
+    try {
+      await _supabase.auth.signOut();
+    } catch (e) {
+      _logger.e("SignOut error: $e");
     }
   }
 
   Future<void> logout() async {
-    await clearCredentials();
+    await signOut();
   }
 
-  Future<({int statusCode, String message})> sendOtp(
-      String email, String loginForRole) async {
+  // Legacy compatibility / Check helper
+  Future<Map<String, String>> checkCredentials() async {
+    final user = currentUser;
+    if (user != null) {
+      return {
+        'token': currentSession?.accessToken ?? '',
+        '_id': user.id,
+        'name': user.userMetadata?['name'] ?? '',
+        'email': user.email ?? '',
+        'role': user.userMetadata?['role'] ?? '',
+      };
+    }
+    return {};
+  }
+
+  // Legacy cleanup helper
+  Future<void> clearCredentials() async {
+    await signOut();
+  }
+
+  // OTP Fallback (if needed for Supabase)
+  Future<void> sendOtp(String email) async {
     try {
-      final response = await _client.post(
-        '/otp/send-otp',
-        data: {
-          'email': email,
-          'loginForRole': loginForRole,
-        },
-      );
-      _logger.i(response.data);
-      return (
-        statusCode: response.statusCode!,
-        message: response.data['message'] as String
-      );
+      await _supabase.auth.signInWithOtp(email: email);
     } catch (e) {
-      _logger.e(e);
-      if (e is DioException && e.response != null) {
-        return (
-          statusCode: e.response!.statusCode ?? 500,
-          message: e.response!.data['message']?.toString() ?? 'Error'
-        );
-      }
-      return (statusCode: 500, message: 'Internal Server Error');
+      _logger.e("OTP Send error: $e");
+      rethrow;
     }
   }
 
-  Future<({int statusCode, String message})> verifyOtp(
-      String email, String otp) async {
+  Future<AuthResponse> verifyOtp(String email, String token) async {
     try {
-      final response = await _client.post(
-        '/otp/verify-otp',
-        data: {
-          'email': email,
-          'otp': otp,
-        },
-      );
-      _logger.i(response.data);
-      return (
-        statusCode: response.statusCode!,
-        message: response.data['message']?.toString() ?? '',
+      return await _supabase.auth.verifyOTP(
+        email: email,
+        token: token,
+        type: OtpType.signup,
       );
     } catch (e) {
-      _logger.e(e);
-      if (e is DioException && e.response != null) {
-        return (
-          statusCode: e.response!.statusCode ?? 500,
-          message: e.response!.data['message']?.toString() ?? 'Error'
-        );
-      }
-      return (statusCode: 500, message: 'Internal Server Error');
+      _logger.e("OTP Verify error: $e");
+      rethrow;
     }
   }
 
-  Future<Map<String, dynamic>> loginAdmin(String email, String password) async {
+  Future<Map<String, dynamic>?> getUserProfile(String? token) async {
     try {
-      final response = await _client.post(
-        '/admin-auth/login',
-        data: {
-          'email': email,
-          'password': password,
-        },
-      );
-      return response.data;
+      final user = currentUser;
+      if (user == null) return null;
+
+      final response = await _supabase
+          .from('profiles')
+          .select()
+          .eq('id', user.id)
+          .maybeSingle();
+
+      return response;
     } catch (e) {
-      _logger.e(e);
-      return {};
+      _logger.e("GetProfile error: $e");
     }
+    return null;
   }
 
-  Future<Map<String, dynamic>> loginFacultyOrStudent(
-      String email, String loginForRole) async {
+  Future<Map<String, dynamic>?> updateProfile(
+      String? token, Map<String, dynamic> data) async {
     try {
-      final response = await _client.post(
-        '/general-auth/login',
-        data: {
-          'email': email,
-          'loginForRole': loginForRole,
-        },
-      );
-      return response.data;
-    } catch (e) {
-      _logger.e(e);
-      return {};
-    }
-  }
+      final user = currentUser;
+      if (user == null) return null;
 
-  Future<Map<String, dynamic>> registerStudent(Map<String, dynamic> studentData) async {
-    try {
-      final response = await _client.post(
-        '/general-auth/register',
-        data: studentData,
-      );
-      return response.data;
+      final response = await _supabase
+          .from('profiles')
+          .update(data)
+          .eq('id', user.id)
+          .select()
+          .single();
+
+      return response;
     } catch (e) {
-      _logger.e(e);
-      return {};
+      _logger.e("UpdateProfile error: $e");
     }
+    return null;
   }
 }
