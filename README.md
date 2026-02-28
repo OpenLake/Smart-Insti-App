@@ -20,6 +20,8 @@ Smart Insti App is a comprehensive institute management application designed to 
 - **Lost and Found**: Report lost items or claim found items
 - **Chat Room**: Communicate with other students and faculty
 - **Broadcast Notifications**: Receive important announcements
+- **Complaints & Feedback**: Submit complaints and track their status
+
 
 ### For Faculty
 - **Profile Management**: Manage professional profiles
@@ -32,6 +34,8 @@ Smart Insti App is a comprehensive institute management application designed to 
 - **Course Administration**: Create and manage courses and assignments
 - **Mess Menu Management**: Update and publish mess menus
 - **Room Allocation**: Manage room assignments and vacancies
+- **Complaints Management**: View and update status of student complaints
+
 
 ## Technology Stack
 
@@ -113,8 +117,7 @@ frontend/
    ```
 
 3. Create a `.env` file based on `.env.example` with your configurations.
-4. 
-5. Start the server:
+4. Start the server:
    ```bash
    npm start
    ```
