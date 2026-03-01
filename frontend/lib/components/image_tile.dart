@@ -26,21 +26,25 @@ class ImageTile extends StatelessWidget {
       child: Material(
         borderRadius: BorderRadius.circular(15),
         child: Ink(
-          decoration: BoxDecoration(borderRadius: BorderRadius.circular(15), color: primaryColor),
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(15), color: primaryColor),
           child: InkWell(
-            overlayColor: MaterialStateProperty.all<Color?>(secondaryColor),
+            overlayColor: WidgetStateProperty.all<Color?>(secondaryColor),
             borderRadius: BorderRadius.circular(15),
             splashColor: secondaryColor,
             onTap: () => onTap(),
             child: Center(
               child: Container(
-                padding: contentPadding ?? const EdgeInsets.symmetric(horizontal: 16.0),
+                padding: contentPadding ??
+                    const EdgeInsets.symmetric(horizontal: 16.0),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: <Widget>[
                         const SizedBox(height: 20),
                         image != null
-                            ? ClipRRect(borderRadius: BorderRadius.circular(10), child: image)
+                            ? ClipRRect(
+                                borderRadius: BorderRadius.circular(10),
+                                child: image)
                             : Container(
                                 width: double.infinity,
                                 height: 115,
@@ -48,7 +52,8 @@ class ImageTile extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(10),
                                   color: Colors.white,
                                 ),
-                                child: const Icon(Icons.image, size: 50, color: Colors.black45),
+                                child: const Icon(Icons.image,
+                                    size: 50, color: Colors.black45),
                               ),
                         const SizedBox(height: 10),
                       ] +
