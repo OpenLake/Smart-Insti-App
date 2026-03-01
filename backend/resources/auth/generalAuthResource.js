@@ -1,8 +1,10 @@
 import express from "express";
 import * as messages from "../../constants/messages.js";
 import User from "../../models/user.js";
+import Otp from "../../models/otp.js";
 import jwt from "jsonwebtoken";
 import dotenv from "dotenv";
+import tokenRequired from "../../middlewares/tokenRequired.js";
 
 dotenv.config();
 
@@ -196,20 +198,31 @@ generalAuthRouter.post("/register/alumni", async (req, res) => {
   }
 });
 
-// Login
+// Login (OTP-verified)
 generalAuthRouter.post("/login", async (req, res) => {
   try {
-    const { email, loginForRole } = req.body;
+    const { email, loginForRole, otp } = req.body;
 
     if (!email || !loginForRole) {
       return res.status(400).json({ status: false, message: "Email and role are required." });
     }
 
-    const user = await User.findOne({ email }).select("+password"); // Select password if needed, though this is OTP login usually? 
-    // Wait, the original code had NO password check. It just trusted the email?
-    // This implies OTP verification is handled separately (via /otp/verify-otp) OR this is insecure.
-    // Assuming /otp/verify-otp is called BEFORE this, OR this endpoint is implicitly trusted.
-    // But keeping strictly to previous logic: just verify existence + role.
+    if (!otp) {
+      return res.status(400).json({ status: false, message: "OTP is required for login." });
+    }
+
+    // Verify OTP
+    const otpRecord = await Otp.findOne({ email });
+    if (!otpRecord) {
+      return res.status(401).json({ status: false, message: "OTP expired or not found. Please request a new OTP." });
+    }
+    if (otp !== otpRecord.otp) {
+      return res.status(401).json({ status: false, message: "Incorrect OTP." });
+    }
+    // OTP valid — delete it to prevent reuse
+    await Otp.deleteOne({ email });
+
+    const user = await User.findOne({ email });
 
     if (!user) {
       return res.status(401).json({ status: false, message: "User not found." });
@@ -284,6 +297,59 @@ generalAuthRouter.post("/refresh-token", async (req, res) => {
   } catch (error) {
     return res.status(401).json({ status: false, message: "Invalid or expired refresh token" });
   }
+});
+
+// Get Current User Profile
+generalAuthRouter.get("/profile/me", tokenRequired, async (req, res) => {
+  try {
+    const user = await User.findById(req.user._id)
+      .populate("skills")
+      .populate("achievements");
+
+    if (!user) {
+      return res.status(404).json({ status: false, message: "User not found" });
+    }
+
+    res.status(200).json({
+      status: true,
+      message: "Profile fetched successfully",
+      data: user
+    });
+  } catch (error) {
+    console.error("Profile fetch error:", error);
+    res.status(500).json({ status: false, message: messages.internalServerError });
+  }
+});
+
+/**
+ * @route PUT /profile/me
+ * @desc Update current user profile
+ */
+generalAuthRouter.put("/profile/me", tokenRequired, async (req, res) => {
+    try {
+        const userId = req.user._id;
+        const updateData = req.body;
+
+        // Prevent sensitive field updates via this endpoint if needed
+        delete updateData.roles;
+        delete updateData.email;
+        delete updateData.supabaseId;
+
+        const updatedUser = await User.findByIdAndUpdate(
+            userId,
+            { $set: updateData },
+            { new: true, runValidators: true }
+        ).populate("skills").populate("achievements");
+
+        res.status(200).json({
+            status: true,
+            message: "Profile updated successfully",
+            data: updatedUser
+        });
+    } catch (error) {
+        console.error("Profile update error:", error);
+        res.status(500).json({ status: false, message: "Internal Server Error" });
+    }
 });
 
 export default generalAuthRouter;
