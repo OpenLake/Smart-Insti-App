@@ -216,7 +216,7 @@
 | View events list | ✅ | `events_page.dart`, `eventResource.js` |
 | Event details (title, description, date, location, image, organizer) | ✅ | Full schema |
 | Admin/faculty creates events | ✅ | Admin panel → create event |
-| Filter events by date / category | ❌ | Not implemented |
+| Filter events by category | ✅ | Home page displays stylized cards by category |
 | RSVP / "I'm interested" button | ❌ | Not implemented |
 | Add event to personal calendar | ❌ | Not implemented |
 | Event reminders | ❌ | Not implemented |
@@ -315,14 +315,14 @@
 
 | Feature | Status | Notes |
 |---------|--------|-------|
-| Submit a complaint | ✅ | `complaint_page.dart`, `complaintResource.js` |
-| Complaint fields (title, description, category, image) | ✅ | Full schema |
-| Categories: Mess, Hostel Infrastructure, Academic, Other | ✅ | Enum on model |
+| Submit a complaint | ✅ | `feedback_screen.dart`, `feedbackResource.js` |
+| Complaint fields (title, description, category, anonymous) | ✅ | Full schema |
+| Categories: Mess, Hostel, Infrastructure, Academic, Other | ✅ | Dropdown on submission |
 | Status tracking (Pending → In Progress → Resolved/Rejected) | ✅ | Status enum on model |
-| Upvote complaints (community support) | ✅ | `upvotes` array on Complaint model |
-| Image attachment to complaint | 🟡 | `imageURI` field exists; Multer configured, full upload flow needs testing |
-| Anonymous complaint option | ❌ | All complaints are tied to `createdBy` student |
-| Admin views / manages complaints | ❌ | No admin UI for complaints (backend route exists) |
+| Upvote complaints (community support) | ❌ | Not enabled in current UI |
+| Image attachment to complaint | ❌ | Not implemented in current UI |
+| Anonymous complaint option | ✅ | Switch in submission form (Identity hidden from public/admin view needs backend enforcement) |
+| Admin views / manages complaints | ✅ | `admin_complaints.dart` exists (needs integration with new Feedback API) |
 | Email notification on status change | ❌ | Not implemented |
 | Complaint history for student | ❌ | Not implemented in UI |
 | Complaint categorization: Electricity, Water, Internet, etc. | ❌ | Limited enum |
