@@ -13,45 +13,30 @@ class OtpInputRow extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final int count = controllers.length;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    // Calculate a reasonable size to fit all boxes with some padding
+    // Assuming a max width of 400 for the login form
+    final double containerWidth = screenWidth > 400 ? 400 : screenWidth - 40;
+    final double boxSize = (containerWidth / count) - 8;
+    final double fontSize = boxSize * 0.5;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      children: [
-        MaterialOTPBox(
-          controller: controllers[0],
-          focusNode: focusNodes[0],
-          hintText: 'O',
-        ),
-        MaterialOTPBox(
-          controller: controllers[1],
-          focusNode: focusNodes[1],
-          hintText: 'T',
+      children: List.generate(count, (index) {
+        return MaterialOTPBox(
+          controller: controllers[index],
+          focusNode: focusNodes[index],
+          hintText: (index + 1).toString(),
+          size: boxSize > 48 ? 48 : boxSize,
+          fontSize: fontSize > 24 ? 24 : fontSize,
           onChanged: (value) {
-            if (value != null && value.isEmpty) {
-              focusNodes[0].requestFocus();
+            if (value != null && value.isEmpty && index > 0) {
+              focusNodes[index - 1].requestFocus();
             }
           },
-        ),
-        MaterialOTPBox(
-          controller: controllers[2],
-          focusNode: focusNodes[2],
-          hintText: 'P',
-          onChanged: (value) {
-            if (value != null && value.isEmpty) {
-              focusNodes[1].requestFocus();
-            }
-          },
-        ),
-        MaterialOTPBox(
-          controller: controllers[3],
-          focusNode: focusNodes[3],
-          hintText: ':)',
-          onChanged: (value) {
-            if (value != null && value.isEmpty) {
-              focusNodes[2].requestFocus();
-            }
-          },
-        )
-      ],
+        );
+      }),
     );
   }
 }
