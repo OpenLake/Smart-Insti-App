@@ -16,7 +16,7 @@ Smart Insti App is a Flutter-based mobile application designed for campus manage
 lib/
 ├── components/       # Reusable UI widgets (Buttons, TextFields, Cards)
 ├── constants/        # App-wide constants (API URLs, Strings)
-├── models/           # Data models (Student, Faculty, Event, etc.)
+├── models/           # Data models (Student, Faculty, Event, Feedback, etc.)
 ├── provider/         # Riverpod providers (State Management)
 ├── repositories/     # Data & API interactions
 ├── screens/          # UI Pages (organized by feature/role)
