@@ -1,51 +1,75 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_fonts/google_fonts.dart';
+import '../theme/ultimate_theme.dart';
 
 class MaterialOTPBox extends StatelessWidget {
-  const MaterialOTPBox(
-      {super.key, required this.controller, required this.focusNode, required this.hintText, this.onChanged});
+  const MaterialOTPBox({
+    super.key,
+    required this.controller,
+    required this.focusNode,
+    required this.hintText,
+    this.onChanged,
+    this.size = 48.0,
+    this.fontSize = 20.0,
+  });
 
   final TextEditingController controller;
   final FocusNode focusNode;
   final String hintText;
   final void Function(String?)? onChanged;
+  final double size;
+  final double fontSize;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+
     return SizedBox(
-      width: 60.0,
-      height: 60.0,
+      width: size,
+      height: size,
       child: TextFormField(
         showCursor: false,
         controller: controller,
         focusNode: focusNode,
-        onChanged: onChanged,
-        buildCounter: (BuildContext context, {int? currentLength, int? maxLength, bool? isFocused}) => null,
+        onChanged: (value) {
+          if (value.length == 1) {
+            focusNode.nextFocus();
+          }
+          if (onChanged != null) onChanged!(value);
+        },
         keyboardType: TextInputType.number,
-        expands: true,
-        maxLines: null,
-        maxLength: null,
-        style: const TextStyle(
-          fontSize: 30.0,
-          fontWeight: FontWeight.w300,
-        ),
         textAlign: TextAlign.center,
+        style: GoogleFonts.spaceGrotesk(
+          fontSize: fontSize,
+          fontWeight: FontWeight.bold,
+          color: UltimateTheme.primary,
+        ),
         inputFormatters: [
           LengthLimitingTextInputFormatter(1),
           FilteringTextInputFormatter.digitsOnly,
         ],
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(0),
+          contentPadding: EdgeInsets.zero,
           hintText: hintText,
-          hintStyle: const TextStyle(
-            fontSize: 30.0,
-            fontFamily: 'Poppins',
-            color: Colors.black12,
-            fontWeight: FontWeight.w300,
+          hintStyle: GoogleFonts.spaceGrotesk(
+            fontSize: fontSize,
+            color: UltimateTheme.primary.withValues(alpha: 0.1),
+            fontWeight: FontWeight.bold,
           ),
           filled: true,
-          fillColor: Colors.lightBlueAccent.withOpacity(0.4),
-          border: OutlineInputBorder(borderSide: BorderSide.none, borderRadius: BorderRadius.circular(15)),
+          fillColor: UltimateTheme.primary.withValues(alpha: 0.05),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(
+                color: UltimateTheme.primary.withValues(alpha: 0.1),
+                width: 1.5),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderSide:
+                const BorderSide(color: UltimateTheme.primary, width: 2),
+            borderRadius: BorderRadius.circular(12),
+          ),
         ),
       ),
     );
