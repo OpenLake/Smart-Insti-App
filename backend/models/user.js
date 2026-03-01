@@ -11,6 +11,7 @@ const userSchema = new mongoose.Schema({
     lowercase: true,
     match: [/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/, 'Please fill a valid email address']
   },
+  supabaseId: { type: String, unique: true, sparse: true, index: true },
   username: { type: String, unique: true, sparse: true, trim: true, lowercase: true },
   password: { type: String, select: false }, // For those using password auth (Admin/Marketplace)
   
@@ -99,8 +100,6 @@ const userSchema = new mongoose.Schema({
 });
 
 // Indexes for performance
-userSchema.index({ email: 1 });
-userSchema.index({ username: 1 });
 userSchema.index({ 'academicInfo.studentId': 1 });
 
 const User = mongoose.model('User', userSchema);
