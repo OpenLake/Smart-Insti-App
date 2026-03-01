@@ -18,29 +18,32 @@ class MenuTile extends StatelessWidget {
   final String title;
   final List<Widget>? body;
   final IconData? icon;
-  final Function onTap;
+  final VoidCallback onTap;
   final EdgeInsets? contentPadding;
   final Color primaryColor;
   final Color secondaryColor;
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return GestureDetector(
-      onTap: () => onTap(),
-        child: Container(
-          padding: contentPadding ?? const EdgeInsets.all(16),
-          decoration: UltimateTheme.bentoDecoration.copyWith(
-            color: primaryColor.withOpacity(0.08), // Slightly more noticeable tint
-            border: Border.all(color: primaryColor.withOpacity(0.12), width: 1.5),
-          ),
+      onTap: onTap,
+      child: Container(
+        padding: contentPadding ?? const EdgeInsets.all(20),
+        decoration: UltimateTheme.bentoDecoration(context).copyWith(
+          color: isDark
+              ? primaryColor.withValues(alpha: 0.05)
+              : primaryColor.withValues(alpha: 0.08),
+        ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null)
               Container(
-                padding: const EdgeInsets.all(15),
+                padding: const EdgeInsets.all(16),
                 decoration: BoxDecoration(
-                  color: primaryColor.withOpacity(0.12),
+                  color: primaryColor.withValues(alpha: 0.1),
                   borderRadius: BorderRadius.circular(20),
                 ),
                 child: Icon(
@@ -48,26 +51,31 @@ class MenuTile extends StatelessWidget {
                   color: primaryColor,
                   size: 32,
                 ),
-              ).animate().scale(delay: 200.ms, duration: 400.ms, curve: Curves.easeOutBack),
+              ).animate().scale(
+                  delay: 100.ms, duration: 400.ms, curve: Curves.easeOutBack),
             const SizedBox(height: 16),
             Text(
-              title.toUpperCase(),
+              title,
               textAlign: TextAlign.center,
               style: GoogleFonts.spaceGrotesk(
-                fontSize: 12,
-                fontWeight: FontWeight.w800,
-                color: primaryColor.withOpacity(0.8),
-                letterSpacing: 1.2,
-                height: 1.1,
+                fontSize: 14,
+                fontWeight: FontWeight.bold,
+                color: isDark
+                    ? UltimateTheme.darkTextMain
+                    : UltimateTheme.textMain,
+                height: 1.2,
               ),
             ),
             if (body != null && body!.isNotEmpty) ...[
-              const SizedBox(height: 6),
+              const SizedBox(height: 8),
               ...body!,
             ],
           ],
         ),
       ),
-    ).animate().fadeIn(duration: 400.ms).scale(begin: const Offset(0.9, 0.9), curve: Curves.easeOutQuad);
+    )
+        .animate()
+        .fadeIn(duration: 400.ms)
+        .scale(begin: const Offset(0.95, 0.95), curve: Curves.easeOutQuad);
   }
 }
