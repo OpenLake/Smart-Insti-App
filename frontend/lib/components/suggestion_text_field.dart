@@ -29,7 +29,7 @@ class SuggestionTextField extends StatelessWidget {
               fontSize: 15,
               fontFamily: "RobotoFlex",
             ),
-            fillColor: Colors.tealAccent.withOpacity(0.4),
+            fillColor: Colors.tealAccent.withValues(alpha: 0.4),
             border: OutlineInputBorder(
               borderRadius: BorderRadius.circular(15),
               borderSide: BorderSide.none,
