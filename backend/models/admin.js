@@ -15,6 +15,7 @@ const adminSchema = new mongoose.Schema(
         message: "Please enter a valid email address",
       },
     },
+    supabaseId: { type: String, unique: true, sparse: true, index: true },
     password: { type: String, required: true, minlength: 6 },
   },
   { timestamps: true } // Adds createdAt & updatedAt automatically
