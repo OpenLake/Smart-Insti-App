@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
 
 class CollapsingAppBar extends StatelessWidget {
-  const CollapsingAppBar({super.key, required this.bottom, this.height, this.leading, required this.body, this.title});
+  const CollapsingAppBar(
+      {super.key,
+      required this.bottom,
+      this.height,
+      this.leading,
+      required this.body,
+      this.title});
 
   final Widget bottom;
   final double? height;
