@@ -43,10 +43,10 @@ class ClubNotifier extends StateNotifier<ClubState> {
     state = state.copyWith(isLoading: true);
     final token = _ref.read(authProvider).token;
     if (token != null) {
-        final clubs = await _repository.getClubs(token);
-        state = state.copyWith(clubs: clubs, isLoading: false);
+      final clubs = await _repository.getClubs(token);
+      state = state.copyWith(clubs: clubs, isLoading: false);
     } else {
-        state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false);
     }
   }
 
@@ -54,10 +54,10 @@ class ClubNotifier extends StateNotifier<ClubState> {
     state = state.copyWith(isLoading: true);
     final token = _ref.read(authProvider).token;
     if (token != null) {
-        final club = await _repository.getClubDetails(id, token);
-        state = state.copyWith(selectedClub: club, isLoading: false);
+      final club = await _repository.getClubDetails(id, token);
+      state = state.copyWith(selectedClub: club, isLoading: false);
     } else {
-        state = state.copyWith(isLoading: false);
+      state = state.copyWith(isLoading: false);
     }
   }
 }
