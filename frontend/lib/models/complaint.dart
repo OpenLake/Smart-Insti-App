@@ -12,7 +12,6 @@ class Complaint {
   final String? resolutionNote;
   final DateTime createdAt;
 
-
   Complaint({
     required this.id,
     required this.title,
@@ -26,7 +25,6 @@ class Complaint {
     this.resolvedBy,
     this.resolutionNote,
     required this.createdAt,
-
   });
 
   factory Complaint.fromJson(Map<String, dynamic> json) {
@@ -43,7 +41,6 @@ class Complaint {
       resolvedBy: json['resolvedBy'],
       resolutionNote: json['resolutionNote'],
       createdAt: DateTime.parse(json['createdAt']),
-
     );
   }
 
