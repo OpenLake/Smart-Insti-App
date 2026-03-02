@@ -24,13 +24,14 @@ class Alumni {
   });
 
   factory Alumni.fromJson(Map<String, dynamic> json) {
+    final academicInfo = json['academicInfo'] as Map<String, dynamic>?;
     return Alumni(
       id: json['_id'],
       name: json['name'],
       email: json['email'],
-      graduationYear: json['graduationYear'],
-      degree: json['degree'],
-      department: json['department'],
+      graduationYear: json['graduationYear'] ?? academicInfo?['batch'],
+      degree: json['degree'] ?? academicInfo?['program'],
+      department: json['department'] ?? academicInfo?['department'],
       currentOrganization: json['currentOrganization'],
       designation: json['designation'],
       linkedInProfile: json['linkedInProfile'],
