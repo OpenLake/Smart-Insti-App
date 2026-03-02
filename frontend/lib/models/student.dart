@@ -31,30 +31,40 @@ class Student {
   });
 
   factory Student.fromJson(Map<String, dynamic> json) {
+    final academicInfo = json['academicInfo'] as Map<String, dynamic>?;
     return Student(
-      id: json['_id'] ?? '',
+      id: json['_id'] ?? json['id'] ?? '',
       name: json['name'] ?? 'Smart Insti User',
       email: json['email'] ?? '',
-      rollNumber: json['rollNumber'] ?? '',
+      rollNumber: json['rollNumber'] ?? json['student_id'] ?? academicInfo?['studentId'] ?? '',
       about: json['about'],
-      profilePicURI: json['profilePicURI'],
-      branch: json['branch'],
-      graduationYear: json['graduationYear'],
+      profilePicURI: json['profilePicURI'] ?? json['profile_pic_url'],
+      branch: json['branch'] ?? json['department'] ?? academicInfo?['department'],
+      graduationYear: json['graduationYear'] ?? json['batch'] ?? academicInfo?['batch'],
       skills: json['skills'] != null
           ? (json['skills'] as List<dynamic>)
-              .map((item) => Skill.fromJson(item as Map<String, dynamic>))
+              .map((item) =>
+                  item is Map<String, dynamic> ? Skill.fromJson(item) : null)
+              .whereType<Skill>()
               .toList()
           : [],
       achievements: json['achievements'] != null
           ? (json['achievements'] as List<dynamic>)
-              .map((item) => Achievement.fromJson(item as Map<String, dynamic>))
+              .map((item) => item is Map<String, dynamic>
+                  ? Achievement.fromJson(item)
+                  : null)
+              .whereType<Achievement>()
               .toList()
           : null,
       roles: json['roles'] != null
           ? (json['roles'] as List?)?.map((item) => item as String).toList()
-          : [],
+          : json['role'] != null ? [json['role'] as String] : [],
       wishlist: json['wishlist'] != null
-          ? (json['wishlist'] as List?)?.map((item) => item is String ? item : item['_id'].toString()).toList() ?? []
+          ? (json['wishlist'] as List?)
+                  ?.map(
+                      (item) => item is String ? item : item['_id'].toString())
+                  .toList() ??
+              []
           : [],
     );
   }
