@@ -114,7 +114,6 @@ class AdminStateNotifier extends StateNotifier<AdminState> {
         primaryColor: Colors.deepOrangeAccent.shade100,
         secondaryColor: Colors.deepOrangeAccent.shade200,
       ),
-
     ];
     String query = state.searchController.text;
     state = state.copyWith(
