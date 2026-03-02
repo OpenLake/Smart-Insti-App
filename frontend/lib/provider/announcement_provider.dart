@@ -5,7 +5,8 @@ import '../models/announcement.dart';
 import '../repositories/announcement_repository.dart';
 import 'auth_provider.dart';
 
-final announcementProvider = StateNotifierProvider<AnnouncementNotifier, AnnouncementState>((ref) {
+final announcementProvider =
+    StateNotifierProvider<AnnouncementNotifier, AnnouncementState>((ref) {
   return AnnouncementNotifier(ref);
 });
 
@@ -51,7 +52,8 @@ class AnnouncementNotifier extends StateNotifier<AnnouncementState> {
     try {
       final token = _ref.read(authProvider).token;
       if (token != null) {
-        final announcements = await _repository.getAnnouncements(token, type: state.selectedType == 'All' ? null : state.selectedType);
+        final announcements = await _repository.getAnnouncements(token,
+            type: state.selectedType == 'All' ? null : state.selectedType);
         state = state.copyWith(announcements: announcements, isLoading: false);
       } else {
         state = state.copyWith(isLoading: false);
@@ -73,8 +75,8 @@ class AnnouncementNotifier extends StateNotifier<AnnouncementState> {
       final currentUser = _ref.read(authProvider).currentUser;
       if (token != null && currentUser != null) {
         // Create basic announcement object
-        // Note: ID, Author, CreatedAt will be handled/ignored by backend on create usually, 
-        // but we need them for the object here. 
+        // Note: ID, Author, CreatedAt will be handled/ignored by backend on create usually,
+        // but we need them for the object here.
         // Better to let backend return the object or just reload.
         final newAnnouncement = Announcement(
           id: '',
@@ -85,7 +87,8 @@ class AnnouncementNotifier extends StateNotifier<AnnouncementState> {
           createdAt: DateTime.now(),
         );
 
-        final success = await _repository.createAnnouncement(newAnnouncement, token);
+        final success =
+            await _repository.createAnnouncement(newAnnouncement, token);
         if (success) {
           await loadAnnouncements();
           clearControllers();
