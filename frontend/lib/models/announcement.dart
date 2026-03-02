@@ -33,7 +33,9 @@ class Announcement {
       target: json['target'],
       targetModel: json['targetModel'],
       isPinned: json['isPinned'] ?? false,
-      expiryDate: json['expiryDate'] != null ? DateTime.parse(json['expiryDate']) : null,
+      expiryDate: json['expiryDate'] != null
+          ? DateTime.parse(json['expiryDate'])
+          : null,
       createdAt: DateTime.parse(json['createdAt']),
     );
   }
