@@ -4,8 +4,10 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 class AppConstants {
   static const String appName = "Smart Insti App";
   static const Color seedColor = Colors.lightBlueAccent;
-  static String get apiBaseUrl => dotenv.env['API_URL'] ?? "http://localhost:3000";
-  static String get hubApiBaseUrl => dotenv.env['HUB_API_URL'] ?? "https://hub.openlake.in/api/v1";
+  static String get apiBaseUrl =>
+      dotenv.env['API_URL'] ?? "http://localhost:3000";
+  static String get hubApiBaseUrl =>
+      dotenv.env['HUB_API_URL'] ?? "https://hub.openlake.in/api/v1";
 }
 
 enum LoadingState { idle, progress, success, error }
@@ -34,7 +36,7 @@ class Branches {
     DropdownMenuItem<String>(
         value: "Chemical Engineering", child: Text("Chemical Engineering")),
     DropdownMenuItem<String>(
-        value: "AerosRpace Engineering", child: Text("Aerospace Engineering")),
+        value: "Aerospace Engineering", child: Text("Aerospace Engineering")),
     DropdownMenuItem<String>(
         value: "Metallurgical Engineering",
         child: Text("Metallurgical Engineering")),
@@ -140,21 +142,20 @@ class MessMenuConstants {
   };
 
   static final List<Text> weekdays = [
-    Text('Sun', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
-    Text('Mon', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
-    Text('Tue', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
-    Text('Wed', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
-    Text('Thu', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
-    Text('Fri', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
-    Text('Sat', style: TextStyle(color: Colors.teal.shade900, fontSize: 16)),
+    const Text('Sun', style: TextStyle(fontSize: 16)),
+    const Text('Mon', style: TextStyle(fontSize: 16)),
+    const Text('Tue', style: TextStyle(fontSize: 16)),
+    const Text('Wed', style: TextStyle(fontSize: 16)),
+    const Text('Thu', style: TextStyle(fontSize: 16)),
+    const Text('Fri', style: TextStyle(fontSize: 16)),
+    const Text('Sat', style: TextStyle(fontSize: 16)),
   ];
 
   static final List<Text> mealTypes = [
-    Text('Breakfast',
-        style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
-    Text('Lunch', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
-    Text('Snacks', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
-    Text('Dinner', style: TextStyle(color: Colors.teal.shade900, fontSize: 14)),
+    const Text('Breakfast', style: TextStyle(fontSize: 14)),
+    const Text('Lunch', style: TextStyle(fontSize: 14)),
+    const Text('Snacks', style: TextStyle(fontSize: 14)),
+    const Text('Dinner', style: TextStyle(fontSize: 14)),
   ];
 
   static const Map<String, String> weekdaysShortToLong = {
@@ -168,11 +169,20 @@ class MessMenuConstants {
   };
 
   static final List<String> weekdaysNames = [
-    "Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"
+    "Sunday",
+    "Monday",
+    "Tuesday",
+    "Wednesday",
+    "Thursday",
+    "Friday",
+    "Saturday"
   ];
 
   static final List<String> mealTypeNames = [
-    "Breakfast", "Lunch", "Snacks", "Dinner"
+    "Breakfast",
+    "Lunch",
+    "Snacks",
+    "Dinner"
   ];
 }
 
@@ -233,7 +243,7 @@ class Validators {
     if (value == null || value.isEmpty) {
       return "Roll Number cannot be empty";
     }
-    if (value.contains(r"!@#%^&*()_+{}||:<>?/.,$")) {
+    if (RegExp(r'[!@#%^&*()_+{}|:<>?/.,\$]').hasMatch(value)) {
       return "Invalid Roll Number";
     }
     return null;
@@ -243,7 +253,7 @@ class Validators {
     if (value == null || value.isEmpty) {
       return "Course Code cannot be empty";
     }
-    if (value.contains(r"!@#%^&*()_+{}||:<>?/.,$")) {
+    if (RegExp(r'[!@#%^&*()_+{}|:<>?/.,\$]').hasMatch(value)) {
       return "Invalid Course Code";
     }
     return null;
