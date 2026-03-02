@@ -20,16 +20,27 @@ class Faculty {
   });
 
   factory Faculty.fromJson(Map<String, dynamic> json) {
+    final academicInfo = json['academicInfo'] as Map<String, dynamic>?;
+    String? extractedCabin = json['cabinNumber'];
+    if (extractedCabin == null && json['about'] != null) {
+      final aboutStr = json['about'] as String;
+      if (aboutStr.contains('Cabin: ')) {
+        final match = RegExp(r'Cabin: (.+)').firstMatch(aboutStr);
+        extractedCabin = match?.group(1);
+      }
+    }
     return Faculty(
-      id: json['_id'],
+      id: json['_id'] ?? json['id'] ?? '',
       name: json['name'] ?? 'Smart Insti User',
-      email: json['email'],
-      cabinNumber: json['cabinNumber'],
-      department: json['department'],
-      profilePicURI: json['profilePicURI'],
+      email: json['email'] ?? '',
+      cabinNumber: extractedCabin,
+      department: json['department'] ?? academicInfo?['department'],
+      profilePicURI: json['profilePicURI'] ?? json['profile_pic_url'],
       courses: json['courses'] != null
           ? (json['courses'] as List)
-              .map((item) => Course.fromJson(item))
+              .map((item) =>
+                  item is Map<String, dynamic> ? Course.fromJson(item) : null)
+              .whereType<Course>()
               .toList()
           : [],
     );
