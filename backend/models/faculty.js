@@ -15,6 +15,7 @@ const facultySchema = new mongoose.Schema(
       ],
       index: true, // Improves lookup performance
     },
+    supabaseId: { type: String, unique: true, sparse: true, index: true },
     cabinNumber: { type: String, trim: true },
     department: { type: String, trim: true, default: "Unknown" }, // Avoids missing values
     courses: [
