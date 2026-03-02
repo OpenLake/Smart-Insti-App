@@ -4,10 +4,10 @@ class LostAndFoundItem {
   String? id;
   String name;
   String lastSeenLocation;
-  String? imagePath;   // can be null
+  String? imagePath; // can be null
   String description;
   String contactNumber;
-  String? listerId;    // can be null
+  String? listerId; // can be null
   bool isLost;
 
   LostAndFoundItem({
@@ -30,7 +30,9 @@ class LostAndFoundItem {
       description: json['description'] ?? '',
       contactNumber: json['contactNumber'] ?? '',
       listerId: json['listerId'], // nullable
-      isLost: json['isLost'] == true || json['isLost'] == "true" || json['isLost'] == 1,
+      isLost: json['isLost'] == true ||
+          json['isLost'] == "true" ||
+          json['isLost'] == 1,
     );
   }
 
