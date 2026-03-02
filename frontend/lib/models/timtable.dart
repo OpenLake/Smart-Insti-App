@@ -34,7 +34,8 @@ class Timetable {
           ),
         ),
       ),
-      timetable: List<List<String>>.from(json['timetable'].map((x) => List<String>.from(x.map((x) => x)))),
+      timetable: List<List<String>>.from(
+          json['timetable'].map((x) => List<String>.from(x.map((x) => x)))),
     );
   }
 
@@ -58,7 +59,8 @@ class Timetable {
           },
         ),
       ),
-      'timetable': List<dynamic>.from(timetable.map((x) => List<dynamic>.from(x.map((x) => x)))),
+      'timetable': List<dynamic>.from(
+          timetable.map((x) => List<dynamic>.from(x.map((x) => x)))),
     };
   }
 }
