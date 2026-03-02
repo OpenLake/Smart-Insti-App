@@ -33,7 +33,8 @@ class Club {
 
     var memberList = <ClubMember>[];
     if (json['members'] != null) {
-      memberList = (json['members'] as List).map((m) => ClubMember.fromJson(m)).toList();
+      memberList =
+          (json['members'] as List).map((m) => ClubMember.fromJson(m)).toList();
     }
 
     return Club(
