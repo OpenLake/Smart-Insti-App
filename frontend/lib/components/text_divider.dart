@@ -8,10 +8,14 @@ class TextDivider extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Row(children: <Widget>[
-      const Expanded(child: Divider(color: Colors.black,thickness: 0.1,)),
+      const Expanded(
+          child: Divider(
+        color: Colors.black,
+        thickness: 0.1,
+      )),
       Container(
           decoration: BoxDecoration(
-              shape: BoxShape.circle,
+            shape: BoxShape.circle,
             border: Border.all(
               color: Colors.black,
               width: 0.5,
@@ -21,7 +25,11 @@ class TextDivider extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Text(text),
           )),
-      const Expanded(child: Divider(color: Colors.black,thickness: 0.1,)),
+      const Expanded(
+          child: Divider(
+        color: Colors.black,
+        thickness: 0.1,
+      )),
     ]);
   }
 }
