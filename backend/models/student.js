@@ -10,6 +10,7 @@ const studentSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+    supabaseId: { type: String, unique: true, sparse: true, index: true },
     rollNumber: { type: String, unique: true, sparse: true, trim: true }, // Allows null but ensures uniqueness
     about: { type: String, trim: true },
     profilePicURI: { type: String, trim: true },
