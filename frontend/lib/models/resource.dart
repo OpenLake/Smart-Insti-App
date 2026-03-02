@@ -36,7 +36,8 @@ class Resource {
       type: json['type'],
       fileUrl: json['fileUrl'],
       publicId: json['publicId'] ?? '',
-      uploadedBy: json['uploadedBy'] is Map ? json['uploadedBy'] : {'name': 'Unknown'},
+      uploadedBy:
+          json['uploadedBy'] is Map ? json['uploadedBy'] : {'name': 'Unknown'},
       createdAt: DateTime.parse(json['createdAt']),
     );
   }
