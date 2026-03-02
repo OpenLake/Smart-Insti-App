@@ -15,6 +15,7 @@ const alumniSchema = new mongoose.Schema(
       ],
       index: true,
     },
+    supabaseId: { type: String, unique: true, sparse: true, index: true },
     graduationYear: { type: Number, min: 1950, max: 2100 },
     degree: { type: String, trim: true },
     department: { type: String, trim: true },
