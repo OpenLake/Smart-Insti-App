@@ -4,7 +4,8 @@ import '../models/alumni.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 
-final alumniRepositoryProvider = Provider<AlumniRepository>((ref) => AlumniRepository());
+final alumniRepositoryProvider =
+    Provider<AlumniRepository>((ref) => AlumniRepository());
 
 class AlumniRepository {
   final Dio _client = Dio(
