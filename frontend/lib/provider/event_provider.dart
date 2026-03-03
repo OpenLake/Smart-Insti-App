@@ -11,19 +11,23 @@ final eventProvider = StateNotifierProvider<EventNotifier, EventState>((ref) {
 class EventState {
   final List<Event> events;
   final bool isLoading;
+  final DateTime selectedDate;
 
   EventState({
     this.events = const [],
     this.isLoading = false,
-  });
+    DateTime? selectedDate,
+  }) : selectedDate = selectedDate ?? DateTime.now();
 
   EventState copyWith({
     List<Event>? events,
     bool? isLoading,
+    DateTime? selectedDate,
   }) {
     return EventState(
       events: events ?? this.events,
       isLoading: isLoading ?? this.isLoading,
+      selectedDate: selectedDate ?? this.selectedDate,
     );
   }
 }
@@ -36,14 +40,13 @@ class EventNotifier extends StateNotifier<EventState> {
   final TextEditingController descriptionController = TextEditingController();
   final TextEditingController locationController = TextEditingController();
   final TextEditingController organizedByController = TextEditingController();
-  DateTime selectedDate = DateTime.now();
 
   EventNotifier(this._ref)
       : _repository = _ref.read(eventRepositoryProvider),
         super(EventState());
 
   void updateDate(DateTime date) {
-    selectedDate = date;
+    state = state.copyWith(selectedDate: date);
   }
 
   Future<void> addEvent() async {
@@ -52,10 +55,10 @@ class EventNotifier extends StateNotifier<EventState> {
       'description': descriptionController.text,
       'location': locationController.text,
       'organizedBy': organizedByController.text,
-      'date': selectedDate.toIso8601String(),
+      'date': state.selectedDate.toIso8601String(),
     };
     await createEvent(data);
-    
+
     // Clear
     titleController.clear();
     descriptionController.clear();
@@ -71,22 +74,22 @@ class EventNotifier extends StateNotifier<EventState> {
   }
 
   Future<bool> createEvent(Map<String, dynamic> data) async {
-      final token = _ref.read(authProvider).token;
-      if (token != null) {
-          final success = await _repository.createEvent(data, token);
-          if (success) {
-              loadEvents();
-              return true;
-          }
+    final token = _ref.read(authProvider).token;
+    if (token != null) {
+      final success = await _repository.createEvent(data, token);
+      if (success) {
+        loadEvents();
+        return true;
       }
-      return false;
+    }
+    return false;
   }
-  
+
   Future<void> deleteEvent(String id) async {
-      final token = _ref.read(authProvider).token;
-      if (token != null) {
-          await _repository.deleteEvent(id, token);
-          loadEvents();
-      }
+    final token = _ref.read(authProvider).token;
+    if (token != null) {
+      await _repository.deleteEvent(id, token);
+      loadEvents();
+    }
   }
 }
