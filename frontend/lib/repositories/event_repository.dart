@@ -4,7 +4,8 @@ import 'package:logger/logger.dart';
 import '../constants/constants.dart';
 import '../models/event.dart';
 
-final eventRepositoryProvider = Provider<EventRepository>((ref) => EventRepository());
+final eventRepositoryProvider =
+    Provider<EventRepository>((ref) => EventRepository());
 
 class EventRepository {
   final Dio _client = Dio(
@@ -16,7 +17,7 @@ class EventRepository {
   final Logger _logger = Logger();
 
   Future<List<Event>> getEvents(String token) async {
-    // _client.options.headers['authorization'] = 'Bearer $token'; 
+    // _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response = await _client.get('/events');
       if (response.statusCode == 200 && response.data is List) {
@@ -31,7 +32,7 @@ class EventRepository {
   }
 
   Future<bool> createEvent(Map<String, dynamic> data, String token) async {
-    _client.options.headers['authorization'] = 'Bearer $token'; 
+    _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response = await _client.post('/events', data: data);
       return response.data['status'] == true;
@@ -42,17 +43,18 @@ class EventRepository {
   }
 
   Future<bool> deleteEvent(String id, String token) async {
-      _client.options.headers['authorization'] = 'Bearer $token';
-      try {
-          final response = await _client.delete('/events/$id');
-          return response.data['status'] == true;
-      } catch (e) {
-          _logger.e(e);
-          return false;
-      }
+    _client.options.headers['authorization'] = 'Bearer $token';
+    try {
+      final response = await _client.delete('/events/$id');
+      return response.data['status'] == true;
+    } catch (e) {
+      _logger.e(e);
+      return false;
+    }
   }
+
   Future<List<Event>> getLatestEvents(String token) async {
-    // _client.options.headers['authorization'] = 'Bearer $token'; 
+    // _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response = await _client.get('/events/latest');
       if (response.statusCode == 200 && response.data is List) {
@@ -67,27 +69,27 @@ class EventRepository {
   }
 
   Future<Event?> getEventById(String id, String token) async {
-      // _client.options.headers['authorization'] = 'Bearer $token';
-      try {
-          final response = await _client.get('/events/$id');
-          if (response.statusCode == 200) {
-              return Event.fromJson(response.data);
-          }
-          return null;
-      } catch (e) {
-          _logger.e(e);
-          return null;
+    // _client.options.headers['authorization'] = 'Bearer $token';
+    try {
+      final response = await _client.get('/events/$id');
+      if (response.statusCode == 200) {
+        return Event.fromJson(response.data);
       }
+      return null;
+    } catch (e) {
+      _logger.e(e);
+      return null;
+    }
   }
 
   Future<bool> registerForEvent(String id, String token) async {
-      _client.options.headers['authorization'] = 'Bearer $token';
-      try {
-          final response = await _client.post('/events/$id/register');
-          return response.data['status'] == true;
-      } catch (e) {
-          _logger.e(e);
-          return false;
-      }
+    _client.options.headers['authorization'] = 'Bearer $token';
+    try {
+      final response = await _client.post('/events/$id/register');
+      return response.data['status'] == true;
+    } catch (e) {
+      _logger.e(e);
+      return false;
+    }
   }
 }
