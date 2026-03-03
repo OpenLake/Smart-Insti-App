@@ -4,7 +4,8 @@ import 'package:logger/logger.dart';
 import '../constants/constants.dart';
 import '../models/announcement.dart';
 
-final announcementRepositoryProvider = Provider<AnnouncementRepository>((ref) => AnnouncementRepository());
+final announcementRepositoryProvider =
+    Provider<AnnouncementRepository>((ref) => AnnouncementRepository());
 
 class AnnouncementRepository {
   final Dio _client = Dio(
@@ -17,15 +18,19 @@ class AnnouncementRepository {
   );
   final Logger _logger = Logger();
 
-  Future<List<Announcement>> getAnnouncements(String token, {String? type}) async {
+  Future<List<Announcement>> getAnnouncements(String token,
+      {String? type}) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final Map<String, dynamic> queryParams = {};
       if (type != null && type != 'All') queryParams['type'] = type;
 
-      final response = await _client.get('/announcements', queryParameters: queryParams);
+      final response =
+          await _client.get('/announcements', queryParameters: queryParams);
       if (response.statusCode == 200 && response.data is List) {
-        return (response.data as List).map((e) => Announcement.fromJson(e)).toList();
+        return (response.data as List)
+            .map((e) => Announcement.fromJson(e))
+            .toList();
       } else {
         return [];
       }
@@ -35,10 +40,12 @@ class AnnouncementRepository {
     }
   }
 
-  Future<bool> createAnnouncement(Announcement announcement, String token) async {
+  Future<bool> createAnnouncement(
+      Announcement announcement, String token) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
-      final response = await _client.post('/announcements', data: announcement.toJson());
+      final response =
+          await _client.post('/announcements', data: announcement.toJson());
       return response.data['status'] == true;
     } catch (e) {
       _logger.e(e);
@@ -56,28 +63,31 @@ class AnnouncementRepository {
       return false;
     }
   }
+
   Future<Announcement?> getAnnouncementById(String id, String token) async {
-      _client.options.headers['authorization'] = 'Bearer $token';
-      try {
-          final response = await _client.get('/announcements/$id');
-          if (response.statusCode == 200) {
-              return Announcement.fromJson(response.data);
-          }
-          return null;
-      } catch (e) {
-          _logger.e(e);
-          return null;
+    _client.options.headers['authorization'] = 'Bearer $token';
+    try {
+      final response = await _client.get('/announcements/$id');
+      if (response.statusCode == 200) {
+        return Announcement.fromJson(response.data);
       }
+      return null;
+    } catch (e) {
+      _logger.e(e);
+      return null;
+    }
   }
 
-  Future<bool> updateAnnouncement(String id, Announcement announcement, String token) async {
-      _client.options.headers['authorization'] = 'Bearer $token';
-      try {
-          final response = await _client.put('/announcements/$id', data: announcement.toJson());
-          return response.data['status'] == true;
-      } catch (e) {
-          _logger.e(e);
-          return false;
-      }
+  Future<bool> updateAnnouncement(
+      String id, Announcement announcement, String token) async {
+    _client.options.headers['authorization'] = 'Bearer $token';
+    try {
+      final response =
+          await _client.put('/announcements/$id', data: announcement.toJson());
+      return response.data['status'] == true;
+    } catch (e) {
+      _logger.e(e);
+      return false;
+    }
   }
 }
