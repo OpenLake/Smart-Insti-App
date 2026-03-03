@@ -4,7 +4,8 @@ import 'package:logger/logger.dart';
 import '../constants/constants.dart';
 import '../models/club.dart';
 
-final clubRepositoryProvider = Provider<ClubRepository>((ref) => ClubRepository());
+final clubRepositoryProvider =
+    Provider<ClubRepository>((ref) => ClubRepository());
 
 class ClubRepository {
   final Dio _client = Dio(
@@ -16,7 +17,7 @@ class ClubRepository {
   final Logger _logger = Logger();
 
   Future<List<Club>> getClubs(String token) async {
-    // _client.options.headers['authorization'] = 'Bearer $token'; 
+    // _client.options.headers['authorization'] = 'Bearer $token';
     // Public endpoint for now, but token can be sent if needed
     try {
       final response = await _client.get('/clubs');
