@@ -4,7 +4,8 @@ import 'package:logger/logger.dart';
 import '../constants/constants.dart';
 import '../models/complaint.dart';
 
-final complaintRepositoryProvider = Provider<ComplaintRepository>((ref) => ComplaintRepository());
+final complaintRepositoryProvider =
+    Provider<ComplaintRepository>((ref) => ComplaintRepository());
 
 class ComplaintRepository {
   final Dio _client = Dio(
@@ -18,7 +19,8 @@ class ComplaintRepository {
   final Logger _logger = Logger();
 
   Future<List<Complaint>> getComplaints(String token) async {
-    _client.options.headers['authorization'] = 'Bearer $token'; // Ensure header case consistency if needed
+    _client.options.headers['authorization'] =
+        'Bearer $token'; // Ensure header case consistency if needed
     try {
       final response = await _client.get('/complaints');
       if (response.data['status'] == true) {
@@ -36,7 +38,8 @@ class ComplaintRepository {
   Future<bool> addComplaint(Complaint complaint, String token) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
-      final response = await _client.post('/complaints', data: complaint.toJson());
+      final response =
+          await _client.post('/complaints', data: complaint.toJson());
       return response.data['status'] == true;
     } catch (e) {
       _logger.e(e);
@@ -55,7 +58,8 @@ class ComplaintRepository {
     }
   }
 
-  Future<bool> updateStatus(String id, String status, String? note, String token) async {
+  Future<bool> updateStatus(
+      String id, String status, String? note, String token) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response = await _client.patch(
