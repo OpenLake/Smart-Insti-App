@@ -15,7 +15,8 @@ import '../models/faculty.dart';
 import '../models/student.dart';
 import '../repositories/room_repository.dart';
 
-final roomProvider = StateNotifierProvider<RoomProvider, RoomState>((ref) => RoomProvider(ref));
+final roomProvider =
+    StateNotifierProvider<RoomProvider, RoomState>((ref) => RoomProvider(ref));
 
 class RoomState {
   final List<Room> roomList;
@@ -103,7 +104,8 @@ class RoomProvider extends StateNotifier<RoomState> {
   Future<void> loadRooms() async {
     final rooms = await _api.getRooms();
     //   _api.getOccupants();
-    final newState = state.copyWith(roomList: rooms, loadingState: LoadingState.success);
+    final newState =
+        state.copyWith(roomList: rooms, loadingState: LoadingState.success);
     state = newState;
   }
 
@@ -190,7 +192,10 @@ class RoomProvider extends StateNotifier<RoomState> {
     }
     String query = state.searchRoomController.text;
     state = state.copyWith(
-      roomTiles: roomTiles.where((element) => element.title.toLowerCase().contains(query.toLowerCase())).toList(),
+      roomTiles: roomTiles
+          .where((element) =>
+              element.title.toLowerCase().contains(query.toLowerCase()))
+          .toList(),
     );
     _logger.i("Built room tiles : ${roomTiles.length}");
   }
