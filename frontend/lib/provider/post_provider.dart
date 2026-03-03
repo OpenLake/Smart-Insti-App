@@ -42,28 +42,33 @@ class PostProvider extends StateNotifier<PostState> {
 
   PostProvider(this._ref)
       : _repository = _ref.read(postRepositoryProvider),
-        _studentDbRepository = _ref.read(studentDbRepositoryProvider), // Fixed ref -> _ref
+        _studentDbRepository =
+            _ref.read(studentDbRepositoryProvider), // Fixed ref -> _ref
         super(PostState());
 
   Future<void> loadPosts() async {
     state = state.copyWith(isLoading: true);
     try {
-      final token = _ref.read(authProvider).token ?? ""; // Optional token for GET?
+      final token =
+          _ref.read(authProvider).token ?? ""; // Optional token for GET?
       final posts = await _repository.getPosts(token);
-      
+
       // Fetch announcements from Student DB
       final announcements = await _studentDbRepository.getAnnouncements();
-      final announcementPosts = announcements.map((a) => Post(
-        id: a['_id'],
-        title: a['title'],
-        content: a['content'],
-        author: a['author']['personal_info']['name'] ?? "Admin",
-        type: "Announcement",
-        likes: [],
-        createdAt: DateTime.parse(a['createdAt']),
-      )).toList();
+      final announcementPosts = announcements
+          .map((a) => Post(
+                id: a['_id'],
+                title: a['title'],
+                content: a['content'],
+                author: a['author']['personal_info']['name'] ?? "Admin",
+                type: "Announcement",
+                likes: [],
+                createdAt: DateTime.parse(a['createdAt']),
+              ))
+          .toList();
 
-      state = state.copyWith(posts: [...posts, ...announcementPosts], isLoading: false);
+      state = state
+          .copyWith(posts: [...posts, ...announcementPosts], isLoading: false);
     } catch (e) {
       _logger.e(e);
       state = state.copyWith(isLoading: false);
