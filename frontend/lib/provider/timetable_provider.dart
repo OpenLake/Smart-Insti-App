@@ -2,6 +2,8 @@ import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
@@ -14,7 +16,9 @@ import '../models/student.dart';
 import '../models/timtable.dart';
 import '../repositories/timetable_repository.dart';
 
-final timetableProvider = StateNotifierProvider<TimetableProvider, TimetableState>((ref) => TimetableProvider(ref));
+final timetableProvider =
+    StateNotifierProvider<TimetableProvider, TimetableState>(
+        (ref) => TimetableProvider(ref));
 
 class TimetableState {
   final List<Timetable> timetables;
@@ -55,8 +59,10 @@ class TimetableState {
   }) {
     return TimetableState(
       timetables: timetables ?? this.timetables,
-      searchTimetableController: searchTimetableController ?? this.searchTimetableController,
-      timetableNameController: timetableNameController ?? this.timetableNameController,
+      searchTimetableController:
+          searchTimetableController ?? this.searchTimetableController,
+      timetableNameController:
+          timetableNameController ?? this.timetableNameController,
       rowsController: rowsController ?? this.rowsController,
       columnsController: columnsController ?? this.columnsController,
       includeSaturday: includeSaturday ?? this.includeSaturday,
@@ -108,7 +114,8 @@ class TimetableProvider extends StateNotifier<TimetableState> {
         return;
       }
 
-      final List<Timetable> timetables = await _api.getTimetablesByCreatorId(userId) ?? [];
+      final List<Timetable> timetables =
+          await _api.getTimetablesByCreatorId(userId) ?? [];
       state = state.copyWith(
         timetables: timetables,
         loadingState: LoadingState.success,
@@ -154,7 +161,10 @@ class TimetableProvider extends StateNotifier<TimetableState> {
         ),
         timeRanges: List.generate(
           int.parse(state.columnsController.text),
-          (index) => (const TimeOfDay(hour: 0, minute: 0), const TimeOfDay(hour: 0, minute: 0)),
+          (index) => (
+            const TimeOfDay(hour: 0, minute: 0),
+            const TimeOfDay(hour: 0, minute: 0)
+          ),
         ),
         tilesDisabled: false,
       );
@@ -164,145 +174,188 @@ class TimetableProvider extends StateNotifier<TimetableState> {
   Widget buildTimetableTiles(BuildContext context) {
     final timeTable = Consumer(
       builder: (_, ref, __) => Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Days Column
           Column(
             children: [
-              TimetableButton(
-                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
-                child: const Text(''),
+              const TimetableButton(
+                onPressed: null,
+                isHeader: true,
+                child: Icon(Icons.access_time_rounded, size: 20),
               ),
               TimetableButton(
-                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
-                child: const Text('Monday'),
+                onPressed: null,
+                isHeader: true,
+                child: const Text('MON'),
               ),
               TimetableButton(
-                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
-                child: const Text('Tuesday'),
+                onPressed: null,
+                isHeader: true,
+                child: const Text('TUE'),
               ),
               TimetableButton(
-                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
-                child: const Text('Wednesday'),
+                onPressed: null,
+                isHeader: true,
+                child: const Text('WED'),
               ),
               TimetableButton(
-                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
-                child: const Text('Thursday'),
+                onPressed: null,
+                isHeader: true,
+                child: const Text('THU'),
               ),
               TimetableButton(
-                onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
-                child: const Text('Friday'),
+                onPressed: null,
+                isHeader: true,
+                child: const Text('FRI'),
               ),
               if (state.includeSaturday)
                 TimetableButton(
-                  onPressed: ref.read(timetableProvider).tilesDisabled ? () {} : () {},
-                  child: const Text('Saturday'),
+                  onPressed: null,
+                  isHeader: true,
+                  child: const Text('SAT'),
                 ),
             ],
           ),
+
+          // Time Slots Columns
           for (int i = 0; i < int.parse(state.columnsController.text); i++)
             Column(
               children: [
+                // Time Range Header Tile
                 TimetableButton(
+                  isHeader: true,
                   onPressed: ref.read(timetableProvider).tilesDisabled
-                      ? () {}
+                      ? null
                       : () {
                           showDialog(
                             context: context,
                             builder: (context) => AlertDialog(
-                              title: const Text('Edit Time Range'),
-                              content: Container(
-                                width: 300,
-                                height: 100,
-                                color: Colors.transparent,
-                                child: Consumer(
-                                  builder: (_, ref, __) => Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      BorderlessButton(
-                                        backgroundColor: Colors.green.shade100,
-                                        onPressed: () async {
-                                          final TimeOfDay? time = await showTimePicker(
-                                            context: context,
-                                            initialTime: TimeOfDay.now(),
-                                            initialEntryMode: TimePickerEntryMode.dial,
-                                          );
-                                          if (time != null) {
-                                            state = state.copyWith(
-                                              timeRanges: [
-                                                ...state.timeRanges.sublist(0, i),
-                                                (time, state.timeRanges[i].$2),
-                                                ...state.timeRanges.sublist(i + 1),
-                                              ],
-                                            );
-                                          }
-                                        },
-                                        splashColor: Colors.green.shade700,
-                                        label: Text(
-                                            '${ref.watch(timetableProvider).timeRanges[i].$1.hour}:${ref.watch(timetableProvider).timeRanges[i].$1.minute}'),
-                                      ),
-                                      BorderlessButton(
-                                        backgroundColor: Colors.red.shade100,
-                                        onPressed: () async {
-                                          final TimeOfDay? time = await showTimePicker(
-                                            context: context,
-                                            initialTime: TimeOfDay.now(),
-                                            initialEntryMode: TimePickerEntryMode.dial,
-                                          );
-                                          if (time != null) {
-                                            state = state.copyWith(
-                                              timeRanges: [
-                                                ...state.timeRanges.sublist(0, i),
-                                                (state.timeRanges[i].$1, time),
-                                                ...state.timeRanges.sublist(i + 1),
-                                              ],
-                                            );
-                                          }
-                                        },
-                                        splashColor: Colors.red.shade700,
-                                        label: Text(
-                                            '${ref.watch(timetableProvider).timeRanges[i].$2.hour}:${ref.watch(timetableProvider).timeRanges[i].$2.minute}'),
-                                      )
-                                    ],
-                                  ),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(28)),
+                              title: Text('Set Time Slot ${i + 1}',
+                                  style: GoogleFonts.spaceGrotesk(
+                                      fontWeight: FontWeight.bold)),
+                              content: Consumer(
+                                builder: (_, ref, __) => Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  children: [
+                                    _buildTimePickerButton(
+                                      context: context,
+                                      label: "Start",
+                                      time: ref
+                                          .watch(timetableProvider)
+                                          .timeRanges[i]
+                                          .$1,
+                                      onTimeSelected: (time) {
+                                        state = state.copyWith(
+                                          timeRanges: [
+                                            ...state.timeRanges.sublist(0, i),
+                                            (time, state.timeRanges[i].$2),
+                                            ...state.timeRanges.sublist(i + 1),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                    Icon(Icons.arrow_forward_rounded,
+                                        color: UltimateTheme.textSub),
+                                    _buildTimePickerButton(
+                                      context: context,
+                                      label: "End",
+                                      time: ref
+                                          .watch(timetableProvider)
+                                          .timeRanges[i]
+                                          .$2,
+                                      onTimeSelected: (time) {
+                                        state = state.copyWith(
+                                          timeRanges: [
+                                            ...state.timeRanges.sublist(0, i),
+                                            (state.timeRanges[i].$1, time),
+                                            ...state.timeRanges.sublist(i + 1),
+                                          ],
+                                        );
+                                      },
+                                    ),
+                                  ],
                                 ),
                               ),
+                              actions: [
+                                TextButton(
+                                  onPressed: () => Navigator.pop(context),
+                                  child: Text("Done",
+                                      style: GoogleFonts.inter(
+                                          fontWeight: FontWeight.bold,
+                                          color: UltimateTheme.primary)),
+                                ),
+                              ],
                             ),
                           );
                         },
                   child: AutoSizeText(
-                    '${ref.watch(timetableProvider).timeRanges[i].$1.hour}:${ref.watch(timetableProvider).timeRanges[i].$1.minute} - ${ref.watch(timetableProvider).timeRanges[i].$2.hour}:${ref.watch(timetableProvider).timeRanges[i].$2.minute}',
-                    maxLines: 1,
-                    minFontSize: 12,
-                    overflow: TextOverflow.ellipsis,
+                    '${_formatTimeOfDay(ref.watch(timetableProvider).timeRanges[i].$1)} - ${_formatTimeOfDay(ref.watch(timetableProvider).timeRanges[i].$2)}',
+                    maxLines: 2,
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.inter(
+                        fontSize: 11, fontWeight: FontWeight.bold),
+                    minFontSize: 9,
                   ),
                 ),
+
+                // Subject Tiles
                 for (int j = 0; j < int.parse(state.rowsController.text); j++)
                   TimetableButton(
                     onPressed: ref.read(timetableProvider).tilesDisabled
-                        ? () {}
+                        ? null
                         : () {
                             showDialog(
                               context: context,
                               builder: (context) => AlertDialog(
-                                scrollable: true,
-                                title: const Text('Edit Subject'),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(28)),
+                                title: Text('Edit Subject',
+                                    style: GoogleFonts.spaceGrotesk(
+                                        fontWeight: FontWeight.bold)),
                                 content: Container(
                                   width: 300,
-                                  color: Colors.transparent,
-                                  child: IntrinsicHeight(
-                                    child: MaterialTextFormField(
-                                      controller: state.tileControllers[i][j],
-                                      hintText: 'Enter Subject',
-                                    ),
+                                  child: MaterialTextFormField(
+                                    controller: state.tileControllers[i][j],
+                                    hintText: 'e.g. CS301 / Lab',
+                                    prefixIcon: const Icon(Icons.book_outlined),
+                                    autofocus: true,
                                   ),
                                 ),
+                                actions: [
+                                  TextButton(
+                                    onPressed: () {
+                                      state = state.copyWith(); // Force rebuild
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("Save",
+                                        style: GoogleFonts.inter(
+                                            fontWeight: FontWeight.bold,
+                                            color: UltimateTheme.primary)),
+                                  ),
+                                ],
                               ),
                             );
                           },
                     child: AutoSizeText(
-                      state.tileControllers[i][j].text,
+                      state.tileControllers[i][j].text.isEmpty
+                          ? '+'
+                          : state.tileControllers[i][j].text,
                       overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
                       maxLines: 3,
-                      minFontSize: 12,
+                      minFontSize: 10,
+                      style: GoogleFonts.inter(
+                        color: state.tileControllers[i][j].text.isEmpty
+                            ? UltimateTheme.textSub.withValues(alpha: 0.3)
+                            : UltimateTheme.textMain,
+                        fontWeight: state.tileControllers[i][j].text.isEmpty
+                            ? FontWeight.normal
+                            : FontWeight.w600,
+                      ),
                     ),
                   ),
               ],
@@ -312,7 +365,64 @@ class TimetableProvider extends StateNotifier<TimetableState> {
     );
 
     return FittedBox(
-      child: timeTable,
+      fit: BoxFit.contain,
+      child: Padding(
+        padding: const EdgeInsets.all(20),
+        child: timeTable,
+      ),
+    );
+  }
+
+  String _formatTimeOfDay(TimeOfDay time) {
+    final hour =
+        time.hour == 0 ? 12 : (time.hour > 12 ? time.hour - 12 : time.hour);
+    final period = time.hour >= 12 ? "PM" : "AM";
+    return "$hour:${time.minute.toString().padLeft(2, '0')} $period";
+  }
+
+  Widget _buildTimePickerButton({
+    required BuildContext context,
+    required String label,
+    required TimeOfDay time,
+    required Function(TimeOfDay) onTimeSelected,
+  }) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(label,
+                style: GoogleFonts.inter(
+                    fontSize: 12,
+                    color: UltimateTheme.textSub,
+                    fontWeight: FontWeight.w500)),
+          ],
+        ),
+        const SizedBox(height: 8),
+        InkWell(
+          onTap: () async {
+            final picked =
+                await showTimePicker(context: context, initialTime: time);
+            if (picked != null) onTimeSelected(picked);
+          },
+          borderRadius: BorderRadius.circular(12),
+          child: Container(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            decoration: BoxDecoration(
+              color: UltimateTheme.primary.withValues(alpha: 0.1),
+              borderRadius: BorderRadius.circular(12),
+              border: Border.all(
+                  color: UltimateTheme.primary.withValues(alpha: 0.2)),
+            ),
+            child: Text(
+              _formatTimeOfDay(time),
+              style: GoogleFonts.spaceGrotesk(
+                  fontWeight: FontWeight.bold, color: UltimateTheme.primary),
+            ),
+          ),
+        ),
+      ],
     );
   }
 
