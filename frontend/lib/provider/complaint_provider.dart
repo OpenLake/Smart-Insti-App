@@ -5,7 +5,8 @@ import '../models/complaint.dart';
 import '../repositories/complaint_repository.dart';
 import 'auth_provider.dart';
 
-final complaintProvider = StateNotifierProvider<ComplaintProvider, ComplaintState>((ref) {
+final complaintProvider =
+    StateNotifierProvider<ComplaintProvider, ComplaintState>((ref) {
   return ComplaintProvider(ref);
 });
 
@@ -111,7 +112,6 @@ class ComplaintProvider extends StateNotifier<ComplaintState> {
       _logger.e(e);
     }
   }
-
 
   void updateCategory(String category) {
     selectedCategory = category;
