@@ -18,7 +18,8 @@ import '../models/student.dart';
 import 'auth_provider.dart';
 
 final lostAndFoundProvider =
-    StateNotifierProvider<LostAndFoundStateNotifier, LostAndFoundState>((ref) => LostAndFoundStateNotifier(ref));
+    StateNotifierProvider<LostAndFoundStateNotifier, LostAndFoundState>(
+        (ref) => LostAndFoundStateNotifier(ref));
 
 class LostAndFoundState {
   final List<LostAndFoundItem> lostAndFoundItemList;
@@ -58,10 +59,14 @@ class LostAndFoundState {
     return LostAndFoundState(
       lostAndFoundItemList: lostAndFoundItemList ?? this.lostAndFoundItemList,
       itemNameController: itemNameController ?? this.itemNameController,
-      itemDescriptionController: itemDescriptionController ?? this.itemDescriptionController,
-      lastSeenLocationController: lastSeenLocationController ?? this.lastSeenLocationController,
-      searchLostAndFoundController: searchLostAndFoundController ?? this.searchLostAndFoundController,
-      contactNumberController: contactNumberController ?? this.contactNumberController,
+      itemDescriptionController:
+          itemDescriptionController ?? this.itemDescriptionController,
+      lastSeenLocationController:
+          lastSeenLocationController ?? this.lastSeenLocationController,
+      searchLostAndFoundController:
+          searchLostAndFoundController ?? this.searchLostAndFoundController,
+      contactNumberController:
+          contactNumberController ?? this.contactNumberController,
       listingStatus: listingStatus ?? this.listingStatus,
       selectedImage: selectedImage,
       loadingState: loadingState ?? this.loadingState,
@@ -94,7 +99,6 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
   final Logger _logger = Logger();
 
   Future<void> addItem() async {
-
     String userId;
 
     if (_authState.currentUserRole == 'student') {
@@ -117,10 +121,9 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
       contactNumber: state.contactNumberController.text,
     );
     state = state.copyWith(loadingState: LoadingState.progress);
-    if(await _api.addLostAndFoundItem(item)){
+    if (await _api.addLostAndFoundItem(item)) {
       loadItems();
-    }
-    else{
+    } else {
       state = state.copyWith(loadingState: LoadingState.error);
     }
   }
@@ -165,7 +168,8 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
   }
 
   void pickImageFromCamera() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.camera);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.camera);
 
     if (pickedFile != null) {
       CroppedFile? file = await _cropImage(pickedFile);
@@ -175,7 +179,8 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
   }
 
   void pickImageFromGallery() async {
-    final pickedFile = await ImagePicker().pickImage(source: ImageSource.gallery);
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
 
     if (pickedFile != null) {
       CroppedFile? file = await _cropImage(pickedFile);
@@ -192,7 +197,8 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
 
   void loadItems() async {
     final items = await _api.lostAndFoundItems();
-    state = state.copyWith(lostAndFoundItemList: items, loadingState: LoadingState.success);
+    state = state.copyWith(
+        lostAndFoundItemList: items, loadingState: LoadingState.success);
   }
 
   Uint8List imageFromBase64String(String base64String) {
@@ -201,10 +207,9 @@ class LostAndFoundStateNotifier extends StateNotifier<LostAndFoundState> {
 
   Future<void> deleteItem(String id) async {
     state = state.copyWith(loadingState: LoadingState.progress);
-    if(await _api.deleteLostAndFoundItem(id)){
-        loadItems();
-    }
-    else{
+    if (await _api.deleteLostAndFoundItem(id)) {
+      loadItems();
+    } else {
       state = state.copyWith(loadingState: LoadingState.error);
     }
   }
