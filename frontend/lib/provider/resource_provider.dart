@@ -6,7 +6,8 @@ import '../models/resource.dart';
 import '../repositories/resource_repository.dart';
 import 'auth_provider.dart';
 
-final resourceProvider = StateNotifierProvider<ResourceNotifier, ResourceState>((ref) {
+final resourceProvider =
+    StateNotifierProvider<ResourceNotifier, ResourceState>((ref) {
   return ResourceNotifier(ref);
 });
 
@@ -53,7 +54,7 @@ class ResourceNotifier extends StateNotifier<ResourceState> {
   String selectedType = 'Notes';
   int selectedSemester = 1;
   String selectedDepartment = 'CSE';
-  
+
   File? pickedFile;
 
   ResourceNotifier(this._ref)
@@ -65,12 +66,10 @@ class ResourceNotifier extends StateNotifier<ResourceState> {
     try {
       final token = _ref.read(authProvider).token;
       if (token != null) {
-        final resources = await _repository.getResources(
-          token, 
-          department: state.selectedDepartment,
-          semester: state.selectedSemester,
-          subject: state.selectedSubject
-        );
+        final resources = await _repository.getResources(token,
+            department: state.selectedDepartment,
+            semester: state.selectedSemester,
+            subject: state.selectedSubject);
         state = state.copyWith(resources: resources, isLoading: false);
       } else {
         state = state.copyWith(isLoading: false);
@@ -86,8 +85,7 @@ class ResourceNotifier extends StateNotifier<ResourceState> {
         selectedDepartment: department,
         selectedSemester: semester,
         selectedSubject: subject,
-        isLoading: true
-    );
+        isLoading: true);
     loadResources();
   }
 
@@ -100,15 +98,16 @@ class ResourceNotifier extends StateNotifier<ResourceState> {
       final token = _ref.read(authProvider).token;
       if (token != null && pickedFile != null) {
         final data = {
-            'title': titleController.text,
-            'description': descriptionController.text,
-            'subject': subjectController.text,
-            'semester': selectedSemester.toString(),
-            'department': selectedDepartment,
-            'type': selectedType,
+          'title': titleController.text,
+          'description': descriptionController.text,
+          'subject': subjectController.text,
+          'semester': selectedSemester.toString(),
+          'department': selectedDepartment,
+          'type': selectedType,
         };
 
-        final success = await _repository.uploadResource(token, pickedFile!, data);
+        final success =
+            await _repository.uploadResource(token, pickedFile!, data);
         if (success) {
           clearUploadForm();
           loadResources(); // Reload current view
@@ -131,8 +130,8 @@ class ResourceNotifier extends StateNotifier<ResourceState> {
     selectedSemester = 1;
     selectedDepartment = 'CSE';
   }
-  
+
   void setPickedFile(File file) {
-      pickedFile = file;
+    pickedFile = file;
   }
 }
