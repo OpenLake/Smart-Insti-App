@@ -19,7 +19,6 @@ class StudentRepository {
     ),
   );
 
-
   Future<Student?> getStudentById(String id, String token) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     final response = await _client.get('/student/$id');
@@ -44,7 +43,9 @@ class StudentRepository {
   Future<List<Student>> getStudents() async {
     try {
       final response = await _client.get('/students');
-      return (response.data['data'] as List).map((e) => Student.fromJson(e)).toList();
+      return (response.data['data'] as List)
+          .map((e) => Student.fromJson(e))
+          .toList();
     } catch (e) {
       return DummyStudents.students;
     }
