@@ -5,10 +5,10 @@ import 'package:logger/logger.dart';
 import 'package:smart_insti_app/models/mess_menu.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 
-final messMenuRepositoryProvider = Provider<MessMenuRepository>((ref) => MessMenuRepository());
+final messMenuRepositoryProvider =
+    Provider<MessMenuRepository>((ref) => MessMenuRepository());
 
-class MessMenuRepository{
-
+class MessMenuRepository {
   final _client = Dio(
     BaseOptions(
       baseUrl: AppConstants.apiBaseUrl,
@@ -19,13 +19,14 @@ class MessMenuRepository{
 
   final Logger _logger = Logger();
 
- Future<List<MessMenu>> getMessMenu() async {
+  Future<List<MessMenu>> getMessMenu() async {
     try {
       final response = await _client.get('/mess-menus');
       // Backend returns { status: true, data: [...] }
       final data = response.data;
-      List<dynamic> list = (data is Map && data.containsKey('data')) ? data['data'] : data;
-      
+      List<dynamic> list =
+          (data is Map && data.containsKey('data')) ? data['data'] : data;
+
       List<MessMenu> messMenus = list.map((e) => MessMenu.fromJson(e)).toList();
       return messMenus;
     } catch (e) {
@@ -36,7 +37,8 @@ class MessMenuRepository{
 
   Future<bool> addMessMenu(MessMenu messMenu) async {
     try {
-      final response = await _client.post('/mess-menus', data: messMenu.toJson());
+      final response =
+          await _client.post('/mess-menus', data: messMenu.toJson());
       _logger.i(response.data);
       return true;
     } catch (e) {
@@ -47,7 +49,8 @@ class MessMenuRepository{
 
   Future<bool> updateMessMenu(String menuId, MessMenu messMenu) async {
     try {
-      final response = await _client.put('/mess-menu/$menuId', data: messMenu.toJson());
+      final response =
+          await _client.put('/mess-menu/$menuId', data: messMenu.toJson());
       _logger.i(response.data);
       return true;
     } catch (e) {
