@@ -4,7 +4,8 @@ import 'package:logger/logger.dart';
 import '../constants/constants.dart';
 import '../models/link.dart';
 
-final linkRepositoryProvider = Provider<LinkRepository>((ref) => LinkRepository());
+final linkRepositoryProvider =
+    Provider<LinkRepository>((ref) => LinkRepository());
 
 class LinkRepository {
   final Dio _client = Dio(
