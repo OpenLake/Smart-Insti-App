@@ -6,7 +6,8 @@ import 'package:http_parser/http_parser.dart';
 import '../constants/constants.dart';
 import '../models/resource.dart';
 
-final resourceRepositoryProvider = Provider<ResourceRepository>((ref) => ResourceRepository());
+final resourceRepositoryProvider =
+    Provider<ResourceRepository>((ref) => ResourceRepository());
 
 class ResourceRepository {
   final Dio _client = Dio(
@@ -17,7 +18,8 @@ class ResourceRepository {
   );
   final Logger _logger = Logger();
 
-  Future<List<Resource>> getResources(String token, {String? department, int? semester, String? subject}) async {
+  Future<List<Resource>> getResources(String token,
+      {String? department, int? semester, String? subject}) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final Map<String, dynamic> queryParams = {};
@@ -25,7 +27,8 @@ class ResourceRepository {
       if (semester != null) queryParams['semester'] = semester;
       if (subject != null) queryParams['subject'] = subject;
 
-      final response = await _client.get('/resources', queryParameters: queryParams);
+      final response =
+          await _client.get('/resources', queryParameters: queryParams);
       if (response.data['status'] == true) {
         final List<dynamic> data = response.data['data'];
         return data.map((e) => Resource.fromJson(e)).toList();
@@ -38,11 +41,12 @@ class ResourceRepository {
     }
   }
 
-  Future<bool> uploadResource(String token, File file, Map<String, dynamic> data) async {
+  Future<bool> uploadResource(
+      String token, File file, Map<String, dynamic> data) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
       String fileName = file.path.split('/').last;
-      
+
       // Determine content type based on extension
       MediaType? contentType;
       if (fileName.endsWith('.pdf')) {
@@ -52,7 +56,7 @@ class ResourceRepository {
       } else if (fileName.endsWith('.png')) {
         contentType = MediaType('image', 'png');
       } else {
-         contentType = MediaType('application', 'octet-stream');
+        contentType = MediaType('application', 'octet-stream');
       }
 
       FormData formData = FormData.fromMap({
