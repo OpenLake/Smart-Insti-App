@@ -10,10 +10,12 @@ class AdminComplaintScreen extends ConsumerStatefulWidget {
   const AdminComplaintScreen({super.key});
 
   @override
-  ConsumerState<AdminComplaintScreen> createState() => _AdminComplaintScreenState();
+  ConsumerState<AdminComplaintScreen> createState() =>
+      _AdminComplaintScreenState();
 }
 
-class _AdminComplaintScreenState extends ConsumerState<AdminComplaintScreen> with SingleTickerProviderStateMixin {
+class _AdminComplaintScreenState extends ConsumerState<AdminComplaintScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -44,7 +46,9 @@ class _AdminComplaintScreenState extends ConsumerState<AdminComplaintScreen> wit
     return Scaffold(
       backgroundColor: UltimateTheme.backgroundColor,
       appBar: AppBar(
-        title: Text("Complaints Management", style: GoogleFonts.outfit(color: UltimateTheme.textColor, fontWeight: FontWeight.bold)),
+        title: Text("Complaints Management",
+            style: GoogleFonts.outfit(
+                color: UltimateTheme.textColor, fontWeight: FontWeight.bold)),
         backgroundColor: UltimateTheme.surfaceColor,
         elevation: 0,
         iconTheme: const IconThemeData(color: UltimateTheme.textColor),
@@ -67,18 +71,25 @@ class _AdminComplaintScreenState extends ConsumerState<AdminComplaintScreen> wit
           : TabBarView(
               controller: _tabController,
               children: [
-                _buildComplaintList(context, ref, _filterComplaints(allComplaints, "Pending")),
-                _buildComplaintList(context, ref, _filterComplaints(allComplaints, "In Progress")),
-                _buildComplaintList(context, ref, _filterComplaints(allComplaints, "Resolved")),
-                _buildComplaintList(context, ref, _filterComplaints(allComplaints, "Rejected")),
+                _buildComplaintList(
+                    context, ref, _filterComplaints(allComplaints, "Pending")),
+                _buildComplaintList(context, ref,
+                    _filterComplaints(allComplaints, "In Progress")),
+                _buildComplaintList(
+                    context, ref, _filterComplaints(allComplaints, "Resolved")),
+                _buildComplaintList(
+                    context, ref, _filterComplaints(allComplaints, "Rejected")),
               ],
             ),
     );
   }
 
-  Widget _buildComplaintList(BuildContext context, WidgetRef ref, List<Complaint> complaints) {
+  Widget _buildComplaintList(
+      BuildContext context, WidgetRef ref, List<Complaint> complaints) {
     if (complaints.isEmpty) {
-      return Center(child: Text("No complaints in this category", style: GoogleFonts.outfit(color: Colors.grey)));
+      return Center(
+          child: Text("No complaints in this category",
+              style: GoogleFonts.outfit(color: Colors.grey)));
     }
 
     return ListView.builder(
@@ -89,7 +100,8 @@ class _AdminComplaintScreenState extends ConsumerState<AdminComplaintScreen> wit
         return Card(
           elevation: 2,
           margin: const EdgeInsets.only(bottom: 16),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Column(
@@ -99,48 +111,78 @@ class _AdminComplaintScreenState extends ConsumerState<AdminComplaintScreen> wit
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-                      decoration: BoxDecoration(color: Colors.blue[50], borderRadius: BorderRadius.circular(8)),
-                      child: Text(complaint.category, style: GoogleFonts.outfit(color: Colors.blue, fontSize: 12, fontWeight: FontWeight.bold)),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 8, vertical: 4),
+                      decoration: BoxDecoration(
+                          color: Colors.blue[50],
+                          borderRadius: BorderRadius.circular(8)),
+                      child: Text(complaint.category,
+                          style: GoogleFonts.outfit(
+                              color: Colors.blue,
+                              fontSize: 12,
+                              fontWeight: FontWeight.bold)),
                     ),
-                    Text(timeago.format(complaint.createdAt), style: GoogleFonts.outfit(color: Colors.grey, fontSize: 12)),
+                    Text(timeago.format(complaint.createdAt),
+                        style: GoogleFonts.outfit(
+                            color: Colors.grey, fontSize: 12)),
                   ],
                 ),
                 const SizedBox(height: 12),
-                Text(complaint.title, style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold)),
+                Text(complaint.title,
+                    style: GoogleFonts.outfit(
+                        fontSize: 16, fontWeight: FontWeight.bold)),
                 const SizedBox(height: 4),
-                Text(complaint.description, style: GoogleFonts.outfit(color: Colors.grey[800])),
+                Text(complaint.description,
+                    style: GoogleFonts.outfit(color: Colors.grey[800])),
                 const SizedBox(height: 12),
                 Row(
                   children: [
                     const Icon(Icons.person, size: 14, color: Colors.grey),
                     const SizedBox(width: 4),
-                    Text(complaint.createdByName ?? 'Anonymous', style: GoogleFonts.outfit(color: Colors.grey, fontSize: 12)),
+                    Text(complaint.createdByName ?? 'Anonymous',
+                        style: GoogleFonts.outfit(
+                            color: Colors.grey, fontSize: 12)),
                     const Spacer(),
-                    const Icon(Icons.arrow_upward, size: 14, color: UltimateTheme.primaryColor),
-                    Text(" ${complaint.upvotes.length}", style: GoogleFonts.outfit(color: UltimateTheme.primaryColor, fontWeight: FontWeight.bold)),
+                    const Icon(Icons.arrow_upward,
+                        size: 14, color: UltimateTheme.primaryColor),
+                    Text(" ${complaint.upvotes.length}",
+                        style: GoogleFonts.outfit(
+                            color: UltimateTheme.primaryColor,
+                            fontWeight: FontWeight.bold)),
                   ],
                 ),
                 const Divider(height: 24),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    if (complaint.status == 'Pending' || complaint.status == 'In Progress') ...[
+                    if (complaint.status == 'Pending' ||
+                        complaint.status == 'In Progress') ...[
                       if (complaint.status == 'Pending')
                         TextButton(
-                          onPressed: () => _updateStatus(context, ref, complaint, 'In Progress'),
-                          child: Text("Mark In Progress", style: GoogleFonts.outfit(color: Colors.orange)),
+                          onPressed: () => _updateStatus(
+                              context, ref, complaint, 'In Progress'),
+                          child: Text("Mark In Progress",
+                              style: GoogleFonts.outfit(color: Colors.orange)),
                         ),
                       TextButton(
-                        onPressed: () => _showResolveDialog(context, ref, complaint, 'Resolved'),
-                        child: Text("Resolve", style: GoogleFonts.outfit(color: Colors.green)),
+                        onPressed: () => _showResolveDialog(
+                            context, ref, complaint, 'Resolved'),
+                        child: Text("Resolve",
+                            style: GoogleFonts.outfit(color: Colors.green)),
                       ),
                       TextButton(
-                        onPressed: () => _showResolveDialog(context, ref, complaint, 'Rejected'),
-                        child: Text("Reject", style: GoogleFonts.outfit(color: Colors.red)),
+                        onPressed: () => _showResolveDialog(
+                            context, ref, complaint, 'Rejected'),
+                        child: Text("Reject",
+                            style: GoogleFonts.outfit(color: Colors.red)),
                       ),
                     ] else ...[
-                       Text("Resolved by: ${complaint.resolvedBy?['name'] ?? 'Admin'}", style: GoogleFonts.outfit(color: Colors.grey, fontSize: 12, fontStyle: FontStyle.italic)), 
+                      Text(
+                          "Resolved by: ${complaint.resolvedBy?['name'] ?? 'Admin'}",
+                          style: GoogleFonts.outfit(
+                              color: Colors.grey,
+                              fontSize: 12,
+                              fontStyle: FontStyle.italic)),
                     ]
                   ],
                 )
@@ -152,11 +194,15 @@ class _AdminComplaintScreenState extends ConsumerState<AdminComplaintScreen> wit
     );
   }
 
-  void _updateStatus(BuildContext context, WidgetRef ref, Complaint complaint, String status) {
-    ref.read(complaintProvider.notifier).updateStatus(complaint.id, status, null);
+  void _updateStatus(
+      BuildContext context, WidgetRef ref, Complaint complaint, String status) {
+    ref
+        .read(complaintProvider.notifier)
+        .updateStatus(complaint.id, status, null);
   }
 
-  void _showResolveDialog(BuildContext context, WidgetRef ref, Complaint complaint, String status) {
+  void _showResolveDialog(
+      BuildContext context, WidgetRef ref, Complaint complaint, String status) {
     final noteController = TextEditingController();
     showDialog(
       context: context,
@@ -164,14 +210,20 @@ class _AdminComplaintScreenState extends ConsumerState<AdminComplaintScreen> wit
         title: Text("Mark as $status"),
         content: TextField(
           controller: noteController,
-          decoration: const InputDecoration(labelText: "Resolution Note (Optional)", border: OutlineInputBorder()),
+          decoration: const InputDecoration(
+              labelText: "Resolution Note (Optional)",
+              border: OutlineInputBorder()),
           maxLines: 3,
         ),
         actions: [
-          TextButton(onPressed: () => Navigator.pop(context), child: const Text("Cancel")),
+          TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: const Text("Cancel")),
           ElevatedButton(
             onPressed: () {
-              ref.read(complaintProvider.notifier).updateStatus(complaint.id, status, noteController.text);
+              ref
+                  .read(complaintProvider.notifier)
+                  .updateStatus(complaint.id, status, noteController.text);
               Navigator.pop(context);
             },
             child: const Text("Confirm"),
