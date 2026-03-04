@@ -18,8 +18,10 @@ class AddFaculty extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+          LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.adminAuthLabel.toLowerCase());
       }
     });
     return ResponsiveScaledBox(
@@ -58,7 +60,7 @@ class AddFaculty extends ConsumerWidget {
                             .pickSpreadsheet(),
                         style: ButtonStyle(
                             minimumSize:
-                                MaterialStateProperty.all(const Size(200, 60))),
+                                WidgetStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
                     ],
@@ -88,7 +90,8 @@ class AddFaculty extends ConsumerWidget {
                               .facultyNameController,
                           validator: (value) => Validators.nameValidator(value),
                           hintText: 'Faculty Name',
-                          hintColor: Colors.teal.shade900.withOpacity(0.5),
+                          hintColor:
+                              Colors.teal.shade900.withValues(alpha: 0.5),
                         ),
                         const SizedBox(height: 30),
                         MaterialTextFormField(
@@ -98,7 +101,8 @@ class AddFaculty extends ConsumerWidget {
                           validator: (value) =>
                               Validators.emailValidator(value),
                           hintText: 'Faculty Mail',
-                          hintColor: Colors.teal.shade900.withOpacity(0.5),
+                          hintColor:
+                              Colors.teal.shade900.withValues(alpha: 0.5),
                         ),
                         const SizedBox(height: 30),
                         SearchChoices.multiple(
@@ -130,7 +134,8 @@ class AddFaculty extends ConsumerWidget {
                                     horizontal: 20, vertical: 10),
                                 isDense: true,
                                 filled: true,
-                                fillColor: Colors.tealAccent.withOpacity(0.4),
+                                fillColor:
+                                    Colors.tealAccent.withValues(alpha: 0.4),
                                 border: const OutlineInputBorder(
                                   borderSide: BorderSide.none,
                                   borderRadius:
@@ -176,7 +181,7 @@ class AddFaculty extends ConsumerWidget {
                     },
                     style: ButtonStyle(
                         minimumSize:
-                            MaterialStateProperty.all(const Size(200, 60))),
+                            WidgetStateProperty.all(const Size(200, 60))),
                     child: const Text("Add Faculty"),
                   ),
                 ),
