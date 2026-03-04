@@ -6,7 +6,8 @@ import 'package:logger/logger.dart';
 import '../models/timtable.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 
-final timetableRepositoryProvider = Provider<TimetableRepository>((ref) => TimetableRepository());
+final timetableRepositoryProvider =
+    Provider<TimetableRepository>((ref) => TimetableRepository());
 
 class TimetableRepository {
   final _client = Dio(
@@ -22,9 +23,11 @@ class TimetableRepository {
   final _secureStorage = const FlutterSecureStorage();
 
   Future<bool> createTimetable(Timetable timetable) async {
-    _client.options.headers['authorization'] = await _secureStorage.read(key: 'token') ?? '';
+    _client.options.headers['authorization'] =
+        await _secureStorage.read(key: 'token') ?? '';
     try {
-      final response = await _client.post('/timetable', data: timetable.toJson());
+      final response =
+          await _client.post('/timetable', data: timetable.toJson());
       _logger.i(response.data);
       return true;
     } catch (e) {
@@ -34,7 +37,8 @@ class TimetableRepository {
   }
 
   Future<List<Timetable>?> getTimetablesByCreatorId(String creatorId) async {
-    _client.options.headers['authorization'] = await _secureStorage.read(key: 'token') ?? '';
+    _client.options.headers['authorization'] =
+        await _secureStorage.read(key: 'token') ?? '';
     try {
       final response = await _client.get('/timetables/$creatorId');
       return (response.data as List).map((e) => Timetable.fromJson(e)).toList();
@@ -45,7 +49,8 @@ class TimetableRepository {
   }
 
   Future<bool> deleteTimetableById(String id) async {
-    _client.options.headers['authorization'] = await _secureStorage.read(key: 'token') ?? '';
+    _client.options.headers['authorization'] =
+        await _secureStorage.read(key: 'token') ?? '';
     try {
       final response = await _client.delete('/timetables/$id');
       _logger.i(response.data);
