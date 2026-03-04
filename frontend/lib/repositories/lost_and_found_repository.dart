@@ -7,7 +7,8 @@ import 'package:smart_insti_app/models/lost_and_found_item.dart';
 import 'package:http_parser/http_parser.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 
-final lostAndFoundRepositoryProvider = Provider<LostAndFoundRepository>((_) => LostAndFoundRepository());
+final lostAndFoundRepositoryProvider =
+    Provider<LostAndFoundRepository>((_) => LostAndFoundRepository());
 
 class LostAndFoundRepository {
   final _client = Dio(
@@ -25,9 +26,8 @@ class LostAndFoundRepository {
     try {
       final response = await _client.get('/lost-and-found');
       final itemsJson = response.data['data'] as List; // <-- extract "data"
-      List<LostAndFoundItem> items = itemsJson
-          .map((item) => LostAndFoundItem.fromJson(item))
-          .toList();
+      List<LostAndFoundItem> items =
+          itemsJson.map((item) => LostAndFoundItem.fromJson(item)).toList();
       return items;
     } catch (e) {
       Logger().e(e);
@@ -56,7 +56,7 @@ class LostAndFoundRepository {
         "lastSeenLocation": item.lastSeenLocation ?? "",
         "description": item.description ?? "",
         "contactNumber": item.contactNumber ?? "",
-        "isLost": item.isLost.toString(),   // "true" or "false"
+        "isLost": item.isLost.toString(), // "true" or "false"
       };
 
       // Only include listerId if it's non-empty
@@ -83,5 +83,4 @@ class LostAndFoundRepository {
       return false;
     }
   }
-
 }
