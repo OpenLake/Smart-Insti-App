@@ -4,7 +4,8 @@ import 'package:logger/logger.dart';
 import '../constants/constants.dart';
 import '../models/post.dart';
 
-final postRepositoryProvider = Provider<PostRepository>((ref) => PostRepository());
+final postRepositoryProvider =
+    Provider<PostRepository>((ref) => PostRepository());
 
 class PostRepository {
   final Dio _client = Dio(
@@ -18,7 +19,8 @@ class PostRepository {
   final Logger _logger = Logger();
 
   Future<List<Post>> getPosts(String token) async {
-    _client.options.headers['authorization'] = 'Bearer $token'; // Though GET /news is public? Wait, my backend implementation of GET /news didn't use `tokenRequired`.
+    _client.options.headers['authorization'] =
+        'Bearer $token'; // Though GET /news is public? Wait, my backend implementation of GET /news didn't use `tokenRequired`.
     // Actually, `newsResource.get("/", async (req, res)...` did NOT use tokenRequired.
     // So token is optional? But if I pass it, it doesn't hurt.
     try {
