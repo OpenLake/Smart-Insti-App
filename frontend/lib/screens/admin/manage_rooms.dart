@@ -18,8 +18,10 @@ class ManageRooms extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(roomProvider.notifier).buildRoomTiles(context);
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+          LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.adminAuthLabel.toLowerCase());
       }
     });
 
@@ -52,7 +54,8 @@ class ManageRooms extends ConsumerWidget {
                         SizedBox(
                           width: 300,
                           child: MaterialTextFormField(
-                            controller: ref.read(roomProvider).roomNameController,
+                            controller:
+                                ref.read(roomProvider).roomNameController,
                             hintText: 'Enter room name',
                           ),
                         ),
@@ -63,18 +66,22 @@ class ManageRooms extends ConsumerWidget {
                             BorderlessButton(
                               onPressed: () => context.pop(),
                               splashColor: Colors.redAccent,
-                              backgroundColor: Colors.redAccent.shade100.withOpacity(0.2),
+                              backgroundColor: Colors.redAccent.shade100
+                                  .withValues(alpha: 0.2),
                               label: const Text('Cancel'),
                             ),
                             BorderlessButton(
                               onPressed: () {
                                 Logger().i("Adding room");
                                 ref.read(roomProvider.notifier).addRoom();
-                                ref.read(roomProvider.notifier).buildRoomTiles(context);
+                                ref
+                                    .read(roomProvider.notifier)
+                                    .buildRoomTiles(context);
                                 context.pop();
                               },
                               splashColor: Colors.blueAccent,
-                              backgroundColor: Colors.blueAccent.shade100.withOpacity(0.2),
+                              backgroundColor: Colors.blueAccent.shade100
+                                  .withValues(alpha: 0.2),
                               label: const Text('Add'),
                             ),
                           ],
@@ -120,8 +127,11 @@ class ManageRooms extends ConsumerWidget {
                         ),
                         const SizedBox(width: 30),
                         ElevatedButton(
-                          onPressed: () => ref.read(roomProvider.notifier).pickSpreadsheet(),
-                          style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                          onPressed: () =>
+                              ref.read(roomProvider.notifier).pickSpreadsheet(),
+                          style: ButtonStyle(
+                              minimumSize:
+                                  WidgetStateProperty.all(const Size(200, 60))),
                           child: const Text("Upload Spreadsheet"),
                         ),
                       ],
@@ -144,13 +154,19 @@ class ManageRooms extends ConsumerWidget {
                         controller: ref.read(roomProvider).searchRoomController,
                         hintText: 'Enter room name',
                         onChanged: (value) {
-                          ref.watch(roomProvider.notifier).buildRoomTiles(context);
+                          ref
+                              .watch(roomProvider.notifier)
+                              .buildRoomTiles(context);
                         },
                         onSubmitted: (value) {
-                          ref.watch(roomProvider.notifier).buildRoomTiles(context);
+                          ref
+                              .watch(roomProvider.notifier)
+                              .buildRoomTiles(context);
                         },
-                        padding: MaterialStateProperty.all(const EdgeInsets.only(left: 15)),
-                        shadowColor: MaterialStateProperty.all(Colors.transparent),
+                        padding: WidgetStateProperty.all(
+                            const EdgeInsets.only(left: 15)),
+                        shadowColor:
+                            WidgetStateProperty.all(Colors.transparent),
                       ),
                     ),
                   ],
