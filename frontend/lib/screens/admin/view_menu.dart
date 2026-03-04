@@ -15,8 +15,10 @@ class ViewMessMenu extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.adminAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+          LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.adminAuthLabel.toLowerCase());
       }
     });
 
@@ -29,7 +31,8 @@ class ViewMessMenu extends ConsumerWidget {
         body: SingleChildScrollView(
           child: Consumer(
             builder: (_, ref, __) {
-              if (ref.watch(menuProvider).loadingState == LoadingState.progress) {
+              if (ref.watch(menuProvider).loadingState ==
+                  LoadingState.progress) {
                 return const Center(
                   child: CircularProgressIndicator(),
                 );
@@ -41,11 +44,14 @@ class ViewMessMenu extends ConsumerWidget {
                       padding: const EdgeInsets.symmetric(horizontal: 15),
                       child: ChoiceSelector(
                         onChanged: (value) {
-                          ref.read(menuProvider.notifier).setSelectViewMenu(value);
+                          ref
+                              .read(menuProvider.notifier)
+                              .setSelectViewMenu(value);
                         },
                         value: ref.read(menuProvider).selectedViewMenu,
                         items: [
-                          for (String i in ref.read(menuProvider).messMenus.keys)
+                          for (String i
+                              in ref.read(menuProvider).messMenus.keys)
                             DropdownMenuItem<String>(
                               value: i,
                               child: Text(i),
@@ -55,13 +61,18 @@ class ViewMessMenu extends ConsumerWidget {
                       ),
                     ),
                     Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 30),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 15, vertical: 30),
                       child: SlideSwitcher(
-                        onSelect: (index) => ref.read(menuProvider.notifier).selectMealType(index),
+                        onSelect: (index) => ref
+                            .read(menuProvider.notifier)
+                            .selectMealType(index),
                         containerHeight: 65,
                         containerWight: 380,
                         containerBorderRadius: 20,
-                        slidersColors: [Colors.tealAccent.shade700.withOpacity(0.7)],
+                        slidersColors: [
+                          Colors.tealAccent.shade700.withValues(alpha: 0.7)
+                        ],
                         containerColor: Colors.tealAccent.shade100,
                         children: MessMenuConstants.mealTypes,
                       ),
@@ -77,7 +88,8 @@ class ViewMessMenu extends ConsumerWidget {
                             margin: const EdgeInsets.only(right: 15),
                             decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(20),
-                              border: Border.all(color: Colors.transparent, width: 0),
+                              border: Border.all(
+                                  color: Colors.transparent, width: 0),
                               color: Colors.grey[200],
                             ),
                             child: Column(
@@ -85,18 +97,25 @@ class ViewMessMenu extends ConsumerWidget {
                                 Consumer(
                                   builder: (_, ref, __) {
                                     final menuState = ref.watch(menuProvider);
-                                    final weekDay =
-                                        ref.watch(menuProvider.notifier).getWeekDay(menuState.selectedWeekdayIndex);
-                                    final mealType =
-                                        ref.watch(menuProvider.notifier).getMealType(menuState.selectedMealTypeIndex);
+                                    final weekDay = ref
+                                        .watch(menuProvider.notifier)
+                                        .getWeekDay(
+                                            menuState.selectedWeekdayIndex);
+                                    final mealType = ref
+                                        .watch(menuProvider.notifier)
+                                        .getMealType(
+                                            menuState.selectedMealTypeIndex);
                                     return Column(
                                       children: [
                                         Container(
-                                          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 15),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 20, vertical: 15),
                                           alignment: Alignment.topLeft,
                                           child: Text(
                                             "$weekDay's $mealType",
-                                            style: const TextStyle(fontSize: 23, fontFamily: "GoogleSanaFlex"),
+                                            style: const TextStyle(
+                                                fontSize: 23,
+                                                fontFamily: "GoogleSanaFlex"),
                                           ),
                                         ),
                                       ],
@@ -106,44 +125,79 @@ class ViewMessMenu extends ConsumerWidget {
                                 Consumer(
                                   builder: (context, ref, child) {
                                     final menuState = ref.watch(menuProvider);
-                                    final weekDay =
-                                        ref.watch(menuProvider.notifier).getWeekDay(menuState.selectedWeekdayIndex);
-                                    final mealType =
-                                        ref.watch(menuProvider.notifier).getMealType(menuState.selectedMealTypeIndex);
+                                    final weekDay = ref
+                                        .watch(menuProvider.notifier)
+                                        .getWeekDay(
+                                            menuState.selectedWeekdayIndex);
+                                    final mealType = ref
+                                        .watch(menuProvider.notifier)
+                                        .getMealType(
+                                            menuState.selectedMealTypeIndex);
                                     if (menuState.selectedViewMenu != null) {
-                                      MessMenu? selectedMenu = menuState.messMenus[menuState.selectedViewMenu];
-                                      int length = selectedMenu?.messMenu?[weekDay]?[mealType]?.length ?? 0;
-                                      List controllers = List.generate(length, (index) => TextEditingController());
+                                      MessMenu? selectedMenu =
+                                          menuState.messMenus[
+                                              menuState.selectedViewMenu];
+                                      int length = selectedMenu
+                                              ?.messMenu?[weekDay]?[mealType]
+                                              ?.length ??
+                                          0;
+                                      List controllers = List.generate(length,
+                                          (index) => TextEditingController());
                                       return ListView.builder(
                                         shrinkWrap: true,
                                         itemCount: length,
                                         itemBuilder: (context, index) {
                                           controllers[index].text =
-                                              selectedMenu?.messMenu?[weekDay]?[mealType]?[index] ?? '';
+                                              selectedMenu?.messMenu?[weekDay]
+                                                      ?[mealType]?[index] ??
+                                                  '';
                                           return length != 0
                                               ? Container(
-                                                  margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                                                  margin: const EdgeInsets
+                                                      .symmetric(
+                                                      horizontal: 20,
+                                                      vertical: 10),
                                                   decoration: BoxDecoration(
                                                     color: Colors.white,
-                                                    borderRadius: BorderRadius.circular(15),
-                                                    border: Border.all(color: Colors.transparent, width: 0),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            15),
+                                                    border: Border.all(
+                                                        color:
+                                                            Colors.transparent,
+                                                        width: 0),
                                                   ),
                                                   child: MaterialTextFormField(
-                                                    enabled: ref.watch(authProvider).currentUserRole ==
-                                                        AuthConstants.adminAuthLabel.toLowerCase(),
+                                                    enabled: ref
+                                                            .watch(authProvider)
+                                                            .currentUserRole ==
+                                                        AuthConstants
+                                                            .adminAuthLabel
+                                                            .toLowerCase(),
                                                     contentPadding:
-                                                        const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                                                    controller: controllers[index],
-                                                    hintText: 'Item ${index + 1}',
+                                                        const EdgeInsets
+                                                            .symmetric(
+                                                            horizontal: 20,
+                                                            vertical: 10),
+                                                    controller:
+                                                        controllers[index],
+                                                    hintText:
+                                                        'Item ${index + 1}',
                                                     onChanged: (value) =>
-                                                        selectedMenu?.messMenu?[weekDay]?[mealType]?[index] = value,
+                                                        selectedMenu?.messMenu?[
+                                                                    weekDay]
+                                                                ?[mealType]
+                                                            ?[index] = value,
                                                   ),
                                                 )
                                               : const Expanded(
                                                   child: Center(
                                                     child: Text(
                                                       'No items today',
-                                                      style: TextStyle(fontSize: 20, color: Colors.black38),
+                                                      style: TextStyle(
+                                                          fontSize: 20,
+                                                          color:
+                                                              Colors.black38),
                                                     ),
                                                   ),
                                                 );
@@ -154,7 +208,9 @@ class ViewMessMenu extends ConsumerWidget {
                                         child: Center(
                                           child: Text(
                                             'No menu selected',
-                                            style: TextStyle(fontSize: 20, color: Colors.black38),
+                                            style: TextStyle(
+                                                fontSize: 20,
+                                                color: Colors.black38),
                                           ),
                                         ),
                                       );
@@ -167,12 +223,17 @@ class ViewMessMenu extends ConsumerWidget {
                           Align(
                             alignment: Alignment.centerRight,
                             child: SlideSwitcher(
-                              onSelect: (index) => ref.read(menuProvider.notifier).selectWeekday(index),
+                              onSelect: (index) => ref
+                                  .read(menuProvider.notifier)
+                                  .selectWeekday(index),
                               containerHeight: 550,
                               containerWight: 70,
                               containerBorderRadius: 20,
                               direction: Axis.vertical,
-                              slidersColors: [Colors.tealAccent.shade700.withOpacity(0.7)],
+                              slidersColors: [
+                                Colors.tealAccent.shade700
+                                    .withValues(alpha: 0.7)
+                              ],
                               containerColor: Colors.tealAccent.shade100,
                               children: MessMenuConstants.weekdays,
                             ),
@@ -187,13 +248,14 @@ class ViewMessMenu extends ConsumerWidget {
                         children: [
                           const SizedBox(height: 30),
                           GestureDetector(
-                            onTap: () => ref.read(menuProvider.notifier).deleteMenu(),
+                            onTap: () =>
+                                ref.read(menuProvider.notifier).deleteMenu(),
                             child: Container(
                               width: 55,
                               height: 55,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.redAccent.withOpacity(0.5),
+                                color: Colors.redAccent.withValues(alpha: 0.5),
                               ),
                               child: const Icon(
                                 Icons.delete,
@@ -203,13 +265,15 @@ class ViewMessMenu extends ConsumerWidget {
                           ),
                           const SizedBox(width: 20),
                           GestureDetector(
-                            onTap: () => ref.read(menuProvider.notifier).resetMenu(),
+                            onTap: () =>
+                                ref.read(menuProvider.notifier).resetMenu(),
                             child: Container(
                               width: 55,
                               height: 55,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(10),
-                                color: Colors.greenAccent.withOpacity(0.5),
+                                color:
+                                    Colors.greenAccent.withValues(alpha: 0.5),
                               ),
                               child: const Icon(
                                 Icons.refresh,
@@ -219,8 +283,11 @@ class ViewMessMenu extends ConsumerWidget {
                           ),
                           const Spacer(),
                           ElevatedButton(
-                            onPressed: () => ref.read(menuProvider.notifier).updateMenu(),
-                            style: ButtonStyle(minimumSize: MaterialStateProperty.all(const Size(200, 60))),
+                            onPressed: () =>
+                                ref.read(menuProvider.notifier).updateMenu(),
+                            style: ButtonStyle(
+                                minimumSize: WidgetStateProperty.all(
+                                    const Size(200, 60))),
                             child: const Text("Update Menu"),
                           ),
                         ],
