@@ -47,7 +47,7 @@ class ViewCourses extends ConsumerWidget {
                       context.pop();
                     },
                   ),
-                  shadowColor: MaterialStateProperty.all(Colors.transparent),
+                  shadowColor: WidgetStateProperty.all(Colors.transparent),
                 ),
               ),
             )
