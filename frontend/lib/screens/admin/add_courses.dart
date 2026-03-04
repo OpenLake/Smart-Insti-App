@@ -59,7 +59,7 @@ class AddCourses extends ConsumerWidget {
                             .pickSpreadsheet(),
                         style: ButtonStyle(
                             minimumSize:
-                                MaterialStateProperty.all(const Size(200, 60))),
+                                WidgetStateProperty.all(const Size(200, 60))),
                         child: const Text("Upload Spreadsheet"),
                       ),
                     ],
@@ -87,7 +87,8 @@ class AddCourses extends ConsumerWidget {
                           controller: course.courseNameController,
                           validator: (value) => Validators.nameValidator(value),
                           hintText: "Enter course name",
-                          hintColor: Colors.teal.shade900.withOpacity(0.5),
+                          hintColor:
+                              Colors.teal.shade900.withValues(alpha: 0.5),
                         ),
                         const SizedBox(height: 30),
                         MaterialTextFormField(
@@ -95,7 +96,8 @@ class AddCourses extends ConsumerWidget {
                           validator: (value) =>
                               Validators.courseCodeValidator(value),
                           hintText: "Enter course code",
-                          hintColor: Colors.teal.shade900.withOpacity(0.5),
+                          hintColor:
+                              Colors.teal.shade900.withValues(alpha: 0.5),
                         ),
                         const SizedBox(height: 30),
                         ChoiceSelector(
@@ -119,7 +121,7 @@ class AddCourses extends ConsumerWidget {
                               }
                             },
                             style: ButtonStyle(
-                                minimumSize: MaterialStateProperty.all(
+                                minimumSize: WidgetStateProperty.all(
                                     const Size(200, 60))),
                             child: const Text("Add Course"),
                           ),
