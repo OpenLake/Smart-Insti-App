@@ -6,7 +6,8 @@ import 'package:smart_insti_app/constants/dummy_entries.dart';
 import '../models/room.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 
-final roomRepositoryProvider = Provider<RoomRepository>((_) => RoomRepository());
+final roomRepositoryProvider =
+    Provider<RoomRepository>((_) => RoomRepository());
 
 class RoomRepository {
   final _client = Dio(
@@ -28,9 +29,14 @@ class RoomRepository {
     }
   }
 
-  Future<bool> reserveRoom(String roomId, String occupantId, String userName) async {
+  Future<bool> reserveRoom(
+      String roomId, String occupantId, String userName) async {
     try {
-      final response = await _client.put('/room/$roomId', data: {'occupantName' : userName ,'occupantId': occupantId, 'vacant': false });
+      final response = await _client.put('/room/$roomId', data: {
+        'occupantName': userName,
+        'occupantId': occupantId,
+        'vacant': false
+      });
       Logger().i(response.data);
       return true;
     } catch (e) {
@@ -41,7 +47,8 @@ class RoomRepository {
 
   Future<bool> vacateRoom(String roomId) async {
     try {
-      final response = await _client.put('/room/$roomId', data: {'occupantId': null, 'vacant': true });
+      final response = await _client
+          .put('/room/$roomId', data: {'occupantId': null, 'vacant': true});
       Logger().i(response.data);
       return true;
     } catch (e) {
