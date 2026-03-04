@@ -3,7 +3,8 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 
-final studentDbRepositoryProvider = Provider<StudentDbRepository>((ref) => StudentDbRepository());
+final studentDbRepositoryProvider =
+    Provider<StudentDbRepository>((ref) => StudentDbRepository());
 
 class StudentDbRepository {
   final Dio _client = Dio(
