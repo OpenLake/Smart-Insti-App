@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,55 +8,56 @@ import '../../models/student.dart';
 // Reusing StudentProfileScreen logic but tailored for Alumni
 
 class AlumniProfileScreen extends ConsumerWidget {
-  final Map<String, dynamic> alumniData; // Passing data directly for MVP simplicity
+  final Map<String, dynamic>
+      alumniData; // Passing data directly for MVP simplicity
 
   const AlumniProfileScreen({super.key, required this.alumniData});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return Scaffold(
-      backgroundColor: UltimateTheme.backgroundColor,
+      backgroundColor: Colors.transparent,
       body: CustomScrollView(
         slivers: [
-          SliverAppBar(
-            expandedHeight: 200.0,
-            floating: false,
-            pinned: true,
-            backgroundColor: UltimateTheme.primaryColor,
-            flexibleSpace: FlexibleSpaceBar(
-              background: Container(
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    begin: Alignment.topCenter,
-                    end: Alignment.bottomCenter,
-                    colors: [
-                      UltimateTheme.primaryColor,
-                      UltimateTheme.primaryColor.withOpacity(0.8),
-                    ],
-                  ),
+          SliverToBoxAdapter(
+            child: Container(
+              height: 240, // Increased to account for lack of AppBar height
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                  colors: [
+                    UltimateTheme.primary,
+                    UltimateTheme.primary.withValues(alpha: 0.8),
+                  ],
                 ),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      const SizedBox(height: 40),
-                      CircleAvatar(
-                        radius: 50,
-                        backgroundImage: alumniData['profilePicURI'] != null
-                            ? NetworkImage(alumniData['profilePicURI'])
-                            : null,
-                        backgroundColor: Colors.white,
-                        child: alumniData['profilePicURI'] == null
-                            ? Text(alumniData['name'][0], style: const TextStyle(fontSize: 40, color: UltimateTheme.primaryColor))
-                            : null,
-                      ),
-                      const SizedBox(height: 10),
-                      Text(
-                        alumniData['name'],
-                        style: GoogleFonts.outfit(color: Colors.white, fontSize: 24, fontWeight: FontWeight.bold),
-                      ),
-                    ],
-                  ),
+              ),
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const SizedBox(height: 20),
+                    CircleAvatar(
+                      radius: 50,
+                      backgroundImage: alumniData['profilePicURI'] != null
+                          ? NetworkImage(alumniData['profilePicURI'])
+                          : null,
+                      backgroundColor: Colors.white,
+                      child: alumniData['profilePicURI'] == null
+                          ? Text(alumniData['name'][0],
+                              style: const TextStyle(
+                                  fontSize: 40, color: UltimateTheme.primary))
+                          : null,
+                    ),
+                    const SizedBox(height: 10),
+                    Text(
+                      alumniData['name'],
+                      style: GoogleFonts.outfit(
+                          color: Colors.white,
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
                 ),
               ),
             ),
@@ -69,28 +69,19 @@ class AlumniProfileScreen extends ConsumerWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   _buildSectionTitle("Professional Info"),
-                  _buildInfoCard(
-                      Icons.business, 
-                      "Organization", 
-                      alumniData['currentOrganization'] ?? "Not Listed"
-                  ),
-                  _buildInfoCard(
-                      Icons.work, 
-                      "Designation", 
-                      alumniData['designation'] ?? "Not Listed"
-                  ),
-                   _buildInfoCard(
-                      Icons.link, 
-                      "LinkedIn", 
+                  _buildInfoCard(Icons.business, "Organization",
+                      alumniData['currentOrganization'] ?? "Not Listed"),
+                  _buildInfoCard(Icons.work, "Designation",
+                      alumniData['designation'] ?? "Not Listed"),
+                  _buildInfoCard(Icons.link, "LinkedIn",
                       alumniData['linkedInProfile'] ?? "Not Linked",
-                      isLink: true
-                  ),
-
+                      isLink: true),
                   const SizedBox(height: 24),
                   _buildSectionTitle("Academic Info"),
-                  _buildInfoCard(Icons.school, "Branch", alumniData['branch'] ?? "Unknown"),
-                  _buildInfoCard(Icons.calendar_today, "Class of", "${alumniData['graduationYear'] ?? 'Unknown'}"),
-
+                  _buildInfoCard(Icons.school, "Branch",
+                      alumniData['branch'] ?? "Unknown"),
+                  _buildInfoCard(Icons.calendar_today, "Class of",
+                      "${alumniData['graduationYear'] ?? 'Unknown'}"),
                   const SizedBox(height: 24),
                   _buildSectionTitle("Contact"),
                   _buildInfoCard(Icons.email, "Email", alumniData['email']),
@@ -108,12 +99,16 @@ class AlumniProfileScreen extends ConsumerWidget {
       padding: const EdgeInsets.only(bottom: 12.0),
       child: Text(
         title,
-        style: GoogleFonts.outfit(fontSize: 18, fontWeight: FontWeight.bold, color: UltimateTheme.primaryColor),
+        style: GoogleFonts.outfit(
+            fontSize: 18,
+            fontWeight: FontWeight.bold,
+            color: UltimateTheme.primaryColor),
       ),
     );
   }
 
-  Widget _buildInfoCard(IconData icon, String label, String value, {bool isLink = false}) {
+  Widget _buildInfoCard(IconData icon, String label, String value,
+      {bool isLink = false}) {
     return Card(
       elevation: 2,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
@@ -122,24 +117,24 @@ class AlumniProfileScreen extends ConsumerWidget {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: UltimateTheme.primaryColor.withOpacity(0.1),
+            color: UltimateTheme.primaryColor.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(icon, color: UltimateTheme.primaryColor),
         ),
-        title: Text(label, style: GoogleFonts.outfit(color: Colors.grey[600], fontSize: 12)),
-        subtitle: Text(
-            value, 
+        title: Text(label,
+            style: GoogleFonts.outfit(color: Colors.grey[600], fontSize: 12)),
+        subtitle: Text(value,
             style: GoogleFonts.outfit(
-                color: isLink ? Colors.blue : Colors.black87, 
-                fontSize: 16, 
+                color: isLink ? Colors.blue : Colors.black87,
+                fontSize: 16,
                 fontWeight: FontWeight.w500,
-                decoration: isLink ? TextDecoration.underline : null
-            )
-        ),
-        onTap: isLink && value != "Not Linked" ? () {
-            // Launch URL logic here
-        } : null,
+                decoration: isLink ? TextDecoration.underline : null)),
+        onTap: isLink && value != "Not Linked"
+            ? () {
+                // Launch URL logic here
+              }
+            : null,
       ),
     );
   }
