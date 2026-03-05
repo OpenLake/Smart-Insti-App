@@ -88,13 +88,14 @@ class _PrivateChatScreenState extends ConsumerState<PrivateChatScreen> {
 
     final content = _messageController.text.trim();
     _messageController.clear();
-    
+
     // Optimistic UI update
     // We need a temporary ID or just add it to list
     // Ideally service returns standard message object
 
     final chatService = ref.read(chatServiceProvider);
-    final newMessage = await chatService.sendMessage(widget.conversationId, content);
+    final newMessage =
+        await chatService.sendMessage(widget.conversationId, content);
 
     if (newMessage != null && mounted) {
       setState(() {
@@ -107,30 +108,46 @@ class _PrivateChatScreenState extends ConsumerState<PrivateChatScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: UltimateTheme.backgroundColor,
-      appBar: AppBar(
-        title: Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: widget.targetUserProfilePic != null 
-                  ? NetworkImage(widget.targetUserProfilePic!) 
-                  : null,
-              child: widget.targetUserProfilePic == null 
-                  ? Text(widget.targetUserName[0].toUpperCase())
-                  : null,
-            ),
-            const SizedBox(width: 10),
-            Text(widget.targetUserName, style: GoogleFonts.outfit(color: UltimateTheme.textColor)),
-          ],
-        ),
-        backgroundColor: UltimateTheme.surfaceColor,
-        elevation: 1,
-        iconTheme: const IconThemeData(color: UltimateTheme.textColor),
-      ),
+      backgroundColor: Colors.transparent,
       body: Column(
         children: [
+          // User Info Bar
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                  bottom: BorderSide(
+                      color: UltimateTheme.primary.withValues(alpha: 0.05))),
+            ),
+            child: Row(
+              children: [
+                CircleAvatar(
+                  radius: 16,
+                  backgroundImage: widget.targetUserProfilePic != null
+                      ? NetworkImage(widget.targetUserProfilePic!)
+                      : null,
+                  child: widget.targetUserProfilePic == null
+                      ? Text(widget.targetUserName[0].toUpperCase(),
+                          style: const TextStyle(fontSize: 12))
+                      : null,
+                ),
+                const SizedBox(width: 12),
+                Expanded(
+                  child: Text(
+                    widget.targetUserName,
+                    style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 16,
+                        color: UltimateTheme.textMain),
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+              ],
+            ),
+          ),
           Expanded(
-            child: _isLoading 
+            child: _isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : ListView.builder(
                     controller: _scrollController,
@@ -138,20 +155,29 @@ class _PrivateChatScreenState extends ConsumerState<PrivateChatScreen> {
                     padding: const EdgeInsets.all(16),
                     itemBuilder: (context, index) {
                       final msg = _messages[index];
-                      final isMe = msg['sender']['_id'] == _currentUserId || msg['sender'] == _currentUserId;
-                      
+                      final isMe = msg['sender']['_id'] == _currentUserId ||
+                          msg['sender'] == _currentUserId;
+
                       return Align(
-                        alignment: isMe ? Alignment.centerRight : Alignment.centerLeft,
+                        alignment:
+                            isMe ? Alignment.centerRight : Alignment.centerLeft,
                         child: Container(
                           margin: const EdgeInsets.symmetric(vertical: 4),
-                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+                          padding: const EdgeInsets.symmetric(
+                              horizontal: 16, vertical: 10),
                           decoration: BoxDecoration(
-                            color: isMe ? UltimateTheme.primaryColor : const Color(0xFFE0E0E0),
+                            color: isMe
+                                ? UltimateTheme.primaryColor
+                                : const Color(0xFFE0E0E0),
                             borderRadius: BorderRadius.only(
                               topLeft: const Radius.circular(16),
                               topRight: const Radius.circular(16),
-                              bottomLeft: isMe ? const Radius.circular(16) : Radius.zero,
-                              bottomRight: isMe ? Radius.zero : const Radius.circular(16),
+                              bottomLeft: isMe
+                                  ? const Radius.circular(16)
+                                  : Radius.zero,
+                              bottomRight: isMe
+                                  ? Radius.zero
+                                  : const Radius.circular(16),
                             ),
                           ),
                           child: Column(
@@ -166,7 +192,8 @@ class _PrivateChatScreenState extends ConsumerState<PrivateChatScreen> {
                               ),
                               const SizedBox(height: 4),
                               Text(
-                                timeago.format(DateTime.parse(msg['createdAt'])),
+                                timeago
+                                    .format(DateTime.parse(msg['createdAt'])),
                                 style: GoogleFonts.outfit(
                                   color: isMe ? Colors.white70 : Colors.black54,
                                   fontSize: 10,
@@ -184,27 +211,33 @@ class _PrivateChatScreenState extends ConsumerState<PrivateChatScreen> {
             decoration: BoxDecoration(
               color: UltimateTheme.surfaceColor,
               boxShadow: [
-                BoxShadow(color: Colors.black12, blurRadius: 4, offset: Offset(0, -2))
+                BoxShadow(
+                    color: Colors.black12, blurRadius: 4, offset: Offset(0, -2))
               ],
             ),
             child: Row(
               children: [
-                IconButton(icon: const Icon(Icons.attach_file), onPressed: () {}),
+                IconButton(
+                    icon: const Icon(Icons.attach_file), onPressed: () {}),
                 Expanded(
                   child: TextField(
                     controller: _messageController,
                     decoration: InputDecoration(
                       hintText: "Type a message...",
-                      border: OutlineInputBorder(borderRadius: BorderRadius.circular(24), borderSide: BorderSide.none),
+                      border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(24),
+                          borderSide: BorderSide.none),
                       filled: true,
                       fillColor: UltimateTheme.backgroundColor,
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 16),
+                      contentPadding:
+                          const EdgeInsets.symmetric(horizontal: 16),
                     ),
                     onSubmitted: (_) => _sendMessage(),
                   ),
                 ),
                 IconButton(
-                  icon: const Icon(Icons.send, color: UltimateTheme.primaryColor),
+                  icon:
+                      const Icon(Icons.send, color: UltimateTheme.primaryColor),
                   onPressed: _sendMessage,
                 ),
               ],
@@ -214,7 +247,7 @@ class _PrivateChatScreenState extends ConsumerState<PrivateChatScreen> {
       ),
     );
   }
-  
+
   @override
   void dispose() {
     _messageController.dispose();
