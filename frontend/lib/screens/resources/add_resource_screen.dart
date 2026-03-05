@@ -19,7 +19,17 @@ class _AddResourceScreenState extends ConsumerState<AddResourceScreen> {
   final _formKey = GlobalKey<FormState>();
   bool _isUploading = false;
 
-  final List<String> departments = ['CSE', 'ECE', 'ME', 'CE', 'EEE', 'MME', 'DSAI', 'BT', 'CHE'];
+  final List<String> departments = [
+    'CSE',
+    'ECE',
+    'ME',
+    'CE',
+    'EEE',
+    'MME',
+    'DSAI',
+    'BT',
+    'CHE'
+  ];
   final List<String> types = ['Notes', 'Paper', 'Book', 'Assignment', 'Other'];
 
   Future<void> _pickFile() async {
@@ -41,17 +51,20 @@ class _AddResourceScreenState extends ConsumerState<AddResourceScreen> {
         _isUploading = true;
       });
 
-      final success = await ref.read(resourceProvider.notifier).uploadResource();
+      final success =
+          await ref.read(resourceProvider.notifier).uploadResource();
 
       setState(() {
         _isUploading = false;
       });
 
       if (success && mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Resource uploaded successfully!")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Resource uploaded successfully!")));
         context.pop();
       } else if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Upload failed. Please try again.")));
+        ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Upload failed. Please try again.")));
       }
     }
   }
@@ -60,15 +73,9 @@ class _AddResourceScreenState extends ConsumerState<AddResourceScreen> {
   Widget build(BuildContext context) {
     final notifier = ref.watch(resourceProvider.notifier);
     // Watch provider to get updates? We are using notifier directly for state here mainly
-    
+
     return Scaffold(
-      backgroundColor: UltimateTheme.backgroundColor,
-      appBar: AppBar(
-        title: Text("Upload Resource", style: GoogleFonts.outfit(color: UltimateTheme.textColor, fontWeight: FontWeight.bold)),
-        backgroundColor: UltimateTheme.surfaceColor,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: UltimateTheme.textColor),
-      ),
+      backgroundColor: Colors.transparent,
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(20),
         child: Form(
@@ -79,7 +86,8 @@ class _AddResourceScreenState extends ConsumerState<AddResourceScreen> {
               MaterialTextFormField(
                 controller: notifier.titleController,
                 hintText: "Title",
-                validator: (val) => val == null || val.isEmpty ? "Required" : null,
+                validator: (val) =>
+                    val == null || val.isEmpty ? "Required" : null,
               ),
               const SizedBox(height: 16),
               MaterialTextFormField(
@@ -90,38 +98,49 @@ class _AddResourceScreenState extends ConsumerState<AddResourceScreen> {
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: notifier.selectedDepartment,
-                decoration: const InputDecoration(labelText: "Department", border: OutlineInputBorder()),
-                items: departments.map((d) => DropdownMenuItem(value: d, child: Text(d))).toList(),
+                decoration: const InputDecoration(
+                    labelText: "Department", border: OutlineInputBorder()),
+                items: departments
+                    .map((d) => DropdownMenuItem(value: d, child: Text(d)))
+                    .toList(),
                 onChanged: (val) {
-                   if(val != null) notifier.selectedDepartment = val;
+                  if (val != null) notifier.selectedDepartment = val;
                 },
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<int>(
                 value: notifier.selectedSemester,
-                decoration: const InputDecoration(labelText: "Semester", border: OutlineInputBorder()),
-                items: List.generate(8, (index) => index + 1).map((s) => DropdownMenuItem(value: s, child: Text("Semester $s"))).toList(),
+                decoration: const InputDecoration(
+                    labelText: "Semester", border: OutlineInputBorder()),
+                items: List.generate(8, (index) => index + 1)
+                    .map((s) =>
+                        DropdownMenuItem(value: s, child: Text("Semester $s")))
+                    .toList(),
                 onChanged: (val) {
-                   if(val != null) notifier.selectedSemester = val;
+                  if (val != null) notifier.selectedSemester = val;
                 },
               ),
               const SizedBox(height: 16),
               MaterialTextFormField(
                 controller: notifier.subjectController,
                 hintText: "Subject / Course Code",
-                validator: (val) => val == null || val.isEmpty ? "Required" : null,
+                validator: (val) =>
+                    val == null || val.isEmpty ? "Required" : null,
               ),
               const SizedBox(height: 16),
               DropdownButtonFormField<String>(
                 value: notifier.selectedType,
-                decoration: const InputDecoration(labelText: "Type", border: OutlineInputBorder()),
-                items: types.map((t) => DropdownMenuItem(value: t, child: Text(t))).toList(),
+                decoration: const InputDecoration(
+                    labelText: "Type", border: OutlineInputBorder()),
+                items: types
+                    .map((t) => DropdownMenuItem(value: t, child: Text(t)))
+                    .toList(),
                 onChanged: (val) {
-                   if(val != null) notifier.selectedType = val;
+                  if (val != null) notifier.selectedType = val;
                 },
               ),
               const SizedBox(height: 24),
-              
+
               // File Picker
               GestureDetector(
                 onTap: _pickFile,
@@ -134,32 +153,42 @@ class _AddResourceScreenState extends ConsumerState<AddResourceScreen> {
                   ),
                   child: Column(
                     children: [
-                      Icon(Icons.cloud_upload_outlined, size: 40, color: Colors.grey[600]),
+                      Icon(Icons.cloud_upload_outlined,
+                          size: 40, color: Colors.grey[600]),
                       const SizedBox(height: 8),
                       Text(
-                        notifier.pickedFile != null ? notifier.pickedFile!.path.split('/').last : "Tap to upload file",
-                        style: GoogleFonts.outfit(color: Colors.grey[800], fontWeight: FontWeight.bold),
+                        notifier.pickedFile != null
+                            ? notifier.pickedFile!.path.split('/').last
+                            : "Tap to upload file",
+                        style: GoogleFonts.outfit(
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.bold),
                         textAlign: TextAlign.center,
                       ),
                       if (notifier.pickedFile != null)
-                          Text("(Tap to change)", style: GoogleFonts.outfit(color: Colors.grey, fontSize: 12)),
+                        Text("(Tap to change)",
+                            style: GoogleFonts.outfit(
+                                color: Colors.grey, fontSize: 12)),
                     ],
                   ),
                 ),
               ),
-              
+
               const SizedBox(height: 32),
-              
+
               ElevatedButton(
                 onPressed: _isUploading ? null : _submit,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: UltimateTheme.primaryColor,
                   padding: const EdgeInsets.symmetric(vertical: 16),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(12)),
                 ),
-                child: _isUploading 
+                child: _isUploading
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text("Upload Resource", style: GoogleFonts.outfit(fontSize: 16, fontWeight: FontWeight.bold)),
+                    : Text("Upload Resource",
+                        style: GoogleFonts.outfit(
+                            fontSize: 16, fontWeight: FontWeight.bold)),
               ),
             ],
           ),
