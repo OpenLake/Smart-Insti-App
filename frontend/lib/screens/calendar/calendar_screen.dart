@@ -24,7 +24,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
     super.initState();
     _selectedDay = _focusedDay;
     _selectedEvents = ValueNotifier(_getEventsForDay(_selectedDay!));
-    
+
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(eventProvider.notifier).loadEvents();
     });
@@ -39,7 +39,7 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   List<Event> _getEventsForDay(DateTime day) {
     final state = ref.read(eventProvider);
     return state.events.where((event) {
-        return isSameDay(event.startTime, day);
+      return isSameDay(event.startTime, day);
     }).toList();
   }
 
@@ -60,27 +60,22 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
 
     // Update selected events when state changes (e.g. initial load)
     if (!state.isLoading) {
-        // This might cause loop if not careful, but ValueNotifier handles equality check? 
-        // Better to update _selectedEvents.value only if we are building.
-        // Actually, just calling _getEventsForDay inside ValueListenableBuilder is safer if we passed list directly
-        // But table_calendar expects a loader. 
-        // Let's just update the notifier value here if the day matches.
-        final eventsForDay = _getEventsForDay(_selectedDay!);
-        if (eventsForDay.length != _selectedEvents.value.length) { // Basic check
-            WidgetsBinding.instance.addPostFrameCallback((_) {
-                 _selectedEvents.value = eventsForDay;
-            });
-        }
+      // This might cause loop if not careful, but ValueNotifier handles equality check?
+      // Better to update _selectedEvents.value only if we are building.
+      // Actually, just calling _getEventsForDay inside ValueListenableBuilder is safer if we passed list directly
+      // But table_calendar expects a loader.
+      // Let's just update the notifier value here if the day matches.
+      final eventsForDay = _getEventsForDay(_selectedDay!);
+      if (eventsForDay.length != _selectedEvents.value.length) {
+        // Basic check
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _selectedEvents.value = eventsForDay;
+        });
+      }
     }
 
     return Scaffold(
-      backgroundColor: UltimateTheme.backgroundColor,
-      appBar: AppBar(
-        title: Text("Academic Calendar", style: GoogleFonts.outfit(color: UltimateTheme.textColor, fontWeight: FontWeight.bold)),
-        backgroundColor: UltimateTheme.surfaceColor,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: UltimateTheme.textColor),
-      ),
+      backgroundColor: Colors.transparent,
       body: Column(
         children: [
           TableCalendar<Event>(
@@ -93,9 +88,13 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             startingDayOfWeek: StartingDayOfWeek.monday,
             calendarStyle: CalendarStyle(
               outsideDaysVisible: false,
-              markerDecoration: const BoxDecoration(color: UltimateTheme.primaryColor, shape: BoxShape.circle),
-              selectedDecoration: const BoxDecoration(color: UltimateTheme.primaryColor, shape: BoxShape.circle),
-              todayDecoration: BoxDecoration(color: UltimateTheme.primaryColor.withOpacity(0.5), shape: BoxShape.circle),
+              markerDecoration: const BoxDecoration(
+                  color: UltimateTheme.primaryColor, shape: BoxShape.circle),
+              selectedDecoration: const BoxDecoration(
+                  color: UltimateTheme.primaryColor, shape: BoxShape.circle),
+              todayDecoration: BoxDecoration(
+                  color: UltimateTheme.primaryColor.withValues(alpha: 0.5),
+                  shape: BoxShape.circle),
             ),
             onDaySelected: _onDaySelected,
             onFormatChanged: (format) {
@@ -114,41 +113,57 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
             child: ValueListenableBuilder<List<Event>>(
               valueListenable: _selectedEvents,
               builder: (context, value, _) {
-                if (state.isLoading) return const Center(child: CircularProgressIndicator());
-                if (value.isEmpty) return Center(child: Text("No events for this day", style: GoogleFonts.outfit(color: Colors.grey)));
+                if (state.isLoading)
+                  return const Center(child: CircularProgressIndicator());
+                if (value.isEmpty)
+                  return Center(
+                      child: Text("No events for this day",
+                          style: GoogleFonts.outfit(color: Colors.grey)));
 
                 return ListView.builder(
                   itemCount: value.length,
                   itemBuilder: (context, index) {
                     final event = value[index];
                     return Container(
-                      margin: const EdgeInsets.symmetric(horizontal: 12.0, vertical: 4.0),
+                      margin: const EdgeInsets.symmetric(
+                          horizontal: 12.0, vertical: 4.0),
                       decoration: BoxDecoration(
-                        border: Border.all(color: Colors.grey.withOpacity(0.2)),
-                        borderRadius: BorderRadius.circular(12.0),
-                        color: Colors.white
-                      ),
+                          border: Border.all(
+                              color: Colors.grey.withValues(alpha: 0.2)),
+                          borderRadius: BorderRadius.circular(12.0),
+                          color: Colors.white),
                       child: ListTile(
                         leading: Container(
-                            padding: const EdgeInsets.all(8),
-                            decoration: BoxDecoration(
-                                color: _getEventTypeColor(event.type).withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(8)
-                            ),
-                            child: Icon(Icons.event, color: _getEventTypeColor(event.type)),
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                              color: _getEventTypeColor(event.type)
+                                  .withValues(alpha: 0.1),
+                              borderRadius: BorderRadius.circular(8)),
+                          child: Icon(Icons.event,
+                              color: _getEventTypeColor(event.type)),
                         ),
-                        title: Text(event.title, style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+                        title: Text(event.title,
+                            style: GoogleFonts.outfit(
+                                fontWeight: FontWeight.bold)),
                         subtitle: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                                if (event.description.isNotEmpty) Text(event.description, maxLines: 1, overflow: TextOverflow.ellipsis),
-                                Text("${_formatTime(event.startTime)} - ${_formatTime(event.endTime)}", style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey)),
-                                if (event.location.isNotEmpty) 
-                                    Row(children: [
-                                        const Icon(Icons.location_on, size: 12, color: Colors.grey),
-                                        Text(event.location, style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey))
-                                    ])
-                            ],
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            if (event.description.isNotEmpty)
+                              Text(event.description,
+                                  maxLines: 1, overflow: TextOverflow.ellipsis),
+                            Text(
+                                "${_formatTime(event.startTime)} - ${_formatTime(event.endTime)}",
+                                style: GoogleFonts.outfit(
+                                    fontSize: 12, color: Colors.grey)),
+                            if (event.location.isNotEmpty)
+                              Row(children: [
+                                const Icon(Icons.location_on,
+                                    size: 12, color: Colors.grey),
+                                Text(event.location,
+                                    style: GoogleFonts.outfit(
+                                        fontSize: 12, color: Colors.grey))
+                              ])
+                          ],
                         ),
                       ),
                     );
@@ -163,17 +178,23 @@ class _CalendarScreenState extends ConsumerState<CalendarScreen> {
   }
 
   Color _getEventTypeColor(String type) {
-      switch (type) {
-          case 'Academic': return Colors.blue;
-          case 'Exam': return Colors.red;
-          case 'Holiday': return Colors.green;
-          case 'Club': return Colors.purple;
-          case 'Sports': return Colors.orange;
-          default: return Colors.grey;
-      }
+    switch (type) {
+      case 'Academic':
+        return Colors.blue;
+      case 'Exam':
+        return Colors.red;
+      case 'Holiday':
+        return Colors.green;
+      case 'Club':
+        return Colors.purple;
+      case 'Sports':
+        return Colors.orange;
+      default:
+        return Colors.grey;
+    }
   }
 
   String _formatTime(DateTime date) {
-      return "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
+    return "${date.hour.toString().padLeft(2, '0')}:${date.minute.toString().padLeft(2, '0')}";
   }
 }
