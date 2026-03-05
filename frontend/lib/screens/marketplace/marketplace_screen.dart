@@ -14,7 +14,14 @@ class MarketplaceScreen extends ConsumerStatefulWidget {
 
 class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
   final TextEditingController _searchController = TextEditingController();
-  final List<String> _categories = ['All', 'Electronics', 'Books', 'Furniture', 'Stationery', 'Other'];
+  final List<String> _categories = [
+    'All',
+    'Electronics',
+    'Books',
+    'Furniture',
+    'Stationery',
+    'Other'
+  ];
   String _selectedCategory = 'All';
 
   @override
@@ -31,133 +38,153 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
     final listings = state.listings;
 
     return Scaffold(
-        backgroundColor: UltimateTheme.backgroundColor,
-        appBar: AppBar(
-        title: Text("Marketplace", style: GoogleFonts.outfit(color: UltimateTheme.textColor, fontWeight: FontWeight.bold)),
-        backgroundColor: UltimateTheme.surfaceColor,
-        elevation: 0,
-        iconTheme: const IconThemeData(color: UltimateTheme.textColor),
-        actions: [
-            IconButton(
-            icon: const Icon(Icons.favorite_border),
-            onPressed: () {
-                context.push('/user_home/marketplace/wishlist');
-            },
-            ),
-            IconButton(
-            icon: const Icon(Icons.history),
-            onPressed: () {
-                // Navigate to Order History
-            },
-            )
-        ],
-        ),
-        body: Column(
+      body: Column(
         children: [
-            // Search & Filter
-            Container(
+          // Actions Row
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                _buildActionIconButton(
+                  icon: Icons.favorite_border_rounded,
+                  onPressed: () =>
+                      context.push('/user_home/marketplace/wishlist'),
+                ),
+                const SizedBox(width: 12),
+                _buildActionIconButton(
+                  icon: Icons.history_rounded,
+                  onPressed: () {},
+                ),
+              ],
+            ),
+          ),
+          // Search & Filter
+          Container(
             padding: const EdgeInsets.all(16),
             color: UltimateTheme.surfaceColor,
             child: Column(
-                children: [
+              children: [
                 TextField(
-                    controller: _searchController,
-                    onSubmitted: (value) {
-                        ref.read(listingProvider.notifier).loadListings(search: value, category: _selectedCategory);
-                    },
-                    decoration: InputDecoration(
+                  controller: _searchController,
+                  onSubmitted: (value) {
+                    ref.read(listingProvider.notifier).loadListings(
+                        search: value, category: _selectedCategory);
+                  },
+                  decoration: InputDecoration(
                     hintText: "Search items...",
                     prefixIcon: const Icon(Icons.search),
-                    border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+                    border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide.none),
                     filled: true,
                     fillColor: UltimateTheme.backgroundColor,
-                    ),
+                  ),
                 ),
                 const SizedBox(height: 12),
                 SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: Row(
+                  scrollDirection: Axis.horizontal,
+                  child: Row(
                     children: _categories.map((category) {
-                        final isSelected = _selectedCategory == category;
-                        return Padding(
+                      final isSelected = _selectedCategory == category;
+                      return Padding(
                         padding: const EdgeInsets.only(right: 8),
                         child: FilterChip(
-                            label: Text(category),
-                            selected: isSelected,
-                            onSelected: (selected) {
+                          label: Text(category),
+                          selected: isSelected,
+                          onSelected: (selected) {
                             setState(() => _selectedCategory = category);
-                            ref.read(listingProvider.notifier).loadListings(category: category, search: _searchController.text);
-                            },
-                            backgroundColor: UltimateTheme.backgroundColor,
-                            selectedColor: UltimateTheme.primaryColor.withOpacity(0.2),
-                            labelStyle: GoogleFonts.outfit(
-                            color: isSelected ? UltimateTheme.primaryColor : UltimateTheme.textSub,
-                            fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-                            ),
-                            shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20), 
-                            side: BorderSide(color: isSelected ? UltimateTheme.primaryColor : Colors.transparent)
-                            ),
+                            ref.read(listingProvider.notifier).loadListings(
+                                category: category,
+                                search: _searchController.text);
+                          },
+                          backgroundColor: UltimateTheme.backgroundColor,
+                          selectedColor:
+                              UltimateTheme.primaryColor.withValues(alpha: 0.2),
+                          labelStyle: GoogleFonts.outfit(
+                            color: isSelected
+                                ? UltimateTheme.primaryColor
+                                : UltimateTheme.textSub,
+                            fontWeight: isSelected
+                                ? FontWeight.bold
+                                : FontWeight.normal,
+                          ),
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20),
+                              side: BorderSide(
+                                  color: isSelected
+                                      ? UltimateTheme.primaryColor
+                                      : Colors.transparent)),
                         ),
-                        );
+                      );
                     }).toList(),
-                    ),
+                  ),
                 ),
-                ],
+              ],
             ),
-            ),
-            
-            // Listings Grid
-            Expanded(
-            child: state.isLoading 
+          ),
+
+          // Listings Grid
+          Expanded(
+            child: state.isLoading
                 ? const Center(child: CircularProgressIndicator())
                 : listings.isEmpty
-                    ? Center(child: Column(
+                    ? Center(
+                        child: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                        const Icon(Icons.storefront, size: 64, color: Colors.grey),
-                        const SizedBox(height: 16),
-                        Text("No items found", style: GoogleFonts.outfit(fontSize: 18, color: Colors.grey)),
+                          const Icon(Icons.storefront,
+                              size: 64, color: Colors.grey),
+                          const SizedBox(height: 16),
+                          Text("No items found",
+                              style: GoogleFonts.outfit(
+                                  fontSize: 18, color: Colors.grey)),
                         ],
-                    ))
+                      ))
                     : GridView.builder(
                         padding: const EdgeInsets.all(16),
-                        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 0.75,
-                        crossAxisSpacing: 16,
-                        mainAxisSpacing: 16,
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          childAspectRatio: 0.75,
+                          crossAxisSpacing: 16,
+                          mainAxisSpacing: 16,
                         ),
                         itemCount: listings.length,
                         itemBuilder: (context, index) {
-                        return _buildListingCard(listings[index]);
+                          return _buildListingCard(listings[index]);
                         },
-                    ),
-            ),
+                      ),
+          ),
         ],
-        ),
-        floatingActionButton: FloatingActionButton.extended(
+      ),
+      floatingActionButton: FloatingActionButton.extended(
         onPressed: () {
-             context.push('/user_home/marketplace/add');
+          context.push('/user_home/marketplace/add');
         },
         backgroundColor: UltimateTheme.primaryColor,
         icon: const Icon(Icons.add, color: Colors.white),
-        label: Text("Sell Item", style: GoogleFonts.outfit(color: Colors.white, fontWeight: FontWeight.bold)),
-        ),
+        label: Text("Sell Item",
+            style: GoogleFonts.outfit(
+                color: Colors.white, fontWeight: FontWeight.bold)),
+      ),
     );
   }
 
   Widget _buildListingCard(dynamic listing) {
     return GestureDetector(
       onTap: () {
-          context.push('/user_home/marketplace/detail/${listing.id}');
+        context.push('/user_home/marketplace/detail/${listing.id}');
       },
       child: Container(
         decoration: BoxDecoration(
           color: UltimateTheme.surfaceColor,
           borderRadius: BorderRadius.circular(16),
           boxShadow: [
-            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 10, offset: const Offset(0, 4))
+            BoxShadow(
+                color: Colors.black.withValues(alpha: 0.05),
+                blurRadius: 10,
+                offset: const Offset(0, 4))
           ],
         ),
         child: Column(
@@ -166,14 +193,19 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
             Expanded(
               child: Container(
                 decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(16)),
+                  borderRadius:
+                      const BorderRadius.vertical(top: Radius.circular(16)),
                   color: Colors.grey[200],
-                  image: listing.images.isNotEmpty 
-                      ? DecorationImage(image: NetworkImage(listing.images[0]), fit: BoxFit.cover)
+                  image: listing.images.isNotEmpty
+                      ? DecorationImage(
+                          image: NetworkImage(listing.images[0]),
+                          fit: BoxFit.cover)
                       : null,
                 ),
-                child: listing.images.isEmpty 
-                    ? const Center(child: Icon(Icons.image_not_supported, color: Colors.grey))
+                child: listing.images.isEmpty
+                    ? const Center(
+                        child:
+                            Icon(Icons.image_not_supported, color: Colors.grey))
                     : null,
               ),
             ),
@@ -186,23 +218,29 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
                     listing.title,
                     maxLines: 1,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 16),
+                    style: GoogleFonts.outfit(
+                        fontWeight: FontWeight.bold, fontSize: 16),
                   ),
                   Text(
                     "₹${listing.price}",
-                    style: GoogleFonts.outfit(color: UltimateTheme.primaryColor, fontWeight: FontWeight.bold, fontSize: 14),
+                    style: GoogleFonts.outfit(
+                        color: UltimateTheme.primaryColor,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 14),
                   ),
                   const SizedBox(height: 4),
                   Row(
                     children: [
-                      const Icon(Icons.location_on, size: 12, color: Colors.grey),
+                      const Icon(Icons.location_on,
+                          size: 12, color: Colors.grey),
                       const SizedBox(width: 4),
                       Expanded(
                         child: Text(
                           listing.sellerName, // Should come from seller info
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.outfit(color: Colors.grey, fontSize: 12),
+                          style: GoogleFonts.outfit(
+                              color: Colors.grey, fontSize: 12),
                         ),
                       ),
                     ],
@@ -212,6 +250,27 @@ class _MarketplaceScreenState extends ConsumerState<MarketplaceScreen> {
             ),
           ],
         ),
+      ),
+    );
+  }
+
+  Widget _buildActionIconButton(
+      {required IconData icon, required VoidCallback onPressed}) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          ),
+        ],
+      ),
+      child: IconButton(
+        icon: Icon(icon, color: UltimateTheme.primaryColor, size: 20),
+        onPressed: onPressed,
       ),
     );
   }
