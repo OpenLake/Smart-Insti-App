@@ -15,11 +15,21 @@ class ResourcesScreen extends ConsumerStatefulWidget {
 
 class _ResourcesScreenState extends ConsumerState<ResourcesScreen> {
   // Navigation State: 'Root' -> 'Department' -> 'Semester' -> 'Files'
-  String _currentView = 'Root'; 
+  String _currentView = 'Root';
   String? _selectedDept;
   int? _selectedSem;
 
-  final List<String> departments = ['CSE', 'ECE', 'ME', 'CE', 'EEE', 'MME', 'DSAI', 'BT', 'CHE'];
+  final List<String> departments = [
+    'CSE',
+    'ECE',
+    'ME',
+    'CE',
+    'EEE',
+    'MME',
+    'DSAI',
+    'BT',
+    'CHE'
+  ];
   final List<int> semesters = [1, 2, 3, 4, 5, 6, 7, 8];
 
   @override
@@ -29,20 +39,24 @@ class _ResourcesScreenState extends ConsumerState<ResourcesScreen> {
     return Scaffold(
       backgroundColor: UltimateTheme.backgroundColor,
       appBar: AppBar(
-        title: Text(_getTitle(), style: GoogleFonts.outfit(color: UltimateTheme.textColor, fontWeight: FontWeight.bold)),
+        title: Text(_getTitle(),
+            style: GoogleFonts.outfit(
+                color: UltimateTheme.textColor, fontWeight: FontWeight.bold)),
         backgroundColor: UltimateTheme.surfaceColor,
         elevation: 0,
-        leading: _currentView != 'Root' 
-          ? IconButton(
-              icon: const Icon(Icons.arrow_back, color: UltimateTheme.textColor),
-              onPressed: _goBack,
-            )
-          : null,
+        leading: _currentView != 'Root'
+            ? IconButton(
+                icon: const Icon(Icons.arrow_back,
+                    color: UltimateTheme.textColor),
+                onPressed: _goBack,
+              )
+            : null,
         actions: [
-            IconButton(
-                icon: const Icon(Icons.upload_file, color: UltimateTheme.primaryColor),
-                onPressed: () => context.push('/user_home/resources/add'),
-            )
+          IconButton(
+            icon: const Icon(Icons.upload_file,
+                color: UltimateTheme.primaryColor),
+            onPressed: () => context.push('/user_home/resources/add'),
+          )
         ],
       ),
       body: _buildBody(resourceState),
@@ -103,26 +117,31 @@ class _ResourcesScreenState extends ConsumerState<ResourcesScreen> {
           itemCount: semesters.length,
           itemBuilder: (context, index) {
             return _buildFolderCard("Semester ${semesters[index]}", false, () {
-               setState(() {
+              setState(() {
                 _selectedSem = semesters[index];
                 _currentView = 'Semester';
                 // Trigger load
-                ref.read(resourceProvider.notifier).selectFolder(_selectedDept!, _selectedSem!, null);
+                ref
+                    .read(resourceProvider.notifier)
+                    .selectFolder(_selectedDept!, _selectedSem!, null);
               });
             });
           },
         ),
       );
     } else {
-        // Files List
-        if (state.isLoading) return const Center(child: CircularProgressIndicator());
-        if (state.resources.isEmpty) return const Center(child: Text("No resources found"));
+      // Files List
+      if (state.isLoading)
+        return const Center(child: CircularProgressIndicator());
+      if (state.resources.isEmpty)
+        return const Center(child: Text("No resources found"));
 
-        return ListView.builder(
-            padding: const EdgeInsets.all(16),
-            itemCount: state.resources.length,
-            itemBuilder: (context, index) => _buildResourceTile(state.resources[index]),
-        );
+      return ListView.builder(
+        padding: const EdgeInsets.all(16),
+        itemCount: state.resources.length,
+        itemBuilder: (context, index) =>
+            _buildResourceTile(state.resources[index]),
+      );
     }
   }
 
@@ -133,15 +152,24 @@ class _ResourcesScreenState extends ConsumerState<ResourcesScreen> {
         decoration: BoxDecoration(
           color: Colors.white,
           borderRadius: BorderRadius.circular(16),
-          boxShadow: [BoxShadow(color: Colors.black12, blurRadius: 4, offset: const Offset(0, 2))],
-          border: Border.all(color: UltimateTheme.primaryColor.withOpacity(0.1)),
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black12,
+                blurRadius: 4,
+                offset: const Offset(0, 2))
+          ],
+          border: Border.all(
+              color: UltimateTheme.primaryColor.withValues(alpha: 0.1)),
         ),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(isDept ? Icons.domain : Icons.folder, size: 48, color: isDept ? Colors.blue : Colors.orange),
+            Icon(isDept ? Icons.domain : Icons.folder,
+                size: 48, color: isDept ? Colors.blue : Colors.orange),
             const SizedBox(height: 12),
-            Text(title, style: GoogleFonts.outfit(fontWeight: FontWeight.bold, fontSize: 16)),
+            Text(title,
+                style: GoogleFonts.outfit(
+                    fontWeight: FontWeight.bold, fontSize: 16)),
           ],
         ),
       ),
@@ -150,26 +178,31 @@ class _ResourcesScreenState extends ConsumerState<ResourcesScreen> {
 
   Widget _buildResourceTile(Resource resource) {
     return Card(
-        margin: const EdgeInsets.only(bottom: 12),
-        elevation: 2,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-        child: ListTile(
-            leading: _getFileIcon(resource.fileUrl),
-            title: Text(resource.title, style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-            subtitle: Text("${resource.subject} • ${resource.type}", style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey)),
-            trailing: IconButton(
-                icon: const Icon(Icons.download_rounded, color: UltimateTheme.primaryColor),
-                onPressed: () {
-                    // Implement download or open URL
-                },
-            ),
+      margin: const EdgeInsets.only(bottom: 12),
+      elevation: 2,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      child: ListTile(
+        leading: _getFileIcon(resource.fileUrl),
+        title: Text(resource.title,
+            style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
+        subtitle: Text("${resource.subject} • ${resource.type}",
+            style: GoogleFonts.outfit(fontSize: 12, color: Colors.grey)),
+        trailing: IconButton(
+          icon: const Icon(Icons.download_rounded,
+              color: UltimateTheme.primaryColor),
+          onPressed: () {
+            // Implement download or open URL
+          },
         ),
+      ),
     );
   }
 
   Widget _getFileIcon(String url) {
-    if (url.endsWith('.pdf')) return const Icon(Icons.picture_as_pdf, color: Colors.red);
-    if (url.endsWith('.jpg') || url.endsWith('.png')) return const Icon(Icons.image, color: Colors.purple);
+    if (url.endsWith('.pdf'))
+      return const Icon(Icons.picture_as_pdf, color: Colors.red);
+    if (url.endsWith('.jpg') || url.endsWith('.png'))
+      return const Icon(Icons.image, color: Colors.purple);
     return const Icon(Icons.insert_drive_file, color: Colors.grey);
   }
 }
