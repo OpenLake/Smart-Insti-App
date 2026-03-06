@@ -21,8 +21,11 @@ class Timetables extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress && context.mounted) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+              LoadingState.progress &&
+          context.mounted) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.generalAuthLabel.toLowerCase());
       }
     });
 
@@ -31,33 +34,61 @@ class Timetables extends ConsumerWidget {
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () => _showAddTimetableDialog(context, ref),
         backgroundColor: UltimateTheme.primary,
-        icon: const Icon(Icons.add_rounded, color: Colors.white),
-        label: Text("New Timetable", style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, color: Colors.white)),
+        elevation: 4,
+        icon: const Icon(Icons.add_task_rounded, color: Colors.white),
+        label: Text("New Schedule",
+            style: GoogleFonts.spaceGrotesk(
+                fontWeight: FontWeight.bold, color: Colors.white)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
       ).animate().scale(delay: 400.ms, curve: Curves.easeOutBack),
       body: Consumer(
         builder: (_, ref, __) {
           final timetables = ref.watch(timetableProvider).timetables;
           if (timetables.isEmpty) {
             return Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Icon(Icons.calendar_month_rounded, size: 64, color: UltimateTheme.textSub.withOpacity(0.5)),
-                  const SizedBox(height: 16),
-                  Text("No timetables found", style: GoogleFonts.inter(color: UltimateTheme.textSub)),
-                ],
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 40),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: BoxDecoration(
+                        color: UltimateTheme.primary.withValues(alpha: 0.05),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Icon(Icons.calendar_today_rounded,
+                          size: 60,
+                          color: UltimateTheme.primary.withValues(alpha: 0.3)),
+                    ),
+                    const SizedBox(height: 24),
+                    Text("No schedules yet",
+                        style: GoogleFonts.spaceGrotesk(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            color: UltimateTheme.textMain)),
+                    const SizedBox(height: 8),
+                    Text(
+                        "Create your first timetable to keep track of your classes and labs.",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.inter(
+                            color: UltimateTheme.textSub, height: 1.5)),
+                  ],
+                ).animate().fadeIn().scale(begin: const Offset(0.9, 0.9)),
               ),
             );
           }
           return CustomScrollView(
+            physics: const BouncingScrollPhysics(),
             slivers: [
               SliverPadding(
-                padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+                padding: const EdgeInsets.fromLTRB(24, 24, 24, 120),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) {
                       final timetable = timetables[index];
-                      return _buildTimetableCard(context, timetable, ref, index);
+                      return _buildTimetableCard(
+                          context, timetable, ref, index);
                     },
                     childCount: timetables.length,
                   ),
@@ -70,156 +101,253 @@ class Timetables extends ConsumerWidget {
     );
   }
 
-  Widget _buildTimetableCard(BuildContext context, timetable, WidgetRef ref, int index) {
+  Widget _buildTimetableCard(
+      BuildContext context, timetable, WidgetRef ref, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 16),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: UltimateTheme.primary.withOpacity(0.08)),
+        border:
+            Border.all(color: UltimateTheme.primary.withValues(alpha: 0.05)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 10, offset: const Offset(0, 4)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.03),
+              blurRadius: 15,
+              offset: const Offset(0, 5)),
         ],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+        contentPadding:
+            const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
         leading: Container(
           padding: const EdgeInsets.all(12),
           decoration: BoxDecoration(
-            color: UltimateTheme.primary.withOpacity(0.08),
+            gradient: UltimateTheme.brandGradientSoft,
             borderRadius: BorderRadius.circular(16),
           ),
-          child: const Icon(Icons.table_chart_rounded, color: UltimateTheme.primary),
+          child: const Icon(Icons.calendar_view_week_rounded,
+              color: UltimateTheme.primary, size: 24),
         ),
         title: Text(
           timetable.name,
-          style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, fontSize: 16, color: UltimateTheme.textMain),
+          style: GoogleFonts.spaceGrotesk(
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              color: UltimateTheme.textMain),
         ),
-        subtitle: Text(
-          "${timetable.rows} Rows × ${timetable.columns} Columns",
-          style: GoogleFonts.inter(fontSize: 12, color: UltimateTheme.textSub),
+        subtitle: Padding(
+          padding: const EdgeInsets.only(top: 4),
+          child: Row(
+            children: [
+              Icon(Icons.grid_4x4_rounded,
+                  size: 14,
+                  color: UltimateTheme.textSub.withValues(alpha: 0.6)),
+              const SizedBox(width: 6),
+              Text(
+                "${timetable.rows} × ${timetable.columns} Layout",
+                style: GoogleFonts.inter(
+                  fontSize: 12,
+                  color: UltimateTheme.textSub,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
         ),
-        trailing: IconButton(
-          icon: const Icon(Icons.delete_outline_rounded, color: Colors.redAccent, size: 20),
-          onPressed: () => ref.read(timetableProvider.notifier).deleteTimetable(timetable),
+        trailing: Container(
+          decoration: BoxDecoration(
+            color: Colors.redAccent.withValues(alpha: 0.1),
+            shape: BoxShape.circle,
+          ),
+          child: IconButton(
+            icon: const Icon(Icons.delete_outline_rounded,
+                color: Colors.redAccent, size: 18),
+            onPressed: () =>
+                ref.read(timetableProvider.notifier).deleteTimetable(timetable),
+          ),
         ),
         onTap: () {
-          ref.read(timetableProvider.notifier).initTileControllersAndTime(timetable: timetable);
+          ref
+              .read(timetableProvider.notifier)
+              .initTileControllersAndTime(timetable: timetable);
           context.push('/user_home/timetables/editor');
         },
       ),
-    ).animate().fadeIn(delay: (index * 50).ms).slideX(begin: 0.1);
+    ).animate().fadeIn(delay: (index * 60).ms).slideX(begin: 0.05);
   }
 
   void _showAddTimetableDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (_) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(28)),
-        title: Text('New Timetable', style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold)),
-        content: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MaterialTextFormField(
-                hintText: "Timetable Name",
-                controller: ref.read(timetableProvider).timetableNameController,
-                validator: (value) => Validators.nameValidator(value),
-              ),
-              const SizedBox(height: 20),
-              Row(
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+        title: Text('New Schedule',
+            style: GoogleFonts.spaceGrotesk(
+                fontWeight: FontWeight.bold, fontSize: 24)),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: Form(
+            key: _formKey,
+            child: SingleChildScrollView(
+              physics: const BouncingScrollPhysics(),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: MaterialTextFormField(
-                      controller: ref.read(timetableProvider).rowsController,
-                      textAlign: TextAlign.center,
-                      enabled: false,
-                      hintText: 'Rows',
-                    ),
+                  MaterialTextFormField(
+                    hintText: "Schedule Name (e.g. Sem 6)",
+                    controller:
+                        ref.read(timetableProvider).timetableNameController,
+                    validator: (value) => Validators.nameValidator(value),
+                    prefixIcon: const Icon(Icons.label_outline_rounded),
                   ),
-                  const Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 12),
-                    child: Icon(Icons.close_rounded, size: 16, color: UltimateTheme.textSub),
-                  ),
-                  Expanded(
-                    child: Tooltip(
-                      key: _toolTipKey,
-                      message: "Enter columns",
-                      child: MaterialTextFormField(
-                        hintText: "Cols",
-                        textAlign: TextAlign.center,
-                        controller: ref.read(timetableProvider).columnsController,
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                          LengthLimitingTextInputFormatter(1),
-                        ],
+                  const SizedBox(height: 20),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: MaterialTextFormField(
+                          controller:
+                              ref.read(timetableProvider).rowsController,
+                          textAlign: TextAlign.center,
+                          enabled: false,
+                          hintText: 'Rows',
+                          prefixIcon:
+                              const Icon(Icons.height_rounded, size: 18),
+                        ),
                       ),
-                    ),
+                      const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12),
+                        child: Icon(Icons.close_rounded,
+                            size: 16, color: UltimateTheme.textSub),
+                      ),
+                      Expanded(
+                        child: Tooltip(
+                          key: _toolTipKey,
+                          message: "Numbers of periods per day",
+                          child: MaterialTextFormField(
+                            hintText: "Cols",
+                            textAlign: TextAlign.center,
+                            controller:
+                                ref.read(timetableProvider).columnsController,
+                            prefixIcon:
+                                const Icon(Icons.view_column_rounded, size: 18),
+                            inputFormatters: [
+                              FilteringTextInputFormatter.digitsOnly,
+                              LengthLimitingTextInputFormatter(1),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
-              const SizedBox(height: 24),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text("Include Saturday?", style: GoogleFonts.inter(fontWeight: FontWeight.w500)),
-                  Consumer(
-                    builder: (_, ref, __) => AnimatedToggleSwitch.dual(
-                      height: 40,
-                      spacing: 12,
-                      onTap: (value) => ref.read(timetableProvider.notifier).toggleIncludeSaturday(),
-                      current: ref.watch(timetableProvider).includeSaturday,
-                      first: true,
-                      second: false,
-                      styleBuilder: (value) => value
-                          ? ToggleStyle(
-                              indicatorColor: UltimateTheme.primary,
-                              backgroundColor: UltimateTheme.primary.withOpacity(0.1),
-                              borderColor: Colors.transparent,
-                            )
-                          : ToggleStyle(
-                              indicatorColor: Colors.redAccent,
-                              backgroundColor: Colors.redAccent.withOpacity(0.1),
-                              borderColor: Colors.transparent,
+                  const SizedBox(height: 24),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    decoration: BoxDecoration(
+                      color: UltimateTheme.primary.withValues(alpha: 0.05),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                          color: UltimateTheme.primary.withValues(alpha: 0.1)),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          children: [
+                            const Icon(Icons.today_rounded,
+                                color: UltimateTheme.primary, size: 20),
+                            const SizedBox(width: 12),
+                            Text("Include Saturday",
+                                style: GoogleFonts.inter(
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 14,
+                                    color: UltimateTheme.textMain)),
+                          ],
+                        ),
+                        Consumer(
+                          builder: (_, ref, __) => AnimatedToggleSwitch.dual(
+                            height: 32,
+                            spacing: 8,
+                            onTap: (value) => ref
+                                .read(timetableProvider.notifier)
+                                .toggleIncludeSaturday(),
+                            current:
+                                ref.watch(timetableProvider).includeSaturday,
+                            first: true,
+                            second: false,
+                            styleBuilder: (value) => value
+                                ? ToggleStyle(
+                                    indicatorColor: UltimateTheme.primary,
+                                    backgroundColor: UltimateTheme.primary
+                                        .withValues(alpha: 0.1),
+                                    borderColor: Colors.transparent,
+                                  )
+                                : ToggleStyle(
+                                    indicatorColor: UltimateTheme.textSub
+                                        .withValues(alpha: 0.3),
+                                    backgroundColor: UltimateTheme.textSub
+                                        .withValues(alpha: 0.05),
+                                    borderColor: Colors.transparent,
+                                  ),
+                            iconBuilder: (value) => Icon(
+                              value ? Icons.check_rounded : Icons.close_rounded,
+                              color: Colors.white,
+                              size: 14,
                             ),
-                      iconBuilder: (value) => Icon(
-                        value ? Icons.check_rounded : Icons.close_rounded,
-                        color: Colors.white,
-                        size: 16,
-                      ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
               ),
-            ],
+            ),
           ),
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         actions: [
-          BorderlessButton(
-            onPressed: () {
-              ref.read(timetableProvider.notifier).clearControllers();
-              context.pop();
-            },
-            label: const Text('Cancel'),
-            backgroundColor: UltimateTheme.textSub.withOpacity(0.05),
-            splashColor: UltimateTheme.textSub,
-          ),
-          BorderlessButton(
-            onPressed: () {
-              if (_formKey.currentState!.validate()) {
-                if (ref.read(timetableProvider).columnsController.text.isEmpty) {
-                  _toolTipKey.currentState?.ensureTooltipVisible();
-                } else {
-                  context.pop();
-                  ref.read(timetableProvider.notifier).initTileControllersAndTime();
-                  context.push('/user_home/timetables/editor');
-                }
-              }
-            },
-            label: const Text('Create'),
-            backgroundColor: UltimateTheme.primary.withOpacity(0.1),
-            splashColor: UltimateTheme.primary,
+          Row(
+            children: [
+              Expanded(
+                child: BorderlessButton(
+                  onPressed: () {
+                    ref.read(timetableProvider.notifier).clearControllers();
+                    context.pop();
+                  },
+                  label: const Text('Cancel'),
+                  backgroundColor:
+                      UltimateTheme.textSub.withValues(alpha: 0.05),
+                  splashColor: UltimateTheme.textSub,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: BorderlessButton(
+                  onPressed: () {
+                    if (_formKey.currentState!.validate()) {
+                      if (ref
+                          .read(timetableProvider)
+                          .columnsController
+                          .text
+                          .isEmpty) {
+                        _toolTipKey.currentState?.ensureTooltipVisible();
+                      } else {
+                        context.pop();
+                        ref
+                            .read(timetableProvider.notifier)
+                            .initTileControllersAndTime();
+                        context.push('/user_home/timetables/editor');
+                      }
+                    }
+                  },
+                  label: const Text('Create'),
+                  backgroundColor: UltimateTheme.primary.withValues(alpha: 0.1),
+                  splashColor: UltimateTheme.primary,
+                ),
+              ),
+            ],
           ),
         ],
       ),
