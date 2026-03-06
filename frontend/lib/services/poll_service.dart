@@ -1,8 +1,6 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/constants.dart';
-import 'auth/auth_service.dart';
 import '../../provider/auth_provider.dart';
 
 final pollServiceProvider = Provider<PollService>((ref) {
@@ -15,12 +13,11 @@ class PollService {
 
   PollService(this._ref);
 
-  Future<Map<String, dynamic>> createPoll({
-    required String question,
-    required List<String> options,
-    int? expiryHours,
-    String? target
-  }) async {
+  Future<Map<String, dynamic>> createPoll(
+      {required String question,
+      required List<String> options,
+      int? expiryHours,
+      String? target}) async {
     try {
       final token = _ref.read(authProvider).token;
       _client.options.headers['authorization'] = 'Bearer $token';
@@ -35,7 +32,7 @@ class PollService {
       return response.data;
     } on DioException catch (e) {
       if (e.response != null) {
-          return e.response!.data;
+        return e.response!.data;
       }
       return {'status': false, 'message': e.message};
     } catch (e) {
@@ -51,7 +48,7 @@ class PollService {
       final response = await _client.get('/polls/active');
 
       if (response.data['status'] == true) {
-          return response.data['data'];
+        return response.data['data'];
       }
       return [];
     } catch (e) {
@@ -64,14 +61,13 @@ class PollService {
       final token = _ref.read(authProvider).token;
       _client.options.headers['authorization'] = 'Bearer $token';
 
-      final response = await _client.post('/polls/$pollId/vote', data: {
-        'optionIndex': optionIndex
-      });
+      final response = await _client
+          .post('/polls/$pollId/vote', data: {'optionIndex': optionIndex});
 
       return response.data;
     } on DioException catch (e) {
       if (e.response != null) {
-          return e.response!.data;
+        return e.response!.data;
       }
       return {'status': false, 'message': e.message};
     } catch (e) {
