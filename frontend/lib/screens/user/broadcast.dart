@@ -20,9 +20,12 @@ class BroadcastPage extends ConsumerWidget {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Icon(Icons.campaign_rounded, size: 64, color: UltimateTheme.textSub.withOpacity(0.5)),
+                  Icon(Icons.campaign_rounded,
+                      size: 64,
+                      color: UltimateTheme.textSub.withValues(alpha: 0.5)),
                   const SizedBox(height: 16),
-                  Text("No broadcasts yet.", style: GoogleFonts.inter(color: UltimateTheme.textSub)),
+                  Text("No broadcasts yet.",
+                      style: GoogleFonts.inter(color: UltimateTheme.textSub)),
                 ],
               ),
             );
@@ -56,9 +59,13 @@ class BroadcastPage extends ConsumerWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: UltimateTheme.primary.withOpacity(0.08)),
+        border:
+            Border.all(color: UltimateTheme.primary.withValues(alpha: 0.08)),
         boxShadow: [
-          BoxShadow(color: Colors.black.withOpacity(0.02), blurRadius: 20, offset: const Offset(0, 10)),
+          BoxShadow(
+              color: Colors.black.withValues(alpha: 0.02),
+              blurRadius: 20,
+              offset: const Offset(0, 10)),
         ],
       ),
       child: ClipRRect(
@@ -79,19 +86,27 @@ class BroadcastPage extends ConsumerWidget {
                           Flexible(
                             child: Text(
                               broadcast.title,
-                              style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, fontSize: 18, color: UltimateTheme.textMain),
+                              style: GoogleFonts.spaceGrotesk(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 18,
+                                  color: UltimateTheme.textMain),
                             ),
                           ),
                           const SizedBox(width: 12),
                           Container(
-                            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                            padding: const EdgeInsets.symmetric(
+                                horizontal: 8, vertical: 4),
                             decoration: BoxDecoration(
-                              color: UltimateTheme.primary.withOpacity(0.08),
+                              color:
+                                  UltimateTheme.primary.withValues(alpha: 0.08),
                               borderRadius: BorderRadius.circular(8),
                             ),
                             child: Text(
                               '${broadcast.date.day}/${broadcast.date.month}',
-                              style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: UltimateTheme.primary),
+                              style: GoogleFonts.inter(
+                                  fontSize: 10,
+                                  fontWeight: FontWeight.bold,
+                                  color: UltimateTheme.primary),
                             ),
                           ),
                         ],
@@ -99,7 +114,10 @@ class BroadcastPage extends ConsumerWidget {
                       const SizedBox(height: 12),
                       Text(
                         broadcast.body,
-                        style: GoogleFonts.inter(color: UltimateTheme.textSub, height: 1.5, fontSize: 14),
+                        style: GoogleFonts.inter(
+                            color: UltimateTheme.textSub,
+                            height: 1.5,
+                            fontSize: 14),
                       ),
                     ],
                   ),
