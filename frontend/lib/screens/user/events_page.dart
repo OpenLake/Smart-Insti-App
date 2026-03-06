@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_fonts/google_fonts.dart'; 
+import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
@@ -33,13 +33,20 @@ class _EventsPageState extends ConsumerState<EventsPage> {
 
     return Scaffold(
       backgroundColor: Colors.transparent,
-      floatingActionButton: currentUserRole == 'admin' || currentUserRole == 'faculty'
-          ? FloatingActionButton(
-              onPressed: () => _showAddEventDialog(context, ref),
-              backgroundColor: UltimateTheme.primary,
-              child: const Icon(Icons.add, color: Colors.white),
-            ).animate().scale(delay: 400.ms, curve: Curves.easeOutBack)
-          : null,
+      floatingActionButton:
+          currentUserRole == 'admin' || currentUserRole == 'faculty'
+              ? FloatingActionButton.extended(
+                  onPressed: () => _showAddEventDialog(context, ref),
+                  backgroundColor: UltimateTheme.primary,
+                  elevation: 4,
+                  icon: const Icon(Icons.add_rounded, color: Colors.white),
+                  label: Text("Add Event",
+                      style: GoogleFonts.spaceGrotesk(
+                          fontWeight: FontWeight.bold, color: Colors.white)),
+                  shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16)),
+                ).animate().scale(delay: 400.ms, curve: Curves.easeOutBack)
+              : null,
       body: eventState.isLoading
           ? const Center(child: CircularProgressIndicator())
           : eventState.events.isEmpty
@@ -47,16 +54,34 @@ class _EventsPageState extends ConsumerState<EventsPage> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      Icon(Icons.event_busy_rounded, size: 64, color: UltimateTheme.textSub.withOpacity(0.5)),
-                      const SizedBox(height: 16),
-                      Text("No upcoming events", style: GoogleFonts.inter(color: UltimateTheme.textSub)),
+                      Container(
+                        padding: const EdgeInsets.all(24),
+                        decoration: BoxDecoration(
+                          color: UltimateTheme.primary.withValues(alpha: 0.05),
+                          shape: BoxShape.circle,
+                        ),
+                        child: Icon(Icons.event_busy_rounded,
+                            size: 64,
+                            color:
+                                UltimateTheme.primary.withValues(alpha: 0.3)),
+                      ),
+                      const SizedBox(height: 24),
+                      Text("No upcoming events",
+                          style: GoogleFonts.spaceGrotesk(
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              color: UltimateTheme.textMain)),
+                      Text("Check back later for updates!",
+                          style:
+                              GoogleFonts.inter(color: UltimateTheme.textSub)),
                     ],
-                  ),
+                  ).animate().fadeIn(),
                 )
               : CustomScrollView(
+                  physics: const BouncingScrollPhysics(),
                   slivers: [
                     SliverPadding(
-                      padding: const EdgeInsets.fromLTRB(20, 20, 20, 100),
+                      padding: const EdgeInsets.fromLTRB(24, 24, 24, 120),
                       sliver: SliverList(
                         delegate: SliverChildBuilderDelegate(
                           (context, index) {
@@ -75,16 +100,16 @@ class _EventsPageState extends ConsumerState<EventsPage> {
   Widget _buildEventTicket(event, int index) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
-      height: 110,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: UltimateTheme.primary.withOpacity(0.08)),
+        border:
+            Border.all(color: UltimateTheme.primary.withValues(alpha: 0.05)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.02),
-            blurRadius: 10,
-            offset: const Offset(0, 4),
+            color: Colors.black.withValues(alpha: 0.04),
+            blurRadius: 15,
+            offset: const Offset(0, 5),
           ),
         ],
       ),
@@ -96,7 +121,7 @@ class _EventsPageState extends ConsumerState<EventsPage> {
             children: [
               // Date Portion
               Container(
-                width: 75,
+                width: 80,
                 decoration: BoxDecoration(
                   gradient: UltimateTheme.brandGradientSoft,
                 ),
@@ -106,36 +131,36 @@ class _EventsPageState extends ConsumerState<EventsPage> {
                     Text(
                       DateFormat('MMM').format(event.startTime).toUpperCase(),
                       style: GoogleFonts.spaceGrotesk(
-                        fontWeight: FontWeight.w800,
+                        fontWeight: FontWeight.w900,
                         color: UltimateTheme.primary,
                         fontSize: 12,
-                        letterSpacing: 1.2,
+                        letterSpacing: 1.5,
                       ),
                     ),
+                    const SizedBox(height: 4),
                     Text(
                       DateFormat('dd').format(event.startTime),
                       style: GoogleFonts.spaceGrotesk(
-                        fontSize: 28,
+                        fontSize: 32,
                         fontWeight: FontWeight.bold,
                         color: UltimateTheme.textMain,
-                        height: 1.1,
+                        height: 1,
                       ),
                     ),
                   ],
                 ),
               ),
-              // Dashed Line / Separator
-              VerticalDivider(
-                width: 1,
-                thickness: 1,
-                color: UltimateTheme.primary.withOpacity(0.1),
-                indent: 12,
-                endIndent: 12,
+              // Dashed Line Separator
+              CustomPaint(
+                size: const Size(1, double.infinity),
+                painter: DashedLinePainter(
+                    color: UltimateTheme.primary.withValues(alpha: 0.1)),
               ),
               // Content Portion
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 16),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -150,11 +175,12 @@ class _EventsPageState extends ConsumerState<EventsPage> {
                           color: UltimateTheme.textMain,
                         ),
                       ),
-                      const SizedBox(height: 4),
+                      const SizedBox(height: 8),
                       Row(
                         children: [
-                          Icon(Icons.location_on_rounded, size: 14, color: UltimateTheme.accent),
-                          const SizedBox(width: 4),
+                          Icon(Icons.location_on_rounded,
+                              size: 14, color: UltimateTheme.secondary),
+                          const SizedBox(width: 6),
                           Expanded(
                             child: Text(
                               event.location,
@@ -163,6 +189,7 @@ class _EventsPageState extends ConsumerState<EventsPage> {
                               style: GoogleFonts.inter(
                                 color: UltimateTheme.textSub,
                                 fontSize: 13,
+                                fontWeight: FontWeight.w500,
                               ),
                             ),
                           ),
@@ -174,15 +201,16 @@ class _EventsPageState extends ConsumerState<EventsPage> {
               ),
               // Action Indicator
               Padding(
-                padding: const EdgeInsets.only(right: 12),
+                padding: const EdgeInsets.only(right: 16),
                 child: Center(
                   child: Container(
                     padding: const EdgeInsets.all(8),
                     decoration: BoxDecoration(
-                      color: UltimateTheme.primary.withOpacity(0.05),
+                      color: UltimateTheme.primary.withValues(alpha: 0.08),
                       shape: BoxShape.circle,
                     ),
-                    child: Icon(Icons.chevron_right_rounded, color: UltimateTheme.primary, size: 20),
+                    child: const Icon(Icons.arrow_forward_ios_rounded,
+                        color: UltimateTheme.primary, size: 14),
                   ),
                 ),
               ),
@@ -190,74 +218,169 @@ class _EventsPageState extends ConsumerState<EventsPage> {
           ),
         ),
       ),
-    ).animate().fadeIn(delay: (index * 100).ms).slideX(begin: 0.1, curve: Curves.easeOutQuad);
+    ).animate().fadeIn(delay: (index * 80).ms).slideX(begin: 0.1);
   }
 
   void _showAddEventDialog(BuildContext context, WidgetRef ref) {
     showDialog(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Add Event'),
-        content: SingleChildScrollView(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              MaterialTextFormField(
-                controller: ref.read(eventProvider.notifier).titleController,
-                hintText: 'Event Title',
-              ),
-              const SizedBox(height: 10),
-              MaterialTextFormField(
-                controller: ref.read(eventProvider.notifier).descriptionController,
-                hintText: 'Description',
-                maxLines: 3,
-              ),
-              const SizedBox(height: 10),
-              MaterialTextFormField(
-                controller: ref.read(eventProvider.notifier).locationController,
-                hintText: 'Location',
-              ),
-              const SizedBox(height: 10),
-              MaterialTextFormField(
-                controller: ref.read(eventProvider.notifier).organizedByController,
-                hintText: 'Organized By',
-              ),
-              const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  final DateTime? picked = await showDatePicker(
-                    context: context,
-                    initialDate: DateTime.now(),
-                    firstDate: DateTime.now(),
-                    lastDate: DateTime(2100),
-                  );
-                  if (picked != null) {
-                    ref.read(eventProvider.notifier).updateDate(picked);
-                  }
-                },
-                child: const Text("Select Date"),
-              ),
-            ],
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+        contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+        title: Text('New Event',
+            style: GoogleFonts.spaceGrotesk(
+                fontWeight: FontWeight.bold, fontSize: 24)),
+        content: SizedBox(
+          width: MediaQuery.of(context).size.width * 0.9,
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                MaterialTextFormField(
+                  controller: ref.read(eventProvider.notifier).titleController,
+                  hintText: 'Event Title',
+                  prefixIcon: const Icon(Icons.title_rounded),
+                ),
+                const SizedBox(height: 16),
+                MaterialTextFormField(
+                  controller:
+                      ref.read(eventProvider.notifier).descriptionController,
+                  hintText: 'Description',
+                  maxLines: 3,
+                  prefixIcon: const Icon(Icons.description_outlined),
+                ),
+                const SizedBox(height: 16),
+                MaterialTextFormField(
+                  controller:
+                      ref.read(eventProvider.notifier).locationController,
+                  hintText: 'Location',
+                  prefixIcon: const Icon(Icons.location_on_outlined),
+                ),
+                const SizedBox(height: 16),
+                MaterialTextFormField(
+                  controller:
+                      ref.read(eventProvider.notifier).organizedByController,
+                  hintText: 'Organized By',
+                  prefixIcon: const Icon(Icons.corporate_fare_rounded),
+                ),
+                const SizedBox(height: 24),
+                Consumer(
+                  builder: (_, ref, __) {
+                    final date = ref.watch(eventProvider).selectedDate;
+                    return InkWell(
+                      onTap: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: DateTime.now(),
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2100),
+                          builder: (context, child) {
+                            return Theme(
+                              data: Theme.of(context).copyWith(
+                                colorScheme: ColorScheme.light(
+                                  primary: UltimateTheme.primary,
+                                  onPrimary: Colors.white,
+                                  onSurface: UltimateTheme.textMain,
+                                ),
+                              ),
+                              child: child!,
+                            );
+                          },
+                        );
+                        if (picked != null) {
+                          ref.read(eventProvider.notifier).updateDate(picked);
+                        }
+                      },
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 16, vertical: 16),
+                        decoration: BoxDecoration(
+                          color: UltimateTheme.primary.withValues(alpha: 0.05),
+                          borderRadius: BorderRadius.circular(16),
+                          border: Border.all(
+                              color:
+                                  UltimateTheme.primary.withValues(alpha: 0.1)),
+                        ),
+                        child: Row(
+                          children: [
+                            const Icon(Icons.calendar_month_rounded,
+                                color: UltimateTheme.primary),
+                            const SizedBox(width: 12),
+                            Text(
+                              date != null
+                                  ? DateFormat('MMMM dd, yyyy').format(date)
+                                  : "Select Date",
+                              style: GoogleFonts.inter(
+                                fontSize: 15,
+                                fontWeight: FontWeight.w600,
+                                color: date != null
+                                    ? UltimateTheme.textMain
+                                    : UltimateTheme.textSub,
+                              ),
+                            ),
+                            const Spacer(),
+                            const Icon(Icons.edit_calendar_rounded,
+                                color: UltimateTheme.primary, size: 20),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ),
+        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
         actions: [
-          BorderlessButton(
-            onPressed: () => context.pop(),
-            label: const Text('Cancel'),
-            backgroundColor: Colors.red.shade100,
-            splashColor: Colors.red.shade200,
-          ),
-          BorderlessButton(
-            onPressed: () {
-              ref.read(eventProvider.notifier).addEvent();
-              context.pop();
-            },
-            label: const Text('Add'),
-            backgroundColor: Colors.green.shade100,
-            splashColor: Colors.green.shade200,
+          Row(
+            children: [
+              Expanded(
+                child: BorderlessButton(
+                  onPressed: () => context.pop(),
+                  label: const Text('Cancel'),
+                  backgroundColor:
+                      UltimateTheme.textSub.withValues(alpha: 0.05),
+                  splashColor: UltimateTheme.textSub,
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: BorderlessButton(
+                  onPressed: () {
+                    ref.read(eventProvider.notifier).addEvent();
+                    context.pop();
+                  },
+                  label: const Text('Add Event'),
+                  backgroundColor: UltimateTheme.primary.withValues(alpha: 0.1),
+                  splashColor: UltimateTheme.primary,
+                ),
+              ),
+            ],
           ),
         ],
       ),
     );
   }
+}
+
+class DashedLinePainter extends CustomPainter {
+  final Color color;
+  DashedLinePainter({required this.color});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    double dashHeight = 5, dashSpace = 3, startY = 10;
+    final paint = Paint()
+      ..color = color
+      ..strokeWidth = 1;
+    while (startY < size.height - 10) {
+      canvas.drawLine(Offset(0, startY), Offset(0, startY + dashHeight), paint);
+      startY += dashHeight + dashSpace;
+    }
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) => false;
 }
