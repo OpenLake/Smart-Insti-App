@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
@@ -10,10 +11,12 @@ class AskYourCampusScreen extends ConsumerStatefulWidget {
   const AskYourCampusScreen({super.key});
 
   @override
-  ConsumerState<AskYourCampusScreen> createState() => _AskYourCampusScreenState();
+  ConsumerState<AskYourCampusScreen> createState() =>
+      _AskYourCampusScreenState();
 }
 
-class _AskYourCampusScreenState extends ConsumerState<AskYourCampusScreen> with SingleTickerProviderStateMixin {
+class _AskYourCampusScreenState extends ConsumerState<AskYourCampusScreen>
+    with SingleTickerProviderStateMixin {
   late TabController _tabController;
 
   @override
@@ -34,20 +37,37 @@ class _AskYourCampusScreenState extends ConsumerState<AskYourCampusScreen> with 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: UltimateTheme.backgroundColor,
+      backgroundColor: const Color(0xFFFBFBFE),
       body: Column(
         children: [
           Container(
-            color: UltimateTheme.surfaceColor,
+            padding: const EdgeInsets.only(top: 8, bottom: 8),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withValues(alpha: 0.03),
+                  blurRadius: 10,
+                  offset: const Offset(0, 4),
+                ),
+              ],
+            ),
             child: TabBar(
               controller: _tabController,
-              labelColor: UltimateTheme.primaryColor,
-              unselectedLabelColor: Colors.grey,
-              indicatorColor: UltimateTheme.primaryColor,
-              labelStyle: GoogleFonts.outfit(fontWeight: FontWeight.bold),
+              labelColor: UltimateTheme.primary,
+              unselectedLabelColor:
+                  UltimateTheme.textSub.withValues(alpha: 0.5),
+              indicatorColor: UltimateTheme.primary,
+              indicatorWeight: 3,
+              indicatorSize: TabBarIndicatorSize.label,
+              dividerColor: Colors.transparent,
+              labelStyle: GoogleFonts.spaceGrotesk(
+                  fontWeight: FontWeight.bold, fontSize: 15),
+              unselectedLabelStyle: GoogleFonts.spaceGrotesk(
+                  fontWeight: FontWeight.w600, fontSize: 15),
               tabs: const [
-                Tab(text: "Anonymous Posts"),
-                Tab(text: "Polls"),
+                Tab(text: "Confessions"),
+                Tab(text: "Campus Polls"),
               ],
             ),
           ),
@@ -62,19 +82,32 @@ class _AskYourCampusScreenState extends ConsumerState<AskYourCampusScreen> with 
           ),
         ],
       ),
-      floatingActionButton: _tabController.index == 0
-          ? FloatingActionButton.extended(
-              onPressed: () => context.push('/user_home/confessions/add'),
-              backgroundColor: UltimateTheme.primaryColor,
-              icon: const Icon(Icons.edit, color: Colors.white),
-              label: Text("Post anonymously", style: GoogleFonts.outfit(color: Colors.white)),
-            )
-          : FloatingActionButton.extended(
-              onPressed: () => context.push('/user_home/polls/create'),
-              backgroundColor: UltimateTheme.primaryColor,
-              icon: const Icon(Icons.poll, color: Colors.white),
-              label: Text("Create Poll", style: GoogleFonts.outfit(color: Colors.white)),
-            ),
+      floatingActionButton: Padding(
+        padding: const EdgeInsets.only(bottom: 90),
+        child: _tabController.index == 0
+            ? FloatingActionButton.extended(
+                onPressed: () => context.push('/user_home/confessions/add'),
+                backgroundColor: UltimateTheme.primary,
+                elevation: 4,
+                icon: const Icon(Icons.favorite_rounded, color: Colors.white),
+                label: Text("Post Anonymously",
+                    style: GoogleFonts.spaceGrotesk(
+                        fontWeight: FontWeight.bold, color: Colors.white)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+              ).animate().scale(curve: Curves.easeOutBack)
+            : FloatingActionButton.extended(
+                onPressed: () => context.push('/user_home/polls/create'),
+                backgroundColor: UltimateTheme.primary,
+                elevation: 4,
+                icon: const Icon(Icons.poll_rounded, color: Colors.white),
+                label: Text("Create Poll",
+                    style: GoogleFonts.spaceGrotesk(
+                        fontWeight: FontWeight.bold, color: Colors.white)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
+              ).animate().scale(curve: Curves.easeOutBack),
+      ),
     );
   }
 }
