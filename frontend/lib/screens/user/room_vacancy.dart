@@ -1,16 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
-import 'package:smart_insti_app/components/borderless_button.dart';
 import 'package:smart_insti_app/constants/constants.dart';
 import 'package:smart_insti_app/provider/room_provider.dart';
-import '../../models/admin.dart';
-import '../../models/faculty.dart';
 import '../../models/room.dart';
-import '../../models/student.dart';
 import '../../provider/auth_provider.dart';
 
 class RoomVacancy extends ConsumerStatefulWidget {
@@ -33,19 +28,24 @@ class _RoomVacancyState extends ConsumerState<RoomVacancy> {
   @override
   Widget build(BuildContext context) {
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (ref.read(authProvider.notifier).tokenCheckProgress != LoadingState.progress) {
-        ref.read(authProvider.notifier).verifyAuthTokenExistence(context, AuthConstants.generalAuthLabel.toLowerCase());
+      if (ref.read(authProvider.notifier).tokenCheckProgress !=
+          LoadingState.progress) {
+        ref.read(authProvider.notifier).verifyAuthTokenExistence(
+            context, AuthConstants.generalAuthLabel.toLowerCase());
       }
     });
 
     final roomState = ref.watch(roomProvider);
-    if (roomState.loadingState == LoadingState.progress) ref.read(roomProvider.notifier).loadRooms();
+    if (roomState.loadingState == LoadingState.progress)
+      ref.read(roomProvider.notifier).loadRooms();
 
     // Filtering Logic
     List<Room> filteredRooms = [];
     if (roomState.loadingState == LoadingState.success) {
       filteredRooms = roomState.roomList.where((room) {
-        final matchesSearch = room.name.toLowerCase().contains(_searchController.text.toLowerCase());
+        final matchesSearch = room.name
+            .toLowerCase()
+            .contains(_searchController.text.toLowerCase());
         final matchesFilter = _filter == 'All'
             ? true
             : _filter == 'Vacant'
@@ -67,25 +67,19 @@ class _RoomVacancyState extends ConsumerState<RoomVacancy> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(
-                          "Room Availability",
-                          style: GoogleFonts.spaceGrotesk(
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold,
-                            color: UltimateTheme.textMain,
-                          ),
-                        ),
-                        const SizedBox(height: 16),
+                        const SizedBox(height: 10),
                         // Search Bar
                         Container(
                           padding: const EdgeInsets.symmetric(horizontal: 16),
                           decoration: BoxDecoration(
                             color: Colors.white,
                             borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: UltimateTheme.primary.withOpacity(0.1)),
+                            border: Border.all(
+                                color: UltimateTheme.primary
+                                    .withValues(alpha: 0.1)),
                             boxShadow: [
                               BoxShadow(
-                                color: Colors.black.withOpacity(0.02),
+                                color: Colors.black.withValues(alpha: 0.02),
                                 blurRadius: 10,
                                 offset: const Offset(0, 4),
                               ),
@@ -97,12 +91,15 @@ class _RoomVacancyState extends ConsumerState<RoomVacancy> {
                             style: GoogleFonts.inter(fontSize: 14),
                             decoration: InputDecoration(
                               hintText: "Search room...",
-                              hintStyle: GoogleFonts.inter(color: UltimateTheme.textSub),
+                              hintStyle: GoogleFonts.inter(
+                                  color: UltimateTheme.textSub),
                               border: InputBorder.none,
-                              icon: const Icon(Icons.search_rounded, color: UltimateTheme.primary),
+                              icon: const Icon(Icons.search_rounded,
+                                  color: UltimateTheme.primary),
                               suffixIcon: _searchController.text.isNotEmpty
                                   ? IconButton(
-                                      icon: const Icon(Icons.clear_rounded, size: 20),
+                                      icon: const Icon(Icons.clear_rounded,
+                                          size: 20),
                                       onPressed: () {
                                         _searchController.clear();
                                         setState(() {});
@@ -149,9 +146,14 @@ class _RoomVacancyState extends ConsumerState<RoomVacancy> {
                             child: Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                Icon(Icons.search_off_rounded, size: 64, color: UltimateTheme.textSub.withOpacity(0.5)),
+                                Icon(Icons.search_off_rounded,
+                                    size: 64,
+                                    color: UltimateTheme.textSub
+                                        .withValues(alpha: 0.5)),
                                 const SizedBox(height: 16),
-                                Text("No matching rooms found", style: GoogleFonts.inter(color: UltimateTheme.textSub)),
+                                Text("No matching rooms found",
+                                    style: GoogleFonts.inter(
+                                        color: UltimateTheme.textSub)),
                               ],
                             ),
                           ),
@@ -172,10 +174,14 @@ class _RoomVacancyState extends ConsumerState<RoomVacancy> {
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
         decoration: BoxDecoration(
-          color: isSelected ? UltimateTheme.primary : UltimateTheme.primary.withOpacity(0.05),
+          color: isSelected
+              ? UltimateTheme.primary
+              : UltimateTheme.primary.withValues(alpha: 0.05),
           borderRadius: BorderRadius.circular(20),
           border: Border.all(
-            color: isSelected ? UltimateTheme.primary : UltimateTheme.primary.withOpacity(0.1),
+            color: isSelected
+                ? UltimateTheme.primary
+                : UltimateTheme.primary.withValues(alpha: 0.1),
           ),
         ),
         child: Text(
@@ -190,20 +196,23 @@ class _RoomVacancyState extends ConsumerState<RoomVacancy> {
     );
   }
 
-  Widget _buildRoomTile(BuildContext context, Room room, WidgetRef ref, int index) {
+  Widget _buildRoomTile(
+      BuildContext context, Room room, WidgetRef ref, int index) {
     final bool isVacant = room.vacant;
-    final Color statusColor = isVacant ? UltimateTheme.accent : UltimateTheme.primary;
-    
+    final Color statusColor =
+        isVacant ? UltimateTheme.accent : UltimateTheme.primary;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: statusColor.withOpacity(0.12), width: 1.5),
+        border:
+            Border.all(color: statusColor.withValues(alpha: 0.12), width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: statusColor.withOpacity(0.04),
+            color: statusColor.withValues(alpha: 0.04),
             blurRadius: 4,
             offset: const Offset(0, 2),
           ),
@@ -214,10 +223,11 @@ class _RoomVacancyState extends ConsumerState<RoomVacancy> {
           Container(
             padding: const EdgeInsets.all(8),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
+              color: statusColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(12),
             ),
-            child: Icon(Icons.meeting_room_rounded, color: statusColor, size: 20),
+            child:
+                Icon(Icons.meeting_room_rounded, color: statusColor, size: 20),
           ),
           const SizedBox(width: 16),
           Expanded(
@@ -233,7 +243,7 @@ class _RoomVacancyState extends ConsumerState<RoomVacancy> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
             decoration: BoxDecoration(
-              color: statusColor.withOpacity(0.1),
+              color: statusColor.withValues(alpha: 0.1),
               borderRadius: BorderRadius.circular(20),
             ),
             child: Row(
@@ -262,7 +272,9 @@ class _RoomVacancyState extends ConsumerState<RoomVacancy> {
           ),
         ],
       ),
-    ).animate().fadeIn(delay: (index * 30).ms).slideX(begin: 0.05, curve: Curves.easeOutQuad);
+    )
+        .animate()
+        .fadeIn(delay: (index * 30).ms)
+        .slideX(begin: 0.05, curve: Curves.easeOutQuad);
   }
 }
-
