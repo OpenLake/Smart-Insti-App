@@ -1,10 +1,9 @@
-
 import 'package:smart_insti_app/models/mess_menu.dart';
 
 class MenuParser {
   static MessMenu parseTsv(String content) {
     List<String> lines = content.split('\n');
-    
+
     // Initialize empty menu structure
     Map<String, Map<String, List<String>>> menuData = {
       'Monday': {'Breakfast': [], 'Lunch': [], 'Snacks': [], 'Dinner': []},
@@ -21,7 +20,7 @@ class MenuParser {
 
     for (var line in lines) {
       if (line.trim().isEmpty) continue;
-      
+
       // Split by tab
       List<String> cells = line.split('\t').map((e) => e.trim()).toList();
       if (cells.isEmpty) continue;
@@ -45,7 +44,7 @@ class MenuParser {
       // Check for keywords in first cell
       if (firstCell.contains('BF (Time)') || firstCell.contains('Breakfast')) {
         currentMealType = 'Breakfast';
-        continue; 
+        continue;
       } else if (firstCell.contains('Lunch')) {
         currentMealType = 'Lunch';
         continue;
@@ -79,7 +78,7 @@ class MenuParser {
     }
 
     return MessMenu(
-      kitchenName: "Hostel Mess Menu", 
+      kitchenName: "Hostel Mess Menu",
       messMenu: menuData,
     );
   }
