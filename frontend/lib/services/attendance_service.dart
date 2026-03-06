@@ -1,8 +1,6 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/constants.dart';
-import 'auth/auth_service.dart';
 import '../../provider/auth_provider.dart';
 
 final attendanceServiceProvider = Provider<AttendanceService>((ref) {
@@ -15,7 +13,8 @@ class AttendanceService {
 
   AttendanceService(this._ref);
 
-  Future<Map<String, dynamic>> markAttendance(String courseId, String sessionId, {Map<String, double>? location}) async {
+  Future<Map<String, dynamic>> markAttendance(String courseId, String sessionId,
+      {Map<String, double>? location}) async {
     try {
       final token = _ref.read(authProvider).token;
       _client.options.headers['authorization'] = 'Bearer $token';
@@ -29,7 +28,7 @@ class AttendanceService {
       return response.data;
     } on DioException catch (e) {
       if (e.response != null) {
-          return e.response!.data;
+        return e.response!.data;
       }
       return {'status': false, 'message': e.message};
     } catch (e) {
@@ -42,12 +41,11 @@ class AttendanceService {
       final token = _ref.read(authProvider).token;
       _client.options.headers['authorization'] = 'Bearer $token';
 
-      final response = await _client.get('/attendance/my-attendance', queryParameters: 
-        courseId != null ? {'courseId': courseId} : null
-      );
+      final response = await _client.get('/attendance/my-attendance',
+          queryParameters: courseId != null ? {'courseId': courseId} : null);
 
       if (response.data['status'] == true) {
-          return response.data['data'];
+        return response.data['data'];
       }
       return [];
     } catch (e) {
@@ -63,7 +61,7 @@ class AttendanceService {
       final response = await _client.get('/attendance/stats');
 
       if (response.data['status'] == true) {
-          return response.data['data'];
+        return response.data['data'];
       }
       return [];
     } catch (e) {
