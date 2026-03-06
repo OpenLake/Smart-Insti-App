@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:dio/dio.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:socket_io_client/socket_io_client.dart' as IO;
@@ -14,7 +13,7 @@ class ChatService {
   late IO.Socket _socket;
   final _secureStorage = const FlutterSecureStorage();
   final Logger _logger = Logger();
-  
+
   final _messageController = StreamController<Map<String, dynamic>>.broadcast();
   Stream<Map<String, dynamic>> get messageStream => _messageController.stream;
 
@@ -42,15 +41,16 @@ class ChatService {
     final token = await _secureStorage.read(key: 'token');
     if (token == null) return;
 
-    _socket = IO.io(AppConstants.apiBaseUrl, IO.OptionBuilder()
-      .setTransports(['websocket'])
-      .setAuth({'token': token})
-      .enableForceNew()
-      .build()
-    );
+    _socket = IO.io(
+        AppConstants.apiBaseUrl,
+        IO.OptionBuilder()
+            .setTransports(['websocket'])
+            .setAuth({'token': token})
+            .enableForceNew()
+            .build());
 
     _socket.connect();
-    
+
     _socket.onConnect((_) {
       _logger.i('Socket connected');
     });
@@ -98,7 +98,8 @@ class ChatService {
   // Get messages for conversation
   Future<List<dynamic>> getMessages(String conversationId) async {
     try {
-      final response = await _client.get('/chat/conversations/$conversationId/messages');
+      final response =
+          await _client.get('/chat/conversations/$conversationId/messages');
       if (response.statusCode == 200 && response.data['status'] == true) {
         return response.data['data'];
       }
@@ -110,7 +111,8 @@ class ChatService {
   }
 
   // Send message
-  Future<Map<String, dynamic>?> sendMessage(String conversationId, String content) async {
+  Future<Map<String, dynamic>?> sendMessage(
+      String conversationId, String content) async {
     try {
       final response = await _client.post(
         '/chat/conversations/$conversationId/messages',
