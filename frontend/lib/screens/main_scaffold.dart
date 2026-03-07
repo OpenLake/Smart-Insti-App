@@ -6,16 +6,12 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
 import 'package:smart_insti_app/services/auth/auth_service.dart';
-import 'package:smart_insti_app/screens/user/complaint_page.dart';
-import 'package:smart_insti_app/screens/user/events_page.dart';
-import 'package:smart_insti_app/screens/user/links_page.dart';
-import 'package:smart_insti_app/screens/user/news_page.dart';
-import 'package:smart_insti_app/screens/user/user_home.dart';
-import 'package:smart_insti_app/screens/auth/login_general.dart';
 import 'package:smart_insti_app/models/student.dart';
 import 'package:smart_insti_app/models/faculty.dart';
 import 'package:smart_insti_app/models/admin.dart';
 import 'package:smart_insti_app/models/alumni.dart';
+import 'package:smart_insti_app/screens/search/search_screen.dart';
+import 'package:smart_insti_app/constants/route_constants.dart';
 
 class MainScaffold extends ConsumerWidget {
   final Widget child;
@@ -30,23 +26,23 @@ class MainScaffold extends ConsumerWidget {
     // Drawer User Details Logic
     final user = authState.currentUser;
     String name = "Guest";
-    String email = "";
+    String email = "Welcome to Smart Insti";
     String? profilePicURI;
 
     if (user != null) {
       if (user is Student) {
-        name = user.name.split(' ').first;
+        name = user.name;
         email = user.email;
         profilePicURI = user.profilePicURI;
       } else if (user is Faculty) {
-        name = user.name.split(' ').first;
+        name = user.name;
         email = user.email;
         profilePicURI = user.profilePicURI;
       } else if (user is Admin) {
-        name = "Admin";
+        name = "Administrator";
         email = user.email;
       } else if (user is Alumni) {
-        name = user.name.split(' ').first;
+        name = user.name;
         email = user.email;
         profilePicURI = user.profilePicURI;
       }
@@ -54,144 +50,267 @@ class MainScaffold extends ConsumerWidget {
 
     // Dynamic Title Logic
     String title = "IIT Bhilai";
-    if (location.contains('/news')) title = "Feed";
-    else if (location.contains('/confessions') || location.contains('/polls')) title = "Ask Your Campus";
-    else if (location.contains('/events')) title = "Explore";
-    else if (location.contains('/student_profile') || location.contains('/profile')) title = "Profile";
-    else if (location == '/user_home') title = "IIT Bhilai";
-    // Add more conditions as needed for other sub-pages if they need specific titles over the default
+    String matchedRoute = RouteConstants.routeTitles.keys.firstWhere(
+      (route) => location.startsWith(route),
+      orElse: () => '/user_home',
+    );
+
+    if (matchedRoute != '/user_home') {
+      title = RouteConstants.routeTitles[matchedRoute] ?? "IIT Bhilai";
+    }
+
+    if (location.contains('/confessions') || location.contains('/polls')) {
+      // AskYourCampus screen handles both, but we can be more specific
+      if (location.contains('/confessions')) title = "Campus Confessions";
+      if (location.contains('/polls')) title = "Campus Polls";
+    }
+
+    String profileRoute = '/login';
+    if (user != null) {
+      if (user is Student) {
+        profileRoute = '/user_home/student_profile';
+      } else if (user is Faculty) {
+        profileRoute = '/user_home/faculty_profile';
+      } else if (user is Admin) {
+        profileRoute = '/admin/profile';
+      } else if (user is Alumni) {
+        profileRoute = '/user_home/student_profile'; // Fallback for now
+      }
+    }
 
     return Scaffold(
       extendBody: true,
-      drawer: Drawer(
-        child: ListView(
-          padding: EdgeInsets.zero,
-          children: [
-             UserAccountsDrawerHeader(
-                decoration: const BoxDecoration(color: UltimateTheme.primary),
-                accountName: Text(name, style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-                accountEmail: Text(email, style: GoogleFonts.outfit()),
-                currentAccountPicture: CircleAvatar(
-                    backgroundColor: Colors.white,
-                    backgroundImage: profilePicURI != null ? NetworkImage(profilePicURI) : null,
-                    child: profilePicURI == null ? Text(name.isNotEmpty ? name[0] : "G", style: const TextStyle(fontSize: 24, color: UltimateTheme.primary)) : null,
-                ),
-             ),
-             ListTile(
-                leading: const Icon(Icons.person),
-                title: Text("Profile", style: GoogleFonts.outfit()),
-                onTap: () {
-                    Navigator.pop(context);
-                    context.push('/user_home/student_profile'); 
-                },
-             ),
-             ListTile(
-                leading: const Icon(Icons.settings),
-                title: Text("Settings", style: GoogleFonts.outfit()),
-                onTap: () {
-                    Navigator.pop(context);
-                    context.push('/user_home/settings');
-                },
-             ),
-             if (user is Admin)
-               ListTile(
-                  leading: const Icon(Icons.analytics, color: Colors.blue),
-                  title: Text("Analytics", style: GoogleFonts.outfit()),
-                  onTap: () {
-                      Navigator.pop(context);
-                      context.push('/user_home/analytics');
-                  },
-               ),
-             const Divider(),
-             ListTile(
-                leading: const Icon(Icons.logout, color: Colors.red),
-                title: Text("Logout", style: GoogleFonts.outfit(color: Colors.red)),
-                onTap: () async {
-                    await ref.read(authServiceProvider).logout();
-                    if (context.mounted) context.go('/login');
-                },
-             ),
-          ],
-        ),
-      ),
+      drawer: _buildDrawer(
+          context, ref, name, email, profilePicURI, user, profileRoute),
       appBar: AppBar(
+        leadingWidth: 64,
         leading: Builder(
-          builder: (context) => IconButton(
-            icon: const Icon(Icons.menu_rounded),
-            onPressed: () => Scaffold.of(context).openDrawer(),
+          builder: (context) {
+            final bool canPop = Navigator.of(context).canPop();
+            return IconButton(
+              icon: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: UltimateTheme.primary.withValues(alpha: 0.05),
+                  borderRadius: BorderRadius.circular(12),
+                ),
+                child: Icon(
+                    canPop
+                        ? Icons.arrow_back_ios_new_rounded
+                        : Icons.menu_rounded,
+                    color: UltimateTheme.primary,
+                    size: 18),
+              ),
+              onPressed: () {
+                if (canPop) {
+                  Navigator.of(context).pop();
+                } else {
+                  Scaffold.of(context).openDrawer();
+                }
+              },
+            );
+          },
+        ),
+        title: Text(
+          title,
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
+          style: GoogleFonts.spaceGrotesk(
+            fontWeight: FontWeight.bold,
+            color: UltimateTheme.textMain,
+            fontSize: 20,
           ),
         ),
-        title: Text(title),
         actions: [
           IconButton(
-            icon: const Icon(Icons.search_rounded),
-            onPressed: () {},
+            icon: Icon(Icons.search_rounded,
+                color: UltimateTheme.textSub.withValues(alpha: 0.7)),
+            onPressed: () => Navigator.push(context,
+                MaterialPageRoute(builder: (_) => const SearchScreen())),
           ),
-          Stack(
-            children: [
-              IconButton(
-                icon: const Icon(Icons.notifications_none_rounded),
-                onPressed: () {},
-              ),
-              Positioned(
-                right: 12,
-                top: 12,
-                child: Container(
-                  width: 8,
-                  height: 8,
-                  decoration: const BoxDecoration(
-                    color: Colors.amber,
-                    shape: BoxShape.circle,
-                  ),
-                ),
-              ),
-            ],
-          ),
+          const SizedBox(width: 8),
         ],
       ),
       body: child,
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.white,
-        padding: EdgeInsets.zero,
-        height: 70,
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            _buildCustomNavItem(context, '/user_home/news', Icons.explore_outlined, Icons.explore_rounded, "Feed"),
-            _buildCustomNavItem(context, '/user_home/confessions', Icons.favorite_outline, Icons.favorite_rounded, "Campus"),
-            _buildCustomNavItem(context, '/user_home', Icons.home_outlined, Icons.home_rounded, "Home"),
-            _buildCustomNavItem(context, '/user_home/events', Icons.search_outlined, Icons.search_rounded, "Explore"),
-            _buildCustomNavItem(context, '/user_home/student_profile', Icons.person_outline, Icons.person_rounded, "Profile"),
-          ],
-        ),
+      bottomNavigationBar: _buildBottomNavBar(context, profileRoute),
+    );
+  }
+
+  Widget _buildDrawer(BuildContext context, WidgetRef ref, String name,
+      String email, String? profilePicURI, dynamic user, String profileRoute) {
+    return Drawer(
+      backgroundColor: Colors.white,
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.horizontal(right: Radius.circular(32)),
+      ),
+      child: Column(
+        children: [
+          Container(
+            width: double.infinity,
+            padding: const EdgeInsets.fromLTRB(24, 60, 24, 32),
+            decoration: BoxDecoration(
+              gradient: UltimateTheme.brandGradient,
+              borderRadius:
+                  const BorderRadius.only(topRight: Radius.circular(32)),
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                CircleAvatar(
+                  radius: 36,
+                  backgroundColor: Colors.white.withValues(alpha: 0.2),
+                  child: CircleAvatar(
+                    radius: 32,
+                    backgroundColor: Colors.white,
+                    backgroundImage: profilePicURI != null
+                        ? NetworkImage(profilePicURI)
+                        : null,
+                    child: profilePicURI == null
+                        ? Text(name.isNotEmpty ? name[0] : "G",
+                            style: const TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                color: UltimateTheme.primary))
+                        : null,
+                  ),
+                ),
+                const SizedBox(height: 16),
+                Text(
+                  name,
+                  style: GoogleFonts.spaceGrotesk(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white,
+                  ),
+                ),
+                Text(
+                  email,
+                  style: GoogleFonts.inter(
+                    fontSize: 13,
+                    color: Colors.white.withValues(alpha: 0.8),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Expanded(
+            child: ListView(
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 12),
+              children: [
+                _buildDrawerItem(Icons.person_outline_rounded, "Profile", () {
+                  Navigator.pop(context);
+                  context.push(profileRoute);
+                }),
+                _buildDrawerItem(Icons.settings_outlined, "Settings", () {
+                  Navigator.pop(context);
+                  context.push('/user_home/settings');
+                }),
+                if (user is Admin)
+                  _buildDrawerItem(Icons.analytics_outlined, "Analytics", () {
+                    Navigator.pop(context);
+                    context.push('/user_home/analytics');
+                  }),
+                const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  child: Divider(),
+                ),
+                _buildDrawerItem(Icons.logout_rounded, "Logout", () async {
+                  await ref.read(authServiceProvider).logout();
+                  if (context.mounted) context.go('/login');
+                }, isDestructive: true),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.all(24.0),
+            child: Text(
+              "Smart Insti v2.0",
+              style: GoogleFonts.inter(
+                fontSize: 12,
+                color: UltimateTheme.textSub.withValues(alpha: 0.5),
+                fontWeight: FontWeight.w500,
+              ),
+            ),
+          ),
+        ],
       ),
     );
   }
 
-  Widget _buildCustomNavItem(BuildContext context, String route, IconData icon, IconData activeIcon, String label) {
-    final String location = GoRouterState.of(context).uri.toString();
-    
-    bool isSelected = false;
-    // Specific check for Home to avoid matching prefixes of other routes if they share structure, though here we have distinct paths mostly.
-    // However, logic:
-    // Feed: /user_home/news
-    // Confession: /user_home/confessions
-    // Home: /user_home
-    // Explore: /user_home/events
-    // Profile: /user_home/student_profile
+  Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap,
+      {bool isDestructive = false}) {
+    return ListTile(
+      leading: Icon(icon,
+          color: isDestructive ? Colors.redAccent : UltimateTheme.textSub),
+      title: Text(
+        title,
+        style: GoogleFonts.inter(
+          fontWeight: FontWeight.w600,
+          fontSize: 14,
+          color: isDestructive ? Colors.redAccent : UltimateTheme.textMain,
+        ),
+      ),
+      onTap: onTap,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+    );
+  }
 
-    if (route == '/user_home') {
-       // Only selected if strictly /user_home OR a subroute that isn't one of the other main tabs
-       // Identifying other tabs:
-       bool isOtherTab = location.contains('/news') || location.contains('/confessions') || location.contains('/events') || location.contains('/student_profile');
-       isSelected = !isOtherTab; 
+  Widget _buildBottomNavBar(BuildContext context, String profileRoute) {
+    return Container(
+      margin: const EdgeInsets.fromLTRB(24, 0, 24, 20),
+      height: 72,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.08),
+            blurRadius: 20,
+            offset: const Offset(0, 10),
+          ),
+        ],
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          _buildNavItem(
+              context, '/', Icons.home_outlined, Icons.home_rounded, "Home"),
+          _buildNavItem(context, '/user_home/news', Icons.explore_outlined,
+              Icons.explore_rounded, "Feed"),
+          _buildNavItem(context, '/user_home/confessions',
+              Icons.favorite_outline, Icons.favorite_rounded, "Campus"),
+          _buildNavItem(context, '/user_home/events', Icons.search_outlined,
+              Icons.search_rounded, "Explore"),
+          _buildNavItem(context, profileRoute, Icons.person_outline,
+              Icons.person_rounded, "Profile"),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildNavItem(BuildContext context, String route, IconData icon,
+      IconData activeIcon, String label) {
+    final String location = GoRouterState.of(context).uri.toString();
+
+    bool isSelected = false;
+    if (route == '/' || route == '/user_home') {
+      bool isOtherTab = location.contains('/news') ||
+          location.contains('/confessions') ||
+          location.contains('/events') ||
+          location.contains('/student_profile') ||
+          location.contains('/faculty_profile') ||
+          location.contains('/admin/profile');
+      isSelected = !isOtherTab;
     } else {
-       isSelected = location.contains(route.split('/').last); // e.g. contains 'news', 'confessions'
+      isSelected =
+          location == route || (route != '/' && location.startsWith(route));
     }
 
     return InkWell(
       onTap: () => context.go(route),
-      child: Container(
+      borderRadius: BorderRadius.circular(16),
+      child: AnimatedContainer(
+        duration: 300.ms,
         padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -200,19 +319,22 @@ class MainScaffold extends ConsumerWidget {
               isSelected ? activeIcon : icon,
               color: isSelected ? UltimateTheme.primary : UltimateTheme.textSub,
               size: 24,
-            ),
+            )
+                .animate(target: isSelected ? 1 : 0)
+                .scale(begin: const Offset(1, 1), end: const Offset(1.2, 1.2)),
             const SizedBox(height: 4),
-            Text(
-              label,
-              style: GoogleFonts.inter(
-                fontSize: 10,
-                fontWeight: isSelected ? FontWeight.bold : FontWeight.w500,
-                color: isSelected ? UltimateTheme.primary : UltimateTheme.textSub,
-              ),
-            ),
+            if (isSelected)
+              Container(
+                width: 4,
+                height: 4,
+                decoration: const BoxDecoration(
+                  color: UltimateTheme.primary,
+                  shape: BoxShape.circle,
+                ),
+              ).animate().fadeIn().scale(),
           ],
         ),
       ),
-    ).animate().scale(begin: isSelected ? const Offset(1.1, 1.1) : const Offset(1, 1), duration: 200.ms);
+    );
   }
 }
