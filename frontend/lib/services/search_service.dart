@@ -1,8 +1,6 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/constants.dart';
-import 'auth/auth_service.dart';
 import '../../provider/auth_provider.dart';
 
 final searchServiceProvider = Provider<SearchService>((ref) {
@@ -20,10 +18,11 @@ class SearchService {
       final token = _ref.read(authProvider).token;
       _client.options.headers['authorization'] = 'Bearer $token';
 
-      final response = await _client.get('/search', queryParameters: {'q': query});
+      final response =
+          await _client.get('/search', queryParameters: {'q': query});
 
       if (response.data['status'] == true) {
-          return response.data['data'];
+        return response.data['data'];
       }
       return {};
     } catch (e) {
