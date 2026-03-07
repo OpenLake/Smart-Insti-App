@@ -1,8 +1,6 @@
-
 import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../constants/constants.dart';
-import 'auth/auth_service.dart';
 import '../../provider/auth_provider.dart';
 
 final transportServiceProvider = Provider<TransportService>((ref) {
@@ -23,7 +21,7 @@ class TransportService {
       final response = await _client.get('/transport');
 
       if (response.data['status'] == true) {
-          return response.data['data'];
+        return response.data['data'];
       }
       return [];
     } catch (e) {
