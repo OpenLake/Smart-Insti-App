@@ -5,16 +5,18 @@ import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:smart_insti_app/provider/auth_provider.dart';
-import 'package:smart_insti_app/provider/home_provider.dart';
 import 'package:smart_insti_app/services/auth/auth_service.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/models/student.dart';
 import 'package:smart_insti_app/models/faculty.dart';
 import 'package:smart_insti_app/models/alumni.dart';
 import 'package:smart_insti_app/models/admin.dart';
-import 'package:smart_insti_app/models/event.dart'; // Added import
-import 'package:smart_insti_app/provider/event_provider.dart'; // Added import
+import 'package:smart_insti_app/models/event.dart';
+import 'package:smart_insti_app/provider/event_provider.dart';
 import '../search/search_screen.dart';
+import 'package:smart_insti_app/provider/user_bundle_provider.dart';
+import 'package:smart_insti_app/provider/acadmap_provider.dart';
+import 'package:smart_insti_app/models/acad_course.dart';
 
 class UserHome extends ConsumerStatefulWidget {
   const UserHome({super.key});
@@ -27,80 +29,243 @@ class _UserHomeState extends ConsumerState<UserHome> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(homeProvider.notifier).buildMenuTiles(context);
-      ref.read(eventProvider.notifier).loadEvents(); // Load events
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      ref.read(eventProvider.notifier).loadEvents();
+      ref.read(acadmapProvider.notifier).fetchCourses();
+      await ref.read(authProvider.notifier).getCurrentUser(context);
     });
+  }
+
+  String _getGreeting() {
+    final hour = DateTime.now().hour;
+    if (hour < 12) return "Good Morning";
+    if (hour < 17) return "Good Afternoon";
+    return "Good Evening";
   }
 
   @override
   Widget build(BuildContext context) {
-    final homeState = ref.watch(homeProvider);
-    final eventState = ref.watch(eventProvider); // Watch event provider
+    final eventState = ref.watch(eventProvider);
     final user = ref.watch(authProvider).currentUser;
-    String name = "Guest";
-    String email = "";
-    String? profilePicURI;
+    final bundleState = ref.watch(userBundleProvider);
+    final acadmapState = ref.watch(acadmapProvider);
+    
+    String firstName = "Guest";
 
     if (user != null) {
       if (user is Student) {
-        name = user.name.split(' ').first;
-        email = user.email;
-        profilePicURI = user.profilePicURI;
+        firstName = user.name.split(' ').first;
       } else if (user is Faculty) {
-        name = user.name.split(' ').first;
-        email = user.email;
-        profilePicURI = user.profilePicURI;
+        firstName = user.name.split(' ').first;
       } else if (user is Admin) {
-        name = "Admin";
-        email = user.email;
+        firstName = "Admin";
       } else if (user is Alumni) {
-        name = user.name.split(' ').first;
-        email = user.email;
-        profilePicURI = user.profilePicURI;
+        firstName = user.name.split(' ').first;
       }
+    } else {
+      // Fallback to Hub bundle name
+      bundleState.whenData((bundle) {
+        final bundleName = bundle?.identity.name;
+        if (bundleName != null && bundleName.isNotEmpty) {
+          firstName = bundleName.split(' ').first;
+        }
+      });
     }
+
+    final quickActionItems = [
+      {
+        "title": "Mess",
+        "icon": Icons.restaurant_menu_rounded,
+        "color": UltimateTheme.primary,
+        "route": "/user_home/mess_menu"
+      },
+      {
+        "title": "Rooms",
+        "icon": Icons.meeting_room_rounded,
+        "color": UltimateTheme.secondary,
+        "route": "/user_home/room_vacancy"
+      },
+      {
+        "title": "Events",
+        "icon": Icons.event_rounded,
+        "color": UltimateTheme.accent,
+        "route": "/user_home/events"
+      },
+      {
+        "title": "Academics",
+        "icon": Icons.school_rounded,
+        "color": UltimateTheme.primary,
+        "route": "/user_home/academics"
+      },
+      {
+        "title": "News",
+        "icon": Icons.article_rounded,
+        "color": UltimateTheme.secondary,
+        "route": "/user_home/news"
+      },
+      {
+        "title": "Feedback",
+        "icon": Icons.feedback_rounded,
+        "color": UltimateTheme.accent,
+        "route": "/user_home/complaints"
+      },
+      {
+        "title": "Lost & Found",
+        "icon": Icons.search_rounded,
+        "color": UltimateTheme.primary,
+        "route": "/user_home/lost_and_found"
+      },
+      {
+        "title": "Clubs",
+        "icon": Icons.groups_outlined,
+        "color": UltimateTheme.secondary,
+        "route": "/user_home/clubs"
+      },
+      {
+        "title": "Polls",
+        "icon": Icons.poll_outlined,
+        "color": UltimateTheme.accent,
+        "route": "/user_home/polls"
+      },
+      {
+        "title": "Confessions",
+        "icon": Icons.favorite_outline,
+        "color": Colors.pinkAccent,
+        "route": "/user_home/confessions"
+      },
+      {
+        "title": "Attendance",
+        "icon": Icons.qr_code,
+        "color": UltimateTheme.primary,
+        "route": "/user_home/attendance"
+      },
+      {
+        "title": "Bus",
+        "icon": Icons.directions_bus,
+        "color": UltimateTheme.secondary,
+        "route": "/user_home/transport"
+      },
+    ];
 
     return Scaffold(
       backgroundColor: Colors.transparent,
       body: CustomScrollView(
+        physics: const BouncingScrollPhysics(),
         slivers: [
-          // 1. Welcome Section with Search
+          // 1. Welcome Section
           SliverToBoxAdapter(
-            child: Container(
-              padding: const EdgeInsets.fromLTRB(20, 60, 20, 20),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(24, 16, 24, 24),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Welcome, $name",
-                    style: GoogleFonts.spaceGrotesk(
-                      fontSize: 32,
-                      fontWeight: FontWeight.bold,
-                      color: UltimateTheme.textMain,
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            _getGreeting(),
+                            style: GoogleFonts.inter(
+                              fontSize: 16,
+                              color: UltimateTheme.textSub,
+                              fontWeight: FontWeight.w500,
+                            ),
+                          ),
+                          Text(
+                            firstName,
+                            style: GoogleFonts.spaceGrotesk(
+                              fontSize: 32,
+                              fontWeight: FontWeight.bold,
+                              color: UltimateTheme.textMain,
+                              letterSpacing: -1,
+                            ),
+                          ),
+                        ],
+                      ).animate().fadeIn().slideX(begin: -0.2),
+                      GestureDetector(
+                        onTap: () {
+                          if (user is Student) {
+                            context.push('/user_home/student_profile');
+                          } else if (user is Faculty) {
+                            context.push('/user_home/faculty_profile');
+                          } else if (user is Alumni) {
+                            context.push('/user_home/student_profile');
+                          } else {
+                            context.go('/login');
+                          }
+                        },
+                        child: CircleAvatar(
+                          radius: 20,
+                          backgroundColor:
+                              UltimateTheme.primary.withValues(alpha: 0.1),
+                          backgroundImage: () {
+                            // 1. Check local profile image
+                            if (user != null &&
+                                (user is Student ||
+                                    user is Faculty ||
+                                    user is Alumni) &&
+                                (user as dynamic).profilePicURI != null) {
+                              return NetworkImage((user as dynamic).profilePicURI!);
+                            }
+                            // 2. Fallback to Hub/Acadmap profile image
+                            final hubImage = bundleState.value?.academics?.acadmap?.profileImage;
+                            if (hubImage != null && hubImage.isNotEmpty) {
+                              return NetworkImage(hubImage);
+                            }
+                            return null;
+                          }(),
+                          child: (user == null ||
+                                  (user is Student ||
+                                          user is Faculty ||
+                                          user is Alumni) &&
+                                      (user as dynamic).profilePicURI == null &&
+                                      (bundleState.value?.academics?.acadmap?.profileImage == null))
+                              ? const Icon(Icons.person_outline_rounded,
+                                  color: UltimateTheme.primary)
+                              : null,
+                        ),
+                      ).animate().fadeIn().scale(),
+                    ],
                   ),
-                  Container(
-                    height: 50,
-                    decoration: BoxDecoration(
-                      color: UltimateTheme.primary.withOpacity(0.05),
-                      borderRadius: BorderRadius.circular(16),
-                      border: Border.all(color: UltimateTheme.primary.withOpacity(0.1)),
-                    ),
-                    child: TextField(
-                      readOnly: true,
-                      onTap: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (_) => const SearchScreen()));
-                      },
-                      decoration: InputDecoration(
-                        hintText: "What are you looking for?",
-                        hintStyle: GoogleFonts.inter(color: UltimateTheme.textSub, fontSize: 14),
-                        prefixIcon: const Icon(Icons.search_rounded, color: UltimateTheme.primary),
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.symmetric(vertical: 14),
+                  const SizedBox(height: 24),
+                  GestureDetector(
+                    onTap: () => Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (_) => const SearchScreen())),
+                    child: Container(
+                      height: 56,
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withValues(alpha: 0.05),
+                            blurRadius: 15,
+                            offset: const Offset(0, 5),
+                          ),
+                        ],
+                        border: Border.all(
+                            color:
+                                UltimateTheme.textSub.withValues(alpha: 0.05)),
+                      ),
+                      child: Row(
+                        children: [
+                          const Icon(Icons.search_rounded,
+                              color: UltimateTheme.primary),
+                          const SizedBox(width: 12),
+                          Text(
+                            "Search for modules, courses...",
+                            style: GoogleFonts.inter(
+                                color: UltimateTheme.textSub, fontSize: 14),
+                          ),
+                        ],
                       ),
                     ),
-                  ),
+                  ).animate().fadeIn(delay: 200.ms).slideY(begin: 0.2),
                 ],
               ),
             ),
@@ -109,19 +274,25 @@ class _UserHomeState extends ConsumerState<UserHome> {
           // 2. Courses Section
           SliverToBoxAdapter(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "My Courses",
-                    style: GoogleFonts.spaceGrotesk(fontSize: 18, fontWeight: FontWeight.bold, color: UltimateTheme.textMain),
+                    "Selected Courses",
+                    style: GoogleFonts.spaceGrotesk(
+                        fontSize: 20,
+                        fontWeight: FontWeight.bold,
+                        color: UltimateTheme.textMain),
                   ),
                   TextButton(
-                    onPressed: () => context.push('/user_home/timetables'), // Assuming timetables is the schedule view
+                    onPressed: () => context.push('/user_home/timetables'),
                     child: Text(
-                      "View Schedule ->",
-                      style: GoogleFonts.inter(fontSize: 12, fontWeight: FontWeight.w600, color: UltimateTheme.primary),
+                      "Full Schedule",
+                      style: GoogleFonts.inter(
+                          fontSize: 13,
+                          fontWeight: FontWeight.bold,
+                          color: UltimateTheme.primary),
                     ),
                   ),
                 ],
@@ -130,142 +301,200 @@ class _UserHomeState extends ConsumerState<UserHome> {
           ),
           SliverToBoxAdapter(
             child: SizedBox(
-              height: 140, // Height for course cards
-              child: ListView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                children: [
-                  _buildCourseCard("CS301", "Operating Systems", "Mon, Wed 10:00 AM", UltimateTheme.accent),
-                  _buildCourseCard("CS302", "Database Systems", "Tue, Thu 11:30 AM", UltimateTheme.primary),
-                  _buildCourseCard("CS303", "Computer Networks", "Fri 09:00 AM", UltimateTheme.navy),
-                ],
+              height: 160,
+              child: bundleState.when(
+                data: (bundle) {
+                  if (bundle == null) {
+                    return Center(
+                      child: Text(
+                        "Please log in to see your courses",
+                        style: GoogleFonts.inter(color: UltimateTheme.textSub),
+                      ),
+                    );
+                  }
+
+                  final selectedCodes = bundle.academics?.acadmap?.selectedCourses ?? [];
+                  
+                  if (selectedCodes.isEmpty) {
+                    return Center(
+                      child: Text(
+                        "No courses selected in Acadmap",
+                        style: GoogleFonts.inter(color: UltimateTheme.textSub),
+                      ),
+                    );
+                  }
+
+                  final List<AcadCourse> myCourses = [];
+                  for (final code in selectedCodes) {
+                    final match = acadmapState.courses.firstWhere(
+                      (c) {
+                        final catalogCodes = c.code.toLowerCase().split('/').map((s) => s.trim());
+                        final bundleCodes = code.toLowerCase().split('/').map((s) => s.trim());
+                        return catalogCodes.any((cc) => bundleCodes.contains(cc));
+                      },
+                      orElse: () => AcadCourse(id: '', code: code, title: 'Details Pending...', department: '', credits: 0, syllabus: []),
+                    );
+                    myCourses.add(match);
+                  }
+
+                  return ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: const EdgeInsets.symmetric(horizontal: 24),
+                    physics: const BouncingScrollPhysics(),
+                    itemCount: myCourses.length,
+                    itemBuilder: (context, index) {
+                      final course = myCourses[index];
+                      // Choose a color based on index
+                      final colors = [UltimateTheme.primary, UltimateTheme.secondary, UltimateTheme.accent];
+                      final color = colors[index % colors.length];
+                      
+                      return _buildCourseCard(
+                        course.code,
+                        course.title,
+                        course.department.isEmpty ? "Ecosystem Core" : course.department,
+                        color,
+                      );
+                    },
+                  );
+                },
+                loading: () => const Center(
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircularProgressIndicator(),
+                      SizedBox(height: 8),
+                      Text("Fetching Bundle...", style: TextStyle(fontSize: 10)),
+                    ],
+                  ),
+                ),
+                error: (e, __) => Center(
+                  child: Text(
+                    "Hub Error: ${e.toString().split('\n').first}",
+                    style: const TextStyle(color: Colors.red, fontSize: 10),
+                  ),
+                ),
               ),
             ),
           ),
 
-          // 3. Announcement Banner
-          SliverToBoxAdapter(
-            child: Container(
-              margin: const EdgeInsets.fromLTRB(20, 24, 20, 0),
-              height: 60,
-              decoration: BoxDecoration(
-                color: UltimateTheme.navy.withOpacity(0.05),
-                borderRadius: BorderRadius.circular(16),
-                border: Border.all(color: UltimateTheme.navy.withOpacity(0.1)),
-              ),
-              child: Row(
-                children: [
-                  const SizedBox(width: 16),
-                  const Icon(Icons.campaign_rounded, color: UltimateTheme.navy),
-                  const SizedBox(width: 12),
-                  Expanded(
-                    child: Text(
-                      "Campus Alert: Career Fair starts at 10 AM",
-                      style: GoogleFonts.inter(fontSize: 13, fontWeight: FontWeight.w600, color: UltimateTheme.navy),
-                    ),
-                  ),
-                  const Icon(Icons.chevron_right_rounded, color: UltimateTheme.navy),
-                  const SizedBox(width: 12),
-                ],
-              ),
-            ).animate().fadeIn(delay: 200.ms),
-          ),
 
-          // 4. Quick Actions Grid (4x2)
+          // 3. Quick Actions Grid
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 0),
+            padding: const EdgeInsets.fromLTRB(24, 32, 24, 0),
+            sliver: SliverToBoxAdapter(
+              child: Text(
+                "Quick Actions",
+                style: GoogleFonts.spaceGrotesk(
+                    fontSize: 20,
+                    fontWeight: FontWeight.bold,
+                    color: UltimateTheme.textMain),
+              ),
+            ),
+          ),
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(24, 16, 24, 0),
             sliver: SliverGrid(
               gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                 crossAxisCount: 4,
-                crossAxisSpacing: 12,
-                mainAxisSpacing: 16, // Increased spacing
-                childAspectRatio: 0.72,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 20,
+                childAspectRatio: 0.75,
               ),
               delegate: SliverChildBuilderDelegate(
                 (context, index) {
-                  final items = [
-                    {"title": "Mess", "icon": Icons.restaurant_menu_rounded, "color": UltimateTheme.primary, "route": "/user_home/mess_menu"},
-                    {"title": "Rooms", "icon": Icons.meeting_room_rounded, "color": UltimateTheme.accent, "route": "/user_home/room_vacancy"},
-                    {"title": "Emergency", "icon": Icons.health_and_safety_rounded, "color": UltimateTheme.navy, "route": "/user_home/links"},
-                    {"title": "Events", "icon": Icons.event_rounded, "color": Colors.orange, "route": "/user_home/events"},
-                    {"title": "News", "icon": Icons.article_rounded, "color": UltimateTheme.accent, "route": "/user_home/news"},
-                    {"title": "Complaints", "icon": Icons.report_problem_rounded, "color": UltimateTheme.primary, "route": "/user_home/complaints"},
-                    {"title": "Lost & Found", "icon": Icons.search_rounded, "color": UltimateTheme.accent, "route": "/user_home/lost_and_found"},
-                    {"title": "Study Groups", "icon": Icons.groups_rounded, "color": UltimateTheme.navy, "route": "/user_home/chat_list"},
-                    {"title": "Broadcast", "icon": Icons.campaign_rounded, "color": UltimateTheme.primary, "route": "/user_home/broadcast"},
-                    {"title": "Buy & Sell", "icon": Icons.storefront_rounded, "color": UltimateTheme.accent, "route": "/user_home/marketplace"},
-                    {"title": "Resources", "icon": Icons.folder_copy_outlined, "color": Colors.teal, "route": "/user_home/resources"},
-                    {"title": "Clubs", "icon": Icons.groups_outlined, "color": Colors.indigo, "route": "/user_home/clubs"},
-                    {"title": "Polls", "icon": Icons.poll_outlined, "color": Colors.purple, "route": "/user_home/polls"},
-                    {"title": "Confessions", "icon": Icons.favorite_outline, "color": Colors.pinkAccent, "route": "/user_home/confessions"},
-                    {"title": "Calendar", "icon": Icons.calendar_today_outlined, "color": Colors.orange, "route": ""},
-                    {"title": "Attendance", "icon": Icons.qr_code, "color": Colors.green, "route": "/user_home/attendance"},
-                    {"title": "Alumni", "icon": Icons.school, "color": Colors.blue, "route": "/user_home/alumni"},
-                    {"title": "Bus", "icon": Icons.directions_bus, "color": Colors.redAccent, "route": "/user_home/transport"},
-                    {"title": "Leaderboard", "icon": Icons.emoji_events, "color": Colors.amber, "route": "/user_home/leaderboard"},
-                  ];
-
-                  final item = items[index];
+                  final item = quickActionItems[index];
                   final color = item['color'] as Color;
 
-                  return InkWell(
+                  return GestureDetector(
                     onTap: () => context.push(item['route'] as String),
-                    borderRadius: BorderRadius.circular(16),
                     child: Column(
                       children: [
                         Container(
-                          height: 58,
-                          width: 58,
+                          height: 64,
+                          width: double.infinity,
                           decoration: BoxDecoration(
-                            color: color.withOpacity(0.12),
-                            borderRadius: BorderRadius.circular(16),
-                            border: Border.all(color: color.withOpacity(0.2), width: 1.5),
+                            color: color.withValues(alpha: 0.08),
+                            borderRadius: BorderRadius.circular(18),
+                            border: Border.all(
+                                color: color.withValues(alpha: 0.15),
+                                width: 1.5),
                           ),
-                          child: Icon(item['icon'] as IconData, color: color, size: 26),
-                        ).animate(delay: (50 * index).ms).scale(curve: Curves.easeOutBack),
-                        const Spacer(),
+                          child: Icon(item['icon'] as IconData,
+                              color: color, size: 28),
+                        )
+                            .animate(delay: (40 * index).ms)
+                            .scale(curve: Curves.easeOutBack),
+                        const SizedBox(height: 8),
                         Text(
                           item['title'] as String,
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
-                          style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: UltimateTheme.textSub),
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.inter(
+                              fontSize: 11,
+                              fontWeight: FontWeight.w600,
+                              color: UltimateTheme.textMain),
                         ),
-                        const Spacer(),
                       ],
                     ),
                   );
                 },
-                childCount: 9,
+                childCount: quickActionItems.length,
               ),
             ),
           ),
 
-          // 5. Upcoming Events
-// ... (omitting Quick Actions replacement as it was done in previous step, but providing context to match)
-
-          // 5. Upcoming Events
+          // 4. Upcoming Events
           SliverPadding(
-            padding: const EdgeInsets.fromLTRB(20, 32, 20, 100), // Added bottom padding
+            padding: const EdgeInsets.fromLTRB(24, 40, 24, 120),
             sliver: SliverToBoxAdapter(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    "Upcoming Events",
-                    style: GoogleFonts.spaceGrotesk(fontSize: 20, fontWeight: FontWeight.bold, color: UltimateTheme.textMain),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        "Upcoming Events",
+                        style: GoogleFonts.spaceGrotesk(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: UltimateTheme.textMain),
+                      ),
+                      TextButton(
+                        onPressed: () => context.push('/user_home/events'),
+                        child: Text(
+                          "Explore All",
+                          style: GoogleFonts.inter(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: UltimateTheme.primary),
+                        ),
+                      ),
+                    ],
                   ),
                   const SizedBox(height: 16),
                   if (eventState.isLoading)
                     const Center(child: CircularProgressIndicator())
                   else if (eventState.events.isEmpty)
-                    Center(child: Text("No upcoming events", style: GoogleFonts.inter(color: UltimateTheme.textSub)))
+                    Container(
+                      padding: const EdgeInsets.all(24),
+                      decoration: UltimateTheme.bentoDecoration(context),
+                      child: Center(
+                        child: Text("No upcoming events",
+                            style: GoogleFonts.inter(
+                                color: UltimateTheme.textSub)),
+                      ),
+                    )
                   else
                     SizedBox(
-                      height: 180,
+                      height: 220,
                       child: ListView.builder(
                         scrollDirection: Axis.horizontal,
-                        itemCount: eventState.events.length, // Use real count
-                        itemBuilder: (context, index) => _buildFeaturedEventCard(eventState.events[index]), // Pass event
+                        physics: const BouncingScrollPhysics(),
+                        itemCount: eventState.events.length,
+                        itemBuilder: (context, index) =>
+                            _buildFeaturedEventCard(eventState.events[index]),
                       ),
                     ),
                 ],
@@ -277,30 +506,41 @@ class _UserHomeState extends ConsumerState<UserHome> {
     );
   }
 
-  Widget _buildCourseCard(String code, String name, String time, Color color) {
+  Widget _buildCourseCard(
+      String code, String name, String details, Color color) {
     return Container(
-      width: 160,
-      margin: const EdgeInsets.only(right: 12),
-      padding: const EdgeInsets.all(16),
+      width: 200,
+      margin: const EdgeInsets.only(right: 16),
+      padding: const EdgeInsets.all(20),
       decoration: BoxDecoration(
-        color: color.withOpacity(0.1),
-        borderRadius: BorderRadius.circular(20),
-        border: Border.all(color: color.withOpacity(0.2)),
+        color: color.withValues(alpha: 0.05),
+        borderRadius: BorderRadius.circular(24),
+        border: Border.all(color: color.withValues(alpha: 0.1), width: 2),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          Container(
-            padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Text(
-              code,
-              style: GoogleFonts.inter(fontSize: 10, fontWeight: FontWeight.bold, color: color),
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Container(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                decoration: BoxDecoration(
+                  color: color.withValues(alpha: 0.1),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Text(
+                  code,
+                  style: GoogleFonts.inter(
+                      fontSize: 11, fontWeight: FontWeight.bold, color: color),
+                ),
+              ),
+              Icon(Icons.more_vert_rounded,
+                  size: 18,
+                  color: UltimateTheme.textSub.withValues(alpha: 0.5)),
+            ],
           ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -309,26 +549,42 @@ class _UserHomeState extends ConsumerState<UserHome> {
                 name,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.spaceGrotesk(fontSize: 14, fontWeight: FontWeight.bold, color: UltimateTheme.textMain),
+                style: GoogleFonts.spaceGrotesk(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: UltimateTheme.textMain),
               ),
-              const SizedBox(height: 4),
-              Text(
-                time,
-                style: GoogleFonts.inter(fontSize: 10, color: UltimateTheme.textSub),
+              const SizedBox(height: 6),
+              Row(
+                children: [
+                  Icon(Icons.location_on_outlined,
+                      size: 12, color: UltimateTheme.textSub),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text(
+                      details,
+                      style: GoogleFonts.inter(
+                          fontSize: 11,
+                          color: UltimateTheme.textSub,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ),
+                ],
               ),
             ],
           )
         ],
       ),
-    );
+    ).animate().fadeIn().scale(begin: const Offset(0.9, 0.9));
   }
 
   Widget _buildFeaturedEventCard(Event event) {
-    // Determine icon/emoji based on event type or title (simple mapping)
     String emoji = "📅";
-    if (event.type.toLowerCase().contains('gala') || event.title.toLowerCase().contains('party')) {
+    if (event.type.toLowerCase().contains('gala') ||
+        event.title.toLowerCase().contains('party')) {
       emoji = "🎉";
-    } else if (event.type.toLowerCase().contains('workshop') || event.title.toLowerCase().contains('workshop')) {
+    } else if (event.type.toLowerCase().contains('workshop') ||
+        event.title.toLowerCase().contains('workshop')) {
       emoji = "🛠️";
     } else if (event.type.toLowerCase().contains('hackathon')) {
       emoji = "💻";
@@ -339,30 +595,37 @@ class _UserHomeState extends ConsumerState<UserHome> {
     }
 
     return GestureDetector(
-      onTap: () => context.push('/user_home/events'), // Navigate to events page on tap
+      onTap: () => context.push('/user_home/events'),
       child: Container(
-        width: 140,
+        width: 170,
         margin: const EdgeInsets.only(right: 16),
         decoration: BoxDecoration(
           color: Colors.white,
-          borderRadius: BorderRadius.circular(24),
-          border: Border.all(color: Colors.black.withOpacity(0.05)),
+          borderRadius: BorderRadius.circular(28),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withValues(alpha: 0.05),
+              blurRadius: 15,
+              offset: const Offset(0, 5),
+            ),
+          ],
         ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Expanded(
-              child: Container(
-                width: double.infinity,
-                decoration: BoxDecoration(
-                  color: UltimateTheme.primary.withOpacity(0.05),
-                  borderRadius: const BorderRadius.vertical(top: Radius.circular(24)),
-                ),
-                child: Center(child: Text(emoji, style: const TextStyle(fontSize: 40))),
+            Container(
+              height: 100,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: UltimateTheme.primary.withValues(alpha: 0.05),
+                borderRadius:
+                    const BorderRadius.vertical(top: Radius.circular(28)),
               ),
+              child: Center(
+                  child: Text(emoji, style: const TextStyle(fontSize: 48))),
             ),
             Padding(
-              padding: const EdgeInsets.all(12.0),
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -370,12 +633,25 @@ class _UserHomeState extends ConsumerState<UserHome> {
                     event.title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.spaceGrotesk(fontSize: 14, fontWeight: FontWeight.bold),
+                    style: GoogleFonts.spaceGrotesk(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: UltimateTheme.textMain),
                   ),
-                  const SizedBox(height: 4),
-                  Text(
-                    DateFormat('MMM dd').format(event.startTime),
-                    style: GoogleFonts.inter(fontSize: 11, color: UltimateTheme.textSub),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      const Icon(Icons.calendar_today_rounded,
+                          size: 12, color: UltimateTheme.primary),
+                      const SizedBox(width: 6),
+                      Text(
+                        DateFormat('MMM dd, yyyy').format(event.startTime),
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: UltimateTheme.textSub,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ],
                   ),
                 ],
               ),
@@ -383,6 +659,6 @@ class _UserHomeState extends ConsumerState<UserHome> {
           ],
         ),
       ),
-    );
+    ).animate().fadeIn().slideX(begin: 0.1);
   }
 }
