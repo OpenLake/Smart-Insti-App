@@ -133,18 +133,6 @@ class _UserHomeState extends ConsumerState<UserHome> {
         "color": Colors.teal,
         "route": "/user_home/campus-posts"
       },
-      {
-        "title": "Attendance",
-        "icon": Icons.qr_code,
-        "color": UltimateTheme.primary,
-        "route": "/user_home/attendance"
-      },
-      {
-        "title": "Bus",
-        "icon": Icons.directions_bus,
-        "color": UltimateTheme.secondary,
-        "route": "/user_home/transport"
-      },
     ];
 
     return Scaffold(

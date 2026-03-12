@@ -24,15 +24,11 @@ import '../screens/feedback/feedback_screen.dart';
 import '../screens/chat/chat_list_screen.dart';
 import '../screens/chat/private_chat_screen.dart';
 import '../screens/alumni/alumni_directory_screen.dart';
-import '../screens/transport/transport_screen.dart';
 import '../screens/gamification/leaderboard_screen.dart';
 import '../screens/settings/settings_screen.dart';
 import '../screens/admin/admin_analytics_screen.dart';
 import '../screens/resources/resources_screen.dart';
 import '../screens/resources/add_resource_screen.dart';
-import '../screens/attendance/attendance_history_screen.dart';
-import '../screens/attendance/qr_scanner_screen.dart';
-
 import 'academics_routes.dart';
 import 'marketplace_routes.dart';
 
@@ -166,11 +162,6 @@ final List<RouteBase> userRoutes = [
         const MaterialPage(child: AlumniDirectoryScreen()),
   ),
   GoRoute(
-    path: 'transport',
-    pageBuilder: (context, state) =>
-        const MaterialPage(child: TransportScreen()),
-  ),
-  GoRoute(
     path: 'leaderboard',
     pageBuilder: (context, state) =>
         const MaterialPage(child: LeaderboardScreen()),
@@ -194,18 +185,6 @@ final List<RouteBase> userRoutes = [
         path: 'add',
         pageBuilder: (context, state) =>
             const MaterialPage(child: AddResourceScreen()),
-      ),
-    ],
-  ),
-  GoRoute(
-    path: 'attendance',
-    pageBuilder: (context, state) =>
-        const MaterialPage(child: AttendanceHistoryScreen()),
-    routes: [
-      GoRoute(
-        path: 'scan',
-        pageBuilder: (context, state) =>
-            const MaterialPage(child: QRScannerScreen()),
       ),
     ],
   ),
