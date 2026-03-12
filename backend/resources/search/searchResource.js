@@ -4,7 +4,6 @@ import Student from "../../models/student.js";
 import Faculty from "../../models/faculty.js";
 import Event from "../../models/event.js";
 import Post from "../../models/post.js";
-import BusRoute from "../../models/bus_route.js";
 import isAuthenticated from "../../middlewares/isAuthenticated.js";
 
 const searchRouter = express.Router();
@@ -20,8 +19,7 @@ searchRouter.get("/", isAuthenticated, async (req, res) => {
 
         const regex = new RegExp(query, "i"); // Case-insensitive regex for simpler Partial match
 
-        // Parallel execution for performance
-        const [students, faculty, events, news, buses] = await Promise.all([
+        const [students, faculty, events, news] = await Promise.all([
             Student.find({ 
                 $or: [{ name: regex }, { branch: regex }, { rollNumber: regex }] 
             }).select("name branch rollNumber profilePicURI").limit(5),
@@ -36,11 +34,7 @@ searchRouter.get("/", isAuthenticated, async (req, res) => {
 
             Post.find({ 
                 $or: [{ title: regex }, { content: regex }] 
-            }).select("title type createdAt").limit(5),
-            
-            BusRoute.find({
-                $or: [{ routeName: regex }, { busNumber: regex }]
-            }).select("routeName busNumber").limit(5)
+            }).select("title type createdAt").limit(5)
         ]);
 
         res.status(200).json({
@@ -49,8 +43,7 @@ searchRouter.get("/", isAuthenticated, async (req, res) => {
                 students,
                 faculty,
                 events,
-                news,
-                buses
+                news
             }
         });
 

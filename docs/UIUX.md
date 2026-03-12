@@ -30,8 +30,7 @@
 21. [Study Resources (New)](#21-study-resources-new)
 22. [Clubs & Societies (New)](#22-clubs--societies-new)
 23. [Polls & Surveys (New)](#23-polls--surveys-new)
-24. [Attendance Tracker (New)](#24-attendance-tracker-new)
-25. [Alumni Network Screens](#25-alumni-network-screens)
+24. [Alumni Network Screens](#25-alumni-network-screens)
 26. [Admin Panel Screens](#26-admin-panel-screens)
 27. [Settings Screen](#27-settings-screen)
 28. [Component Library](#28-component-library)
@@ -67,7 +66,7 @@ On Surface Muted:#6B7A99  (Secondary text, labels)
 **Semantic Colors**
 ```
 Success:   #2E7D32   (Resolved complaints, available rooms)
-Warning:   #F57F17   (Upcoming deadlines, low attendance)
+Warning:   #F57F17   (Upcoming deadlines)
 Error:     #C62828   (Failed actions, urgent alerts)
 Info:      #0277BD   (Informational banners)
 ```
@@ -189,7 +188,6 @@ A left-side navigation drawer accessible via hamburger icon or swipe-right gestu
 - Clubs & Societies
 - Alumni Network
 - Polls & Surveys
-- Attendance
 - Broadcast
 - Notifications
 - Settings
@@ -1043,25 +1041,6 @@ Same card format (compact). Pagination via infinite scroll.
 **Closed poll:** Bars shown with percentages. Winning option has a filled bar in primary color.
 
 ---
-
-## 24. Attendance Tracker (New)
-
-### 24.1 Attendance Dashboard
-
-**AppBar:** `Attendance`
-
-**Attendance Summary Card (top):**
-Large circular gauge showing overall attendance percentage. Color: green > 75%, amber 60–75%, red < 60%.
-
-**Course-wise List:**
-Each course row:
-- Course name
-- Mini horizontal bar: present / total
-- Percentage (right-aligned)
-- Color indicator (green/amber/red based on threshold)
-- `At Risk ⚠️` tag if below 75%
-
-**Calendar Heatmap (bottom):** Small month grid with dots showing attended (green) and missed (red) days per course.
 
 ---
 

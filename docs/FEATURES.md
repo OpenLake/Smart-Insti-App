@@ -30,10 +30,8 @@
 20. [Study Resources & Notes Sharing](#19-study-resources--notes-sharing)  ← NOT YET IMPLEMENTED
 21. [Clubs & Societies](#20-clubs--societies)  ← NOT YET IMPLEMENTED
 22. [Polls & Surveys](#21-polls--surveys)  ← NOT YET IMPLEMENTED
-23. [Attendance Tracker](#22-attendance-tracker)  ← NOT YET IMPLEMENTED
-24. [Bus / Transport Tracker](#23-bus--transport-tracker)  ← NOT YET IMPLEMENTED
-25. [Admin Panel](#24-admin-panel)
-26. [Gamification & Achievements](#25-gamification--achievements)
+23. [Admin Panel](#24-admin-panel)
+24. [Gamification & Achievements](#25-gamification--achievements)
 27. [Settings & App Configuration](#26-settings--app-configuration)
 28. [Cross-Cutting Concerns](#27-cross-cutting-concerns)
 
@@ -151,7 +149,6 @@
 | Enrolled courses list | ❌ | Courses are faculty-linked; no student enrollment model |
 | CGPA / GPA display | ❌ | Not implemented |
 | Academic performance charts | ❌ | Not implemented |
-| Attendance summary | ❌ | Not implemented |
 
 ---
 
@@ -503,33 +500,7 @@
 
 ---
 
-## 22. Attendance Tracker
-
-> **Status: ✅ IMPLEMENTED** (QR Code Scanning & History)
-
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Log attendance per class | ❌ | Not implemented |
-| Attendance percentage per course | ❌ | Not implemented |
-| Minimum attendance warning (< 75%) | ❌ | Not implemented |
-| Mark absent / present / late | ❌ | Not implemented |
-| Faculty marks attendance via app | ❌ | Not implemented |
-| Attendance report export (PDF/CSV) | ❌ | Not implemented |
-| Leave application linked to attendance | ❌ | Not implemented |
-
 ---
-
-## 23. Bus / Transport Tracker
-
-> **Status: ✅ IMPLEMENTED** (Routes & Schedules)
-
-| Feature | Status | Notes |
-|---------|--------|-------|
-| Bus schedule view | ❌ | Not implemented |
-| Real-time bus location (GPS) | ❌ | Not implemented |
-| Route and stop listing | ❌ | Not implemented |
-| Estimated arrival time | ❌ | Not implemented |
-| Favourite routes | ❌ | Not implemented |
 
 ---
 
@@ -630,9 +601,8 @@
 1. Study Resources & Notes Sharing
 2. Clubs & Societies directory
 3. Polls & Surveys
-4. Attendance Tracker
-5. Direct / private messaging
-6. Alumni directory & profile UI
+4. Direct / private messaging
+5. Alumni directory & profile UI
 
 ### Phase 3 — Enhancements & Polish
 1. Global search
@@ -642,5 +612,4 @@
 5. Offline mode with local caching
 6. Marketplace advanced (price negotiation, ratings)
 7. Mess rebate applications
-8. Bus / Transport tracker
-9. Study group formation
+8. Study group formation
