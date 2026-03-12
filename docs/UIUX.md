@@ -25,7 +25,7 @@
 16. [Broadcast & Notifications](#16-broadcast--notifications)
 17. [News & Announcements](#17-news--announcements)
 18. [Quick Links Screen](#18-quick-links-screen)
-19. [Confession Wall (New)](#19-confession-wall-new)
+19. [Campus Post Wall (New)](#19-campus post-wall-new)
 20. [Marketplace (New)](#20-marketplace-new)
 21. [Study Resources (New)](#21-study-resources-new)
 22. [Clubs & Societies (New)](#22-clubs--societies-new)
@@ -78,7 +78,7 @@ Timetable:      #7B1FA2   (Purple)
 Mess Menu:      #E65100   (Deep Orange)
 Lost & Found:   #00838F   (Teal)
 Marketplace:    #2E7D32   (Green)
-Confession:     #AD1457   (Pink)
+Campus Post:     #AD1457   (Pink)
 Events:         #1565C0   (Blue)
 Complaints:     #BF360C   (Red-Orange)
 Chat:           #00695C   (Dark Teal)
@@ -144,7 +144,7 @@ Events          → event_outlined
 Chat            → chat_bubble_outline
 Profile         → person_outline
 Marketplace     → storefront_outlined
-Confession      → lock_outline
+Campus Post      → lock_outline
 Complaints      → report_problem_outlined
 Clubs           → groups_outlined
 Resources       → folder_open_outlined
@@ -164,7 +164,7 @@ The bottom bar is always visible and contains 5 slots for quick access. The sele
 ```
 Tab 1: Home        (home icon)
 Tab 2: Schedule    (calendar icon)
-Tab 3: Community   (groups icon) — Chat, Confession, Marketplace
+Tab 3: Community   (groups icon) — Chat, Campus Post, Marketplace
 Tab 4: Campus      (location_city icon) — Mess, Lost & Found, Rooms
 Tab 5: Profile     (person icon)
 ```
@@ -333,7 +333,7 @@ Each action is a small card (80×80dp) with a colored icon background (48×48dp)
 [Timetable]   [Mess Menu]
 [Events]      [Lost & Found]
 [Chatroom]    [Marketplace]
-[Confession]  [Complaints]
+[Campus Post]  [Complaints]
 ```
 
 **D. Upcoming Events (horizontal scroll card strip):**
@@ -872,9 +872,9 @@ Each link tile (card, 80dp height):
 
 ---
 
-## 19. Confession Wall (New)
+## 19. Campus Post Wall (New)
 
-**AppBar:** `Confession Wall` + info icon (taps to show community guidelines).
+**AppBar:** `Campus Post Wall` + info icon (taps to show community guidelines).
 
 **Header Banner:** Soft pink/purple gradient with a lock icon. Text: `Anonymous. Safe. Yours.`
 
@@ -882,11 +882,11 @@ Each link tile (card, 80dp height):
 
 **Category chips (horizontal scroll):** `All · Academic Stress · Crush · Funny · Rant · Advice · General`
 
-**Confession Feed (vertical cards):**
-Each confession card:
+**Campus Post Feed (vertical cards):**
+Each campus post card:
 - **No name / avatar shown** — replaced by random anonymous avatar (auto-generated geometric pattern avatar using post ID as seed)
 - Category chip (top-right)
-- Confession text (Body Large, max 5 lines with `Read more` expand)
+- Campus Post text (Body Large, max 5 lines with `Read more` expand)
 - Time ago label (e.g., `2 hours ago`)
 - Reaction row: 👍 Like count · 😂 Haha · 😢 Sad · 🔥 Relatable
 - Reply count chip (tap to expand inline replies)
@@ -894,14 +894,14 @@ Each confession card:
 
 **FAB (bottom-right):** Quill pen icon `Confess`
 
-**New Confession Bottom Sheet (opens from FAB):**
+**New Campus Post Bottom Sheet (opens from FAB):**
 - Category selector (chip grid, must choose one)
 - Text area (max 500 chars with counter)
 - Switches: `Show replies` / `Sensitive content warning`
 - Disclaimer text: `Your identity is never revealed.`
 - `Post Anonymously` primary button
 
-**Tap on confession:** Opens thread view (same card at top + replies below in a nested list).
+**Tap on campus post:** Opens thread view (same card at top + replies below in a nested list).
 
 ---
 

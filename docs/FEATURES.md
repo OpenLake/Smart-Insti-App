@@ -24,7 +24,7 @@
 14. [Broadcast & Notifications](#13-broadcast--notifications)
 15. [News & Announcements](#14-news--announcements)
 16. [Quick Links](#15-quick-links)
-17. [Confession Wall](#16-confession-wall)  ← NOT YET IMPLEMENTED
+17. [Campus Post Wall](#16-campus post-wall)  ← NOT YET IMPLEMENTED
 18. [Marketplace](#17-marketplace)  ← NOT YET IMPLEMENTED
 19. [Alumni Network](#18-alumni-network)
 20. [Study Resources & Notes Sharing](#19-study-resources--notes-sharing)  ← NOT YET IMPLEMENTED
@@ -377,27 +377,29 @@
 
 ---
 
-## 16. Confession Wall
+## 16. Campus Post Wall
 
 > **Status: ✅ IMPLEMENTED**
 
 | Feature | Status | Notes |
 |---------|--------|-------|
 | Anonymous post submission | ❌ | No anonymity layer exists |
-| Confession feed view | ❌ | No dedicated screen |
-| Like / react to confessions | ❌ | Not implemented |
-| Report inappropriate confession | ❌ | Not implemented |
+| Campus Post feed view | ❌ | No dedicated screen |
+| Like / react to campus posts | ❌ | Not implemented |
+| Report inappropriate campus post | ❌ | Not implemented |
 | Admin moderation queue | ❌ | Not implemented |
 | Category tags (Academic Stress, Crush, Funny, Rant, Advice) | ❌ | Not implemented |
-| Time-limited confessions (auto-delete after 24h / 7d) | ❌ | Not implemented |
-| Reply to confessions (also anonymous) | ❌ | Not implemented |
+| Time-limited campus posts (auto-delete after 24h / 7d) | ❌ | Not implemented |
+| Reply to campus posts (also anonymous) | ❌ | Not implemented |
+| Time-limited Campus Posts (auto-delete after 24h / 7d) | ❌ | Not implemented |
+| Reply to Campus Posts (also anonymous) | ❌ | Not implemented |
 | Keyword filtering / profanity detection | ❌ | Not implemented |
-| Confession of the day (most liked) | ❌ | Not implemented |
+| Campus Post of the day (most liked) | ❌ | Not implemented |
 
 **Implementation Notes:**
 - Extend `post.js` model with `isAnonymous: Boolean`, `expiresAt: Date`, `category: String`, `reports: []`
-- Add confession-specific API routes under `/confessions`
-- Frontend: new `confession_wall.dart` screen with anonymous post form and masonry/feed layout
+- Add campus-post-specific API routes under `/campus-posts`
+- Frontend: new `campus_post_wall_screen.dart` screen with anonymous post form and masonry/feed layout
 
 ---
 
@@ -618,7 +620,7 @@
 ### Phase 1 — Critical Gaps (Fix Immediately)
 1. Real-time chat via WebSocket (Socket.io)
 2. Push notifications (Firebase Cloud Messaging)
-3. Confession Wall (full anonymous posting)
+3. Campus Post Wall (full anonymous posting)
 4. Marketplace (buy/sell/give)
 5. Academic Calendar screen with event markers
 6. Admin complaint management UI

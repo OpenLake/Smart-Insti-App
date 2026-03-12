@@ -954,8 +954,8 @@ backend/resources/notifications/notificationResource.js
 ```
 
 **Adaptation required:**
-- Extend `reportedItemType` to include `'Confession'` for the Confession Wall moderation
-- This is what powers the "🚩 Report" flag on marketplace listings AND confession wall posts
+- Extend `reportedItemType` to include `'Campus Post'` for the Campus Post Wall moderation
+- This is what powers the "🚩 Report" flag on marketplace listings AND campus post wall posts
 - Admin complaint management in Smart Insti App can use this same report system
 
 **Files to create:**
@@ -989,7 +989,7 @@ ActivityLog.getUserActivities(userId, limit)
 ```
 
 **Adaptation required:**
-- Extend `activityType` enum with Smart Insti App events: `'complaint_filed'`, `'achievement_submitted'`, `'skill_claimed'`, `'event_registered'`, `'confession_posted'`
+- Extend `activityType` enum with Smart Insti App events: `'complaint_filed'`, `'achievement_submitted'`, `'skill_claimed'`, `'event_registered'`, `'campus post_posted'`
 - Admin audit trail (from FEATURES.md wishlist) is built on top of this model
 - TTL of 6 months is appropriate; keep as-is
 
@@ -1257,7 +1257,7 @@ npm install mailgen
 | 19 | Vendor / Club Storefront | MARKETPLACE | 🟡 Medium | Medium | Club merch + food stalls |
 | 20 | Wishlist | MARKETPLACE | 🟡 Medium | Low | Save marketplace items |
 | 21 | Reviews & Ratings | MARKETPLACE | 🟡 Medium | Low | Seller trust system |
-| 22 | Reports / Moderation | MARKETPLACE | 🟡 Medium | Low | Flag listings + confessions |
+| 22 | Reports / Moderation | MARKETPLACE | 🟡 Medium | Low | Flag listings + campus posts |
 | 23 | Activity Log | MARKETPLACE | 🟢 Low | Low | Admin audit trail |
 | 24 | Room Booking via Events | COSA-DB | 🟢 Low | Low | Room request workflow |
 | 25 | Email Templates (mailgen) | MARKETPLACE | 🟢 Low | Low | Better email UX |
