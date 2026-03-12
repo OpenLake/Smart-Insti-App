@@ -4,53 +4,53 @@ import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
-import 'package:smart_insti_app/provider/confession_provider.dart';
-import '../../models/confession.dart';
+import 'package:smart_insti_app/provider/campus_post_provider.dart';
+import '../../models/campus_post.dart';
 import 'dart:math';
 
-class ConfessionWallScreen extends StatelessWidget {
-  const ConfessionWallScreen({super.key});
+class CampusPostWallScreen extends StatelessWidget {
+  const CampusPostWallScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: UltimateTheme.backgroundColor,
       appBar: AppBar(
-        title: Text("Confession Wall",
-            style: GoogleFonts.caveat(
+        title: Text("Ask Your Campus",
+            style: GoogleFonts.spaceGrotesk(
                 color: UltimateTheme.textColor,
                 fontWeight: FontWeight.bold,
-                fontSize: 28)),
-        backgroundColor: UltimateTheme.surfaceColor,
+                fontSize: 24)),
+        backgroundColor: Colors.white,
         elevation: 0,
         iconTheme: const IconThemeData(color: UltimateTheme.textColor),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => context.push('/user_home/confessions/add'),
-        backgroundColor: UltimateTheme.primaryColor,
+        onPressed: () => context.push('/user_home/campus-posts/add'),
+        backgroundColor: UltimateTheme.primary,
         child: const Icon(Icons.create, color: Colors.white),
       ),
-      body: const ConfessionListWidget(),
+      body: const CampusPostListWidget(),
     );
   }
 }
 
-class ConfessionListWidget extends ConsumerStatefulWidget {
-  const ConfessionListWidget({super.key});
+class CampusPostListWidget extends ConsumerStatefulWidget {
+  const CampusPostListWidget({super.key});
 
   @override
-  ConsumerState<ConfessionListWidget> createState() =>
-      _ConfessionListWidgetState();
+  ConsumerState<CampusPostListWidget> createState() =>
+      _CampusPostListWidgetState();
 }
 
-class _ConfessionListWidgetState extends ConsumerState<ConfessionListWidget> {
+class _CampusPostListWidgetState extends ConsumerState<CampusPostListWidget> {
   final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      ref.read(confessionProvider.notifier).loadConfessions(refresh: true);
+      ref.read(campusPostProvider.notifier).loadPosts(refresh: true);
     });
     _scrollController.addListener(_onScroll);
   }
@@ -64,25 +64,25 @@ class _ConfessionListWidgetState extends ConsumerState<ConfessionListWidget> {
   void _onScroll() {
     if (_scrollController.position.pixels >=
         _scrollController.position.maxScrollExtent - 200) {
-      ref.read(confessionProvider.notifier).loadConfessions();
+      ref.read(campusPostProvider.notifier).loadPosts();
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final state = ref.watch(confessionProvider);
+    final state = ref.watch(campusPostProvider);
 
     return state.isLoading
         ? const Center(child: CircularProgressIndicator())
-        : state.confessions.isEmpty
+        : state.posts.isEmpty
             ? Center(
-                child: Text("No confessions yet. Be the first!",
+                child: Text("No posts yet. Be the first!",
                     style:
-                        GoogleFonts.caveat(fontSize: 24, color: Colors.grey)))
+                        GoogleFonts.spaceGrotesk(fontSize: 20, color: Colors.grey)))
             : RefreshIndicator(
                 onRefresh: () async => ref
-                    .read(confessionProvider.notifier)
-                    .loadConfessions(refresh: true),
+                    .read(campusPostProvider.notifier)
+                    .loadPosts(refresh: true),
                 child: CustomScrollView(
                   controller: _scrollController,
                   slivers: [
@@ -92,9 +92,9 @@ class _ConfessionListWidgetState extends ConsumerState<ConfessionListWidget> {
                         crossAxisCount: 2,
                         mainAxisSpacing: 16,
                         crossAxisSpacing: 16,
-                        childCount: state.confessions.length,
+                        childCount: state.posts.length,
                         itemBuilder: (context, index) {
-                          return _buildConfessionCard(state.confessions[index]);
+                          return _buildPostCard(state.posts[index]);
                         },
                       ),
                     ),
@@ -110,8 +110,8 @@ class _ConfessionListWidgetState extends ConsumerState<ConfessionListWidget> {
               );
   }
 
-  Widget _buildConfessionCard(Confession confession) {
-    Color cardColor = Color(int.parse(confession.backgroundColor));
+  Widget _buildPostCard(CampusPost post) {
+    Color cardColor = Color(int.parse(post.backgroundColor));
     Color textColor = Colors.black87;
 
     return Container(
@@ -128,9 +128,9 @@ class _ConfessionListWidgetState extends ConsumerState<ConfessionListWidget> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            confession.content,
-            style: GoogleFonts.caveat(
-                fontSize: 18, color: textColor, fontWeight: FontWeight.w600),
+            post.content,
+            style: GoogleFonts.spaceGrotesk(
+                fontSize: 16, color: textColor, fontWeight: FontWeight.w600),
           ),
           const SizedBox(height: 12),
           Row(
@@ -140,24 +140,24 @@ class _ConfessionListWidgetState extends ConsumerState<ConfessionListWidget> {
                 children: [
                   GestureDetector(
                     onTap: () => ref
-                        .read(confessionProvider.notifier)
-                        .likeConfession(confession.id),
+                        .read(campusPostProvider.notifier)
+                        .likePost(post.id),
                     child: Icon(
-                        confession.isLiked
+                        post.isLiked
                             ? Icons.favorite
                             : Icons.favorite_border,
                         size: 20,
                         color:
-                            confession.isLiked ? Colors.red : Colors.black54),
+                            post.isLiked ? Colors.red : Colors.black54),
                   ),
                   const SizedBox(width: 4),
-                  Text("${confession.likeCount}",
+                  Text("${post.likeCount}",
                       style: GoogleFonts.outfit(
                           fontSize: 12, color: Colors.black54)),
                 ],
               ),
               GestureDetector(
-                onTap: () => _reportConfession(confession.id),
+                onTap: () => _reportPost(post.id),
                 child: const Icon(Icons.flag_outlined,
                     size: 18, color: Colors.black45),
               )
@@ -168,13 +168,13 @@ class _ConfessionListWidgetState extends ConsumerState<ConfessionListWidget> {
     );
   }
 
-  void _reportConfession(String id) {
+  void _reportPost(String id) {
     showDialog(
         context: context,
         builder: (context) => AlertDialog(
-              title: const Text("Report Confession"),
+              title: const Text("Report Post"),
               content: const Text(
-                  "Are you sure you want to report this confession?"),
+                  "Are you sure you want to report this campus post?"),
               actions: [
                 TextButton(
                     onPressed: () => Navigator.pop(context),
@@ -182,8 +182,8 @@ class _ConfessionListWidgetState extends ConsumerState<ConfessionListWidget> {
                 TextButton(
                     onPressed: () {
                       ref
-                          .read(confessionProvider.notifier)
-                          .reportConfession(id);
+                          .read(campusPostProvider.notifier)
+                          .reportPost(id);
                       Navigator.pop(context);
                       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
                           content: Text("Reported successfully")));

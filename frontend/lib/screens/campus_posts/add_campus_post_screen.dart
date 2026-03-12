@@ -3,17 +3,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
-import 'package:smart_insti_app/provider/confession_provider.dart';
+import 'package:smart_insti_app/provider/campus_post_provider.dart';
 
-class AddConfessionScreen extends ConsumerStatefulWidget {
-  const AddConfessionScreen({super.key});
+class AddCampusPostScreen extends ConsumerStatefulWidget {
+  const AddCampusPostScreen({super.key});
 
   @override
-  ConsumerState<AddConfessionScreen> createState() =>
-      _AddConfessionScreenState();
+  ConsumerState<AddCampusPostScreen> createState() =>
+      _AddCampusPostScreenState();
 }
 
-class _AddConfessionScreenState extends ConsumerState<AddConfessionScreen> {
+class _AddCampusPostScreenState extends ConsumerState<AddCampusPostScreen> {
   final TextEditingController _controller = TextEditingController();
   String _selectedColor = "0xFFE0F7FA"; // Default Light Cyan
   bool _isPosting = false;
@@ -38,9 +38,9 @@ class _AddConfessionScreenState extends ConsumerState<AddConfessionScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text("Pick a color",
-                style: GoogleFonts.outfit(fontWeight: FontWeight.bold)),
-            const SizedBox(height: 10),
+            Text("Choose a theme",
+                style: GoogleFonts.spaceGrotesk(fontWeight: FontWeight.bold, fontSize: 18)),
+            const SizedBox(height: 12),
             SizedBox(
               height: 50,
               child: ListView.builder(
@@ -60,7 +60,7 @@ class _AddConfessionScreenState extends ConsumerState<AddConfessionScreen> {
                         shape: BoxShape.circle,
                         border: _selectedColor == colorHex
                             ? Border.all(
-                                color: UltimateTheme.primaryColor, width: 2)
+                                color: UltimateTheme.primary, width: 2)
                             : null,
                         boxShadow: [
                           BoxShadow(
@@ -71,7 +71,7 @@ class _AddConfessionScreenState extends ConsumerState<AddConfessionScreen> {
                       ),
                       child: _selectedColor == colorHex
                           ? const Icon(Icons.check,
-                              size: 20, color: Colors.black54)
+                                size: 20, color: Colors.black54)
                           : null,
                     ),
                   );
@@ -96,10 +96,10 @@ class _AddConfessionScreenState extends ConsumerState<AddConfessionScreen> {
                   controller: _controller,
                   maxLines: null,
                   maxLength: 500,
-                  style: GoogleFonts.caveat(
-                      fontSize: 24, height: 1.5, color: Colors.black87),
+                  style: GoogleFonts.spaceGrotesk(
+                      fontSize: 18, height: 1.5, color: Colors.black87),
                   decoration: const InputDecoration(
-                    hintText: "Type your confession here...",
+                    hintText: "What's on your mind?",
                     border: InputBorder.none,
                     counterText: "",
                   ),
@@ -107,24 +107,25 @@ class _AddConfessionScreenState extends ConsumerState<AddConfessionScreen> {
               ),
             ),
             const SizedBox(height: 10),
-            Text("Confessions are anonymous but moderated. Be kind.",
-                style: GoogleFonts.outfit(color: Colors.grey, fontSize: 12)),
+            Text("Posts are anonymous but moderated. Be kind.",
+                style: GoogleFonts.spaceGrotesk(color: Colors.grey, fontSize: 13, fontWeight: FontWeight.w500)),
             const SizedBox(height: 24),
             SizedBox(
               width: double.infinity,
-              height: 50,
+              height: 56,
               child: ElevatedButton(
-                onPressed: _isPosting ? null : _postConfession,
+                onPressed: _isPosting ? null : _postCampusPost,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: UltimateTheme.primary,
+                  elevation: 0,
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12)),
+                      borderRadius: BorderRadius.circular(16)),
                 ),
                 child: _isPosting
                     ? const CircularProgressIndicator(color: Colors.white)
-                    : Text("Post Confession",
-                        style: GoogleFonts.outfit(
-                            color: Colors.white, fontWeight: FontWeight.bold)),
+                    : Text("Post Anonymously",
+                        style: GoogleFonts.spaceGrotesk(
+                            color: Colors.white, fontWeight: FontWeight.bold, fontSize: 16)),
               ),
             ),
           ],
@@ -133,24 +134,24 @@ class _AddConfessionScreenState extends ConsumerState<AddConfessionScreen> {
     );
   }
 
-  Future<void> _postConfession() async {
+  Future<void> _postCampusPost() async {
     if (_controller.text.trim().isEmpty) return;
 
     setState(() => _isPosting = true);
 
     final success = await ref
-        .read(confessionProvider.notifier)
-        .createConfession(_controller.text.trim(), _selectedColor);
+        .read(campusPostProvider.notifier)
+        .createPost(_controller.text.trim(), _selectedColor);
 
     setState(() => _isPosting = false);
 
     if (success && mounted) {
       context.pop();
       ScaffoldMessenger.of(context)
-          .showSnackBar(const SnackBar(content: Text("Confession posted!")));
+          .showSnackBar(const SnackBar(content: Text("Post shared on campus!")));
     } else if (mounted) {
       ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text("Failed to post confession")));
+          const SnackBar(content: Text("Failed to share post")));
     }
   }
 }

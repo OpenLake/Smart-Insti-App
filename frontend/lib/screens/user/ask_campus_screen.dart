@@ -4,7 +4,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:go_router/go_router.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
-import '../confessions/confession_wall_screen.dart';
+import '../campus_posts/campus_post_wall_screen.dart';
 import '../polls/polls_screen.dart';
 
 class AskYourCampusScreen extends ConsumerStatefulWidget {
@@ -66,7 +66,7 @@ class _AskYourCampusScreenState extends ConsumerState<AskYourCampusScreen>
               unselectedLabelStyle: GoogleFonts.spaceGrotesk(
                   fontWeight: FontWeight.w600, fontSize: 15),
               tabs: const [
-                Tab(text: "Confessions"),
+                Tab(text: "Campus Posts"),
                 Tab(text: "Campus Polls"),
               ],
             ),
@@ -75,7 +75,7 @@ class _AskYourCampusScreenState extends ConsumerState<AskYourCampusScreen>
             child: TabBarView(
               controller: _tabController,
               children: const [
-                ConfessionListWidget(),
+                CampusPostListWidget(),
                 PollListWidget(),
               ],
             ),
@@ -86,7 +86,7 @@ class _AskYourCampusScreenState extends ConsumerState<AskYourCampusScreen>
         padding: const EdgeInsets.only(bottom: 90),
         child: _tabController.index == 0
             ? FloatingActionButton.extended(
-                onPressed: () => context.push('/user_home/confessions/add'),
+                onPressed: () => context.push('/user_home/campus-posts/add'),
                 backgroundColor: UltimateTheme.primary,
                 elevation: 4,
                 icon: const Icon(Icons.favorite_rounded, color: Colors.white),

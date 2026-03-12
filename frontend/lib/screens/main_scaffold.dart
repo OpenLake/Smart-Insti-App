@@ -59,9 +59,9 @@ class MainScaffold extends ConsumerWidget {
       title = RouteConstants.routeTitles[matchedRoute] ?? "IIT Bhilai";
     }
 
-    if (location.contains('/confessions') || location.contains('/polls')) {
+    if (location.contains('/campus-posts') || location.contains('/polls')) {
       // AskYourCampus screen handles both, but we can be more specific
-      if (location.contains('/confessions')) title = "Campus Confessions";
+      if (location.contains('/campus-posts')) title = "Campus Posts";
       if (location.contains('/polls')) title = "Campus Polls";
     }
 
@@ -277,7 +277,7 @@ class MainScaffold extends ConsumerWidget {
               context, '/', Icons.home_outlined, Icons.home_rounded, "Home"),
           _buildNavItem(context, '/user_home/news', Icons.explore_outlined,
               Icons.explore_rounded, "Feed"),
-          _buildNavItem(context, '/user_home/confessions',
+          _buildNavItem(context, '/user_home/campus-posts',
               Icons.favorite_outline, Icons.favorite_rounded, "Campus"),
           _buildNavItem(context, '/user_home/events', Icons.search_outlined,
               Icons.search_rounded, "Explore"),
@@ -295,7 +295,7 @@ class MainScaffold extends ConsumerWidget {
     bool isSelected = false;
     if (route == '/' || route == '/user_home') {
       bool isOtherTab = location.contains('/news') ||
-          location.contains('/confessions') ||
+          location.contains('/campus-posts') ||
           location.contains('/events') ||
           location.contains('/student_profile') ||
           location.contains('/faculty_profile') ||

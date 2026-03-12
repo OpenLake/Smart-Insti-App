@@ -11,7 +11,7 @@ class RouteConstants {
     '/user_home/timetables/editor': "Timetable Editor",
     '/user_home/clubs': "Student Bodies",
     '/user_home/favorites': "My Wishlist",
-    '/user_home/confessions': "Campus Confessions",
+    '/user_home/campus-posts': "Campus Posts",
     '/user_home/polls': "Campus Polls",
     '/user_home/broadcast': "Broadcast",
     '/user_home/chat_room': "Community Chat",

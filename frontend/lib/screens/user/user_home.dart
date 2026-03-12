@@ -128,10 +128,10 @@ class _UserHomeState extends ConsumerState<UserHome> {
         "route": "/user_home/polls"
       },
       {
-        "title": "Confessions",
-        "icon": Icons.favorite_outline,
-        "color": Colors.pinkAccent,
-        "route": "/user_home/confessions"
+        "title": "Campus Posts",
+        "icon": Icons.chat_bubble_outline_rounded,
+        "color": Colors.teal,
+        "route": "/user_home/campus-posts"
       },
       {
         "title": "Attendance",

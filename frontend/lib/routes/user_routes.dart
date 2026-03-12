@@ -14,7 +14,7 @@ import '../screens/clubs/clubs_directory_screen.dart';
 import '../screens/clubs/club_profile_screen.dart';
 import '../screens/marketplace/wishlist_screen.dart';
 import '../screens/user/ask_campus_screen.dart';
-import '../screens/confessions/add_confession_screen.dart';
+import '../screens/campus_posts/add_campus_post_screen.dart';
 import '../screens/polls/create_poll_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
 import '../screens/user/broadcast.dart';
@@ -100,14 +100,14 @@ final List<RouteBase> userRoutes = [
         const MaterialPage(child: WishlistScreen()),
   ),
   GoRoute(
-      path: 'confessions',
+      path: 'campus-posts',
       pageBuilder: (context, state) =>
           const MaterialPage(child: AskYourCampusScreen()),
       routes: [
         GoRoute(
           path: 'add',
           pageBuilder: (context, state) =>
-              const MaterialPage(child: AddConfessionScreen()),
+              const MaterialPage(child: AddCampusPostScreen()),
         ),
       ]),
   GoRoute(
