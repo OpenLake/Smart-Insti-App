@@ -2,12 +2,12 @@ import 'package:dio/dio.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:logger/logger.dart';
 import '../constants/constants.dart';
-import '../models/confession.dart';
+import '../models/campus_post.dart';
 
-final confessionRepositoryProvider =
-    Provider<ConfessionRepository>((ref) => ConfessionRepository());
+final campusPostRepositoryProvider =
+    Provider<CampusPostRepository>((ref) => CampusPostRepository());
 
-class ConfessionRepository {
+class CampusPostRepository {
   final Dio _client = Dio(
     BaseOptions(
       baseUrl: AppConstants.apiBaseUrl,
@@ -16,14 +16,14 @@ class ConfessionRepository {
   );
   final Logger _logger = Logger();
 
-  Future<List<Confession>> getConfessions(String token, {int page = 1}) async {
+  Future<List<CampusPost>> getCampusPosts(String token, {int page = 1}) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
       final response =
-          await _client.get('/confessions', queryParameters: {'page': page});
+          await _client.get('/campus-posts', queryParameters: {'page': page});
       if (response.data['status'] == true) {
         final List<dynamic> data = response.data['data'];
-        return data.map((e) => Confession.fromJson(e)).toList();
+        return data.map((e) => CampusPost.fromJson(e)).toList();
       } else {
         return [];
       }
@@ -33,11 +33,11 @@ class ConfessionRepository {
     }
   }
 
-  Future<bool> createConfession(
+  Future<bool> createCampusPost(
       String content, String backgroundColor, String token) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
-      final response = await _client.post('/confessions',
+      final response = await _client.post('/campus-posts',
           data: {'content': content, 'backgroundColor': backgroundColor});
       return response.data['status'] == true;
     } catch (e) {
@@ -46,10 +46,10 @@ class ConfessionRepository {
     }
   }
 
-  Future<bool> likeConfession(String id, String token) async {
+  Future<bool> likeCampusPost(String id, String token) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
-      final response = await _client.put('/confessions/$id/like');
+      final response = await _client.put('/campus-posts/$id/like');
       return response.data['status'] == true;
     } catch (e) {
       _logger.e(e);
@@ -57,10 +57,10 @@ class ConfessionRepository {
     }
   }
 
-  Future<bool> reportConfession(String id, String token) async {
+  Future<bool> reportCampusPost(String id, String token) async {
     _client.options.headers['authorization'] = 'Bearer $token';
     try {
-      final response = await _client.post('/confessions/$id/report');
+      final response = await _client.post('/campus-posts/$id/report');
       return response.data['status'] == true;
     } catch (e) {
       _logger.e(e);

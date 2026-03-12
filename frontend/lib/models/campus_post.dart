@@ -1,4 +1,4 @@
-class Confession {
+class CampusPost {
   final String id;
   final String content;
   final String backgroundColor; // e.g. "0xFFE0F7FA"
@@ -6,7 +6,7 @@ class Confession {
   final bool isLiked;
   final int likeCount;
 
-  Confession({
+  CampusPost({
     required this.id,
     required this.content,
     required this.backgroundColor,
@@ -15,8 +15,8 @@ class Confession {
     required this.likeCount,
   });
 
-  factory Confession.fromJson(Map<String, dynamic> json) {
-    return Confession(
+  factory CampusPost.fromJson(Map<String, dynamic> json) {
+    return CampusPost(
       id: json['_id'],
       content: json['content'],
       backgroundColor: json['backgroundColor'] ?? '0xFFFFFFFF',
