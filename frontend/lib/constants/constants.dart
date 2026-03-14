@@ -5,7 +5,7 @@ class AppConstants {
   static const String appName = "Smart Insti App";
   static const Color seedColor = Colors.lightBlueAccent;
   static String get apiBaseUrl =>
-      dotenv.env['API_URL'] ?? "http://localhost:3000";
+      dotenv.env['API_URL'] ?? "http://localhost:8000";
   static String get hubApiBaseUrl =>
       dotenv.env['HUB_API_URL'] ?? "https://hub.openlake.in/api/v1";
 }
