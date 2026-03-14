@@ -121,7 +121,7 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
           ),
           selectedWeekdayIndex: 0,
           selectedMealTypeIndex: 0,
-          loadingState: LoadingState.idle,
+          loadingState: LoadingState.progress,
         )) {
     loadMenus();
   }
@@ -226,88 +226,42 @@ class MenuStateNotifier extends StateNotifier<MenuState> {
   void loadMenus() async {
     state = state.copyWith(loadingState: LoadingState.progress);
 
-    // 1. Load from Repository
     Map<String, MessMenu> menuDictionary = {};
+    LoadingState finalLoadingState = LoadingState.success;
+
     try {
       final messMenus = await _messMenuRepository.getMessMenu();
+      if (messMenus.isEmpty) {
+        _logger.w("No mess menus returned from repository");
+      }
       for (var menu in messMenus) {
         menuDictionary[menu.kitchenName] = menu;
       }
     } catch (e) {
       _logger.e("Failed to load menus from repository: $e");
-      state = state.copyWith(loadingState: LoadingState.error);
-      // Continue to try loading local asset even if repo fails
-    }
-
-    // 2. Load Local Asset (Jan Menu)
-    try {
-      String tsvContent = await rootBundle.loadString('assets/menu_jan.tsv');
-      MessMenu localMenu = MenuParser.parseTsv(tsvContent);
-      localMenu.kitchenName = "Jan Menu (TSV)"; // Distinct name
-      menuDictionary[localMenu.kitchenName] = localMenu;
-    } catch (e) {
-      _logger.e("Failed to load local menu asset: $e");
+      finalLoadingState = LoadingState.error;
     }
 
     String? selectedViewMenu =
         menuDictionary.isNotEmpty ? menuDictionary.keys.first : null;
+    
     state.kitchenNameController.clear();
 
     state = state.copyWith(
       selectedMealTypeIndex: 0,
       selectedWeekdayIndex: 0,
       selectedViewMenu: selectedViewMenu,
+      messMenus: menuDictionary,
+      loadingState: (menuDictionary.isEmpty && finalLoadingState == LoadingState.success) 
+          ? LoadingState.success // It's a success, just empty
+          : finalLoadingState,
       currentMenu: selectedViewMenu != null
           ? menuDictionary[selectedViewMenu]
           : MessMenu(
               kitchenName: '',
-              messMenu: <String, Map<String, List<String>>>{
-                  'Sunday': <String, List<String>>{
-                    'Breakfast': <String>[],
-                    'Lunch': <String>[],
-                    'Snacks': <String>[],
-                    'Dinner': <String>[],
-                  },
-                  'Monday': <String, List<String>>{
-                    'Breakfast': <String>[],
-                    'Lunch': <String>[],
-                    'Snacks': <String>[],
-                    'Dinner': <String>[],
-                  },
-                  'Tuesday': <String, List<String>>{
-                    'Breakfast': <String>[],
-                    'Lunch': <String>[],
-                    'Snacks': <String>[],
-                    'Dinner': <String>[],
-                  },
-                  'Wednesday': <String, List<String>>{
-                    'Breakfast': <String>[],
-                    'Lunch': <String>[],
-                    'Snacks': <String>[],
-                    'Dinner': <String>[],
-                  },
-                  'Thursday': <String, List<String>>{
-                    'Breakfast': <String>[],
-                    'Lunch': <String>[],
-                    'Snacks': <String>[],
-                    'Dinner': <String>[],
-                  },
-                  'Friday': <String, List<String>>{
-                    'Breakfast': <String>[],
-                    'Lunch': <String>[],
-                    'Snacks': <String>[],
-                    'Dinner': <String>[],
-                  },
-                  'Saturday': <String, List<String>>{
-                    'Breakfast': <String>[],
-                    'Lunch': <String>[],
-                    'Snacks': <String>[],
-                    'Dinner': <String>[],
-                  },
-                }),
+              messMenu: MessMenuConstants.emptyMenu, // Use constant
+            ),
     );
-    state = state.copyWith(
-        messMenus: menuDictionary, loadingState: LoadingState.success);
   }
 
   void resetMenu() {

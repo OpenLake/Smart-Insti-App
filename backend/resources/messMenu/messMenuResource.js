@@ -10,69 +10,16 @@ const messMenuRouter = express.Router();
  * @desc Update an existing mess menu
  */
 //working
-messMenuRouter.put("/:id", tokenRequired, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const { messMenu } = req.body;
+// Resource logic disabled during transition to Supabase SQL.
+// Endpoint: PUT /mess-menu/:id
+// Endpoint: DELETE /mess-menu/:id
 
-    if (!messMenu) {
-      return res
-        .status(400)
-        .json({ status: false, message: messages.invalidData });
-    }
-
-    const updatedMenu = await MessMenu.findByIdAndUpdate(
-      id,
-      { messMenu },
-      { new: true }
-    );
-
-    if (!updatedMenu) {
-      return res
-        .status(404)
-        .json({ status: false, message: messages.messMenuNotFound });
-    }
-
-    res.status(200).json({
-      status: true,
-      message: messages.messMenuUpdated,
-      data: updatedMenu,
-    });
-  } catch (error) {
-    console.error("Error updating mess menu:", error);
-    res
-      .status(500)
-      .json({ status: false, message: messages.internalServerError });
-  }
+messMenuRouter.put("/:id", (req, res) => {
+  res.status(501).json({ status: false, message: "Use the admin panel for mess menu updates." });
 });
 
-/**
- * @route DELETE /mess-menu/:id
- * @desc Delete a mess menu by ID
- */
-//working
-messMenuRouter.delete("/:id", tokenRequired, async (req, res) => {
-  try {
-    const { id } = req.params;
-    const deletedMenu = await MessMenu.findByIdAndDelete(id);
-
-    if (!deletedMenu) {
-      return res
-        .status(404)
-        .json({ status: false, message: messages.messMenuNotFound });
-    }
-
-    res.status(200).json({
-      status: true,
-      message: "Mess menu successfully deleted",
-      data: deletedMenu,
-    }); // 204 No Content (successful deletion)
-  } catch (error) {
-    console.error("Error deleting mess menu:", error);
-    res
-      .status(500)
-      .json({ status: false, message: messages.internalServerError });
-  }
+messMenuRouter.delete("/:id", (req, res) => {
+  res.status(501).json({ status: false, message: "Use the admin panel for mess menu deletions." });
 });
 
 export default messMenuRouter;

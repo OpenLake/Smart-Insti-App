@@ -24,10 +24,19 @@ class MessMenuRepository {
       final response = await _client.get('/mess-menus');
       // Backend returns { status: true, data: [...] }
       final data = response.data;
+      _logger.i("Raw API response: $data");
       List<dynamic> list =
           (data is Map && data.containsKey('data')) ? data['data'] : data;
 
-      List<MessMenu> messMenus = list.map((e) => MessMenu.fromJson(e)).toList();
+      List<MessMenu> messMenus = list.map((e) {
+        try {
+          return MessMenu.fromJson(e);
+        } catch (ex) {
+          _logger.e("Error parsing individual menu: $ex, Data: $e");
+          rethrow;
+        }
+      }).toList();
+      _logger.i("Parsed ${messMenus.length} mess menus");
       return messMenus;
     } catch (e) {
       _logger.e(e);
