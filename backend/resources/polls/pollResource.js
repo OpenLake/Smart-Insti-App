@@ -51,7 +51,7 @@ pollRouter.get("/active", isAuthenticated, async (req, res) => {
             expiry: { $gt: new Date() } 
         })
         .sort({ createdAt: -1 })
-        .populate("createdBy", "name"); // Populate creator name
+        .populate("createdBy", "name email supabaseId"); // Populate creator details
 
         // Add 'hasVoted' flag for the current user
         const pollsWithStatus = polls.map(poll => {
