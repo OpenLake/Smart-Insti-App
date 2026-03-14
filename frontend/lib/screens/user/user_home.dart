@@ -17,6 +17,9 @@ import '../search/search_screen.dart';
 import 'package:smart_insti_app/provider/user_bundle_provider.dart';
 import 'package:smart_insti_app/provider/acadmap_provider.dart';
 import 'package:smart_insti_app/models/acad_course.dart';
+import 'package:smart_insti_app/models/acad_timetable.dart';
+import 'package:smart_insti_app/utils/timetable_utils.dart';
+import 'package:smart_insti_app/components/course_detail_sheet.dart';
 
 class UserHome extends ConsumerStatefulWidget {
   const UserHome({super.key});
@@ -32,6 +35,7 @@ class _UserHomeState extends ConsumerState<UserHome> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       ref.read(eventProvider.notifier).loadEvents();
       ref.read(acadmapProvider.notifier).fetchCourses();
+      ref.read(acadmapProvider.notifier).fetchTimetable();
       await ref.read(authProvider.notifier).getCurrentUser(context);
     });
   }
@@ -259,7 +263,7 @@ class _UserHomeState extends ConsumerState<UserHome> {
             ),
           ),
 
-          // 2. Courses Section
+          // 2. Schedule Section
           SliverToBoxAdapter(
             child: Padding(
               padding: const EdgeInsets.fromLTRB(24, 8, 24, 16),
@@ -267,14 +271,15 @@ class _UserHomeState extends ConsumerState<UserHome> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Selected Courses",
+                    "Today's Schedule",
                     style: GoogleFonts.spaceGrotesk(
                         fontSize: 20,
                         fontWeight: FontWeight.bold,
                         color: UltimateTheme.textMain),
                   ),
                   TextButton(
-                    onPressed: () => context.push('/user_home/timetables'),
+                    onPressed: () =>
+                        context.push('/user_home/academics/personal_schedule'),
                     child: Text(
                       "Full Schedule",
                       style: GoogleFonts.inter(
@@ -289,13 +294,13 @@ class _UserHomeState extends ConsumerState<UserHome> {
           ),
           SliverToBoxAdapter(
             child: SizedBox(
-              height: 160,
+              height: 180,
               child: bundleState.when(
                 data: (bundle) {
                   if (bundle == null) {
                     return Center(
                       child: Text(
-                        "Please log in to see your courses",
+                        "Please log in to see your schedule",
                         style: GoogleFonts.inter(color: UltimateTheme.textSub),
                       ),
                     );
@@ -312,35 +317,77 @@ class _UserHomeState extends ConsumerState<UserHome> {
                     );
                   }
 
-                  final List<AcadCourse> myCourses = [];
-                  for (final code in selectedCodes) {
+                  // 1. Get today's classes
+                  final todaysClasses = TimetableUtils.getTodaysClasses(
+                      acadmapState.timetable, selectedCodes);
+                  
+                  // 2. Map back to full course details for UI
+                  final List<Map<String, dynamic>> scheduleItems = [];
+                  for (final item in todaysClasses) {
+                    final AcadTimetable t = item['timetable'];
                     final match = acadmapState.courses.firstWhere(
                       (c) {
                         final catalogCodes = c.code.toLowerCase().split('/').map((s) => s.trim());
-                        final bundleCodes = code.toLowerCase().split('/').map((s) => s.trim());
-                        return catalogCodes.any((cc) => bundleCodes.contains(cc));
+                        final tCode = t.code.toLowerCase().trim();
+                        return catalogCodes.any((cc) => cc == tCode);
                       },
-                      orElse: () => AcadCourse(id: '', code: code, title: 'Details Pending...', department: '', credits: 0, syllabus: []),
+                      orElse: () => AcadCourse(id: '', code: t.code, title: t.title, department: t.discipline, credits: t.credits, syllabus: []),
                     );
-                    myCourses.add(match);
+                    
+                    scheduleItems.add({
+                      ...item,
+                      'course': match,
+                    });
                   }
+
+                  if (scheduleItems.isEmpty) {
+                    return Container(
+                      margin: const EdgeInsets.symmetric(horizontal: 24),
+                      decoration: UltimateTheme.bentoDecoration(context),
+                      child: Center(
+                        child: Text(
+                          "No classes scheduled for today 🎉",
+                          style: GoogleFonts.inter(color: UltimateTheme.textSub),
+                        ),
+                      ),
+                    );
+                  }
+
+                  final nextClass = TimetableUtils.getNextClass(todaysClasses);
+                  final ongoingClass = TimetableUtils.getOngoingClass(todaysClasses);
 
                   return ListView.builder(
                     scrollDirection: Axis.horizontal,
                     padding: const EdgeInsets.symmetric(horizontal: 24),
                     physics: const BouncingScrollPhysics(),
-                    itemCount: myCourses.length,
+                    itemCount: scheduleItems.length,
                     itemBuilder: (context, index) {
-                      final course = myCourses[index];
-                      // Choose a color based on index
-                      final colors = [UltimateTheme.primary, UltimateTheme.secondary, UltimateTheme.accent];
-                      final color = colors[index % colors.length];
+                      final item = scheduleItems[index];
+                      final AcadCourse course = item['course'];
+                      final TimeOfDay startTime = item['startTime'];
+                      final String venue = item['venue'];
+                      final String type = item['type'];
                       
-                      return _buildCourseCard(
-                        course.code,
-                        course.title,
-                        course.department.isEmpty ? "Ecosystem Core" : course.department,
+                      bool isNext = nextClass != null && nextClass['slot'] == item['slot'] && nextClass['timetable'].code == item['timetable'].code;
+                      bool isOngoing = ongoingClass != null && ongoingClass['slot'] == item['slot'] && ongoingClass['timetable'].code == item['timetable'].code;
+
+                      // Choose a color
+                      Color color = UltimateTheme.primary;
+                      if (isOngoing) color = Colors.orange;
+                      else if (isNext) color = UltimateTheme.accent;
+                      else {
+                        final colors = [UltimateTheme.primary, UltimateTheme.secondary, UltimateTheme.accent];
+                        color = colors[index % colors.length];
+                      }
+                      
+                      return _buildScheduleCard(
+                        course,
+                        startTime,
+                        venue,
+                        type,
                         color,
+                        isOngoing: isOngoing,
+                        isNext: isNext,
                       );
                     },
                   );
@@ -351,13 +398,13 @@ class _UserHomeState extends ConsumerState<UserHome> {
                     children: [
                       CircularProgressIndicator(),
                       SizedBox(height: 8),
-                      Text("Fetching Bundle...", style: TextStyle(fontSize: 10)),
+                      Text("Loading Schedule...", style: TextStyle(fontSize: 10)),
                     ],
                   ),
                 ),
                 error: (e, __) => Center(
                   child: Text(
-                    "Hub Error: ${e.toString().split('\n').first}",
+                    "Error loading schedule: ${e.toString().split('\n').first}",
                     style: const TextStyle(color: Colors.red, fontSize: 10),
                   ),
                 ),
@@ -494,76 +541,128 @@ class _UserHomeState extends ConsumerState<UserHome> {
     );
   }
 
-  Widget _buildCourseCard(
-      String code, String name, String details, Color color) {
-    return Container(
-      width: 200,
-      margin: const EdgeInsets.only(right: 16),
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.05),
-        borderRadius: BorderRadius.circular(24),
-        border: Border.all(color: color.withValues(alpha: 0.1), width: 2),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                decoration: BoxDecoration(
-                  color: color.withValues(alpha: 0.1),
-                  borderRadius: BorderRadius.circular(10),
+  Widget _buildScheduleCard(AcadCourse course, TimeOfDay startTime, String venue,
+      String type, Color color,
+      {bool isOngoing = false, bool isNext = false}) {
+    final timeStr =
+        "${startTime.hour % 12 == 0 ? 12 : startTime.hour % 12}:${startTime.minute.toString().padLeft(2, '0')} ${startTime.hour >= 12 ? 'PM' : 'AM'}";
+
+    return GestureDetector(
+      onTap: () => showCourseDetail(context, course),
+      child: Container(
+        width: 220,
+        margin: const EdgeInsets.only(right: 16),
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: (isOngoing || isNext)
+              ? color.withValues(alpha: 0.1)
+              : color.withValues(alpha: 0.05),
+          borderRadius: BorderRadius.circular(24),
+          border: Border.all(
+              color: (isOngoing || isNext)
+                  ? color.withValues(alpha: 0.3)
+                  : color.withValues(alpha: 0.1),
+              width: (isOngoing || isNext) ? 2.5 : 2),
+          boxShadow: (isOngoing || isNext)
+              ? [
+                  BoxShadow(
+                      color: color.withValues(alpha: 0.1),
+                      blurRadius: 10,
+                      offset: const Offset(0, 4))
+                ]
+              : null,
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: color.withValues(alpha: 0.15),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: Text(
+                    timeStr,
+                    style: GoogleFonts.inter(
+                        fontSize: 11,
+                        fontWeight: FontWeight.bold,
+                        color: color),
+                  ),
                 ),
-                child: Text(
-                  code,
-                  style: GoogleFonts.inter(
-                      fontSize: 11, fontWeight: FontWeight.bold, color: color),
-                ),
-              ),
-              Icon(Icons.more_vert_rounded,
-                  size: 18,
-                  color: UltimateTheme.textSub.withValues(alpha: 0.5)),
-            ],
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                name,
-                maxLines: 2,
-                overflow: TextOverflow.ellipsis,
-                style: GoogleFonts.spaceGrotesk(
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: UltimateTheme.textMain),
-              ),
-              const SizedBox(height: 6),
-              Row(
-                children: [
-                  Icon(Icons.location_on_outlined,
-                      size: 12, color: UltimateTheme.textSub),
-                  const SizedBox(width: 4),
-                  Expanded(
+                if (isOngoing)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: Colors.orange,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
                     child: Text(
-                      details,
+                      "LIVE",
                       style: GoogleFonts.inter(
-                          fontSize: 11,
-                          color: UltimateTheme.textSub,
-                          fontWeight: FontWeight.w500),
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
+                    ),
+                  )
+                else if (isNext)
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: color,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Text(
+                      "NEXT",
+                      style: GoogleFonts.inter(
+                          fontSize: 9,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                   ),
-                ],
-              ),
-            ],
-          )
-        ],
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  course.title,
+                  maxLines: 2,
+                  overflow: TextOverflow.ellipsis,
+                  style: GoogleFonts.spaceGrotesk(
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                      color: UltimateTheme.textMain),
+                ),
+                const SizedBox(height: 8),
+                Row(
+                  children: [
+                    Icon(Icons.location_on_outlined,
+                        size: 13, color: UltimateTheme.textSub),
+                    const SizedBox(width: 4),
+                    Expanded(
+                      child: Text(
+                        "$venue • $type",
+                        style: GoogleFonts.inter(
+                            fontSize: 12,
+                            color: UltimateTheme.textSub,
+                            fontWeight: FontWeight.w500),
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            )
+          ],
+        ),
       ),
-    ).animate().fadeIn().scale(begin: const Offset(0.9, 0.9));
+    ).animate().fadeIn().scale(begin: const Offset(0.95, 0.95));
   }
 
   Widget _buildFeaturedEventCard(Event event) {

@@ -79,7 +79,7 @@ class MainScaffold extends ConsumerWidget {
     }
 
     return Scaffold(
-      extendBody: true,
+      extendBody: false,
       drawer: _buildDrawer(
           context, ref, name, email, profilePicURI, user, profileRoute),
       appBar: AppBar(
@@ -257,33 +257,44 @@ class MainScaffold extends ConsumerWidget {
 
   Widget _buildBottomNavBar(BuildContext context, String profileRoute) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(24, 0, 24, 20),
-      height: 72,
+      height: 84, // Increased height for the stuck look
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(24),
+        borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.08),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 20,
-            offset: const Offset(0, 10),
+            offset: const Offset(0, -5),
           ),
         ],
+        border: Border(
+          top: BorderSide(
+            color: UltimateTheme.primary.withValues(alpha: 0.05),
+            width: 1,
+          ),
+        ),
       ),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          _buildNavItem(
-              context, '/', Icons.home_outlined, Icons.home_rounded, "Home"),
-          _buildNavItem(context, '/user_home/news', Icons.explore_outlined,
-              Icons.explore_rounded, "Feed"),
-          _buildNavItem(context, '/user_home/campus-posts',
-              Icons.favorite_outline, Icons.favorite_rounded, "Campus"),
-          _buildNavItem(context, '/user_home/events', Icons.search_outlined,
-              Icons.search_rounded, "Explore"),
-          _buildNavItem(context, profileRoute, Icons.person_outline,
-              Icons.person_rounded, "Profile"),
-        ],
+      child: SafeArea(
+        bottom: true,
+        child: Padding(
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              _buildNavItem(context, '/', Icons.home_outlined, Icons.home_rounded,
+                  "Home"),
+              _buildNavItem(context, '/user_home/news', Icons.explore_outlined,
+                  Icons.explore_rounded, "Feed"),
+              _buildNavItem(context, '/user_home/campus-posts',
+                  Icons.favorite_outline, Icons.favorite_rounded, "Campus"),
+              _buildNavItem(context, '/user_home/events', Icons.search_outlined,
+                  Icons.search_rounded, "Explore"),
+              _buildNavItem(context, profileRoute, Icons.person_outline,
+                  Icons.person_rounded, "Profile"),
+            ],
+          ),
+        ),
       ),
     );
   }
