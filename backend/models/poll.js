@@ -8,10 +8,10 @@ const pollSchema = new mongoose.Schema(
         text: { type: String, required: true },
         votes: { type: Number, default: 0 }
     }],
-    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "Student", required: true }, // Can be Student, Admin, etc.
+    createdBy: { type: mongoose.Schema.Types.ObjectId, ref: "User", required: true }, // Can be Student, Admin, etc.
     creatorRole: { type: String, enum: ["Student", "Admin", "Faculty", "Alumni"], default: "Student" },
     expiry: { type: Date, required: true },
-    votedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "Student" }], // Track who voted to prevent double voting
+    votedBy: [{ type: mongoose.Schema.Types.ObjectId, ref: "User" }], // Track who voted to prevent double voting
     target: {
         type: String,
         enum: ["All", "Students", "Faculty", "Alumni"],

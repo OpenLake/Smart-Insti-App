@@ -103,7 +103,8 @@ class _PollCardState extends ConsumerState<_PollCard> {
   Widget build(BuildContext context) {
     final currentUser = ref.read(authProvider).currentUser;
     final isCreator = currentUser != null &&
-        widget.poll['createdBy']['_id'] == (currentUser as dynamic).id;
+        widget.poll['createdBy']['supabaseId'] ==
+            ref.read(authProvider).sbUser?.id;
 
     final hasVoted = widget.poll['hasVoted'] == true;
     final totalVotes = widget.poll['totalVotes'] as int;

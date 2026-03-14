@@ -65,6 +65,40 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
     }
   }
 
+  Widget _buildDurationDropdown() {
+    return DropdownButtonFormField<int>(
+      value: _expiryHours,
+      decoration: InputDecoration(
+          labelText: "Duration",
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          filled: true,
+          fillColor: UltimateTheme.surfaceColor),
+      items: const [
+        DropdownMenuItem(value: 24, child: Text("24 Hours")),
+        DropdownMenuItem(value: 48, child: Text("48 Hours")),
+        DropdownMenuItem(value: 72, child: Text("3 Days")),
+        DropdownMenuItem(value: 168, child: Text("1 Week")),
+      ],
+      onChanged: (v) => setState(() => _expiryHours = v!),
+    );
+  }
+
+  Widget _buildTargetDropdown() {
+    return DropdownButtonFormField<String>(
+      value: _target,
+      decoration: InputDecoration(
+          labelText: "Target Users",
+          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+          filled: true,
+          fillColor: UltimateTheme.surfaceColor),
+      items: const [
+        DropdownMenuItem(value: "All", child: Text("All Users")),
+        DropdownMenuItem(value: "Students", child: Text("Students Only")),
+      ],
+      onChanged: (v) => setState(() => _target = v!),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -131,46 +165,26 @@ class _CreatePollScreenState extends ConsumerState<CreatePollScreen> {
                     icon: const Icon(Icons.add),
                     label: const Text("Add Option")),
               const SizedBox(height: 24),
-              Row(
-                children: [
-                  Expanded(
-                    child: DropdownButtonFormField<int>(
-                      value: _expiryHours,
-                      decoration: InputDecoration(
-                          labelText: "Duration",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          filled: true,
-                          fillColor: UltimateTheme.surfaceColor),
-                      items: const [
-                        DropdownMenuItem(value: 24, child: Text("24 Hours")),
-                        DropdownMenuItem(value: 48, child: Text("48 Hours")),
-                        DropdownMenuItem(value: 72, child: Text("3 Days")),
-                        DropdownMenuItem(value: 168, child: Text("1 Week")),
+              LayoutBuilder(
+                builder: (context, constraints) {
+                  bool isSmall = constraints.maxWidth < 400;
+                  if (isSmall) {
+                    return Column(
+                      children: [
+                        _buildDurationDropdown(),
+                        const SizedBox(height: 16),
+                        _buildTargetDropdown(),
                       ],
-                      onChanged: (v) => setState(() => _expiryHours = v!),
-                    ),
-                  ),
-                  const SizedBox(width: 16),
-                  Expanded(
-                    child: DropdownButtonFormField<String>(
-                      value: _target,
-                      decoration: InputDecoration(
-                          labelText: "Target Users",
-                          border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(12)),
-                          filled: true,
-                          fillColor: UltimateTheme.surfaceColor),
-                      items: const [
-                        DropdownMenuItem(
-                            value: "All", child: Text("All Users")),
-                        DropdownMenuItem(
-                            value: "Students", child: Text("Students Only")),
-                      ],
-                      onChanged: (v) => setState(() => _target = v!),
-                    ),
-                  ),
-                ],
+                    );
+                  }
+                  return Row(
+                    children: [
+                      Expanded(child: _buildDurationDropdown()),
+                      const SizedBox(width: 16),
+                      Expanded(child: _buildTargetDropdown()),
+                    ],
+                  );
+                },
               ),
               const SizedBox(height: 32),
               SizedBox(
