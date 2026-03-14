@@ -5,6 +5,7 @@ import '../screens/academics/acad_courses_screen.dart';
 import '../screens/academics/acad_timetable_screen.dart';
 import '../screens/academics/acad_curriculum_screen.dart';
 import '../screens/academics/acad_departments_screen.dart';
+import '../screens/academics/acad_personal_schedule_screen.dart';
 
 final GoRoute academicsRoute = GoRoute(
   path: 'academics',
@@ -19,6 +20,11 @@ final GoRoute academicsRoute = GoRoute(
       path: 'timetable',
       pageBuilder: (context, state) =>
           const MaterialPage(child: AcadTimetableScreen()),
+    ),
+    GoRoute(
+      path: 'personal_schedule',
+      pageBuilder: (context, state) =>
+          const MaterialPage(child: AcadPersonalScheduleScreen()),
     ),
     GoRoute(
       path: 'curriculum',

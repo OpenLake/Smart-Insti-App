@@ -32,17 +32,27 @@ class AcademicsHome extends ConsumerWidget {
                     children: [
                       _buildActionCard(
                         context,
-                        title: "Courses",
-                        icon: Icons.book,
+                        title: "My Schedule",
+                        icon: Icons.access_time_filled_rounded,
                         color: UltimateTheme.primary,
-                        onTap: () => context.push('/user_home/academics/courses'),
+                        onTap: () => context
+                            .push('/user_home/academics/personal_schedule'),
                       ),
                       _buildActionCard(
                         context,
                         title: "Timetable",
                         icon: Icons.calendar_month,
                         color: UltimateTheme.accent,
-                        onTap: () => context.push('/user_home/academics/timetable'),
+                        onTap: () =>
+                            context.push('/user_home/academics/timetable'),
+                      ),
+                      _buildActionCard(
+                        context,
+                        title: "Courses",
+                        icon: Icons.book,
+                        color: UltimateTheme.secondary,
+                        onTap: () =>
+                            context.push('/user_home/academics/courses'),
                       ),
                       _buildActionCard(
                         context,

@@ -5,6 +5,7 @@ import 'package:smart_insti_app/provider/acadmap_provider.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
 
 import 'package:smart_insti_app/provider/user_bundle_provider.dart';
+import 'package:smart_insti_app/components/course_detail_sheet.dart';
 import 'package:go_router/go_router.dart';
 
 class AcadCoursesScreen extends ConsumerStatefulWidget {
@@ -152,9 +153,7 @@ class _AcadCoursesScreenState extends ConsumerState<AcadCoursesScreen> {
                       ),
                       trailing: const Icon(Icons.chevron_right,
                           color: UltimateTheme.textSub),
-                      onTap: () {
-                        // Optional: Navigate to course details
-                      },
+                      onTap: () => showCourseDetail(context, course),
                     ),
                   );
                 },
