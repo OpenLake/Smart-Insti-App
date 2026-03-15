@@ -86,7 +86,7 @@ class _GeneralLoginState extends ConsumerState<GeneralLogin> {
                         Container(
                           padding: const EdgeInsets.all(32),
                           decoration: BoxDecoration(
-                            color: Colors.white.withValues(alpha: 0.9),
+                            color: UltimateTheme.surface.withValues(alpha: 0.9),
                             borderRadius: BorderRadius.circular(32),
                             boxShadow: [
                               BoxShadow(

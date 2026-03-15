@@ -60,7 +60,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         if (metaName.isNotEmpty) {
           _nameController.text = metaName;
         }
-        
+
         final metaRole = sbUser.userMetadata?['role'];
         if (metaRole != null) {
           setState(() => _selectedRole = metaRole);
@@ -132,7 +132,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                     Container(
                       padding: const EdgeInsets.all(32),
                       decoration: BoxDecoration(
-                        color: Colors.white,
+                        color: UltimateTheme.surface,
                         borderRadius: BorderRadius.circular(32),
                         boxShadow: [
                           BoxShadow(
@@ -170,21 +170,29 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                               value: _selectedRole,
                               decoration: InputDecoration(
                                 labelText: 'I am a...',
-                                prefixIcon: const Icon(Icons.person_search_rounded),
-                                border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
+                                prefixIcon:
+                                    const Icon(Icons.person_search_rounded),
+                                border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(16)),
                                 enabledBorder: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(16),
                                   borderSide: BorderSide(
-                                      color: UltimateTheme.textSub.withValues(alpha: 0.2)),
+                                      color: UltimateTheme.textSub
+                                          .withValues(alpha: 0.2)),
                                 ),
                               ),
                               items: const [
-                                DropdownMenuItem(value: 'student', child: Text('Student')),
-                                DropdownMenuItem(value: 'faculty', child: Text('Faculty')),
-                                DropdownMenuItem(value: 'alumni', child: Text('Alumni')),
+                                DropdownMenuItem(
+                                    value: 'student', child: Text('Student')),
+                                DropdownMenuItem(
+                                    value: 'faculty', child: Text('Faculty')),
+                                DropdownMenuItem(
+                                    value: 'alumni', child: Text('Alumni')),
                               ],
-                              onChanged: (val) => setState(() => _selectedRole = val),
-                              validator: (val) => val == null ? 'Required' : null,
+                              onChanged: (val) =>
+                                  setState(() => _selectedRole = val),
+                              validator: (val) =>
+                                  val == null ? 'Required' : null,
                             ),
                             const SizedBox(height: 16),
 
@@ -278,14 +286,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(
-                color: UltimateTheme.textSub.withValues(alpha: 0.2)),
+            borderSide:
+                BorderSide(color: UltimateTheme.textSub.withValues(alpha: 0.2)),
           ),
         ),
         items: _branches
             .map((b) => DropdownMenuItem(
-                value: b,
-                child: Text(b, overflow: TextOverflow.ellipsis)))
+                value: b, child: Text(b, overflow: TextOverflow.ellipsis)))
             .toList(),
         onChanged: (val) => setState(() => _selectedBranch = val),
         validator: (val) => val == null ? 'Required' : null,
@@ -300,13 +307,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(
-                color: UltimateTheme.textSub.withValues(alpha: 0.2)),
+            borderSide:
+                BorderSide(color: UltimateTheme.textSub.withValues(alpha: 0.2)),
           ),
         ),
         items: _batches
-            .map(
-                (b) => DropdownMenuItem(value: b, child: Text(b.toString())))
+            .map((b) => DropdownMenuItem(value: b, child: Text(b.toString())))
             .toList(),
         onChanged: (val) => setState(() => _selectedBatch = val),
         validator: (val) => val == null ? 'Required' : null,
@@ -324,14 +330,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(
-                color: UltimateTheme.textSub.withValues(alpha: 0.2)),
+            borderSide:
+                BorderSide(color: UltimateTheme.textSub.withValues(alpha: 0.2)),
           ),
         ),
         items: _branches
             .map((b) => DropdownMenuItem(
-                value: b,
-                child: Text(b, overflow: TextOverflow.ellipsis)))
+                value: b, child: Text(b, overflow: TextOverflow.ellipsis)))
             .toList(),
         onChanged: (val) => setState(() => _selectedBranch = val),
         validator: (val) => val == null ? 'Required' : null,
@@ -356,14 +361,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(
-                color: UltimateTheme.textSub.withValues(alpha: 0.2)),
+            borderSide:
+                BorderSide(color: UltimateTheme.textSub.withValues(alpha: 0.2)),
           ),
         ),
         items: _branches
             .map((b) => DropdownMenuItem(
-                value: b,
-                child: Text(b, overflow: TextOverflow.ellipsis)))
+                value: b, child: Text(b, overflow: TextOverflow.ellipsis)))
             .toList(),
         onChanged: (val) => setState(() => _selectedBranch = val),
         validator: (val) => val == null ? 'Required' : null,
@@ -378,13 +382,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           border: OutlineInputBorder(borderRadius: BorderRadius.circular(16)),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(16),
-            borderSide: BorderSide(
-                color: UltimateTheme.textSub.withValues(alpha: 0.2)),
+            borderSide:
+                BorderSide(color: UltimateTheme.textSub.withValues(alpha: 0.2)),
           ),
         ),
         items: _batches
-            .map(
-                (b) => DropdownMenuItem(value: b, child: Text(b.toString())))
+            .map((b) => DropdownMenuItem(value: b, child: Text(b.toString())))
             .toList(),
         onChanged: (val) => setState(() => _selectedBatch = val),
         validator: (val) => val == null ? 'Required' : null,
@@ -430,8 +433,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       UserAttributes(data: {'role': role}),
     );
 
-    final success =
-        await ref.read(authProvider.notifier).updateProfile(context, profileData);
+    final success = await ref
+        .read(authProvider.notifier)
+        .updateProfile(context, profileData);
     if (success && mounted) {
       context.go('/user_home');
     }
