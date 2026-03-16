@@ -7,18 +7,31 @@ import 'package:smart_insti_app/components/material_textformfield.dart';
 import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/provider/announcement_provider.dart';
 import '../../components/borderless_button.dart';
-import '../../provider/auth_provider.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import '../../models/announcement.dart';
 
-class NewsPage extends ConsumerStatefulWidget {
+class NewsPage extends StatelessWidget {
   const NewsPage({super.key});
 
   @override
-  ConsumerState<NewsPage> createState() => _NewsPageState();
+  Widget build(BuildContext context) {
+    return const Scaffold(
+      backgroundColor: Colors.transparent,
+      body: AnnouncementListWidget(),
+    );
+  }
 }
 
-class _NewsPageState extends ConsumerState<NewsPage> {
+class AnnouncementListWidget extends ConsumerStatefulWidget {
+  const AnnouncementListWidget({super.key});
+
+  @override
+  ConsumerState<AnnouncementListWidget> createState() =>
+      _AnnouncementListWidgetState();
+}
+
+class _AnnouncementListWidgetState
+    extends ConsumerState<AnnouncementListWidget> {
   @override
   void initState() {
     super.initState();
@@ -30,7 +43,6 @@ class _NewsPageState extends ConsumerState<NewsPage> {
   @override
   Widget build(BuildContext context) {
     final announcementState = ref.watch(announcementProvider);
-    final currentUserRole = ref.watch(authProvider).currentUserRole;
 
     final filterTypes = [
       'All',
@@ -40,107 +52,92 @@ class _NewsPageState extends ConsumerState<NewsPage> {
       'System'
     ];
 
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      floatingActionButton:
-          currentUserRole == 'admin' || currentUserRole == 'faculty'
-              ? FloatingActionButton.extended(
-                  onPressed: () => _showAddAnnouncementDialog(context, ref),
-                  backgroundColor: UltimateTheme.primary,
-                  elevation: 4,
-                  icon: const Icon(Icons.campaign_rounded, color: Colors.white),
-                  label: Text("Broadcast",
-                      style: GoogleFonts.spaceGrotesk(
-                          fontWeight: FontWeight.bold, color: Colors.white)),
+    return Column(
+      children: [
+        // Filter Bar
+        Container(
+          height: 64,
+          width: double.infinity,
+          padding: const EdgeInsets.symmetric(vertical: 8),
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            padding: const EdgeInsets.symmetric(horizontal: 24),
+            itemCount: filterTypes.length,
+            itemBuilder: (context, index) {
+              final type = filterTypes[index];
+              final isSelected = announcementState.selectedType == type;
+              return Padding(
+                padding: const EdgeInsets.only(right: 12),
+                child: FilterChip(
+                  label: Text(type.replaceAll('_', ' ')),
+                  selected: isSelected,
+                  onSelected: (selected) {
+                    ref.read(announcementProvider.notifier).updateFilter(type);
+                  },
+                  backgroundColor: Theme.of(context).cardTheme.color,
+                  selectedColor: UltimateTheme.primary.withValues(alpha: 0.1),
+                  checkmarkColor: UltimateTheme.primary,
+                  labelStyle: GoogleFonts.inter(
+                    color: isSelected
+                        ? UltimateTheme.primary
+                        : UltimateTheme.textSub,
+                    fontWeight: isSelected ? FontWeight.bold : FontWeight.w600,
+                    fontSize: 13,
+                  ),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
                   shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(16)),
-                ).animate().scale(delay: 400.ms, curve: Curves.easeOutBack)
-              : null,
-      body: Column(
-        children: [
-          // Filter Bar
-          Container(
-            height: 64,
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(vertical: 8),
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              itemCount: filterTypes.length,
-              itemBuilder: (context, index) {
-                final type = filterTypes[index];
-                final isSelected = announcementState.selectedType == type;
-                return Padding(
-                  padding: const EdgeInsets.only(right: 12),
-                  child: FilterChip(
-                    label: Text(type.replaceAll('_', ' ')),
-                    selected: isSelected,
-                    onSelected: (selected) {
-                      ref
-                          .read(announcementProvider.notifier)
-                          .updateFilter(type);
-                    },
-                    backgroundColor: Colors.white,
-                    selectedColor: UltimateTheme.primary.withValues(alpha: 0.1),
-                    checkmarkColor: UltimateTheme.primary,
-                    labelStyle: GoogleFonts.inter(
+                    borderRadius: BorderRadius.circular(12),
+                    side: BorderSide(
                       color: isSelected
                           ? UltimateTheme.primary
-                          : UltimateTheme.textSub,
-                      fontWeight:
-                          isSelected ? FontWeight.bold : FontWeight.w600,
-                      fontSize: 13,
-                    ),
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
-                      side: BorderSide(
-                        color: isSelected
-                            ? UltimateTheme.primary
-                            : UltimateTheme.primary.withValues(alpha: 0.1),
-                        width: 1.5,
-                      ),
+                          : UltimateTheme.primary.withValues(alpha: 0.1),
+                      width: 1.5,
                     ),
                   ),
-                );
-              },
-            ),
+                ),
+              );
+            },
           ),
+        ),
 
-          Expanded(
-            child: announcementState.isLoading
-                ? const Center(child: CircularProgressIndicator())
-                : announcementState.announcements.isEmpty
-                    ? Center(
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Container(
-                              padding: const EdgeInsets.all(24),
-                              decoration: BoxDecoration(
-                                color: UltimateTheme.primary
-                                    .withValues(alpha: 0.05),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Icon(Icons.campaign_outlined,
-                                  size: 64,
-                                  color: UltimateTheme.primary
-                                      .withValues(alpha: 0.3)),
+        Expanded(
+          child: announcementState.isLoading
+              ? const Center(child: CircularProgressIndicator())
+              : announcementState.announcements.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: const EdgeInsets.all(24),
+                            decoration: BoxDecoration(
+                              color:
+                                  UltimateTheme.primary.withValues(alpha: 0.05),
+                              shape: BoxShape.circle,
                             ),
-                            const SizedBox(height: 24),
-                            Text("No announcements found",
-                                style: GoogleFonts.spaceGrotesk(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
-                                    color: UltimateTheme.textMain)),
-                            Text("Be the first to share something important!",
-                                style: GoogleFonts.inter(
-                                    color: UltimateTheme.textSub)),
-                          ],
-                        ).animate().fadeIn(),
-                      )
-                    : CustomScrollView(
+                            child: Icon(Icons.campaign_outlined,
+                                size: 64,
+                                color: UltimateTheme.primary
+                                    .withValues(alpha: 0.3)),
+                          ),
+                          const SizedBox(height: 24),
+                          Text("No announcements found",
+                              style: GoogleFonts.spaceGrotesk(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                  color: UltimateTheme.textMain)),
+                          Text("Be the first to share something important!",
+                              style: GoogleFonts.inter(
+                                  color: UltimateTheme.textSub)),
+                        ],
+                      ).animate().fadeIn(),
+                    )
+                  : RefreshIndicator(
+                      onRefresh: () async => ref
+                          .read(announcementProvider.notifier)
+                          .loadAnnouncements(),
+                      child: CustomScrollView(
                         physics: const BouncingScrollPhysics(),
                         slivers: [
                           SliverPadding(
@@ -160,9 +157,9 @@ class _NewsPageState extends ConsumerState<NewsPage> {
                           ),
                         ],
                       ),
-          ),
-        ],
-      ),
+                    ),
+        ),
+      ],
     );
   }
 
@@ -176,7 +173,7 @@ class _NewsPageState extends ConsumerState<NewsPage> {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).cardTheme.color,
         borderRadius: BorderRadius.circular(24),
         border: Border.all(
           color: isPinned
@@ -332,113 +329,113 @@ class _NewsPageState extends ConsumerState<NewsPage> {
       ),
     ).animate().fadeIn(delay: (index * 50).ms).slideY(begin: 0.1);
   }
+}
 
-  void _showAddAnnouncementDialog(BuildContext context, WidgetRef ref) {
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
-        contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
-        title: Text('New Broadcast',
-            style: GoogleFonts.spaceGrotesk(
-                fontWeight: FontWeight.bold, fontSize: 24)),
-        content: SizedBox(
-          width: MediaQuery.of(context).size.width * 0.9,
-          child: SingleChildScrollView(
-            physics: const BouncingScrollPhysics(),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                MaterialTextFormField(
-                  controller:
-                      ref.read(announcementProvider.notifier).titleController,
-                  hintText: 'Announcement Title',
-                  prefixIcon: const Icon(Icons.title_rounded),
-                ),
-                const SizedBox(height: 16),
-                MaterialTextFormField(
-                  controller:
-                      ref.read(announcementProvider.notifier).contentController,
-                  hintText: 'Content',
-                  maxLines: 5,
-                  prefixIcon: const Icon(Icons.description_outlined),
-                ),
-                const SizedBox(height: 16),
-                DropdownButtonFormField<String>(
-                  value: "General",
-                  items: ['General', 'Organizational_Unit', 'Course', 'System']
-                      .map((e) => DropdownMenuItem(
-                          value: e,
-                          child: Text(e.replaceAll('_', ' '),
-                              style: GoogleFonts.inter(
-                                  fontSize: 14, fontWeight: FontWeight.w500))))
-                      .toList(),
-                  onChanged: (val) {
-                    if (val != null)
-                      ref
-                          .read(announcementProvider.notifier)
-                          .newAnnouncementType = val;
-                  },
-                  icon: const Icon(Icons.arrow_drop_down_rounded,
-                      color: UltimateTheme.primary),
-                  decoration: InputDecoration(
-                    labelText: "Announcement Category",
-                    labelStyle: GoogleFonts.inter(
-                        color: UltimateTheme.textSub, fontSize: 14),
-                    filled: true,
-                    fillColor: UltimateTheme.primary.withValues(alpha: 0.05),
-                    contentPadding: const EdgeInsets.symmetric(
-                        horizontal: 20, vertical: 12),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                          color: UltimateTheme.primary.withValues(alpha: 0.1)),
-                    ),
-                    enabledBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: BorderSide(
-                          color: UltimateTheme.primary.withValues(alpha: 0.1)),
-                    ),
-                    focusedBorder: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(16),
-                      borderSide: const BorderSide(
-                          color: UltimateTheme.primary, width: 1.5),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-        actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
-        actions: [
-          Row(
+void showAddAnnouncementDialog(BuildContext context, WidgetRef ref) {
+  showDialog(
+    context: context,
+    builder: (context) => AlertDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(32)),
+      contentPadding: const EdgeInsets.fromLTRB(24, 24, 24, 24),
+      title: Text('New Broadcast',
+          style: GoogleFonts.spaceGrotesk(
+              fontWeight: FontWeight.bold, fontSize: 24)),
+      content: SizedBox(
+        width: MediaQuery.of(context).size.width * 0.9,
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
             children: [
-              Expanded(
-                child: BorderlessButton(
-                  onPressed: () => context.pop(),
-                  label: const Text('Cancel'),
-                  backgroundColor:
-                      UltimateTheme.textSub.withValues(alpha: 0.05),
-                  splashColor: UltimateTheme.textSub,
-                ),
+              MaterialTextFormField(
+                controller:
+                    ref.read(announcementProvider.notifier).titleController,
+                hintText: 'Announcement Title',
+                prefixIcon: const Icon(Icons.title_rounded),
               ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: BorderlessButton(
-                  onPressed: () {
-                    ref.read(announcementProvider.notifier).addAnnouncement();
-                    context.pop();
-                  },
-                  label: const Text('Post'),
-                  backgroundColor: UltimateTheme.primary.withValues(alpha: 0.1),
-                  splashColor: UltimateTheme.primary,
+              const SizedBox(height: 16),
+              MaterialTextFormField(
+                controller:
+                    ref.read(announcementProvider.notifier).contentController,
+                hintText: 'Content',
+                maxLines: 5,
+                prefixIcon: const Icon(Icons.description_outlined),
+              ),
+              const SizedBox(height: 16),
+              DropdownButtonFormField<String>(
+                value: "General",
+                items: ['General', 'Organizational_Unit', 'Course', 'System']
+                    .map((e) => DropdownMenuItem(
+                        value: e,
+                        child: Text(e.replaceAll('_', ' '),
+                            style: GoogleFonts.inter(
+                                fontSize: 14, fontWeight: FontWeight.w500))))
+                    .toList(),
+                onChanged: (val) {
+                  if (val != null) {
+                    ref
+                        .read(announcementProvider.notifier)
+                        .newAnnouncementType = val;
+                  }
+                },
+                icon: const Icon(Icons.arrow_drop_down_rounded,
+                    color: UltimateTheme.primary),
+                decoration: InputDecoration(
+                  labelText: "Announcement Category",
+                  labelStyle: GoogleFonts.inter(
+                      color: UltimateTheme.textSub, fontSize: 14),
+                  filled: true,
+                  fillColor: UltimateTheme.primary.withValues(alpha: 0.05),
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 12),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                        color: UltimateTheme.primary.withValues(alpha: 0.1)),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: BorderSide(
+                        color: UltimateTheme.primary.withValues(alpha: 0.1)),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(16),
+                    borderSide: const BorderSide(
+                        color: UltimateTheme.primary, width: 1.5),
+                  ),
                 ),
               ),
             ],
           ),
-        ],
+        ),
       ),
-    );
-  }
+      actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+      actions: [
+        Row(
+          children: [
+            Expanded(
+              child: BorderlessButton(
+                onPressed: () => context.pop(),
+                label: const Text('Cancel'),
+                backgroundColor: UltimateTheme.textSub.withValues(alpha: 0.05),
+                splashColor: UltimateTheme.textSub,
+              ),
+            ),
+            const SizedBox(width: 12),
+            Expanded(
+              child: BorderlessButton(
+                onPressed: () {
+                  ref.read(announcementProvider.notifier).addAnnouncement();
+                  context.pop();
+                },
+                label: const Text('Post'),
+                backgroundColor: UltimateTheme.primary.withValues(alpha: 0.1),
+                splashColor: UltimateTheme.primary,
+              ),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
 }
