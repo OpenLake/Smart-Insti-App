@@ -30,7 +30,7 @@ class _TimetableEditorState extends ConsumerState<TimetableEditor> {
     double height = MediaQuery.of(context).size.height;
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFBFBFE),
+      backgroundColor: UltimateTheme.background,
       resizeToAvoidBottomInset: false,
       floatingActionButton: FloatingActionButton.extended(
         onPressed: () async {
@@ -54,11 +54,11 @@ class _TimetableEditorState extends ConsumerState<TimetableEditor> {
             height: height,
             width: width,
             decoration: BoxDecoration(
-              color: const Color(0xFFFBFBFE),
+              color: UltimateTheme.background,
               gradient: LinearGradient(
                 colors: [
                   UltimateTheme.primary.withValues(alpha: 0.05),
-                  const Color(0xFFFBFBFE),
+                  UltimateTheme.background,
                 ],
                 begin: Alignment.topLeft,
                 end: Alignment.bottomRight,

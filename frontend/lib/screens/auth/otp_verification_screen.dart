@@ -12,7 +12,8 @@ class OTPVerificationScreen extends ConsumerStatefulWidget {
   const OTPVerificationScreen({super.key});
 
   @override
-  ConsumerState<OTPVerificationScreen> createState() => _OTPVerificationScreenState();
+  ConsumerState<OTPVerificationScreen> createState() =>
+      _OTPVerificationScreenState();
 }
 
 class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
@@ -62,7 +63,8 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                     Align(
                       alignment: Alignment.topLeft,
                       child: IconButton(
-                        icon: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white),
+                        icon: const Icon(Icons.arrow_back_ios_new_rounded,
+                            color: Colors.white),
                         onPressed: () => context.pop(),
                       ),
                     ),
@@ -78,7 +80,9 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                                   Icons.mark_email_read_rounded,
                                   size: 80,
                                   color: Colors.white,
-                                ).animate().scale(duration: 600.ms, curve: Curves.easeOutBack),
+                                ).animate().scale(
+                                    duration: 600.ms,
+                                    curve: Curves.easeOutBack),
                                 const SizedBox(height: 24),
                                 Text(
                                   'Verify Email',
@@ -103,11 +107,13 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                                 Container(
                                   padding: const EdgeInsets.all(32),
                                   decoration: BoxDecoration(
-                                    color: Colors.white.withValues(alpha: 0.95),
+                                    color: UltimateTheme.surface
+                                        .withValues(alpha: 0.95),
                                     borderRadius: BorderRadius.circular(32),
                                     boxShadow: [
                                       BoxShadow(
-                                        color: Colors.black.withValues(alpha: 0.1),
+                                        color:
+                                            Colors.black.withValues(alpha: 0.1),
                                         blurRadius: 40,
                                         offset: const Offset(0, 20),
                                       ),
@@ -116,17 +122,21 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                                   child: Column(
                                     children: [
                                       Row(
-                                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceEvenly,
                                         children: List.generate(
                                           8,
                                           (index) => SizedBox(
                                             width: 38,
                                             height: 50,
                                             child: TextField(
-                                              controller: authState.otpDigitControllers[index],
-                                              focusNode: authState.otpFocusNodes[index],
+                                              controller: authState
+                                                  .otpDigitControllers[index],
+                                              focusNode: authState
+                                                  .otpFocusNodes[index],
                                               textAlign: TextAlign.center,
-                                              keyboardType: TextInputType.number,
+                                              keyboardType:
+                                                  TextInputType.number,
                                               maxLength: 1,
                                               style: GoogleFonts.spaceGrotesk(
                                                 fontSize: 20,
@@ -135,24 +145,44 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                                               ),
                                               decoration: InputDecoration(
                                                 counterText: "",
-                                                contentPadding: const EdgeInsets.symmetric(vertical: 12),
-                                                enabledBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  borderSide: BorderSide(color: UltimateTheme.primary.withValues(alpha: 0.2)),
+                                                contentPadding:
+                                                    const EdgeInsets.symmetric(
+                                                        vertical: 12),
+                                                enabledBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: BorderSide(
+                                                      color: UltimateTheme
+                                                          .primary
+                                                          .withValues(
+                                                              alpha: 0.2)),
                                                 ),
-                                                focusedBorder: OutlineInputBorder(
-                                                  borderRadius: BorderRadius.circular(10),
-                                                  borderSide: const BorderSide(color: UltimateTheme.primary, width: 2),
+                                                focusedBorder:
+                                                    OutlineInputBorder(
+                                                  borderRadius:
+                                                      BorderRadius.circular(10),
+                                                  borderSide: const BorderSide(
+                                                      color:
+                                                          UltimateTheme.primary,
+                                                      width: 2),
                                                 ),
-                                                fillColor: UltimateTheme.primary.withValues(alpha: 0.05),
+                                                fillColor: UltimateTheme.primary
+                                                    .withValues(alpha: 0.05),
                                                 filled: true,
                                               ),
                                               onChanged: (value) {
-                                                if (value.length == 1 && index < 7) {
-                                                  authState.otpFocusNodes[index + 1].requestFocus();
+                                                if (value.length == 1 &&
+                                                    index < 7) {
+                                                  authState
+                                                      .otpFocusNodes[index + 1]
+                                                      .requestFocus();
                                                 }
-                                                if (value.isEmpty && index > 0) {
-                                                  authState.otpFocusNodes[index - 1].requestFocus();
+                                                if (value.isEmpty &&
+                                                    index > 0) {
+                                                  authState
+                                                      .otpFocusNodes[index - 1]
+                                                      .requestFocus();
                                                 }
                                               },
                                             ),
@@ -161,12 +191,18 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                                       ),
                                       const SizedBox(height: 32),
                                       ElevatedButton(
-                                        onPressed: authState.loginProgressState == LoadingState.progress
+                                        onPressed: authState
+                                                    .loginProgressState ==
+                                                LoadingState.progress
                                             ? null
                                             : () async {
-                                                if (await ref.read(authProvider.notifier).verifyEmailOTP(context)) {
+                                                if (await ref
+                                                    .read(authProvider.notifier)
+                                                    .verifyEmailOTP(context)) {
                                                   if (context.mounted) {
-                                                    if (ref.read(authProvider).needsOnboarding) {
+                                                    if (ref
+                                                        .read(authProvider)
+                                                        .needsOnboarding) {
                                                       context.go('/onboarding');
                                                     } else {
                                                       context.go('/user_home');
@@ -175,27 +211,39 @@ class _OTPVerificationScreenState extends ConsumerState<OTPVerificationScreen> {
                                                 }
                                               },
                                         style: ElevatedButton.styleFrom(
-                                          minimumSize: const Size.fromHeight(56),
-                                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                                          minimumSize:
+                                              const Size.fromHeight(56),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(16)),
                                         ),
-                                        child: authState.loginProgressState == LoadingState.progress
+                                        child: authState.loginProgressState ==
+                                                LoadingState.progress
                                             ? const SizedBox(
                                                 height: 20,
                                                 width: 20,
-                                                child: CircularProgressIndicator(strokeWidth: 2, color: Colors.white),
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        strokeWidth: 2,
+                                                        color: Colors.white),
                                               )
                                             : const Text('Verify & Continue'),
                                       ),
                                     ],
                                   ),
-                                ).animate().fadeIn(delay: 400.ms).slideY(begin: 0.1),
+                                )
+                                    .animate()
+                                    .fadeIn(delay: 400.ms)
+                                    .slideY(begin: 0.1),
 
                                 const SizedBox(height: 32),
                                 TextButton(
                                   onPressed: () {
                                     // Resend logic could be added here
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(content: Text("Resend functionality coming soon!")),
+                                      const SnackBar(
+                                          content: Text(
+                                              "Resend functionality coming soon!")),
                                     );
                                   },
                                   child: Text(
