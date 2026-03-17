@@ -59,10 +59,14 @@ class MainScaffold extends ConsumerWidget {
       title = RouteConstants.routeTitles[matchedRoute] ?? "IIT Bhilai";
     }
 
-    if (location.contains('/campus-posts') || location.contains('/polls')) {
-      // AskYourCampus screen handles both, but we can be more specific
+    if (location.contains('/campus-posts') ||
+        location.contains('/polls') ||
+        location.contains('/feed') ||
+        location.contains('/news')) {
+      title = "Feed";
       if (location.contains('/campus-posts')) title = "Campus Posts";
       if (location.contains('/polls')) title = "Campus Polls";
+      if (location.contains('/news')) title = "Announcements";
     }
 
     String profileRoute = '/login';
@@ -139,7 +143,7 @@ class MainScaffold extends ConsumerWidget {
   Widget _buildDrawer(BuildContext context, WidgetRef ref, String name,
       String email, String? profilePicURI, dynamic user, String profileRoute) {
     return Drawer(
-      backgroundColor: Colors.white,
+      backgroundColor: Theme.of(context).cardTheme.color,
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.horizontal(right: Radius.circular(32)),
       ),
@@ -161,7 +165,7 @@ class MainScaffold extends ConsumerWidget {
                   backgroundColor: Colors.white.withValues(alpha: 0.2),
                   child: CircleAvatar(
                     radius: 32,
-                    backgroundColor: Colors.white,
+                    backgroundColor: Theme.of(context).cardTheme.color,
                     backgroundImage: profilePicURI != null
                         ? NetworkImage(profilePicURI)
                         : null,
@@ -259,7 +263,7 @@ class MainScaffold extends ConsumerWidget {
     return Container(
       height: 84, // Increased height for the stuck look
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: Theme.of(context).bottomNavigationBarTheme.backgroundColor,
         borderRadius: const BorderRadius.vertical(top: Radius.circular(32)),
         boxShadow: [
           BoxShadow(
@@ -282,16 +286,22 @@ class MainScaffold extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
-              _buildNavItem(context, '/', Icons.home_outlined, Icons.home_rounded,
-                  "Home"),
-              _buildNavItem(context, '/user_home/news', Icons.explore_outlined,
-                  Icons.explore_rounded, "Feed"),
-              _buildNavItem(context, '/user_home/campus-posts',
-                  Icons.favorite_outline, Icons.favorite_rounded, "Campus"),
-              _buildNavItem(context, '/user_home/events', Icons.search_outlined,
-                  Icons.search_rounded, "Explore"),
-              _buildNavItem(context, profileRoute, Icons.person_outline,
-                  Icons.person_rounded, "Profile"),
+              _buildNavItem(context, '/user_home', Icons.home_outlined,
+                  Icons.home_rounded, "Home"),
+              _buildNavItem(context, '/user_home/feed', Icons.favorite_outline,
+                  Icons.favorite_rounded, "Feed"),
+              _buildNavItem(
+                  context,
+                  '/user_home/marketplace',
+                  Icons.shopping_bag_outlined,
+                  Icons.shopping_bag_rounded,
+                  "Market"),
+              _buildNavItem(
+                  context,
+                  '/user_home/notifications',
+                  Icons.notifications_none_rounded,
+                  Icons.notifications_rounded,
+                  "Alerts"),
             ],
           ),
         ),
@@ -305,16 +315,23 @@ class MainScaffold extends ConsumerWidget {
 
     bool isSelected = false;
     if (route == '/' || route == '/user_home') {
-      bool isOtherTab = location.contains('/news') ||
+      bool isOtherTab = location.contains('/feed') ||
+          location.contains('/news') ||
           location.contains('/campus-posts') ||
-          location.contains('/events') ||
+          location.contains('/polls') ||
+          location.contains('/marketplace') ||
+          location.contains('/notifications') ||
           location.contains('/student_profile') ||
           location.contains('/faculty_profile') ||
           location.contains('/admin/profile');
       isSelected = !isOtherTab;
     } else {
-      isSelected =
-          location == route || (route != '/' && location.startsWith(route));
+      isSelected = location == route ||
+          (route != '/' && location.startsWith(route)) ||
+          (route == '/user_home/feed' &&
+              (location.contains('/campus-posts') ||
+                  location.contains('/polls') ||
+                  location.contains('/news')));
     }
 
     return InkWell(
@@ -328,7 +345,9 @@ class MainScaffold extends ConsumerWidget {
           children: [
             Icon(
               isSelected ? activeIcon : icon,
-              color: isSelected ? UltimateTheme.primary : UltimateTheme.textSub,
+              color: isSelected
+                  ? UltimateTheme.skeletonBrown
+                  : UltimateTheme.textSub,
               size: 24,
             )
                 .animate(target: isSelected ? 1 : 0)
