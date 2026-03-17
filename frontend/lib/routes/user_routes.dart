@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 
 import '../screens/user/student_profile.dart';
-import '../screens/user/news_page.dart';
 import '../screens/user/events_page.dart';
 import '../screens/user/links_page.dart';
 import '../screens/user/faculty_profile.dart';
@@ -13,7 +12,7 @@ import '../screens/user/timetable_editor.dart';
 import '../screens/clubs/clubs_directory_screen.dart';
 import '../screens/clubs/club_profile_screen.dart';
 import '../screens/marketplace/wishlist_screen.dart';
-import '../screens/user/ask_campus_screen.dart';
+import '../screens/user/feed_screen.dart';
 import '../screens/campus_posts/add_campus_post_screen.dart';
 import '../screens/polls/create_poll_screen.dart';
 import '../screens/calendar/calendar_screen.dart';
@@ -40,7 +39,8 @@ final List<RouteBase> userRoutes = [
   ),
   GoRoute(
     path: 'news',
-    pageBuilder: (context, state) => const MaterialPage(child: NewsPage()),
+    pageBuilder: (context, state) =>
+        const MaterialPage(child: FeedScreen(initialTab: 0)),
   ),
   GoRoute(
     path: 'events',
@@ -96,27 +96,49 @@ final List<RouteBase> userRoutes = [
         const MaterialPage(child: WishlistScreen()),
   ),
   GoRoute(
-      path: 'campus-posts',
-      pageBuilder: (context, state) =>
-          const MaterialPage(child: AskYourCampusScreen()),
-      routes: [
-        GoRoute(
-          path: 'add',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: AddCampusPostScreen()),
-        ),
-      ]),
+    path: 'feed',
+    pageBuilder: (context, state) {
+      final tabStr = state.uri.queryParameters['tab'];
+      final initialTab = int.tryParse(tabStr ?? '0') ?? 0;
+      return MaterialPage(child: FeedScreen(initialTab: initialTab));
+    },
+    routes: [
+      GoRoute(
+        path: 'add-post',
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: AddCampusPostScreen()),
+      ),
+      GoRoute(
+        path: 'create-poll',
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: CreatePollScreen()),
+      ),
+    ],
+  ),
   GoRoute(
-      path: 'polls',
-      pageBuilder: (context, state) =>
-          const MaterialPage(child: AskYourCampusScreen()),
-      routes: [
-        GoRoute(
-          path: 'create',
-          pageBuilder: (context, state) =>
-              const MaterialPage(child: CreatePollScreen()),
-        ),
-      ]),
+    path: 'campus-posts',
+    pageBuilder: (context, state) =>
+        const MaterialPage(child: FeedScreen(initialTab: 1)),
+    routes: [
+      GoRoute(
+        path: 'add',
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: AddCampusPostScreen()),
+      ),
+    ],
+  ),
+  GoRoute(
+    path: 'polls',
+    pageBuilder: (context, state) =>
+        const MaterialPage(child: FeedScreen(initialTab: 2)),
+    routes: [
+      GoRoute(
+        path: 'create',
+        pageBuilder: (context, state) =>
+            const MaterialPage(child: CreatePollScreen()),
+      ),
+    ],
+  ),
   GoRoute(
     path: 'calendar',
     pageBuilder: (context, state) =>
