@@ -23,7 +23,7 @@ class EditProfileScreen extends ConsumerWidget {
     String achievementsJson = jsonEncode(achievements);
 
     return Scaffold(
-      backgroundColor: const Color(0xFFFBFBFE),
+      backgroundColor: UltimateTheme.background,
       body: CustomScrollView(
         slivers: [
           // Premium Header
@@ -174,7 +174,7 @@ class EditProfileScreen extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: UltimateTheme.surface,
         borderRadius: BorderRadius.circular(32),
         border:
             Border.all(color: UltimateTheme.primary.withValues(alpha: 0.05)),

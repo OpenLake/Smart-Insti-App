@@ -131,7 +131,7 @@ class FacultyProfile extends ConsumerWidget {
             child: Container(
               transform: Matrix4.translationValues(0, -30, 0),
               decoration: const BoxDecoration(
-                color: Color(0xFFFBFBFE),
+                color: UltimateTheme.background,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
               ),
               child: Padding(
@@ -198,7 +198,7 @@ class FacultyProfile extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: UltimateTheme.surface,
         borderRadius: BorderRadius.circular(32),
         border:
             Border.all(color: UltimateTheme.primary.withValues(alpha: 0.05)),
@@ -232,7 +232,8 @@ class FacultyProfile extends ConsumerWidget {
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
-            child: Divider(height: 1, thickness: 1, color: Color(0xFFF5F5F7)),
+            child: Divider(
+                height: 1, thickness: 1, color: UltimateTheme.skeletonGrey),
           ),
           ...children,
         ],
@@ -268,7 +269,7 @@ class FacultyProfile extends ConsumerWidget {
       margin: const EdgeInsets.only(bottom: 16),
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: UltimateTheme.surface,
         borderRadius: BorderRadius.circular(28),
         border:
             Border.all(color: UltimateTheme.primary.withValues(alpha: 0.05)),
@@ -335,7 +336,8 @@ class FacultyProfile extends ConsumerWidget {
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 16),
-            child: Divider(height: 1, thickness: 1, color: Color(0xFFF5F5F7)),
+            child: Divider(
+                height: 1, thickness: 1, color: UltimateTheme.skeletonGrey),
           ),
           Row(
             children: [

@@ -169,7 +169,7 @@ class StudentProfile extends ConsumerWidget {
             child: Container(
               transform: Matrix4.translationValues(0, -30, 0),
               decoration: const BoxDecoration(
-                color: Color(0xFFFBFBFE),
+                color: UltimateTheme.background,
                 borderRadius: BorderRadius.vertical(top: Radius.circular(40)),
               ),
               child: Padding(
@@ -277,7 +277,7 @@ class StudentProfile extends ConsumerWidget {
                     Consumer(
                       builder: (context, ref, child) {
                         final bundleState = ref.watch(userBundleProvider);
-                        
+
                         return bundleState.when(
                           data: (bundle) {
                             final acadmap = bundle?.academics?.acadmap;
@@ -286,17 +286,20 @@ class StudentProfile extends ConsumerWidget {
                             return Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                _buildSectionHeader(
-                                    "Ecosystem Academic Status", Icons.auto_awesome_rounded),
+                                _buildSectionHeader("Ecosystem Academic Status",
+                                    Icons.auto_awesome_rounded),
                                 const SizedBox(height: 20),
                                 _buildSectionCard(
                                   title: "Registration Summary",
                                   icon: Icons.assignment_turned_in_rounded,
                                   children: [
-                                    _buildInfoRow(Icons.layers_rounded, "Program", acadmap.program ?? 'N/A'),
+                                    _buildInfoRow(Icons.layers_rounded,
+                                        "Program", acadmap.program ?? 'N/A'),
                                     const SizedBox(height: 12),
-                                    _buildInfoRow(Icons.history_edu_rounded, "Completed", 
-                                      "${acadmap.completedCourses.length} Courses"),
+                                    _buildInfoRow(
+                                        Icons.history_edu_rounded,
+                                        "Completed",
+                                        "${acadmap.completedCourses.length} Courses"),
                                   ],
                                 ),
                                 const SizedBox(height: 24),
@@ -305,34 +308,43 @@ class StudentProfile extends ConsumerWidget {
                                   style: GoogleFonts.spaceGrotesk(
                                     fontSize: 16,
                                     fontWeight: FontWeight.bold,
-                                    color: UltimateTheme.textMain.withValues(alpha: 0.8),
+                                    color: UltimateTheme.textMain
+                                        .withValues(alpha: 0.8),
                                   ),
                                 ),
                                 const SizedBox(height: 16),
                                 Wrap(
                                   spacing: 8,
                                   runSpacing: 8,
-                                  children: acadmap.completedCourses.map((course) => Container(
-                                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
-                                    decoration: BoxDecoration(
-                                      color: Colors.green.withValues(alpha: 0.05),
-                                      borderRadius: BorderRadius.circular(20),
-                                      border: Border.all(color: Colors.green.withValues(alpha: 0.1)),
-                                    ),
-                                    child: Text(
-                                      course,
-                                      style: GoogleFonts.inter(
-                                        fontSize: 11,
-                                        fontWeight: FontWeight.bold,
-                                        color: Colors.green,
-                                      ),
-                                    ),
-                                  )).toList(),
+                                  children: acadmap.completedCourses
+                                      .map((course) => Container(
+                                            padding: const EdgeInsets.symmetric(
+                                                horizontal: 12, vertical: 6),
+                                            decoration: BoxDecoration(
+                                              color: Colors.green
+                                                  .withValues(alpha: 0.05),
+                                              borderRadius:
+                                                  BorderRadius.circular(20),
+                                              border: Border.all(
+                                                  color: Colors.green
+                                                      .withValues(alpha: 0.1)),
+                                            ),
+                                            child: Text(
+                                              course,
+                                              style: GoogleFonts.inter(
+                                                fontSize: 11,
+                                                fontWeight: FontWeight.bold,
+                                                color: Colors.green,
+                                              ),
+                                            ),
+                                          ))
+                                      .toList(),
                                 ),
                               ],
                             );
                           },
-                          loading: () => const Center(child: CircularProgressIndicator()),
+                          loading: () =>
+                              const Center(child: CircularProgressIndicator()),
                           error: (e, __) => const SizedBox.shrink(),
                         );
                       },
@@ -347,7 +359,6 @@ class StudentProfile extends ConsumerWidget {
     );
   }
 
-
   Widget _buildSectionCard(
       {required String title,
       required IconData icon,
@@ -355,7 +366,7 @@ class StudentProfile extends ConsumerWidget {
     return Container(
       padding: const EdgeInsets.all(24),
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: UltimateTheme.surface,
         borderRadius: BorderRadius.circular(32),
         border:
             Border.all(color: UltimateTheme.primary.withValues(alpha: 0.05)),
@@ -389,7 +400,8 @@ class StudentProfile extends ConsumerWidget {
           ),
           const Padding(
             padding: EdgeInsets.symmetric(vertical: 20),
-            child: Divider(height: 1, thickness: 1, color: Color(0xFFF5F5F7)),
+            child: Divider(
+                height: 1, thickness: 1, color: UltimateTheme.skeletonGrey),
           ),
           ...children,
         ],

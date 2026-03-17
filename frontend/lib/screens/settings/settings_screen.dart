@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:smart_insti_app/theme/ultimate_theme.dart';
 import 'package:smart_insti_app/provider/theme_provider.dart';
 import 'package:smart_insti_app/services/auth/auth_service.dart';
 
@@ -87,28 +86,32 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
         style: GoogleFonts.outfit(
             fontSize: 18,
             fontWeight: FontWeight.bold,
-            color: UltimateTheme.primaryColor),
+            color: Theme.of(context).colorScheme.primary),
       ),
     );
   }
 
   Widget _buildSwitchTile(
       String title, String subtitle, bool value, Function(bool) onChanged) {
+    final theme = Theme.of(context);
     return Card(
       elevation: 0,
-      color: UltimateTheme.surfaceColor,
+      color: theme.cardTheme.color,
       margin: const EdgeInsets.only(bottom: 12),
       shape: RoundedRectangleBorder(
           borderRadius: BorderRadius.circular(12),
-          side: BorderSide(color: Colors.grey.withValues(alpha: 0.1))),
+          side: BorderSide(color: theme.dividerColor.withValues(alpha: 0.1))),
       child: SwitchListTile(
-        title:
-            Text(title, style: GoogleFonts.outfit(fontWeight: FontWeight.w600)),
+        title: Text(title,
+            style: GoogleFonts.outfit(
+                fontWeight: FontWeight.w600,
+                color: theme.textTheme.titleMedium?.color)),
         subtitle: Text(subtitle,
-            style: GoogleFonts.outfit(color: Colors.grey, fontSize: 12)),
+            style: GoogleFonts.outfit(
+                color: theme.textTheme.bodyMedium?.color, fontSize: 12)),
         value: value,
         onChanged: onChanged,
-        activeColor: UltimateTheme.primaryColor,
+        activeColor: theme.colorScheme.primary,
       ),
     );
   }
